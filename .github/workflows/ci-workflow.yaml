@@ -1,0 +1,83 @@
+---
+# yamllint disable rule:line-length
+name: "CI Workflow"
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+    tags: ["*"]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  pre-commit:
+    name: "Pre-commit checks"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # https://github.com/actions/checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        id: setup-py
+        # https://github.com/actions/setup-python
+        # yamllint disable-line rule:line-length
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Enable cache for pre-commit hooks
+        # https://github.com/actions/cache
+        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        with:
+          path: ~/.cache/pre-commit
+          # yamllint disable-line rule:line-length
+          key: pre-commit|${{ steps.setup-py.outputs.python-version}}|${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            pre-commit|${{ steps.setup-py.outputs.python-version}}|
+            pre-commit|
+
+      - name: Run pre-commit checks
+        run: pipx run pre-commit run -a
+
+      - name: Run pre-commit gc
+        run: pipx run pre-commit gc
+
+  # This job builds the devcontainer image, but doesn't do anything with it.
+  # It's just here to make sure the image builds successfully.
+  devcontainer:
+    name: "Build devcontainer image"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # https://github.com/actions/checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Docker Buildx
+        # https://github.com/docker/setup-buildx-action
+        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
+        id: setup-buildx
+
+      - name: Expose variables required for actions cache
+        # https://github.com/crazy-max/ghaction-github-runtime
+        uses: crazy-max/ghaction-github-runtime@b3a9207c0e1ef41f4cf215303c976869d0c2c1c4 # v3.0.0
+
+      - name: Build devcontainer
+        run: npx -- @devcontainers/cli build --workspace-folder . --cache-from type=gha,scope=devcontainer --cache-to type=gha,mode=min,scope=devcontainer
+
+  # This is a dummy job to determine success of the CI workflow
+  ci-success:
+    name: CI Workflow - Success
+    needs:
+      - devcontainer
+      - pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "Previous jobs were successful"
