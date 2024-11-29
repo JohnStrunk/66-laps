@@ -1,14 +1,12 @@
 {
 	// For format details, see https://aka.ms/devcontainer.json.
-	// For config options, see the README at:
-	// https://github.com/devcontainers/templates/tree/main/src/debian
 	// Other base images: https://github.com/devcontainers/images
-	"name": "Debian",
-	"image": "mcr.microsoft.com/devcontainers/base:bookworm@sha256:b3fd61ae07a1ebd211cac645c758f4018688a86e2c9b596a6c862ca89b0a668d",
+	"name": "Node.js & TypeScript",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1.1.0-22",
 
 	// Available features: https://containers.dev/features
 	"features": {
-		"ghcr.io/devcontainers/features/node:1.6.1": {},
+		"ghcr.io/devcontainers-extra/features/act:1.0.14": {},
 		"ghcr.io/devcontainers-contrib/features/pre-commit:2.0.17": {}
 	},
 
