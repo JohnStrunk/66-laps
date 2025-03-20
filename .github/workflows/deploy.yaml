@@ -23,9 +23,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  build_dir: ./docs-out
-
 jobs:
   build:
     name: Build website
@@ -64,8 +61,6 @@ jobs:
 
       - name: Build
         run: yarn run build
-        env:
-          PAGES_BASE_PATH: ${{ steps.setup_pages.outputs.base_path }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
