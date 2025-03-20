@@ -10,6 +10,7 @@ queue_rules:
       - "#changes-requested-reviews-by=0"
       - label!=do-not-merge
       - check-success="CI Workflow - Success"
+      - check-success="Build website"
       - check-success=DCO
     merge_conditions: []
     merge_method: merge

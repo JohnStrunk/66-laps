@@ -3,14 +3,17 @@
 	// Other base images: https://github.com/devcontainers/images
 	"name": "Node.js & TypeScript",
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1.1.9-22",
-
 	// Available features: https://containers.dev/features
 	"features": {
 		"ghcr.io/devcontainers-extra/features/act:1.0.14": {},
 		"ghcr.io/devcontainers/features/github-cli:1.0.13": {},
 		"ghcr.io/devcontainers-contrib/features/pre-commit:2.0.17": {}
 	},
-
+	"containerEnv": {
+		// Disable Next.js telemetry
+		// https://nextjs.org/telemetry
+		"NEXT_TELEMETRY_DISABLED": "1"
+	},
 	"postCreateCommand": {
 		// Install pre-commit hooks in the background since they can take a
 		// while, and we want to minimize waiting during `git commit`
