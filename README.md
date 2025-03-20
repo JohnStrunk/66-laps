@@ -1,5 +1,8 @@
-# Project template
+# 66-laps
 
-This is a template to serve as a starting point for new repos.
+... because counting laps is hard, especially when there are 10 lanes.
 
-**Reminder:** Add a license to your new project
+## License
+
+This project is licensed under the AGPL-3.0 or later License - see the
+[LICENSE](LICENSE) file for details.
