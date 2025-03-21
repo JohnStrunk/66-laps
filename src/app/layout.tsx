@@ -18,7 +18,7 @@ export default function RootLayout({
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID as string} />
       <body>
         {children}
-        <Script id="clarity" strategy="afterInteractive">
+        <Script id="clarity_analytics" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
