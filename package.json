@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev-notp": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@next/third-parties": "15.2.3",
+    "@sentry/nextjs": "^9",
     "next": "15.2.3",
     "react": "19.0.0",
     "react-dom": "19.0.0"
