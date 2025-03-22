@@ -9,8 +9,12 @@ Sentry.init({
 
   // Add optional integrations for additional features
   integrations: [
+    Sentry.extraErrorDataIntegration(),
     Sentry.replayIntegration(),
   ],
+
+  // Cache Sentry reports if the user is offline
+  transport: Sentry.makeBrowserOfflineTransport(Sentry.makeFetchTransport),
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,
