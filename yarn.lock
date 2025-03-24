@@ -188,7 +188,7 @@
     "@types/tough-cookie" "^4.0.5"
     tough-cookie "^4.1.4"
 
-"@chromatic-com/storybook@^3":
+"@chromatic-com/storybook@3.2.6":
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/@chromatic-com/storybook/-/storybook-3.2.6.tgz#24fd1a2536311c7538145ccc4d971e90c202e43b"
   integrity sha512-FDmn5Ry2DzQdik+eq2sp/kJMMT36Ewe7ONXUXM2Izd97c7r6R/QyGli8eyh/F0iyqVvbLveNYFyF0dBOJNwLqw==
@@ -1565,7 +1565,7 @@
     react-dom "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-essentials@^8.6.8":
+"@storybook/addon-essentials@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/addon-essentials/-/addon-essentials-8.6.8.tgz#445174459a3bd509613b2525414a07a8ed53750f"
   integrity sha512-+lv8gSvwMTjjJRjHKIEdifVciB2/9nZ9x6HBwQRhuwVaalIzEV7od6MGJGI6g7uDiTW/hARSM8tCgw1hCzsP0g==
@@ -1596,7 +1596,7 @@
     "@storybook/global" "^5.0.0"
     tiny-invariant "^1.3.1"
 
-"@storybook/addon-onboarding@^8.6.8":
+"@storybook/addon-onboarding@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/addon-onboarding/-/addon-onboarding-8.6.8.tgz#252e586eef6fe00f01b7e020baee726e7af7ee32"
   integrity sha512-kj3ZMj0yWL1hAyFZ4MQR/Q5o9GsKCqfwtF/ErIU3U1EE8tZT9oyuCWtnFUZ72iMMqOYKQEejROEVuL30/YzIDg==
@@ -1609,7 +1609,7 @@
     "@storybook/global" "^5.0.0"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-themes@^8.6.8":
+"@storybook/addon-themes@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/addon-themes/-/addon-themes-8.6.8.tgz#b800314a57219b98398f068f29725f99a9c6af68"
   integrity sha512-zc4Hr8bQPDMNV+7IbtpZhnbSIWxzV1Ragv0eRDHIuAJkmxYc5QS+J+FSHQa5UYTWjEO6UxUk91x0YV7wpQQSZA==
@@ -1628,7 +1628,7 @@
   dependencies:
     memoizerific "^1.11.3"
 
-"@storybook/blocks@8.6.8", "@storybook/blocks@^8.6.8":
+"@storybook/blocks@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/blocks/-/blocks-8.6.8.tgz#654d89491ec8fe77477e7899ee1be72b7f345a44"
   integrity sha512-m52Xyb/bKlbkwJ8KwhHLI8lKVs9rjYciAbIq6L0OLvK6k9b+uRDLaNihvp2W45YkGea1M8259uhZu1toNgK49w==
@@ -1681,7 +1681,7 @@
   dependencies:
     type-fest "^2.19.0"
 
-"@storybook/experimental-addon-test@^8.6.8":
+"@storybook/experimental-addon-test@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/experimental-addon-test/-/experimental-addon-test-8.6.8.tgz#a751c94e7d9bae8f248f59549a108e66d07e5606"
   integrity sha512-S/24qEg/bkCCNUXEDOl8pyAjrmVn/o/Xju2nU9qt1WUPEqOwmEqG827lcOzA9WaH23whxu4G2Qp3cNQVMspQ+Q==
@@ -1756,7 +1756,7 @@
     resolve "^1.22.8"
     tsconfig-paths "^4.2.0"
 
-"@storybook/react@8.6.8", "@storybook/react@^8.6.8":
+"@storybook/react@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-8.6.8.tgz#eb68e9553be600646396480c267549c75e044fbb"
   integrity sha512-UVP+vuVrgC9CgUp2ZKQs3ch2JzImGAUbVUpmb+GMAOGD3DGAf9iP7qldIZc5rrNw/jNyTFTo4oX6XnXrWgOCVg==
@@ -1768,7 +1768,7 @@
     "@storybook/react-dom-shim" "8.6.8"
     "@storybook/theming" "8.6.8"
 
-"@storybook/test@8.6.8", "@storybook/test@^8.6.8":
+"@storybook/test@8.6.8":
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/@storybook/test/-/test-8.6.8.tgz#1ede719b95ab0b51bcef53cc00a3a4d0aad1854a"
   integrity sha512-wMJkWWcfPK374uw3JPpgMBkPYkIhYPxqRVp/KAJR/h10YIhSAXg7yiH1LYmmNAwrmvI7Uc3KZZ9fX/Qvot5uRg==
@@ -2253,7 +2253,7 @@
   resolved "https://registry.yarnpkg.com/@unrs/rspack-resolver-binding-win32-x64-msvc/-/rspack-resolver-binding-win32-x64-msvc-1.2.2.tgz#ac441b3bd8cf97b7d3d35f4e7f9792f8e257e729"
   integrity sha512-hewo/UMGP1a7O6FG/ThcPzSJdm/WwrYDNkdGgWl6M18H6K6MSitklomWpT9MUtT5KGj++QJb06va/14QBC4pvw==
 
-"@vitest/browser@^3.0.9":
+"@vitest/browser@3.0.9":
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@vitest/browser/-/browser-3.0.9.tgz#9927bbd5923341cf83e56508215b614110728c6a"
   integrity sha512-P9dcCeMkA3/oYGfUzRFZJLZxiOpApztxhPsQDUiZzAzLoZonWhse2+vPB0xEBP8Q0lX1WCEEmtY7HzBRi4oYBA==
@@ -2268,7 +2268,7 @@
     tinyrainbow "^2.0.0"
     ws "^8.18.1"
 
-"@vitest/coverage-v8@^3.0.9":
+"@vitest/coverage-v8@3.0.9":
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@vitest/coverage-v8/-/coverage-v8-3.0.9.tgz#279f54b54e0096ce23fd10dba52087165899b654"
   integrity sha512-15OACZcBtQ34keIEn19JYTVuMFTlFrClclwWjHo/IRPg/8ELpkgNTl0o7WLP9WO9XGH6+tip9CPYtEOrIDJvBA==
@@ -3324,7 +3324,7 @@ eslint-plugin-react@^7.37.0:
     string.prototype.matchall "^4.0.12"
     string.prototype.repeat "^1.0.0"
 
-eslint-plugin-storybook@^0.11.6:
+eslint-plugin-storybook@0.11.6:
   version "0.11.6"
   resolved "https://registry.yarnpkg.com/eslint-plugin-storybook/-/eslint-plugin-storybook-0.11.6.tgz#3ab1fb37c62641853417c6da8f4c4fd050162489"
   integrity sha512-3WodYD6Bs9ACqnB+TP2TuLh774c/nacAjxSKOP9bHJ2c8rf+nrhocxjjeAWNmO9IPkFIzTKlcl0vNXI2yYpVOw==
@@ -4837,7 +4837,7 @@ playwright-core@1.51.1:
   resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.51.1.tgz#d57f0393e02416f32a47cf82b27533656a8acce1"
   integrity sha512-/crRMj8+j/Nq5s8QcvegseuyeZPxpQCZb6HNk3Sos3BlZyAknRjoyJPFWkpNn8v0+P3WiwqFF8P+zQo4eqiNuw==
 
-playwright@^1.51.1:
+playwright@1.51.1:
   version "1.51.1"
   resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.51.1.tgz#ae1467ee318083968ad28d6990db59f47a55390f"
   integrity sha512-kkx+MB2KQRkyxjYPc3a0wLZZoDczmppyGJIvQ43l+aZihkaVvmu/21kiyaHeHjiFxjxNNFnUncKmcGIyOojsaw==
@@ -5477,7 +5477,7 @@ std-env@^3.8.0:
   resolved "https://registry.yarnpkg.com/std-env/-/std-env-3.8.1.tgz#2b81c631c62e3d0b964b87f099b8dcab6c9a5346"
   integrity sha512-vj5lIj3Mwf9D79hBkltk5qmkFI+biIKWS2IBxEyEU3AX1tUf7AoL8nSazCOiiqQsGKIq01SClsKEzweu34uwvA==
 
-storybook@^8.6.8:
+storybook@8.6.8:
   version "8.6.8"
   resolved "https://registry.yarnpkg.com/storybook/-/storybook-8.6.8.tgz#387f9bc4d0692b53bfc3dc61cd564e369e091450"
   integrity sha512-0Ze7QC0Hqx+ulms/FiQ7PNyaBgmaoxqxLOi8PQc5sOepO1+Ea8nssQGmOHS2QIX1ybb/GW56Fa5eyj+PJgsYDQ==
@@ -5978,7 +5978,7 @@ vite-plugin-storybook-nextjs@^1.1.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vitest@^3.0.9:
+vitest@3.0.9:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-3.0.9.tgz#8cf607d27dcaa12b9f21111f001a4e3e92511ba5"
   integrity sha512-BbcFDqNyBlfSpATmTtXOAOj71RNKDDvjBM/uPfnxxVGrG+FSH2RQIwgeEngTaTkuU/h0ScFvf+tRcKfYXzBybQ==
