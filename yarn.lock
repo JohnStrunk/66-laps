@@ -1059,7 +1059,7 @@
   resolved "https://registry.yarnpkg.com/@pixi/colord/-/colord-2.9.6.tgz#7e4e7851480da6fd3cef4e331f008d60be7e1204"
   integrity sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==
 
-"@pixi/react@^8.0.0":
+"@pixi/react@8.0.0":
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/@pixi/react/-/react-8.0.0.tgz#7625375d7ab8fdaa0b38ba66014282cb288b5f6c"
   integrity sha512-PKmhnX1KCz8tEfNCx2n2EcDBZFSxPVW3ta3gCr56n0obuHcFRFH6l76PEkNwX4VcOTGsAqd/LAqPa3dvmxbbPQ==
@@ -4816,7 +4816,7 @@ picomatch@^4.0.2:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
   integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
 
-pixi.js@^8.9.0:
+pixi.js@8.9.0:
   version "8.9.0"
   resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-8.9.0.tgz#3e1a4f4c8d3a67a7048cad69eed2c8a92bbdc908"
   integrity sha512-uhXZKbus1C4nHu2ZHDCHE7m9BSsGOAuR+rj31VPyN6O8L8TEFs/q5+/43sMBC89EjPahIhvYOSNtY9nnrrY7BA==
