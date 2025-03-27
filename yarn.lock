@@ -4816,10 +4816,10 @@ picomatch@^4.0.2:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
   integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
 
-pixi.js@8.9.0:
-  version "8.9.0"
-  resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-8.9.0.tgz#3e1a4f4c8d3a67a7048cad69eed2c8a92bbdc908"
-  integrity sha512-uhXZKbus1C4nHu2ZHDCHE7m9BSsGOAuR+rj31VPyN6O8L8TEFs/q5+/43sMBC89EjPahIhvYOSNtY9nnrrY7BA==
+pixi.js@8.9.1:
+  version "8.9.1"
+  resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-8.9.1.tgz#6e0cb994fea5c4c505693b717c52b3937bff8018"
+  integrity sha512-2vF5Yu9WC/83ly2tCGkjb+ZGnrr+vlKtZezmD0AmJEQoYZO5nL94806l+PVcJBKW6qrF0YHtbh0ubb6CB7/8Rg==
   dependencies:
     "@pixi/colord" "^2.9.6"
     "@types/css-font-loading-module" "^0.0.12"
