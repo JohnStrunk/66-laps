@@ -18,8 +18,8 @@
     "next": "15.2.4",
     "@pixi/react": "8.0.0",
     "pixi.js": "8.9.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.6",
