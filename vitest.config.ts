@@ -22,13 +22,18 @@ export default defineConfig({
         test: {
           name: 'storybook',
           browser: {
-        enabled: true,
-        headless: true,
-        name: 'chromium',
-        provider: 'playwright'
-      },
+            enabled: true,
+            headless: true,
+            name: 'chromium',
+            provider: 'playwright'
+          },
           setupFiles: ['.storybook/vitest.setup.ts'],
         },
+      },
+      {
+        test: {
+          name: 'unit-tests',
+        }
       },
     ],
   },

@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev-notp": "next dev",
+    "dev-test": "npx vitest dev --project unit-tests",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "npx vitest"
+    "test": "npx vitest run --project unit-tests"
   },
   "dependencies": {
     "@next/third-parties": "15.2.4",
