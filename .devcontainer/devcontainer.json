@@ -6,7 +6,7 @@
 	// Available features: https://containers.dev/features
 	"features": {
 		"ghcr.io/devcontainers-extra/features/act:1.0.14": {},
-		"ghcr.io/devcontainers/features/github-cli:1.0.13": {},
+		"ghcr.io/devcontainers/features/github-cli:1.0.14": {},
 		"ghcr.io/devcontainers-contrib/features/pre-commit:2.0.17": {}
 	},
 	"containerEnv": {
