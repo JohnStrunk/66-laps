@@ -18,7 +18,7 @@ export type SwimmerProps = {
     startEnd: PointData;
     /** Coordinates of the end wall at the turn end of the pool */
     turnEnd: PointData;
-    /** Width of the lane */
+    /** Width of the lane (px) */
     laneWidth: number;
     /** The swimmer position */
     swimmer: ISwimmer;
