@@ -45,7 +45,9 @@
       ]
     }
   ],
-  // "schedule": ["before 7am on Tuesday"],
+  "schedule": [
+    "before 9am on Monday"
+  ],
   "semanticCommits": "disabled",
   "timezone": "America/New_York"
 }
