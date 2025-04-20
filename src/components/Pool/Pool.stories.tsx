@@ -19,7 +19,7 @@ export const LC08: Story = {
     args: {
         poolLength: PoolLength.LC,
         swimmers: Array.from({ length: 8 }, (_, i) => (new SwimmerModel([30 + i, 32 + i, 31 + i, 29 + i]))),
-        className: "h-16 w-xs max-w-full max-h-full",
+        className: "h-64 w-64 max-w-full max-h-full",
     },
 };
 

@@ -28,7 +28,6 @@ export default function Settings(props: SettingsProps) {
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
     const [spread, setSpread] = useState<number>(0.05);
-    console.log(spread);
     const handleSubmit = () => {
         const poolLength = raceLength.slice(-2) as PoolLength;
         const distance = parseInt(raceLength.slice(0, -2));
