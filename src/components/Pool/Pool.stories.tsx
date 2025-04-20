@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Application } from '@pixi/react';
-import Pool from './Pool';
+import { SwimmerModel } from '@/modules/SwimmerModel';
+import Pool, { PoolLength } from './Pool';
 
 const meta: Meta<typeof Pool> = {
     component: Pool,
     decorators: [
         (Story) => (
-            <Application>
-                <Story />
-            </Application>
+            <Story />
         ),
     ],
 };
@@ -19,21 +17,22 @@ type Story = StoryObj<typeof Pool>;
 
 export const LC08: Story = {
     args: {
-        poolLength: "LC",
-        lanes: 8,
+        poolLength: PoolLength.LC,
+        swimmers: Array.from({ length: 8 }, (_, i) => (new SwimmerModel([30 + i, 32 + i, 31 + i, 29 + i]))),
+        className: "h-64 w-64 max-w-full max-h-full",
     },
 };
 
 export const SC06: Story = {
     args: {
-        poolLength: "SC",
-        lanes: 6,
+        poolLength: PoolLength.SC,
+        swimmers: Array.from({ length: 6 }, (_, i) => (new SwimmerModel([15 + i, 16 + i, 14 + i, 15 + i]))),
     },
 };
 
 export const SC10: Story = {
     args: {
-        poolLength: "SC",
-        lanes: 10,
+        poolLength: PoolLength.SC,
+        swimmers: Array.from({ length: 10 }, (_, i) => (new SwimmerModel([15 + i, 16 + i, 14 + i, 15 + i]))),
     },
 };
