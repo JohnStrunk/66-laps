@@ -1,7 +1,7 @@
 'use client'
 
 import Pool, { PoolLength } from "@/components/Pool/Pool";
-import Settings, { SettingsValue } from "@/components/Settings/Settings";
+import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@headlessui/react";
 import { useState } from "react";
@@ -50,6 +50,7 @@ export default function Page() {
         laps: 20,
         difficulty: 1.0,
         spread: 0.05,
+        numberingDirection: NumberingDirection.AWAY,
     });
 
     const handleSettingsClick = (settings: SettingsValue) => {
@@ -66,7 +67,7 @@ export default function Page() {
             </div>
             {mode === Mode.SWIM && (
                 <div className="p-4">
-                    <Pool poolLength={settings.poolLength} swimmers={swimmers} />
+                    <Pool poolLength={settings.poolLength} swimmers={swimmers} numbering={settings.numberingDirection} />
                     <Button
                         onClick={() => setMode(Mode.SETTINGS)}
                         className="bg-blue-500 text-white px-4 py-2 rounded"

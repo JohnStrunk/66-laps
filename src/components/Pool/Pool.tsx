@@ -2,8 +2,9 @@
 import Swimmer from "@/components/Swimmer/Swimmer";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { Application, extend, useApplication, useTick } from "@pixi/react";
-import { Container, Graphics, Rectangle } from "pixi.js";
+import { Container, Graphics, Rectangle, TextStyle } from "pixi.js";
 import { useCallback, useRef, useState } from "react";
+import { NumberingDirection } from "../Settings/Settings";
 
 extend({ Container, Graphics });
 
@@ -17,6 +18,7 @@ export enum PoolLength {
 
 export type PoolProps = {
     poolLength: PoolLength;
+    numbering: NumberingDirection;
     swimmers: ISwimmer[];
     className?: string;
 };
@@ -77,17 +79,48 @@ function PoolContents(props: PoolProps) {
                     .stroke({ color: 0xCC0000, width: 0.1 * scaleFactor });
             }
         }
+        // Draw lane numbers
+        for (let i = 0; i < lanes; i++) {
+            const y = (i + 0.5) * laneWidthPixels + poolEdgePixels + offsetY;
+            g.moveTo(offsetX + poolEdgePixels / 2, y)
+                .lineTo(offsetX + poolEdgePixels / 2, y)
+                .stroke({ color: 0xFFFFFF, width: 0.1 * scaleFactor });
+        }
     };
 
     return (
         <>
             <pixiGraphics draw={drawPool} />
+
+            {Array.from({ length: lanes }).map((_, i) => (
+                <pixiText key={i}
+                    text={props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1}
+                    style={new TextStyle({
+                        fontSize: laneWidthPixels * 0.5,
+                        fill: "white", // Text color
+                        fontFamily: "Atkinson Hyperlegible",
+                        fontStyle: "normal",
+                    })}
+                    position={{
+                        x: poolEdgePixels / 2 + offsetX,
+                        y: (i + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
+                    }}
+                    anchor={{ x: 0.5, y: 0.5 }}
+                />
+            ))}
+
             {props.swimmers.map((swimmer, index) => (
                 <Swimmer
                     key={index}
                     laneWidth={laneWidthPixels}
-                    startEnd={{ x: poolEdgePixels + offsetX, y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY }}
-                    turnEnd={{ x: poolLengthPixels + poolEdgePixels + offsetX, y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY }}
+                    startEnd={{
+                        x: poolEdgePixels + offsetX,
+                        y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
+                    }}
+                    turnEnd={{
+                        x: poolLengthPixels + poolEdgePixels + offsetX,
+                        y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
+                    }}
                     swimmer={swimmer}
                 />
             ))}

@@ -2,6 +2,11 @@ import { PoolLength } from "@/components/Pool/Pool";
 import { Button, Field, Label, Select } from "@headlessui/react";
 import { useState } from "react";
 
+export enum NumberingDirection {
+    AWAY = "AWAY",
+    TOWARDS = "TOWARDS",
+}
+
 /** Configuration for a race */
 export type SettingsValue = {
     /** The length of the swimming pool */
@@ -14,6 +19,8 @@ export type SettingsValue = {
     difficulty: number;
     /** The maximum percentage difference of the swimmers' speeds */
     spread: number;
+    /** The direction for lane numbering */
+    numberingDirection: NumberingDirection;
 };
 
 export type SettingsProps = {
@@ -25,6 +32,7 @@ export default function Settings(props: SettingsProps) {
     const [raceLength, setRaceLength] = useState<string>("500SC");
     const [lanes, setLanes] = useState<number>(8);
     const [difficulty, setDifficulty] = useState<number>(1.0);
+    const [numberingDirection, setNumberingDirection] = useState<NumberingDirection>(NumberingDirection.AWAY);
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
     const [spread, setSpread] = useState<number>(0.05);
@@ -38,6 +46,7 @@ export default function Settings(props: SettingsProps) {
             laps,
             difficulty,
             spread,
+            numberingDirection,
         });
     }
 
@@ -78,6 +87,19 @@ export default function Settings(props: SettingsProps) {
                         <option value="1650SC">1650 SC</option>
                         <option value="800LC">800 LC</option>
                         <option value="1500LC">1500 LC</option>
+                    </Select>
+                </Field>
+                <Field className="flex flex-col gap-1">
+                    <Label>Numbering Direction</Label>
+                    <Select
+                        name="Numbering Direction"
+                        aria-label="Numbering Direction"
+                        className={selectClassName}
+                        value={numberingDirection}
+                        onChange={(e) => setNumberingDirection(e.target.value as NumberingDirection)}
+                    >
+                        <option value={NumberingDirection.AWAY}>Away from starter</option>
+                        <option value={NumberingDirection.TOWARDS}>Toward starter</option>
                     </Select>
                 </Field>
                 <Field className="flex flex-col gap-1">
