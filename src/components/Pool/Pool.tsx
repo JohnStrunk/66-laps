@@ -1,9 +1,9 @@
 'use client'
 import Swimmer from "@/components/Swimmer/Swimmer";
 import { ISwimmer } from "@/modules/SwimmerModel";
-import { Application, extend, useApplication } from "@pixi/react";
+import { Application, extend, useApplication, useTick } from "@pixi/react";
 import { Container, Graphics } from "pixi.js";
-import { useCallback, useRef } from "react";
+import { useRef, useState } from "react";
 
 extend({ Container, Graphics });
 
@@ -21,57 +21,70 @@ export type PoolProps = {
     className?: string;
 };
 
+
 function PoolContents(props: PoolProps) {
     const app = useApplication();
-    const screen = app.app.renderer?.screen || { width: 0, height: 0 };
-
     const lanes = props.swimmers.length;
     const poolLengthMeters = (props.poolLength === PoolLength.SC ? 25 : 50);
     const poolWidthMeters = LANE_WIDTH_METERS * lanes;
     const poolEdgeMeters = 2; // Width of the pool wall (meters)
 
-    // Determine the scale factor to fit the pool to the canvas
-    const scaleFactor = (Math.min(
-        screen.width / (poolLengthMeters + 2 * poolEdgeMeters),
-        screen.height / (poolWidthMeters + 2 * poolEdgeMeters)
-    ));
+    const [laneWidthPixels, setLaneWidthPixels] = useState(0);
+    const [poolEdgePixels, setPoolEdgePixels] = useState(0);
+    const [poolLengthPixels, setPoolLengthPixels] = useState(0);
+    const [offsetX, setOffsetX] = useState(0);
+    const [offsetY, setOffsetY] = useState(0);
+    const poolRef = useRef<Graphics>(null);
 
-    // Convert distances to pixels
-    const poolLengthPixels = poolLengthMeters * scaleFactor;
-    const poolWidthPixels = poolWidthMeters * scaleFactor;
-    const poolEdgePixels = poolEdgeMeters * scaleFactor;
-    const laneWidthPixels = LANE_WIDTH_METERS * scaleFactor;
+    useTick(() => {
+        if (!poolRef.current) return;
+        const g = poolRef.current;
+        const canvas = app.app.renderer?.screen || { width: 0, height: 0 }
 
-    // Calculate the offset to center the pool in the canvas
-    const offsetX = (screen.width - poolLengthPixels - 2 * poolEdgePixels) / 2;
-    const offsetY = (screen.height - poolWidthPixels - 2 * poolEdgePixels) / 2;
+        // Determine the scale factor to fit the pool to the canvas
+        const scaleFactor = (Math.min(
+            canvas.width / (poolLengthMeters + 2 * poolEdgeMeters),
+            canvas.height / (poolWidthMeters + 2 * poolEdgeMeters)
+        ));
 
-    const drawPool = useCallback((graphics: Graphics) => {
-        graphics.clear()
+        // Convert distances to pixels
+        const poolLengthPixels = poolLengthMeters * scaleFactor;
+        setPoolLengthPixels(poolLengthPixels);
+        const poolWidthPixels = poolWidthMeters * scaleFactor;
+        const poolEdgePixels = poolEdgeMeters * scaleFactor;
+        setPoolEdgePixels(poolEdgePixels);
+        const laneWidthPixels = LANE_WIDTH_METERS * scaleFactor;
+        setLaneWidthPixels(laneWidthPixels);
 
+        // Calculate the offset to center the pool in the canvas
+        const offsetX = (canvas.width - poolLengthPixels - 2 * poolEdgePixels) / 2;
+        setOffsetX(offsetX);
+        const offsetY = (canvas.height - poolWidthPixels - 2 * poolEdgePixels) / 2;
+        setOffsetY(offsetY);
+
+        // Draw the pool
+        g.clear();
         // Draw the pool deck
-        graphics.rect(offsetX, offsetY, (poolLengthPixels + 2 * poolEdgePixels), (poolWidthPixels + 2 * poolEdgePixels))
+        g.rect(offsetX, offsetY, (poolLengthPixels + 2 * poolEdgePixels), (poolWidthPixels + 2 * poolEdgePixels))
             .fill(0xCEC9BB);
-
         // Draw the water
-        graphics.rect(offsetX + poolEdgePixels, offsetY + poolEdgePixels, poolLengthPixels, poolWidthPixels)
+        g.rect(offsetX + poolEdgePixels, offsetY + poolEdgePixels, poolLengthPixels, poolWidthPixels)
             .fill(0x1111CC);
-
         // Draw the lane lines
         if (lanes > 0) {
             for (let i = 1; i < lanes; i++) {
                 const y = i * laneWidthPixels + poolEdgePixels + offsetY;
-                graphics.moveTo(offsetX + poolEdgePixels, y)
+                g.moveTo(offsetX + poolEdgePixels, y)
                     // Lane lines should be inside the pool wall
                     .lineTo(poolLengthPixels + poolEdgePixels + offsetX, y)
                     .stroke({ color: 0xCC0000, width: 0.1 * scaleFactor });
             }
         }
-    }, [offsetX, offsetY, poolEdgePixels, poolLengthPixels, poolWidthPixels, lanes, laneWidthPixels, scaleFactor]);
+    });
 
     return (
         <>
-            <pixiGraphics draw={drawPool} />
+            <pixiGraphics draw={() => { }} ref={poolRef} />
             {props.swimmers.map((swimmer, index) => (
                 <Swimmer
                     key={index}
