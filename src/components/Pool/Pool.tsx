@@ -2,8 +2,8 @@
 import Swimmer from "@/components/Swimmer/Swimmer";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { Application, extend, useApplication, useTick } from "@pixi/react";
-import { Container, Graphics } from "pixi.js";
-import { useRef, useState } from "react";
+import { Container, Graphics, Rectangle } from "pixi.js";
+import { useCallback, useRef, useState } from "react";
 
 extend({ Container, Graphics });
 
@@ -29,39 +29,36 @@ function PoolContents(props: PoolProps) {
     const poolWidthMeters = LANE_WIDTH_METERS * lanes;
     const poolEdgeMeters = 2; // Width of the pool wall (meters)
 
-    const [laneWidthPixels, setLaneWidthPixels] = useState(0);
-    const [poolEdgePixels, setPoolEdgePixels] = useState(0);
-    const [poolLengthPixels, setPoolLengthPixels] = useState(0);
-    const [offsetX, setOffsetX] = useState(0);
-    const [offsetY, setOffsetY] = useState(0);
-    const poolRef = useRef<Graphics>(null);
+    const [canvasRect, setCanvasRect] = useState(new Rectangle());
 
-    useTick(() => {
-        if (!poolRef.current) return;
-        const g = poolRef.current;
-        const canvas = app.app.renderer?.screen || { width: 0, height: 0 }
+    const scaleFactor = (Math.min(
+        canvasRect.width / (poolLengthMeters + 2 * poolEdgeMeters),
+        canvasRect.height / (poolWidthMeters + 2 * poolEdgeMeters)
+    ));
 
-        // Determine the scale factor to fit the pool to the canvas
-        const scaleFactor = (Math.min(
-            canvas.width / (poolLengthMeters + 2 * poolEdgeMeters),
-            canvas.height / (poolWidthMeters + 2 * poolEdgeMeters)
-        ));
+    // Convert distances to pixels
+    const poolLengthPixels = poolLengthMeters * scaleFactor;
+    const poolWidthPixels = poolWidthMeters * scaleFactor;
+    const poolEdgePixels = poolEdgeMeters * scaleFactor;
+    const laneWidthPixels = LANE_WIDTH_METERS * scaleFactor;
 
-        // Convert distances to pixels
-        const poolLengthPixels = poolLengthMeters * scaleFactor;
-        setPoolLengthPixels(poolLengthPixels);
-        const poolWidthPixels = poolWidthMeters * scaleFactor;
-        const poolEdgePixels = poolEdgeMeters * scaleFactor;
-        setPoolEdgePixels(poolEdgePixels);
-        const laneWidthPixels = LANE_WIDTH_METERS * scaleFactor;
-        setLaneWidthPixels(laneWidthPixels);
+    // Calculate the offset to center the pool in the canvas
+    const offsetX = (canvasRect.width - poolLengthPixels - 2 * poolEdgePixels) / 2;
+    const offsetY = (canvasRect.height - poolWidthPixels - 2 * poolEdgePixels) / 2;
 
-        // Calculate the offset to center the pool in the canvas
-        const offsetX = (canvas.width - poolLengthPixels - 2 * poolEdgePixels) / 2;
-        setOffsetX(offsetX);
-        const offsetY = (canvas.height - poolWidthPixels - 2 * poolEdgePixels) / 2;
-        setOffsetY(offsetY);
+    const updateCanvasSize = useCallback(() => {
+        // Determine if the canvas size has changed
+        const canvas = app.app.renderer?.screen || new Rectangle();
+        if (canvas.width !== canvasRect.width || canvas.height !== canvasRect.height) {
+            // console.log("Canvas size changed", canvas.width, canvas.height);
+            const canvasCopy = new Rectangle();
+            canvasCopy.copyFrom(canvas);
+            setCanvasRect(canvasCopy);
+        }
+    }, [app, canvasRect]);
+    useTick(updateCanvasSize);
 
+    const drawPool = (g: Graphics) => {
         // Draw the pool
         g.clear();
         // Draw the pool deck
@@ -80,11 +77,11 @@ function PoolContents(props: PoolProps) {
                     .stroke({ color: 0xCC0000, width: 0.1 * scaleFactor });
             }
         }
-    });
+    };
 
     return (
         <>
-            <pixiGraphics draw={() => { }} ref={poolRef} />
+            <pixiGraphics draw={drawPool} />
             {props.swimmers.map((swimmer, index) => (
                 <Swimmer
                     key={index}
