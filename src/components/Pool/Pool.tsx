@@ -97,7 +97,7 @@ function PoolContents(props: PoolProps) {
                     text={props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1}
                     style={new TextStyle({
                         fontSize: laneWidthPixels * 0.5,
-                        fill: "white", // Text color
+                        fill: "black", // Text color
                         fontFamily: "Atkinson Hyperlegible",
                         fontStyle: "normal",
                     })}
@@ -137,7 +137,7 @@ export default function Pool(props: PoolProps) {
                 antialias={true}
                 resolution={window.devicePixelRatio || 1}
                 backgroundColor={0x999999}
-                backgroundAlpha={1}
+                backgroundAlpha={0}
                 resizeTo={divRef}
             >
                 <PoolContents {...props} />

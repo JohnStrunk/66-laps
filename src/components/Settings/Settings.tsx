@@ -55,8 +55,8 @@ export default function Settings(props: SettingsProps) {
     return (
         <div className="flex flex-col gap-6">
             <h2 className="text-2xl font-bold">Settings</h2>
-            <div className="flex flex-row gap-6">
-                <Field className="flex flex-col gap-1">
+            <div className="gap-6 xs:columns-1 sm:columns-2 lg:columns-3 xl:columns-4">
+                <Field className="flex flex-col gap-1 break-inside-avoid">
                     <Label>Lanes</Label>
                     <Select
                         name="Number of Lanes"
@@ -70,7 +70,7 @@ export default function Settings(props: SettingsProps) {
                         <option value="10">10</option>
                     </Select>
                 </Field>
-                <Field className="flex flex-col gap-1">
+                <Field className="flex flex-col gap-1 break-inside-avoid">
                     <Label>Race Length</Label>
                     <Select
                         name="Race Length"
@@ -89,7 +89,7 @@ export default function Settings(props: SettingsProps) {
                         <option value="1500LC">1500 LC</option>
                     </Select>
                 </Field>
-                <Field className="flex flex-col gap-1">
+                <Field className="flex flex-col gap-1 break-inside-avoid">
                     <Label>Numbering Direction</Label>
                     <Select
                         name="Numbering Direction"
@@ -102,7 +102,7 @@ export default function Settings(props: SettingsProps) {
                         <option value={NumberingDirection.TOWARDS}>Toward starter</option>
                     </Select>
                 </Field>
-                <Field className="flex flex-col gap-1">
+                <Field className="flex flex-col gap-1 break-inside-avoid">
                     <Label>Difficulty</Label>
                     <Select
                         name="Difficulty"
@@ -117,7 +117,7 @@ export default function Settings(props: SettingsProps) {
                         <option value="1.5">Nightmare!</option>
                     </Select>
                 </Field>
-                <Field className="flex flex-col gap-1">
+                <Field className="flex flex-col gap-1 break-inside-avoid">
                     <Label>Spread</Label>
                     <Select
                         name="Spread"
