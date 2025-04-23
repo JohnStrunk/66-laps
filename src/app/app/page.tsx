@@ -1,7 +1,7 @@
 'use client'
 
 import Pool, { PoolLength } from "@/components/Pool/Pool";
-import Settings, { SettingsValue } from "@/components/Settings/Settings";
+import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@headlessui/react";
 import { useState } from "react";
@@ -50,6 +50,7 @@ export default function Page() {
         laps: 20,
         difficulty: 1.0,
         spread: 0.05,
+        numberingDirection: NumberingDirection.AWAY,
     });
 
     const handleSettingsClick = (settings: SettingsValue) => {
@@ -65,14 +66,22 @@ export default function Page() {
                 <Settings onClick={handleSettingsClick} />
             </div>
             {mode === Mode.SWIM && (
-                <div className="p-4">
-                    <Pool poolLength={settings.poolLength} swimmers={swimmers} />
-                    <Button
-                        onClick={() => setMode(Mode.SETTINGS)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                        Back to Settings
-                    </Button>
+                <div className="p-4 w-screen h-screen flex flex-col gap-1">
+                    <div className="flex-grow overflow-hidden">
+                        <Pool
+                            className="w-full h-full"
+                            poolLength={settings.poolLength}
+                            swimmers={swimmers}
+                            numbering={settings.numberingDirection} />
+                    </div>
+                    <div className="mt-auto flex justify-center">
+                        <Button
+                            onClick={() => setMode(Mode.SETTINGS)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                            Back to Settings
+                        </Button>
+                    </div>
                 </div>
             )}
         </div>
