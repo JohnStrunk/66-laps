@@ -2,8 +2,8 @@
 import Swimmer from "@/components/Swimmer/Swimmer";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { Application, extend, useApplication, useTick } from "@pixi/react";
-import { Container, Graphics, Rectangle, TextStyle } from "pixi.js";
-import { useCallback, useRef, useState } from "react";
+import { Assets, Container, Graphics, Matrix, Rectangle, TextStyle, Texture } from "pixi.js";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NumberingDirection } from "../Settings/Settings";
 
 extend({ Container, Graphics });
@@ -60,15 +60,49 @@ function PoolContents(props: PoolProps) {
     }, [app, canvasRect]);
     useTick(updateCanvasSize);
 
+    const [waterImg, setWaterImg] = useState<Texture>(Texture.EMPTY);
+    useEffect(() => {
+        if (waterImg === Texture.EMPTY) {
+            Assets.load("/brushwalker437.png").then((texture: Texture) => {
+                setWaterImg(texture);
+            });
+        }
+    }, [waterImg]);
+
+    const [deckImg, setDeckImg] = useState<Texture>(Texture.EMPTY);
+    useEffect(() => {
+        if (deckImg === Texture.EMPTY) {
+            Assets.load("/concrete2_seamless_diffuse_1k.png").then((texture: Texture) => {
+                setDeckImg(texture);
+            });
+        }
+    }, [deckImg]);
+
+    const scalingMatrix = new Matrix().scale(0.4, 0.4);
+
     const drawPool = (g: Graphics) => {
         // Draw the pool
         g.clear();
         // Draw the pool deck
         g.roundRect(offsetX, offsetY, (poolLengthPixels + 2 * poolEdgePixels), (poolWidthPixels + 2 * poolEdgePixels), poolEdgePixels / 3)
-            .fill(0xCEC9BB);
+            // .fill(0xCEC9BB);
+            .fill({
+                texture: deckImg,
+            });
+
         // Draw the water
         g.roundRect(offsetX + poolEdgePixels, offsetY + poolEdgePixels, poolLengthPixels, poolWidthPixels, poolEdgePixels / 6)
-            .fill(0x1111CC);
+            .fill('black');
+        g.roundRect(offsetX + poolEdgePixels, offsetY + poolEdgePixels, poolLengthPixels, poolWidthPixels, poolEdgePixels / 6)
+            .stroke({
+                color: 0x000000,
+                width: 0.15 * scaleFactor,
+            })
+            .fill({
+                texture: waterImg,
+                matrix: scalingMatrix,
+                alpha: 0.6,
+            });
         // Draw the lane lines
         if (lanes > 0) {
             for (let i = 1; i < lanes; i++) {

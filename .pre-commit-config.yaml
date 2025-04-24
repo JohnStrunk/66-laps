@@ -23,6 +23,10 @@ repos:
     rev: v5.0.0
     hooks:
       - id: check-added-large-files  # Prevents giant files from being committed
+        exclude: |
+          (?x)^(
+                public/.*
+          )$
       - id: check-json               # Check that JSON files are valid
         exclude: |
           (?x)^(

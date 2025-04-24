@@ -1,0 +1,9 @@
+brushwalker437.png
+https://opengameart.org/content/3-live-proceduraly-generated-tiling-water-textures-512px-running-brushes
+License: CC0
+by: qubodup
+
+concrete2_seamless_diffuse_1k.png
+https://opengameart.org/content/concrete-textures-seamless-1k
+License: CC0
+by: YCbCr
