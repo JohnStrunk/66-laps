@@ -4,7 +4,7 @@ import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 enum Mode {
     SETTINGS = "SETTINGS",
@@ -53,6 +53,20 @@ export default function Page() {
         numberingDirection: NumberingDirection.AWAY,
     });
 
+    // For small screens, request fullscreen when we start the simulation.
+    useEffect(() => {
+        if (mode === Mode.SWIM && window.innerWidth <= 768) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+        }
+        if (mode !== Mode.SWIM) {
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }, [mode]);
+
     const handleSettingsClick = (settings: SettingsValue) => {
         const newSwimmers = Array.from({ length: settings.lanes }, () => makeSwimmer(settings));
         setSwimmers(newSwimmers);
@@ -66,18 +80,16 @@ export default function Page() {
                 <Settings onClick={handleSettingsClick} />
             </div>
             {mode === Mode.SWIM && (
-                <div className="p-4 w-screen h-screen flex flex-col gap-1">
-                    <div className="flex-grow overflow-hidden">
-                        <Pool
-                            className="w-full h-full"
-                            poolLength={settings.poolLength}
-                            swimmers={swimmers}
-                            numbering={settings.numberingDirection} />
-                    </div>
-                    <div className="mt-auto flex justify-center">
+                <div className="relative w-screen h-screen">
+                    <Pool
+                        className="absolute inset-0 w-full h-full"
+                        poolLength={settings.poolLength}
+                        swimmers={swimmers}
+                        numbering={settings.numberingDirection} />
+                    <div className="absolute top-4 right-4">
                         <Button
                             onClick={() => setMode(Mode.SETTINGS)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            className="bg-blue-500 text-white px-4 py-2 rounded shadow-lg shadow-black/70"
                         >
                             Back to Settings
                         </Button>

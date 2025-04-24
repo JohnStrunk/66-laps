@@ -90,16 +90,16 @@ export default function Settings(props: SettingsProps) {
                     </Select>
                 </Field>
                 <Field className="flex flex-col gap-1 break-inside-avoid">
-                    <Label>Numbering Direction</Label>
+                    <Label>Lane Numbering</Label>
                     <Select
-                        name="Numbering Direction"
-                        aria-label="Numbering Direction"
+                        name="Lane Numbering"
+                        aria-label="Lane Numbering Direction"
                         className={selectClassName}
                         value={numberingDirection}
                         onChange={(e) => setNumberingDirection(e.target.value as NumberingDirection)}
                     >
-                        <option value={NumberingDirection.AWAY}>Away from starter</option>
-                        <option value={NumberingDirection.TOWARDS}>Toward starter</option>
+                        <option value={NumberingDirection.AWAY}>Bottom to top</option>
+                        <option value={NumberingDirection.TOWARDS}>Top to bottom</option>
                     </Select>
                 </Field>
                 <Field className="flex flex-col gap-1 break-inside-avoid">

@@ -64,10 +64,10 @@ function PoolContents(props: PoolProps) {
         // Draw the pool
         g.clear();
         // Draw the pool deck
-        g.rect(offsetX, offsetY, (poolLengthPixels + 2 * poolEdgePixels), (poolWidthPixels + 2 * poolEdgePixels))
+        g.roundRect(offsetX, offsetY, (poolLengthPixels + 2 * poolEdgePixels), (poolWidthPixels + 2 * poolEdgePixels), poolEdgePixels / 3)
             .fill(0xCEC9BB);
         // Draw the water
-        g.rect(offsetX + poolEdgePixels, offsetY + poolEdgePixels, poolLengthPixels, poolWidthPixels)
+        g.roundRect(offsetX + poolEdgePixels, offsetY + poolEdgePixels, poolLengthPixels, poolWidthPixels, poolEdgePixels / 6)
             .fill(0x1111CC);
         // Draw the lane lines
         if (lanes > 0) {
@@ -76,7 +76,7 @@ function PoolContents(props: PoolProps) {
                 g.moveTo(offsetX + poolEdgePixels, y)
                     // Lane lines should be inside the pool wall
                     .lineTo(poolLengthPixels + poolEdgePixels + offsetX, y)
-                    .stroke({ color: 0xCC0000, width: 0.1 * scaleFactor });
+                    .stroke({ color: 0xCC0000, width: 0.15 * scaleFactor });
             }
         }
         // Draw lane numbers
