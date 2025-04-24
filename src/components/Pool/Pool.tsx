@@ -2,7 +2,7 @@
 import Swimmer from "@/components/Swimmer/Swimmer";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { Application, extend, useApplication, useTick } from "@pixi/react";
-import { Assets, Container, Graphics, Matrix, Rectangle, TextStyle, Texture } from "pixi.js";
+import { Assets, Container, Graphics, Rectangle, TextStyle, Texture } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NumberingDirection } from "../Settings/Settings";
 
@@ -78,8 +78,6 @@ function PoolContents(props: PoolProps) {
         }
     }, [deckImg]);
 
-    const scalingMatrix = new Matrix().scale(0.4, 0.4);
-
     const drawPool = (g: Graphics) => {
         // Draw the pool
         g.clear();
@@ -100,7 +98,6 @@ function PoolContents(props: PoolProps) {
             })
             .fill({
                 texture: waterImg,
-                matrix: scalingMatrix,
                 alpha: 0.6,
             });
         // Draw the lane lines
@@ -134,6 +131,9 @@ function PoolContents(props: PoolProps) {
                         fill: "black", // Text color
                         fontFamily: "Atkinson Hyperlegible",
                         fontStyle: "normal",
+                        fontWeight: "bold",
+                        align: "center",
+                        stroke: { color: "white", width: 0.1 * scaleFactor },
                     })}
                     position={{
                         x: poolEdgePixels / 2 + offsetX,
