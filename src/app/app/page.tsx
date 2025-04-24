@@ -55,7 +55,7 @@ export default function Page() {
 
     // For small screens, request fullscreen when we start the simulation.
     useEffect(() => {
-        if (mode === Mode.SWIM && window.innerWidth <= 768) {
+        if (mode === Mode.SWIM && (window.innerWidth <= 768 || window.innerHeight <= 768)) {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             }
