@@ -4,7 +4,7 @@ import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 enum Mode {
     SETTINGS = "SETTINGS",
@@ -52,6 +52,7 @@ export default function Page() {
         spread: 0.05,
         numberingDirection: NumberingDirection.AWAY,
     });
+    const wakeLock = useRef<WakeLockSentinel | null>(null);
 
     // For small screens, request fullscreen when we start the simulation.
     useEffect(() => {
@@ -66,6 +67,43 @@ export default function Page() {
             }
         }
     }, [mode]);
+
+    // Ensure the screen stays awake when the simulation is running.
+    // This is important for mobile devices, where the screen may turn off
+    // automatically after a period of inactivity.
+    useEffect(() => {
+        const requestWakeLock = async () => {
+            try {
+                if ('wakeLock' in navigator && mode === Mode.SWIM) {
+                    wakeLock.current = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.error('Failed to acquire wake lock:', err);
+            }
+        };
+
+        requestWakeLock();
+
+        return () => {
+            if (wakeLock.current) {
+                wakeLock.current.release().catch((err) => {
+                    console.error('Failed to release wake lock:', err);
+                });
+                wakeLock.current = null;
+            }
+        };
+    }, [mode]);
+    useEffect(() => {
+        return () => {
+            // Ensure wakelock is released when the component unmounts
+            if (wakeLock.current) {
+                wakeLock.current.release().catch((err) => {
+                    console.error('Failed to release wake lock on unmount:', err);
+                });
+                wakeLock.current = null;
+            }
+        };
+    }, []);
 
     const handleSettingsClick = (settings: SettingsValue) => {
         const newSwimmers = Array.from({ length: settings.lanes }, () => makeSwimmer(settings));
