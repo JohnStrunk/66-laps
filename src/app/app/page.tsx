@@ -3,7 +3,8 @@
 import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
-import { Button } from "@headlessui/react";
+import { Button } from "@heroui/react";
+
 import { useEffect, useRef, useState } from "react";
 
 enum Mode {
@@ -118,16 +119,16 @@ export default function Page() {
                 <Settings onClick={handleSettingsClick} />
             </div>
             {mode === Mode.SWIM && (
-                <div className="relative w-screen h-screen">
+                <div className="relative w-screen h-screen p-4">
                     <Pool
-                        className="absolute inset-0 w-full h-full"
+                        className="w-full h-full"
                         poolLength={settings.poolLength}
                         swimmers={swimmers}
                         numbering={settings.numberingDirection} />
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-6 right-6">
                         <Button
-                            onClick={() => setMode(Mode.SETTINGS)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded shadow-lg shadow-black/70"
+                            color="primary"
+                            onPress={() => setMode(Mode.SETTINGS)}
                         >
                             Back to Settings
                         </Button>

@@ -2,6 +2,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "66 Laps",
@@ -17,7 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID as string} />
       <body>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <Script id="clarity_analytics" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
