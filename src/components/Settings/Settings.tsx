@@ -83,10 +83,11 @@ export default function Settings(props: SettingsProps) {
                     label="Difficulty"
                     defaultSelectedKeys={[difficulty.toString()]}
                     onChange={(e) => setDifficulty(parseFloat(e.target.value))}>
-                    <SelectItem key="0.5">Apprentice</SelectItem>
+                    <SelectItem key="0.5">Peaceful</SelectItem>
+                    <SelectItem key="0.75">Easy</SelectItem>
                     <SelectItem key="1">Normal</SelectItem>
-                    <SelectItem key="1.2">Hurt me plenty</SelectItem>
-                    <SelectItem key="1.5">Nightmare!</SelectItem>
+                    <SelectItem key="1.25">Hard</SelectItem>
+                    <SelectItem key="1.5">Hardcore 🖤</SelectItem>
                 </Select>
                 <Select
                     label="Spread"

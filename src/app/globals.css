@@ -1,15 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Color+Emoji&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Color+Emoji&display=swap'); */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.js";
-
-/*
- * Control light/dark mode w/ data-theme attribute
- * <html data-theme="dark">
- * Removing this will default to "prefers-color-scheme" media query, but having
- * it manually selectable means storybook can toggle it.
- */
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
   --background: #ffffff;
@@ -19,8 +11,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: "Atkinson Hyperlegible Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: var(--font-atkinson-hyperlegible);
+  /* --font-mono: "Atkinson Hyperlegible Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
 }
 
 @media (prefers-color-scheme: dark) {
