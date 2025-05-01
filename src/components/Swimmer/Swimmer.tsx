@@ -1,28 +1,17 @@
 'use client'
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { extend, useTick } from "@pixi/react";
-import { Noto_Color_Emoji } from "next/font/google";
 import { Container, Graphics, GraphicsContext, PointData, Sprite, Text, TextStyle } from "pixi.js";
 import { useState } from "react";
 
 extend({ Container, Graphics, GraphicsContext, Sprite, Text });
 const emojis = [
-    "🌊",
-    "🦈",
-    "🏠",
-    "🔱",
-    "🩴",
+    "🦈",  // MOR
+    "🩴",  // NCAC
+    "🏠",  // RSA
+    "🔱",  // TAC
+    "🌊",  // WAVE
 ];
-
-// Not entirely sure if this is the right way to do this, but it seems to help
-// get the right emoji font. If the font hasn't loaded by the time the
-// component is rendered, it will use the default font.
-export const noto_color_emoji = Noto_Color_Emoji({
-    weight: '400',
-    subsets: ['emoji'],
-    preload: true,
-    display: 'swap',
-});
 
 export type SwimmerProps = {
     /** Coordinates of the end wall at the start end of the pool */
