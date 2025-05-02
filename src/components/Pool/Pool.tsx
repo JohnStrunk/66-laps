@@ -63,7 +63,7 @@ function PoolContents(props: PoolProps) {
     const [waterImg, setWaterImg] = useState<Texture>(Texture.EMPTY);
     useEffect(() => {
         if (waterImg === Texture.EMPTY) {
-            Assets.load("/brushwalker437.png").then((texture: Texture) => {
+            Assets.load("/images/brushwalker437.png").then((texture: Texture) => {
                 setWaterImg(texture);
             });
         }
@@ -72,7 +72,7 @@ function PoolContents(props: PoolProps) {
     const [deckImg, setDeckImg] = useState<Texture>(Texture.EMPTY);
     useEffect(() => {
         if (deckImg === Texture.EMPTY) {
-            Assets.load("/concrete2_seamless_diffuse_1k.png").then((texture: Texture) => {
+            Assets.load("/images/concrete2_seamless_diffuse_1k.png").then((texture: Texture) => {
                 setDeckImg(texture);
             });
         }
