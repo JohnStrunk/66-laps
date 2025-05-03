@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="126mm"
+   height="126.55204mm"
+   viewBox="0 0 126 126.55204"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="CounterBoard.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title1">Counter board</title>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2"
+     inkscape:cx="258"
+     inkscape:cy="239"
+     inkscape:window-width="2256"
+     inkscape:window-height="1380"
+     inkscape:window-x="-12"
+     inkscape:window-y="-12"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2"
+     inkscape:export-bgcolor="#ffffff00">
+    <inkscape:page
+       x="0"
+       y="-1.4785678e-15"
+       width="126"
+       height="126.55205"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline"
+     transform="translate(-45.595721,-35.382903)">
+    <rect
+       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1"
+       width="125"
+       height="125"
+       x="46.095722"
+       y="36.158924"
+       rx="7"
+       ry="7"
+       inkscape:label="back" />
+    <rect
+       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2"
+       width="60"
+       height="125"
+       x="46.095722"
+       y="36.434944"
+       rx="7"
+       ry="7"
+       inkscape:label="left" />
+    <rect
+       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3"
+       width="60"
+       height="125"
+       x="110.96095"
+       y="35.8829"
+       rx="7"
+       ry="7"
+       inkscape:label="right" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4"
+       width="50"
+       height="16"
+       x="82.806694"
+       y="47.79911"
+       rx="8"
+       ry="8"
+       inkscape:label="handle" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     style="display:inline"
+     transform="translate(-45.595721,-35.382903)">
+    <path
+       id="rect5"
+       style="fill:#f14527;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="stop"
+       d="m 65.520032,68.638188 c -4.432,0 -8.000029,3.568028 -8.000029,8.000028 v 70.947094 c 0,4.432 3.568029,8.00003 8.000029,8.00003 h 40.474018 c 0.0617,-0.375 0.1018,-0.75733 0.1018,-1.15032 V 68.638188 Z" />
+    <path
+       id="rect6"
+       style="display:inline;fill:#f14527;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="stop"
+       d="m 110.96119,68.638188 v 85.244922 c 0,0.59097 0.0938,1.15475 0.23047,1.70223 h 40.4797 c 4.432,0 8.00003,-3.56803 8.00003,-8.00003 V 76.638216 c 0,-4.432 -3.56803,-8.000028 -8.00003,-8.000028 z" />
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+        <dc:title>Counter board</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>John D. Strunk</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:source>66-laps.com</dc:source>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
