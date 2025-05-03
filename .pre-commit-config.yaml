@@ -25,7 +25,8 @@ repos:
       - id: check-added-large-files  # Prevents giant files from being committed
         exclude: |
           (?x)^(
-                public/.*
+                public/.*|
+                media/.*
           )$
       - id: check-json               # Check that JSON files are valid
         exclude: |
