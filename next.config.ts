@@ -1,21 +1,13 @@
-import createMDX from "@next/mdx";
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  pageExtensions: ["js", "jsx", "ts", "tsx"],
   // Settings for deploying to GitHub Pages
   output: "export",  // Static HTML export
 };
 
-const withMDX = createMDX({
-  extension: /\.mdx?$/,
-  options: {},
-});
-
-const mdxNextConfig = withMDX(nextConfig)
-
-export default withSentryConfig(mdxNextConfig, {
+export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
