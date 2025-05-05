@@ -18,7 +18,7 @@
     "@next/third-parties": "15.2.4",
     "@pixi/react": "8.0.1",
     "@sentry/nextjs": "9.14.0",
-    "framer-motion": "12.9.2",
+    "framer-motion": "12.9.4",
     "next": "15.2.4",
     "pixi.js": "8.9.1",
     "react": "19.1.0",
