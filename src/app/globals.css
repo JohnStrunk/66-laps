@@ -1,4 +1,3 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Color+Emoji&display=swap'); */
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.js";
@@ -26,4 +25,15 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/* Custom, global styling for the lucide icons react components. Added to the
+tailwind "base" layer so that the utility classes can override this default
+styling. */
+@layer base {
+
+  .lucide {
+    width: 1em;
+    height: 1em;
+  }
 }
