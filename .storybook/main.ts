@@ -17,7 +17,8 @@ const config: StorybookConfig = {
     "options": {}
   },
   "staticDirs": [
-    "../public"
+    "../public",
+    "../src/app",  // for the favicon
   ],
   "core": {
     disableTelemetry: true,
