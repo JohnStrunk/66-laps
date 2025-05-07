@@ -1,5 +1,6 @@
 'use client'
 
+import Nav from "@/components/Nav/Nav";
 import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
@@ -114,7 +115,10 @@ export default function Page() {
     }
 
     return (
-        <div>
+        <>
+            {mode !== Mode.SWIM && (
+                <Nav />
+            )}
             <div hidden={mode !== Mode.SETTINGS} className="p-4">
                 <Settings onClick={handleSettingsClick} />
             </div>
@@ -135,6 +139,6 @@ export default function Page() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

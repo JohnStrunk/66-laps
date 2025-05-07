@@ -25,24 +25,24 @@
      borderopacity="0.25"
      inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
+     inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="2"
      inkscape:cx="258"
-     inkscape:cy="239"
-     inkscape:window-width="2256"
-     inkscape:window-height="1380"
-     inkscape:window-x="-12"
-     inkscape:window-y="-12"
+     inkscape:cy="239.25"
+     inkscape:window-width="3440"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      inkscape:export-bgcolor="#ffffff00">
     <inkscape:page
-       x="0"
-       y="-1.4785678e-15"
-       width="126"
-       height="126.55205"
+       x="0.000228"
+       y="0.000228"
+       width="125.9996"
+       height="126.00013"
        id="page2"
        margin="0"
        bleed="0" />
@@ -55,39 +55,19 @@
      id="layer1"
      style="display:inline"
      transform="translate(-45.595721,-35.382903)">
-    <rect
-       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+    <path
        id="rect1"
-       width="125"
-       height="125"
-       x="46.095722"
-       y="36.158924"
-       rx="7"
-       ry="7"
-       inkscape:label="back" />
-    <rect
        style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
-       id="rect2"
-       width="60"
-       height="125"
-       x="46.095722"
-       y="36.434944"
-       rx="7"
-       ry="7"
-       inkscape:label="left" />
-    <rect
-       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="back"
+       d="m 53.095522,35.883131 c -3.878,0 -6.999573,3.12209 -6.999573,7.00009 V 153.88317 c 0,3.878 3.121573,6.99957 6.999573,6.99957 H 164.09546 c 3.878,0 7.00009,-3.12157 7.00009,-6.99957 V 42.883221 c 0,-3.878 -3.12209,-7.00009 -7.00009,-7.00009 z m 37.711393,11.640116 h 33.999995 c 4.432,0 8.00003,3.568029 8.00003,8.000029 0,4.432 -3.56803,8.000028 -8.00003,8.000028 H 90.806915 c -4.432,0 -8.000029,-3.568028 -8.000029,-8.000028 0,-4.432 3.568029,-8.000029 8.000029,-8.000029 z" />
+    <path
        id="rect3"
-       width="60"
-       height="125"
-       x="110.96095"
-       y="35.8829"
-       rx="7"
-       ry="7"
-       inkscape:label="right" />
+       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="right"
+       d="M 117.96081 35.883131 C 114.08281 35.883131 110.96072 39.004704 110.96072 42.882704 L 110.96072 47.799199 L 124.80691 47.799199 C 129.23891 47.799199 132.80694 51.367228 132.80694 55.799228 C 132.80694 60.231228 129.23891 63.799256 124.80691 63.799256 L 110.96072 63.799256 L 110.96072 153.88265 C 110.96072 157.76065 114.08281 160.88274 117.96081 160.88274 L 163.96111 160.88274 C 167.83911 160.88274 170.9612 157.76065 170.9612 153.88265 L 170.9612 42.882704 C 170.9612 39.004704 167.83911 35.883131 163.96111 35.883131 L 117.96081 35.883131 z " />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4"
+       style="mix-blend-mode:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       id="rect9"
        width="50"
        height="16"
        x="82.806694"
@@ -95,6 +75,11 @@
        rx="8"
        ry="8"
        inkscape:label="handle" />
+    <path
+       id="path9"
+       style="fill:#e5e5e5;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:label="left"
+       d="m 99.096339,35.883131 c 3.878001,0 7.000091,3.121573 7.000091,6.999573 v 4.916495 H 92.250239 c -4.432,0 -8.00003,3.568029 -8.00003,8.000029 0,4.432 3.56803,8.000028 8.00003,8.000028 h 13.846191 v 90.083394 c 0,3.878 -3.12209,7.00009 -7.000091,7.00009 h -46.0003 c -3.878,0 -7.00009,-3.12209 -7.00009,-7.00009 V 42.882704 c 0,-3.878 3.12209,-6.999573 7.00009,-6.999573 z" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -106,16 +91,28 @@
        id="rect5"
        style="fill:#f14527;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
        inkscape:label="stop"
-       d="m 65.520032,68.638188 c -4.432,0 -8.000029,3.568028 -8.000029,8.000028 v 70.947094 c 0,4.432 3.568029,8.00003 8.000029,8.00003 h 40.474018 c 0.0617,-0.375 0.1018,-0.75733 0.1018,-1.15032 V 68.638188 Z" />
+       d="m 66.020082,68.638188 c -4.432,0 -8.000029,3.568028 -8.000029,8.000028 v 70.947094 c 0,4.432 3.568029,8.00003 8.000029,8.00003 H 106.4941 c 0.0617,-0.375 0.1018,-0.75733 0.1018,-1.15032 V 68.638188 Z" />
     <path
        id="rect6"
        style="display:inline;fill:#f14527;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
        inkscape:label="stop"
-       d="m 110.96119,68.638188 v 85.244922 c 0,0.59097 0.0938,1.15475 0.23047,1.70223 h 40.4797 c 4.432,0 8.00003,-3.56803 8.00003,-8.00003 V 76.638216 c 0,-4.432 -3.56803,-8.000028 -8.00003,-8.000028 z" />
+       d="m 110.46072,68.638188 v 85.244922 c 0,0.59097 0.0938,1.15475 0.23047,1.70223 h 40.4797 c 4.432,0 8.00003,-3.56803 8.00003,-8.00003 V 76.638216 c 0,-4.432 -3.56803,-8.000028 -8.00003,-8.000028 z" />
   </g>
   <metadata
      id="metadata1">
     <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+        <dc:title>Counter board</dc:title>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>John D. Strunk</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:source>66-laps.com</dc:source>
+      </cc:Work>
       <cc:License
          rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
         <cc:permits
@@ -133,18 +130,6 @@
         <cc:requires
            rdf:resource="http://creativecommons.org/ns#ShareAlike" />
       </cc:License>
-      <cc:Work
-         rdf:about="">
-        <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
-        <dc:title>Counter board</dc:title>
-        <dc:creator>
-          <cc:Agent>
-            <dc:title>John D. Strunk</dc:title>
-          </cc:Agent>
-        </dc:creator>
-        <dc:source>66-laps.com</dc:source>
-      </cc:Work>
     </rdf:RDF>
   </metadata>
 </svg>
