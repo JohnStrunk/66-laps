@@ -1,6 +1,7 @@
 'use client'
 
-import { Image, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
+import LightDark from "@/components/LightDark/LightDark";
+import { Divider, Image, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -46,6 +47,12 @@ export default function Nav() {
                     ))}
                 </NavbarContent>
 
+                <NavbarContent className="hidden sm:flex" justify="end">
+                    <NavbarItem>
+                        <LightDark />
+                    </NavbarItem>
+                </NavbarContent>
+
                 <NavbarMenu>
                     {menuItems.map((item, index) => (
                         <NavbarMenuItem key={`${item}-${index}`}>
@@ -54,6 +61,11 @@ export default function Nav() {
                             </Link>
                         </NavbarMenuItem>
                     ))}
+                    <Divider className="my-2" />
+                    <NavbarMenuItem className="flex flex-row items-center gap-4">
+                        <p className="font-bold">Theme:</p>
+                        <LightDark />
+                    </NavbarMenuItem>
                 </NavbarMenu>
             </Navbar>
         </>
