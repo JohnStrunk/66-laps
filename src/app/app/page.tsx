@@ -1,5 +1,6 @@
 'use client'
 
+import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
@@ -116,29 +117,34 @@ export default function Page() {
 
     return (
         <>
-            {mode !== Mode.SWIM && (
-                <Nav />
-            )}
-            <div hidden={mode !== Mode.SETTINGS} className="p-4">
-                <Settings onClick={handleSettingsClick} />
-            </div>
-            {mode === Mode.SWIM && (
-                <div className="relative w-screen h-screen p-4">
-                    <Pool
-                        className="w-full h-full"
-                        poolLength={settings.poolLength}
-                        swimmers={swimmers}
-                        numbering={settings.numberingDirection} />
-                    <div className="absolute top-6 right-6">
-                        <Button
-                            color="primary"
-                            onPress={() => setMode(Mode.SETTINGS)}
-                        >
-                            Back to Settings
-                        </Button>
-                    </div>
+            <div className="w-full flex flex-col min-h-screen">
+                {mode !== Mode.SWIM && (
+                    <Nav />
+                )}
+                <div hidden={mode !== Mode.SETTINGS} className="p-4 grow">
+                    <Settings onClick={handleSettingsClick} />
                 </div>
-            )}
+                {mode === Mode.SWIM && (
+                    <div className="relative w-screen h-screen p-4">
+                        <Pool
+                            className="w-full h-full"
+                            poolLength={settings.poolLength}
+                            swimmers={swimmers}
+                            numbering={settings.numberingDirection} />
+                        <div className="absolute top-6 right-6">
+                            <Button
+                                color="primary"
+                                onPress={() => setMode(Mode.SETTINGS)}
+                            >
+                                Back to Settings
+                            </Button>
+                        </div>
+                    </div>
+                )}
+                {mode !== Mode.SWIM && (
+                    <Footer />
+                )}
+            </div>
         </>
     );
 }
