@@ -1,5 +1,6 @@
 'use client'
 
+import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import { Divider, Link } from "@heroui/react";
 import { ExternalLink, FileText } from "lucide-react";
@@ -35,51 +36,54 @@ const externalSheets: LapCountingSheet[] = [
 export default function Page() {
     return (
         <>
-            <Nav />
-            <div className="prose mx-auto p-6">
-                <h1>Lap counting sheets</h1>
-                <h2 className="text-lg mb-2">66-Laps custom counting sheets</h2>
-                <p className="text-sm">
-                    Want to customize these sheets? Check out the{' '}
-                    <Link
-                        isExternal
-                        showAnchorIcon
-                        href="https://docs.google.com/spreadsheets/d/1GHPSscX-hn9-Av33UEZ2iyQLtknGxFwlX46lGB50Xc8/edit?usp=sharing"
-                        className="text-sm leading-none">
-                        editable version.
-                    </Link>
-                </p>
-                <ul className="list-none p-0">
-                    <li>
-                        <Link href="/sheets/SC500.pdf">
-                            <FileText />&nbsp;66-Laps SC 500
+            <div className="w-full flex flex-col min-h-screen">
+                <Nav />
+                <div className="prose mx-auto p-6 grow">
+                    <h1>Lap counting sheets</h1>
+                    <h2 className="text-lg mb-2">66-Laps custom counting sheets</h2>
+                    <p className="text-sm">
+                        Want to customize these sheets? Check out the{' '}
+                        <Link
+                            isExternal
+                            showAnchorIcon
+                            href="https://docs.google.com/spreadsheets/d/1GHPSscX-hn9-Av33UEZ2iyQLtknGxFwlX46lGB50Xc8/edit?usp=sharing"
+                            className="text-sm leading-none">
+                            editable version.
                         </Link>
-                    </li>
-                    <li>
-                        <Link href="/sheets/SC1000-1650.pdf">
-                            <FileText />&nbsp;66-Laps SC 1000/1650
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/sheets/LC800-1500.pdf">
-                            <FileText />&nbsp;66-Laps LC 800/1500
-                        </Link>
-                    </li>
-                </ul>
-                <Divider />
-                <h2 className="text-lg mb-2">Other counting sheets</h2>
-                <p className="text-sm">
-                    The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
-                </p>
-                <ul className="list-none p-0 md:grid md:grid-cols-2">
-                    {externalSheets.map((sheet) => (
-                        <li key={sheet.url}>
-                            <Link isExternal href={sheet.url}>
-                                <ExternalLink />&nbsp;{sheet.name}
+                    </p>
+                    <ul className="list-none p-0">
+                        <li>
+                            <Link href="/sheets/SC500.pdf">
+                                <FileText />&nbsp;66-Laps SC 500
                             </Link>
                         </li>
-                    ))}
-                </ul>
+                        <li>
+                            <Link href="/sheets/SC1000-1650.pdf">
+                                <FileText />&nbsp;66-Laps SC 1000/1650
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/sheets/LC800-1500.pdf">
+                                <FileText />&nbsp;66-Laps LC 800/1500
+                            </Link>
+                        </li>
+                    </ul>
+                    <Divider />
+                    <h2 className="text-lg mb-2">Other counting sheets</h2>
+                    <p className="text-sm">
+                        The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
+                    </p>
+                    <ul className="list-none p-0 md:grid md:grid-cols-2">
+                        {externalSheets.map((sheet) => (
+                            <li key={sheet.url}>
+                                <Link isExternal href={sheet.url}>
+                                    <ExternalLink />&nbsp;{sheet.name}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <Footer />
             </div>
         </>
     );
