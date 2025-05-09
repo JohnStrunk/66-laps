@@ -7,7 +7,7 @@ export default function Footer() {
         <>
             <div className="w-full h-16 mt-6 flex flex-row gap-6 items-center justify-center bg-black text-white">
                 <div className="mx-6">
-                    <p className="text-xs text-center">© 2025 66-Laps.com CC BY-NC-SA 4.0</p>
+                    <p className="text-xs text-center">© 2025 66-Laps.com CC&nbsp;BY-NC-SA&nbsp;4.0</p>
                 </div>
                 <div className="mx-auto flex flex-col justify-center items-center">
                     <p className="text-sm">Suggestions?</p>
