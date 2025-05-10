@@ -8,8 +8,8 @@ export default function Page() {
         <>
             <div className="w-full flex flex-col min-h-screen">
                 <Nav />
-                <div className="mx-auto prose text-justify p-6 grow">
-                    <h1>Lap counting</h1>
+                <div className="mx-auto prose text-justify p-6 grow text-inherit bg-inherit">
+                    <h1 className="text-inherit bg-inherit">Lap counting</h1>
 
                     <div className="flex flex-col items-center md:flex-row md:items-start">
                         <div>

@@ -38,9 +38,9 @@ export default function Page() {
         <>
             <div className="w-full flex flex-col min-h-screen">
                 <Nav />
-                <div className="prose mx-auto p-6 grow">
-                    <h1>Lap counting sheets</h1>
-                    <h2 className="text-lg mb-2">66-Laps custom counting sheets</h2>
+                <div className="prose mx-auto p-6 grow text-inherit bg-inherit">
+                    <h1 className="text-inherit bg-inherit">Lap counting sheets</h1>
+                    <h2 className="text-inherit bg-inherit text-lg mb-2">66-Laps custom counting sheets</h2>
                     <p className="text-sm">
                         Want to customize these sheets? Check out the{' '}
                         <Link
@@ -69,7 +69,7 @@ export default function Page() {
                         </li>
                     </ul>
                     <Divider />
-                    <h2 className="text-lg mb-2">Other counting sheets</h2>
+                    <h2 className="text-inherit bg-inherit text-lg mb-2">Other counting sheets</h2>
                     <p className="text-sm">
                         The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
                     </p>

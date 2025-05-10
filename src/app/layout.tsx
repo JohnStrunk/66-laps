@@ -2,6 +2,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Atkinson_Hyperlegible, Noto_Color_Emoji } from "next/font/google";
 import Script from "next/script";
+import { StrictMode } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -34,12 +35,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${atkinson_hyperlegible.variable} ${noto_color_emoji.variable}`}>
+    <html
+      lang="en"
+      className={`${atkinson_hyperlegible.variable} ${noto_color_emoji.variable}`}
+    >
       <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID as string} />
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <StrictMode>
+          <Providers>
+            {children}
+          </Providers>
+        </StrictMode>
         <Script id="clarity_analytics" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
