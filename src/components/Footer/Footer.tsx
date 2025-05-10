@@ -15,7 +15,7 @@ export default function Footer() {
                         feedback@66-laps.com
                     </Link>
                 </div>
-                <div className="mx-6">
+                <div className="mx-6 min-w-[32px]">
                     <Link isExternal href="https://github.com/JohnStrunk/66-laps">
                         <Image className="invert h-[32px] w-[32px]" src="/images/github-mark.svg" alt="GitHub" width={32} height={32} />
                     </Link>
