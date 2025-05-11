@@ -6,6 +6,7 @@ import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@heroui/react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -56,6 +57,30 @@ export default function Page() {
         numberingDirection: NumberingDirection.AWAY,
     });
     const wakeLock = useRef<WakeLockSentinel | null>(null);
+    const startTime = useRef<number>(0);
+
+    // Send tracking events when the simulation starts and stops.
+    useEffect(() => {
+        // When we start the swimulation, register a cleanup function
+        // to send the event when the simulation ends.
+        // This is important because the simulation may end when the user
+        // closes the tab or navigates away from the page.
+        if (mode === Mode.SWIM) {
+            return () => {
+                const raceCompleted = swimmers.every((swimmer) => swimmer.isDone());
+                console.log("event", "swimulation_end", {
+                    ...settings,
+                    completed: raceCompleted,
+                    elapsedTimeSec: (Date.now() - startTime.current) / 1000,
+                });
+                sendGAEvent("event", "swimulation_end", {
+                    ...settings,
+                    completed: raceCompleted,
+                    elapsedTimeSec: (Date.now() - startTime.current) / 1000,
+                });
+            }
+        }
+    }, [mode, settings, swimmers]);
 
     // For small screens, request fullscreen when we start the simulation.
     useEffect(() => {
@@ -109,6 +134,7 @@ export default function Page() {
     }, []);
 
     const handleSettingsClick = (settings: SettingsValue) => {
+        startTime.current = Date.now();
         const newSwimmers = Array.from({ length: settings.lanes }, () => makeSwimmer(settings));
         setSwimmers(newSwimmers);
         setSettings(settings);
