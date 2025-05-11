@@ -40,11 +40,11 @@ export default heroui({
                 //     foreground: "#ffffff",
                 //     // 50-900:
                 // }
-                // primary: {
-                //     DEFAULT: "#000000",  // background
-                //     foreground: "#ff0000",
-                //     // 50-900:
-                // },
+                primary: {
+                    DEFAULT: "#193cb8",  // background
+                    foreground: "#FFFFFF",
+                    //     // 50-900:
+                },
                 // secondary: {
                 //     DEFAULT: "#000000",  // background
                 //     foreground: "#ffffff",
@@ -71,6 +71,10 @@ export default heroui({
             colors: {
                 background: "#000000",
                 foreground: "#EEEEEE",
+                primary: {
+                    DEFAULT: "#8ec5ff", // tw blue-300
+                    foreground: "#000000",
+                },
             },
         },
     },
