@@ -37,39 +37,38 @@ export default function LightDark() {
 
     return (
         <>
-            {mode === ThemeMode.AUTO && (
-                <Tooltip content="Switch to dark mode">
+            <div className="flex flex-row gap-2 items-center justify-center">
+                <Tooltip content="Automatic">
                     <Button
                         isIconOnly
+                        variant={mode === ThemeMode.AUTO ? "solid" : "faded"}
+                        aria-label="Automatic light/dark mode"
+                        onPress={() => { setMode(ThemeMode.AUTO) }}
+                    >
+                        <SunMoon className="w-full h-full m-2" />
+                    </Button>
+                </Tooltip>
+                <Tooltip content="Dark">
+                    <Button
+                        isIconOnly
+                        variant={mode === ThemeMode.DARK ? "solid" : "faded"}
                         aria-label="Switch to dark mode"
                         onPress={() => { setMode(ThemeMode.DARK) }}
                     >
                         <Moon className="w-full h-full m-2" />
                     </Button>
                 </Tooltip>
-            )}
-            {mode === ThemeMode.DARK && (
-                <Tooltip content="Switch to light mode">
+                <Tooltip content="Light">
                     <Button
                         isIconOnly
+                        variant={mode === ThemeMode.LIGHT ? "solid" : "faded"}
                         aria-label="Switch to light mode"
                         onPress={() => { setMode(ThemeMode.LIGHT) }}
                     >
                         <Sun className="w-full h-full m-2" />
                     </Button>
                 </Tooltip>
-            )}
-            {mode === ThemeMode.LIGHT && (
-                <Tooltip content="Switch to automatic mode">
-                    <Button
-                        isIconOnly
-                        aria-label="Switch to automatic mode"
-                        onPress={() => { setMode(ThemeMode.AUTO) }}
-                    >
-                        <SunMoon className="w-full h-full m-2" />
-                    </Button>
-                </Tooltip>
-            )}
+            </div>
         </>
     );
 }
