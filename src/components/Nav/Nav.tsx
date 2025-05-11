@@ -63,7 +63,6 @@ export default function Nav() {
                     ))}
                     <Divider className="my-2" />
                     <NavbarMenuItem className="flex flex-row items-center gap-4">
-                        <p className="font-bold">Theme:</p>
                         <LightDark />
                     </NavbarMenuItem>
                 </NavbarMenu>
