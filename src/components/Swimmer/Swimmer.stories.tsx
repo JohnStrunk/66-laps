@@ -33,6 +33,10 @@ class MockSwimmer implements ISwimmer {
             direction: this._direction,
         };
     }
+
+    isDone(): boolean {
+        return false;
+    }
 }
 
 export const StartEnd: Story = {

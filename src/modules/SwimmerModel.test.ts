@@ -73,4 +73,33 @@ describe('SwimmerModel', () => {
             direction: Direction.TOSTART,
         });
     });
+
+    it('should return false if the swimmer has not completed all laps', () => {
+        const lapTimes = [30, 40]; // Lap times in seconds
+        const startTime = Date.now();
+        const swimmer = new SwimmerModel(lapTimes, startTime);
+
+        const elapsedTime = 50 * 1000; // Less than total lap time
+        expect(swimmer.isDone(startTime + elapsedTime)).toBe(false);
+    });
+
+    it('should return true if the swimmer has completed all laps', () => {
+        const lapTimes = [30, 40]; // Lap times in seconds
+        const startTime = Date.now();
+        const swimmer = new SwimmerModel(lapTimes, startTime);
+
+        const elapsedTime = 80 * 1000; // Equal to total lap time
+        expect(swimmer.isDone(startTime + elapsedTime)).toBe(true);
+    });
+
+    it('should handle single lap races correctly', () => {
+        const lapTimes = [10]; // Single lap time in seconds
+        const startTime = Date.now();
+        const swimmer = new SwimmerModel(lapTimes, startTime);
+
+        expect(swimmer.isDone(startTime)).toBe(false);
+
+        const elapsedTime = 10 * 1000; // Equal to lap time
+        expect(swimmer.isDone(startTime + elapsedTime)).toBe(true);
+    });
 });

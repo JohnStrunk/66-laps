@@ -25,6 +25,17 @@ export interface ISwimmer {
      * and 1) and their direction (`Direction.TOTURN` or `Direction.TOSTART`).
      */
     where(currentTimeMs?: number): SwimVector;
+
+    /**
+     * Determines if the swimmer has completed all laps and is finished with
+     * the race.
+     *
+     * @param currentTimeMs - The current time in milliseconds since the Unix
+     * epoch. Defaults to the current time.
+     * @returns A boolean indicating whether the swimmer has completed all
+     * laps
+     */
+    isDone(currentTimeMs?: number): boolean;
 }
 
 /**
@@ -96,5 +107,19 @@ export class SwimmerModel implements ISwimmer {
             location: 0,
             direction: Direction.TOSTART,
         };
+    }
+
+    /**
+     * Determines if the swimmer has completed all laps and is finished with
+     * the race.
+     *
+     * @param currentTimeMs - The current time in milliseconds since the Unix
+     * epoch. Defaults to the current time.
+     * @returns A boolean indicating whether the swimmer has completed all
+     * laps
+     */
+    isDone(currentTimeMs: number = Date.now()): boolean {
+        return currentTimeMs - this._startTimeMs >=
+            this._lapTimes.reduce((a, b) => a + b, 0) * 1000;
     }
 }
