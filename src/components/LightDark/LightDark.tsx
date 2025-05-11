@@ -2,38 +2,18 @@
 
 import { Button, Tooltip } from "@heroui/react";
 import { Moon, Sun, SunMoon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-enum ThemeMode {
-    LIGHT = "light",
-    DARK = "dark",
-    AUTO = "auto",
-}
-
 export default function LightDark() {
-    const [mode, setMode] = useState<ThemeMode>(ThemeMode.AUTO);
+    const [mounted, setMounted] = useState(false)
+    const { theme, setTheme } = useTheme()
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem("theme") as ThemeMode;
-        setMode(savedTheme || ThemeMode.AUTO);
-    }, []);
+        setMounted(true)
+    }, [])
 
-    useEffect(() => {
-        if (mode === ThemeMode.LIGHT) {
-            localStorage.setItem("theme", ThemeMode.LIGHT);
-            document.documentElement.classList.remove("dark");
-            document.documentElement.classList.add("light");
-        } else if (mode === ThemeMode.DARK) {
-            localStorage.setItem("theme", ThemeMode.DARK);
-            document.documentElement.classList.remove("light");
-            document.documentElement.classList.add("dark");
-        } else {
-            localStorage.removeItem("theme");
-            const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            document.documentElement.classList.toggle("dark", isDark);
-            document.documentElement.classList.toggle("light", !isDark);
-        }
-    }, [mode]);
+    if (!mounted) return null
 
     return (
         <>
@@ -41,9 +21,9 @@ export default function LightDark() {
                 <Tooltip content="Automatic">
                     <Button
                         isIconOnly
-                        variant={mode === ThemeMode.AUTO ? "solid" : "faded"}
+                        variant={theme === "system" ? "solid" : "faded"}
                         aria-label="Automatic light/dark mode"
-                        onPress={() => { setMode(ThemeMode.AUTO) }}
+                        onPress={() => { setTheme("system") }}
                     >
                         <SunMoon className="w-full h-full m-2" />
                     </Button>
@@ -51,9 +31,9 @@ export default function LightDark() {
                 <Tooltip content="Dark">
                     <Button
                         isIconOnly
-                        variant={mode === ThemeMode.DARK ? "solid" : "faded"}
+                        variant={theme === "dark" ? "solid" : "faded"}
                         aria-label="Switch to dark mode"
-                        onPress={() => { setMode(ThemeMode.DARK) }}
+                        onPress={() => { setTheme("dark") }}
                     >
                         <Moon className="w-full h-full m-2" />
                     </Button>
@@ -61,9 +41,9 @@ export default function LightDark() {
                 <Tooltip content="Light">
                     <Button
                         isIconOnly
-                        variant={mode === ThemeMode.LIGHT ? "solid" : "faded"}
+                        variant={theme === "light" ? "solid" : "faded"}
                         aria-label="Switch to light mode"
-                        onPress={() => { setMode(ThemeMode.LIGHT) }}
+                        onPress={() => { setTheme("light") }}
                     >
                         <Sun className="w-full h-full m-2" />
                     </Button>
