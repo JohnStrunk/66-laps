@@ -25,7 +25,12 @@ export default function Nav() {
 
     return (
         <>
-            <Navbar onMenuOpenChange={setIsMenuOpen} isBordered shouldHideOnScroll>
+            <Navbar onMenuOpenChange={setIsMenuOpen} isBordered shouldHideOnScroll classNames={{
+                item: [
+                    "data-[active=true]:border-b-2",
+                    "data-[active=true]:border-b-primary",
+                ]
+            }}>
                 <NavbarContent>
                     <NavbarMenuToggle className="sm:hidden" aria-label={isMenuOpen ? "Close menu" : "Open menu"} icon={menuIcon} />
                     <Link href="/" >
