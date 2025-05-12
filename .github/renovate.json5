@@ -45,6 +45,9 @@
       ]
     }
   ],
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 0,
+  "rebaseWhen": "behind-base-branch",
   "schedule": [
     "before 9am on Monday"
   ],
