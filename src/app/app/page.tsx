@@ -68,11 +68,6 @@ export default function Page() {
         if (mode === Mode.SWIM) {
             return () => {
                 const raceCompleted = swimmers.every((swimmer) => swimmer.isDone());
-                console.log("event", "swimulation_end", {
-                    ...settings,
-                    completed: raceCompleted,
-                    elapsedTimeSec: (Date.now() - startTime.current) / 1000,
-                });
                 sendGAEvent("event", "swimulation_end", {
                     ...settings,
                     completed: raceCompleted,
