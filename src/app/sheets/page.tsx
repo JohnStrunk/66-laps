@@ -4,6 +4,7 @@ import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import { Divider, Link } from "@heroui/react";
 import { ExternalLink, FileText } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
 
 type LapCountingSheet = {
     name: string;
@@ -34,6 +35,8 @@ const externalSheets: LapCountingSheet[] = [
 ];
 
 export default function Page() {
+    const postHog = usePostHog();
+
     return (
         <>
             <div className="w-full flex flex-col min-h-screen">
@@ -46,6 +49,9 @@ export default function Page() {
                         <Link
                             isExternal
                             showAnchorIcon
+                            onPress={() => {
+                                postHog?.capture("download_sheet_editable");
+                            }}
                             href="https://docs.google.com/spreadsheets/d/1GHPSscX-hn9-Av33UEZ2iyQLtknGxFwlX46lGB50Xc8/edit?usp=sharing"
                             className="text-sm leading-none">
                             editable version.
@@ -53,17 +59,38 @@ export default function Page() {
                     </p>
                     <ul className="list-none p-0">
                         <li>
-                            <Link href="/sheets/SC500.pdf">
+                            <Link
+                                onPress={() => {
+                                    postHog?.capture("download_sheet", {
+                                        course: "SC",
+                                        sheet: "SC500",
+                                    });
+                                }}
+                                href="/sheets/SC500.pdf">
                                 <FileText />&nbsp;66-Laps SC 500
                             </Link>
                         </li>
                         <li>
-                            <Link href="/sheets/SC1000-1650.pdf">
+                            <Link
+                                onPress={() => {
+                                    postHog?.capture("download_sheet", {
+                                        course: "SC",
+                                        sheet: "SC1000-1650",
+                                    });
+                                }}
+                                href="/sheets/SC1000-1650.pdf">
                                 <FileText />&nbsp;66-Laps SC 1000/1650
                             </Link>
                         </li>
                         <li>
-                            <Link href="/sheets/LC800-1500.pdf">
+                            <Link
+                                onPress={() => {
+                                    postHog?.capture("download_sheet", {
+                                        course: "LC",
+                                        sheet: "LC800-1500",
+                                    });
+                                }}
+                                href="/sheets/LC800-1500.pdf">
                                 <FileText />&nbsp;66-Laps LC 800/1500
                             </Link>
                         </li>
@@ -76,7 +103,14 @@ export default function Page() {
                     <ul className="list-none p-0 md:grid md:grid-cols-2">
                         {externalSheets.map((sheet) => (
                             <li key={sheet.url}>
-                                <Link isExternal href={sheet.url}>
+                                <Link
+                                    isExternal
+                                    onPress={() => {
+                                        postHog?.capture("download_sheet_external", {
+                                            name: sheet.name,
+                                        });
+                                    }}
+                                    href={sheet.url}>
                                     <ExternalLink />&nbsp;{sheet.name}
                                 </Link>
                             </li>
