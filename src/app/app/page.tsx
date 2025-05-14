@@ -6,7 +6,6 @@ import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@heroui/react";
-import { sendGAEvent } from "@next/third-parties/google";
 import { usePostHog } from "posthog-js/react";
 
 import { useEffect, useRef, useState } from "react";
@@ -71,11 +70,6 @@ export default function Page() {
             return () => {
                 const raceCompleted = swimmers.every((swimmer) => swimmer.isDone());
                 postHog?.capture("swimulation_end", {
-                    ...settings,
-                    completed: raceCompleted,
-                    elapsedTimeSec: (Date.now() - startTime.current) / 1000,
-                });
-                sendGAEvent("event", "swimulation_end", {
                     ...settings,
                     completed: raceCompleted,
                     elapsedTimeSec: (Date.now() - startTime.current) / 1000,

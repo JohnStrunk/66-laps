@@ -1,8 +1,10 @@
 import { Link } from "@heroui/react";
 import Image from "next/image";
+import { usePostHog } from "posthog-js/react";
 
 
 export default function Footer() {
+    const postHog = usePostHog();
     return (
         <>
             <div className="w-full h-16 mt-6 flex flex-row gap-6 items-center justify-center bg-black text-white border-t-1 border-t-content1">
@@ -16,7 +18,15 @@ export default function Footer() {
                     </Link>
                 </div>
                 <div className="mx-6 min-w-[32px]">
-                    <Link isExternal href="https://github.com/JohnStrunk/66-laps">
+                    <Link
+                        isExternal
+                        onPress={() => {
+                            postHog?.capture("link_out", {
+                                url: "https://github.com/JohnStrunk/66-laps",
+                                name: "GitHub - 66-laps",
+                            });
+                        }}
+                        href="https://github.com/JohnStrunk/66-laps">
                         <Image className="invert h-[32px] w-[32px]" src="/images/github-mark.svg" alt="GitHub" width={32} height={32} />
                     </Link>
                 </div>
