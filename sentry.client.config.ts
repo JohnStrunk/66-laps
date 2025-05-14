@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import posthog from "posthog-js";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -11,6 +12,11 @@ Sentry.init({
   integrations: [
     Sentry.extraErrorDataIntegration(),
     Sentry.replayIntegration(),
+    posthog.sentryIntegration({
+      organization: "jstrunk-sentry",
+      projectId: 4509018578681856,
+      severityAllowList: ["fatal", "error", "warning"],
+    }),
   ],
 
   // Cache Sentry reports if the user is offline
