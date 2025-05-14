@@ -7,6 +7,7 @@ import Settings, { NumberingDirection, SettingsValue } from "@/components/Settin
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@heroui/react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { usePostHog } from "posthog-js/react";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -58,6 +59,7 @@ export default function Page() {
     });
     const wakeLock = useRef<WakeLockSentinel | null>(null);
     const startTime = useRef<number>(0);
+    const postHog = usePostHog();
 
     // Send tracking events when the simulation starts and stops.
     useEffect(() => {
@@ -68,6 +70,11 @@ export default function Page() {
         if (mode === Mode.SWIM) {
             return () => {
                 const raceCompleted = swimmers.every((swimmer) => swimmer.isDone());
+                postHog?.capture("swimulation_end", {
+                    ...settings,
+                    completed: raceCompleted,
+                    elapsedTimeSec: (Date.now() - startTime.current) / 1000,
+                });
                 sendGAEvent("event", "swimulation_end", {
                     ...settings,
                     completed: raceCompleted,
@@ -75,7 +82,7 @@ export default function Page() {
                 });
             }
         }
-    }, [mode, settings, swimmers]);
+    }, [mode, postHog, settings, swimmers]);
 
     // For small screens, request fullscreen when we start the simulation.
     useEffect(() => {
