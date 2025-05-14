@@ -23,6 +23,10 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
+  // Auth token for uploading source maps. Automatically picks up the token
+  // from the environment variable if not provided here.
+  // authToken: process.env.SENTRY_AUTH_TOKEN,
+
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
 
@@ -39,5 +43,10 @@ export default withSentryConfig(nextConfig, {
   // See the following for more information:
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true,
+  // automaticVercelMonitors: true,
+
+  // Capture React component names to see which component a user clicked on
+  reactComponentAnnotation: {
+    enabled: true,
+  },
 });
