@@ -1,5 +1,6 @@
 "use client";
 
+import { ph_event_set_theme } from "@/modules/phEvents";
 import { Button, Tooltip } from "@heroui/react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -27,7 +28,7 @@ export default function LightDark() {
                         aria-label="Automatic light/dark mode"
                         onPress={() => {
                             setTheme("system");
-                            postHog?.capture("set_theme", { theme: "system" });
+                            ph_event_set_theme(postHog, "system");
                         }}
                     >
                         <SunMoon className="w-full h-full m-2" />
@@ -40,7 +41,7 @@ export default function LightDark() {
                         aria-label="Switch to dark mode"
                         onPress={() => {
                             setTheme("dark");
-                            postHog?.capture("set_theme", { theme: "dark" });
+                            ph_event_set_theme(postHog, "dark");
                         }}
                     >
                         <Moon className="w-full h-full m-2" />
@@ -53,7 +54,7 @@ export default function LightDark() {
                         aria-label="Switch to light mode"
                         onPress={() => {
                             setTheme("light");
-                            postHog?.capture("set_theme", { theme: "light" });
+                            ph_event_set_theme(postHog, "light");
                         }}
                     >
                         <Sun className="w-full h-full m-2" />
