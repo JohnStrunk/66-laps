@@ -4,6 +4,7 @@ import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
+import { ph_event_swimulation } from "@/modules/phEvents";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button } from "@heroui/react";
 import { usePostHog } from "posthog-js/react";
@@ -69,11 +70,13 @@ export default function Page() {
         if (mode === Mode.SWIM) {
             return () => {
                 const raceCompleted = swimmers.every((swimmer) => swimmer.isDone());
-                postHog?.capture("swimulation_end", {
-                    ...settings,
-                    completed: raceCompleted,
-                    elapsedTimeSec: (Date.now() - startTime.current) / 1000,
-                });
+                const elapsedTimeSec = (Date.now() - startTime.current) / 1000;
+                ph_event_swimulation(
+                    postHog,
+                    settings,
+                    raceCompleted,
+                    elapsedTimeSec
+                );
             }
         }
     }, [mode, postHog, settings, swimmers]);

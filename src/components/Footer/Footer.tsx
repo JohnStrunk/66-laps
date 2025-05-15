@@ -1,3 +1,4 @@
+import { ph_event_link_out } from "@/modules/phEvents";
 import { Link } from "@heroui/react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
@@ -21,10 +22,11 @@ export default function Footer() {
                     <Link
                         isExternal
                         onPress={() => {
-                            postHog?.capture("link_out", {
-                                url: "https://github.com/JohnStrunk/66-laps",
-                                name: "GitHub - 66-laps",
-                            });
+                            ph_event_link_out(
+                                postHog,
+                                "GitHub - 66-laps",
+                                "https://github.com/JohnStrunk/66-laps"
+                            );
                         }}
                         href="https://github.com/JohnStrunk/66-laps">
                         <Image className="invert h-[32px] w-[32px]" src="/images/github-mark.svg" alt="GitHub" width={32} height={32} />
