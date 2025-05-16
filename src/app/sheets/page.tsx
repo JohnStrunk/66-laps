@@ -78,41 +78,72 @@ export default function Page() {
                                 sheet: externalSheets[org as keyof typeof externalSheets],
                             }))}
                         >
-                            {(item) => (
-                                <TableRow key={item.org}>
-                                    <TableCell>{item.org}</TableCell>
-                                    <TableCell>
-                                        {Object.keys(item.sheet.SC).map((distance, idx, arr) => (
-                                            <span key={distance}>
-                                                <Link
-                                                    isExternal
-                                                    onPress={() => {
-                                                        ph_event_download_sheet(postHog, distance, "SC", true);
-                                                    }}
-                                                    href={item.sheet.SC[distance as keyof typeof item.sheet.SC]}>
-                                                    {distance}
-                                                </Link>
-                                                {idx < arr.length - 1 && ', '}
-                                            </span>
-                                        ))}
-                                    </TableCell>
-                                    <TableCell>
-                                        {Object.keys(item.sheet.LC).map((distance, idx, arr) => (
-                                            <span key={distance}>
-                                                <Link
-                                                    isExternal
-                                                    onPress={() => {
-                                                        ph_event_download_sheet(postHog, distance, "LC", true);
-                                                    }}
-                                                    href={item.sheet.LC[distance as keyof typeof item.sheet.LC]}>
-                                                    {distance}
-                                                </Link>
-                                                {idx < arr.length - 1 && ', '}
-                                            </span>
-                                        ))}
-                                    </TableCell>
-                                </TableRow>
-                            )}
+                            {(item) => {
+                                const sheet = item.sheet;
+                                const hasAll = 'all' in sheet && sheet.all && Object.keys(sheet.all as object).length > 0;
+                                const hasSC = 'SC' in sheet && sheet.SC && Object.keys(sheet.SC as object).length > 0;
+                                const hasLC = 'LC' in sheet && sheet.LC && Object.keys(sheet.LC as object).length > 0;
+                                if (hasAll) {
+                                    return (
+                                        <TableRow key={item.org}>
+                                            <TableCell>{item.org}</TableCell>
+                                            <TableCell colSpan={2}>
+                                                {Object.keys(sheet.all as object).map((distance, idx, arr) => (
+                                                    <span key={distance}>
+                                                        <Link
+                                                            isExternal
+                                                            onPress={() => {
+                                                                ph_event_download_sheet(postHog, distance, "all", true);
+                                                            }}
+                                                            href={(sheet.all as Record<string, string>)[distance]}>
+                                                            {distance}
+                                                        </Link>
+                                                        {idx < arr.length - 1 && ', '}
+                                                    </span>
+                                                ))}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                } else {
+                                    return (
+                                        <TableRow key={item.org}>
+                                            <TableCell>{item.org}</TableCell>
+                                            <TableCell>
+                                                {hasSC ? (Object.keys(sheet.SC as object).map((distance, idx, arr) => (
+                                                    <span key={distance}>
+                                                        <Link
+                                                            isExternal
+                                                            onPress={() => {
+                                                                ph_event_download_sheet(postHog, distance, "SC", true);
+                                                            }}
+                                                            href={(sheet.SC as Record<string, string>)[distance]}>
+                                                            {distance}
+                                                        </Link>
+                                                        {idx < arr.length - 1 && ', '}
+                                                    </span>
+                                                ))
+                                                ) : null}
+                                            </TableCell>
+                                            <TableCell>
+                                                {hasLC ? (Object.keys(sheet.LC as object).map((distance, idx, arr) => (
+                                                    <span key={distance}>
+                                                        <Link
+                                                            isExternal
+                                                            onPress={() => {
+                                                                ph_event_download_sheet(postHog, distance, "LC", true);
+                                                            }}
+                                                            href={(sheet.LC as Record<string, string>)[distance]}>
+                                                            {distance}
+                                                        </Link>
+                                                        {idx < arr.length - 1 && ', '}
+                                                    </span>
+                                                ))
+                                                ) : null}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }
+                            }}
                         </TableBody>
                     </Table>
                 </div>
