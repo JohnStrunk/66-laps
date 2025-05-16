@@ -1,4 +1,10 @@
-export const externalSheets = {
+export type SheetLinks = Record<string, string>;
+
+export type ExternalSheet =
+    | { all: SheetLinks }
+    | { SC: SheetLinks; LC: SheetLinks };
+
+export const externalSheets: Record<string, ExternalSheet> = {
     "USA Swimming": {
         SC: {
             "500": "https://websitedevsa.blob.core.windows.net/sitefinity/docs/default-source/officialsdocuments/officiating-forms/split-recording-forms/500-yard-freestyle-split-recording-sheet.pdf",
@@ -22,11 +28,7 @@ export const externalSheets = {
         },
     },
     "Connecticut Swimming": {  // https://www.ctswim.org/Meets/Meet-Management/
-        SC: {
-            "All 2-Up": "https://www.ctswim.org/Customer-Content/www/CMS/files/policies_meets/CountingUnivSheet_2up.pdf",
-            "All 3-Up": "https://www.ctswim.org/Customer-Content/www/CMS/files/policies_meets/CountingUnivSheet_3up.pdf",
-        },
-        LC: {
+        all: {
             "All 2-Up": "https://www.ctswim.org/Customer-Content/www/CMS/files/policies_meets/CountingUnivSheet_2up.pdf",
             "All 3-Up": "https://www.ctswim.org/Customer-Content/www/CMS/files/policies_meets/CountingUnivSheet_3up.pdf",
         },
