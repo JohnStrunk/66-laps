@@ -2,44 +2,11 @@
 
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
-import { CourseTypes, ph_event_download_sheet } from "@/modules/phEvents";
-import { Divider, Link } from "@heroui/react";
-import { ExternalLink, FileText } from "lucide-react";
+import { ph_event_download_sheet } from "@/modules/phEvents";
+import { Divider, Link, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import { FileText } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
-
-type LapCountingSheet = {
-    name: string;
-    course: CourseTypes;
-    url: string;
-}
-
-const externalSheets: LapCountingSheet[] = [
-    {
-        name: "USA Swimming SC 500",
-        course: "SC",
-        url: "https://websitedevsa.blob.core.windows.net/sitefinity/docs/default-source/officialsdocuments/officiating-forms/split-recording-forms/500-yard-freestyle-split-recording-sheet.pdf",
-    },
-    {
-        name: "USA Swimming SC 1000",
-        course: "SC",
-        url: "https://websitedevsa.blob.core.windows.net/sitefinity/docs/default-source/officialsdocuments/officiating-forms/split-recording-forms/1000-yard-freestyle-split-recording-sheet.pdf",
-    },
-    {
-        name: "USA Swimming SC 1650",
-        course: "SC",
-        url: "https://websitedevsa.blob.core.windows.net/sitefinity/docs/default-source/officialsdocuments/officiating-forms/split-recording-forms/1650-yard-freestyle-split-recording-sheet.pdf",
-    },
-    {
-        name: "USA Swimming LC 800",
-        course: "LC",
-        url: "https://websitedevsa.blob.core.windows.net/sitefinity/docs/default-source/officialsdocuments/officiating-forms/split-recording-forms/800-free-lcb91036fa6cbc6a0a9b57ff00009030c2.pdf",
-    },
-    {
-        name: "USA Swimming LC 1500",
-        course: "LC",
-        url: "https://websitedevsa.blob.core.windows.net/sitefinity/docs/default-source/officialsdocuments/officiating-forms/split-recording-forms/1500-meter-freestyle-lc-split-recording-sheet.pdf",
-    },
-];
+import { externalSheets } from "./sheets";
 
 export default function Page() {
     const postHog = usePostHog();
@@ -95,23 +62,59 @@ export default function Page() {
                     </ul>
                     <Divider />
                     <h2 className="text-inherit bg-inherit text-lg mb-2">Other counting sheets</h2>
-                    <p className="text-sm">
+                    <p className="text-sm mb-0">
                         The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
                     </p>
-                    <ul className="list-none p-0 md:grid md:grid-cols-2">
-                        {externalSheets.map((sheet) => (
-                            <li key={sheet.url}>
-                                <Link
-                                    isExternal
-                                    onPress={() => {
-                                        ph_event_download_sheet(postHog, sheet.name, sheet.course, true);
-                                    }}
-                                    href={sheet.url}>
-                                    <ExternalLink />&nbsp;{sheet.name}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
+
+                    <Table aria-label="Lap counting sheets" isStriped removeWrapper>
+                        <TableHeader>
+                            <TableColumn>ORGANIZATION</TableColumn>
+                            <TableColumn align="center">SHORT COURSE</TableColumn>
+                            <TableColumn align="center">LONG COURSE</TableColumn>
+                        </TableHeader>
+                        <TableBody
+                            items={Object.keys(externalSheets).map((org) => ({
+                                org,
+                                sheet: externalSheets[org as keyof typeof externalSheets],
+                            }))}
+                        >
+                            {(item) => (
+                                <TableRow key={item.org}>
+                                    <TableCell>{item.org}</TableCell>
+                                    <TableCell>
+                                        {Object.keys(item.sheet.SC).map((distance, idx, arr) => (
+                                            <span key={distance}>
+                                                <Link
+                                                    isExternal
+                                                    onPress={() => {
+                                                        ph_event_download_sheet(postHog, distance, "SC", true);
+                                                    }}
+                                                    href={item.sheet.SC[distance as keyof typeof item.sheet.SC]}>
+                                                    {distance}
+                                                </Link>
+                                                {idx < arr.length - 1 && ', '}
+                                            </span>
+                                        ))}
+                                    </TableCell>
+                                    <TableCell>
+                                        {Object.keys(item.sheet.LC).map((distance, idx, arr) => (
+                                            <span key={distance}>
+                                                <Link
+                                                    isExternal
+                                                    onPress={() => {
+                                                        ph_event_download_sheet(postHog, distance, "LC", true);
+                                                    }}
+                                                    href={item.sheet.LC[distance as keyof typeof item.sheet.LC]}>
+                                                    {distance}
+                                                </Link>
+                                                {idx < arr.length - 1 && ', '}
+                                            </span>
+                                        ))}
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </div>
                 <Footer />
             </div>
