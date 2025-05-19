@@ -12,7 +12,7 @@ __metadata:
     "@chromatic-com/storybook": "npm:3.2.6"
     "@eslint/eslintrc": "npm:3.3.1"
     "@heroui/react": "npm:2.8.0-beta.5"
-    "@pixi/react": "npm:8.0.1"
+    "@pixi/react": "npm:8.0.2"
     "@sentry/nextjs": "npm:9.19.0"
     "@storybook/addon-essentials": "npm:8.6.14"
     "@storybook/addon-onboarding": "npm:8.6.14"
@@ -3244,16 +3244,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pixi/react@npm:8.0.1":
-  version: 8.0.1
-  resolution: "@pixi/react@npm:8.0.1"
+"@pixi/react@npm:8.0.2":
+  version: 8.0.2
+  resolution: "@pixi/react@npm:8.0.2"
   dependencies:
     its-fine: "npm:^2.0.0"
     react-reconciler: "npm:0.31.0"
   peerDependencies:
     pixi.js: ^8.2.6
     react: ">=19.0.0"
-  checksum: 10c0/3308c631b51f157610a6ff91af18f5ae8be6eb5f9a0af826d0d2e807e154bc1a6907f81c4fb0efe927a0b7143c1e23540391c3bc559a5590ebc3e204a04fd5f0
+  checksum: 10c0/3953d3a1117bbaec238d6c9b41d6f9b9466c1c001e9e924eb10527b53b08ed53d76693c6a1da03c3a0d71b7bbb4ce455a6d234d5fa785c503dd67f48801c8727
   languageName: node
   linkType: hard
 
