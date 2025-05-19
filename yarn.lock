@@ -38,7 +38,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.9.2"
     playwright: "npm:1.52.0"
-    posthog-js: "npm:^1.242.0"
+    posthog-js: "npm:1.242.0"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
     storybook: "npm:8.6.12"
@@ -10707,7 +10707,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:^1.242.0":
+"posthog-js@npm:1.242.0":
   version: 1.242.0
   resolution: "posthog-js@npm:1.242.0"
   dependencies:
