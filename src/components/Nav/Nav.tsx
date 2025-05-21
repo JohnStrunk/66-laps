@@ -26,14 +26,15 @@ export default function Nav() {
     return (
         <>
             <Navbar onMenuOpenChange={setIsMenuOpen} isBordered shouldHideOnScroll classNames={{
+                base: "bg-content2 border-b-3 border-b-foreground",
                 item: [
-                    "data-[active=true]:border-b-2",
-                    "data-[active=true]:border-b-primary",
+                    "data-[active=true]:border-b-3",
+                    "data-[active=true]:border-b-foreground",
                 ]
             }}>
                 <NavbarContent>
                     <NavbarMenuToggle className="sm:hidden" aria-label={isMenuOpen ? "Close menu" : "Open menu"} icon={menuIcon} />
-                    <Link href="/" >
+                    <Link href="/" className="text-foreground">
                         <NavbarBrand>
                             <Image src="/icon.svg" alt="66 Laps" className="w-[2em] h-[2em] mr-2 rounded-sm" />
                             <p className="text-xl font-bold">66-Laps</p>
@@ -44,7 +45,7 @@ export default function Nav() {
                 <NavbarContent className="hidden sm:flex gap-4" justify="start">
                     {menuItems.map((item, index) => (
                         <NavbarItem key={`${item}-${index}`} isActive={isActive(item.path)}>
-                            <Link href={item.path}>
+                            <Link href={item.path} className="text-foreground">
                                 {item.name}
                             </Link>
                         </NavbarItem>
