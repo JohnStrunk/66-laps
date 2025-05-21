@@ -4,25 +4,6 @@
 @source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-} */
-
-@theme inline {
-  /* --color-background: var(--background);
-  --color-foreground: var(--foreground); */
-  --font-sans: var(--font-atkinson-hyperlegible);
-  /* --font-mono: "Atkinson Hyperlegible Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
-}
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 /* Custom, global styling for the lucide icons react components. Added to the
 tailwind "base" layer so that the utility classes can override this default
 styling. */

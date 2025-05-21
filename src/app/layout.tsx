@@ -18,6 +18,7 @@ const atkinson_hyperlegible = Atkinson_Hyperlegible({
   preload: true,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const noto_color_emoji = Noto_Color_Emoji({
   weight: '400',
   subsets: ['emoji'],
@@ -36,7 +37,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${atkinson_hyperlegible.variable} ${noto_color_emoji.variable}`}
+      className={atkinson_hyperlegible.className}
     >
       <body>
         <StrictMode>

@@ -66,7 +66,10 @@ export default function Page() {
                         The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
                     </p>
 
-                    <Table aria-label="Lap counting sheets" isStriped removeWrapper>
+                    <Table aria-label="Lap counting sheets" isStriped removeWrapper
+                        classNames={{
+                            th: "dark:text-foreground",
+                        }}>
                         <TableHeader>
                             <TableColumn>ORGANIZATION</TableColumn>
                             <TableColumn align="center">SHORT COURSE</TableColumn>

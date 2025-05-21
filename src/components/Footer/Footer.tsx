@@ -8,7 +8,7 @@ export default function Footer() {
     const postHog = usePostHog();
     return (
         <>
-            <div className="w-full h-16 mt-6 flex flex-row gap-6 items-center justify-center bg-black text-white border-t-1 border-t-content1">
+            <div className="w-full h-16 mt-6 flex flex-row gap-6 items-center justify-center bg-content3 text-white border-t-1 border-t-content1">
                 <div className="mx-6">
                     <p className="text-xs text-center">© 2025 66-Laps.com CC&nbsp;BY-NC-SA&nbsp;4.0</p>
                 </div>
