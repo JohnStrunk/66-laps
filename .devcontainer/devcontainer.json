@@ -5,9 +5,9 @@
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1.1.13-22",
 	// Available features: https://containers.dev/features
 	"features": {
-		"ghcr.io/devcontainers-extra/features/act:1.0.14": {},
+		"ghcr.io/devcontainers-extra/features/act:1.0.15": {},
 		"ghcr.io/devcontainers/features/github-cli:1.0.14": {},
-		"ghcr.io/devcontainers-contrib/features/pre-commit:2.0.17": {}
+		"ghcr.io/devcontainers-extra/features/pre-commit:2.0.18": {}
 	},
 	"containerEnv": {
 		// Disable Next.js telemetry
