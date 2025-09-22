@@ -14,7 +14,7 @@
     "test": "npx vitest run --project unit-tests"
   },
   "dependencies": {
-    "@heroui/react": "2.8.1",
+    "@heroui/react": "2.8.4",
     "@pixi/react": "8.0.3",
     "@sentry/nextjs": "9.42.1",
     "framer-motion": "12.23.9",
