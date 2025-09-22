@@ -14,10 +14,10 @@
     "test": "npx vitest run --project unit-tests"
   },
   "dependencies": {
-    "@heroui/react": "2.8.1",
+    "@heroui/react": "2.8.4",
     "@pixi/react": "8.0.3",
     "@sentry/nextjs": "9.42.1",
-    "framer-motion": "12.23.9",
+    "framer-motion": "12.23.18",
     "lucide-react": "0.527.0",
     "next": "15.3.3",
     "next-themes": "0.4.6",
@@ -27,7 +27,7 @@
     "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "4.0.1",
+    "@chromatic-com/storybook": "4.1.1",
     "@eslint/eslintrc": "3.3.1",
     "@storybook/addon-essentials": "8.6.14",
     "@storybook/addon-onboarding": "8.6.14",
@@ -58,5 +58,5 @@
       "plugin:storybook/recommended"
     ]
   },
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "yarn@4.10.0"
 }
