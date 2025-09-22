@@ -2,10 +2,8 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 
-# Need pipx?
-# > pip install --user --upgrade pipx
-# Install in your local dev environment
-# > pipx install pre-commit
+# > pip install --user --upgrade uv
+# > uv tool install pre-commit
 # Enable the hooks for this repo
 # > pre-commit install
 
@@ -54,17 +52,12 @@ repos:
       - id: yamllint
         args: ["--strict", "-c", ".github/yamllint-config.yaml"]
 
-  - repo: https://github.com/hadolint/hadolint
-    rev: v2.14.0
-    hooks:
-      # Lint Dockerfiles
-      - id: hadolint
-
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: "v0.45.0"
     hooks:
       # Lint markdown files
       - id: markdownlint
+        args: ["--config", ".github/markdownlint-config.yaml"]
         exclude: |
           (?x)^(
                 .github/pull_request_template.md
