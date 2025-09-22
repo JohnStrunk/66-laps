@@ -38,7 +38,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.13.2"
     playwright: "npm:1.55.0"
-    posthog-js: "npm:1.249.4"
+    posthog-js: "npm:1.268.0"
     react: "npm:19.1.1"
     react-dom: "npm:19.1.1"
     storybook: "npm:8.6.14"
@@ -3224,6 +3224,13 @@ __metadata:
   version: 1.0.0-next.29
   resolution: "@polka/url@npm:1.0.0-next.29"
   checksum: 10c0/0d58e081844095cb029d3c19a659bfefd09d5d51a2f791bc61eba7ea826f13d6ee204a8a448c2f5a855c17df07b37517373ff916dd05801063c0568ae9937684
+  languageName: node
+  linkType: hard
+
+"@posthog/core@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@posthog/core@npm:1.1.0"
+  checksum: 10c0/313dba3fe575bbb2fb9eae85b89d8c2bd67d6d1b83b932d2835b5abe10404e1accd443ffa55fd58bd2741e8cd9e74585303519bc5d06c20cff228ad1f5ad8b9a
   languageName: node
   linkType: hard
 
@@ -10445,10 +10452,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.249.4":
-  version: 1.249.4
-  resolution: "posthog-js@npm:1.249.4"
+"posthog-js@npm:1.268.0":
+  version: 1.268.0
+  resolution: "posthog-js@npm:1.268.0"
   dependencies:
+    "@posthog/core": "npm:1.1.0"
     core-js: "npm:^3.38.1"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.19.3"
@@ -10461,7 +10469,7 @@ __metadata:
       optional: true
     rrweb-snapshot:
       optional: true
-  checksum: 10c0/e1aa8d1ff84a56a4822cb23bd56f1b5cbdb91053cc25621dbf527219864cef95a42c15d5c23bec75fc2bd0c2dc7d03c089075676a6706d0b27093f50bc66fcbc
+  checksum: 10c0/ddc1429c300b2684a8159a2bb30707968b24776bfdeca962e85eabf59ceb8c4c4d0809977cf20494ad375d0936c4c72c1d5be314d0221dda9bc8fcf4fb7dbb45
   languageName: node
   linkType: hard
 
