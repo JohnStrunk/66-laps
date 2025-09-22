@@ -26,3 +26,12 @@ modified and before telling the user that changes are complete.**
 
 All markdown files must comply with markdownlint rules (line length,
 formatting, etc.).
+
+## Testing
+
+Tests are written using [Vitest](https://vitest.dev/). After making changes to
+the codebase, run all tests to ensure that everything is functioning correctly.
+Use the command `yarn test` to execute the tests. If any tests fail, debug and
+fix the issues. Continue to iterate unile no tests fail. **This must be done
+any time files are modified and before telling the user that changes are
+complete.**

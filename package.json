@@ -11,7 +11,7 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "npx vitest run --project unit-tests"
+    "test": "vitest run --project unit-tests"
   },
   "dependencies": {
     "@heroui/react": "2.8.4",

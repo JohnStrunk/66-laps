@@ -139,7 +139,7 @@ justification.}
 ## Other options considered
 
 {Describe other options that were considered, but not chosen. This should be a
-list of options with a short description of each.}
+bulleted list of options with a short description of each.}
 
 ## Additional information
 

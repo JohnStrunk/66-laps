@@ -57,7 +57,7 @@ repos:
     hooks:
       # Lint markdown files
       - id: markdownlint
-        args: ["--config", ".github/markdownlint-config.yaml"]
+        args: ["--fix", "--config", ".github/markdownlint-config.yaml"]
         exclude: |
           (?x)^(
                 .github/pull_request_template.md
