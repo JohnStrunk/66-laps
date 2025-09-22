@@ -30,10 +30,10 @@ __metadata:
     "@vitest/browser": "npm:3.1.4"
     "@vitest/coverage-v8": "npm:3.1.4"
     eslint: "npm:9.36.0"
-    eslint-config-next: "npm:15.3.3"
+    eslint-config-next: "npm:15.5.3"
     eslint-plugin-storybook: "npm:0.12.0"
     framer-motion: "npm:12.23.18"
-    lucide-react: "npm:0.527.0"
+    lucide-react: "npm:0.544.0"
     next: "npm:15.3.3"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.11.0"
@@ -2684,12 +2684,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:15.3.3":
-  version: 15.3.3
-  resolution: "@next/eslint-plugin-next@npm:15.3.3"
+"@next/eslint-plugin-next@npm:15.5.3":
+  version: 15.5.3
+  resolution: "@next/eslint-plugin-next@npm:15.5.3"
   dependencies:
     fast-glob: "npm:3.3.1"
-  checksum: 10c0/d6c95d07d46b9369f27eb716e2f6c8df6d97e077b055e26eff8f1931fc3cd7a6af73461d318917e60b68561ea90e0b5f43a2c6eaf641c1f740aadd1d2b12919a
+  checksum: 10c0/c8d083b4bd789f238ac99081034b59bb7f5a65e34d188a53980d4f47b65889582ff3d3803b915a26160c5192d2b1ebf29db6441d03d1f941787d8bf29e0673e0
   languageName: node
   linkType: hard
 
@@ -7837,11 +7837,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-next@npm:15.3.3":
-  version: 15.3.3
-  resolution: "eslint-config-next@npm:15.3.3"
+"eslint-config-next@npm:15.5.3":
+  version: 15.5.3
+  resolution: "eslint-config-next@npm:15.5.3"
   dependencies:
-    "@next/eslint-plugin-next": "npm:15.3.3"
+    "@next/eslint-plugin-next": "npm:15.5.3"
     "@rushstack/eslint-patch": "npm:^1.10.3"
     "@typescript-eslint/eslint-plugin": "npm:^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
     "@typescript-eslint/parser": "npm:^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
@@ -7857,7 +7857,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/908f0edce6ae1aeb1565e9b52739fe4086ba66da9926baa2fe2580e2f4c99619b033bfb0bbbbae4e02f28e411715ceb684e574a212774f47fa5b627f337fd1d7
+  checksum: 10c0/c49b7280e79b2b9af5dac43200a2b3c496e8d3e967b90bdd7ba4962a0b19fa5e81b0cca64c13b9b93106dafe889b5ccc3c15c0cfe7dbd2d23bf546f3fbc979ba
   languageName: node
   linkType: hard
 
@@ -9593,12 +9593,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:0.527.0":
-  version: 0.527.0
-  resolution: "lucide-react@npm:0.527.0"
+"lucide-react@npm:0.544.0":
+  version: 0.544.0
+  resolution: "lucide-react@npm:0.544.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/eb0b43fa961cb5bae42b81d790d33cd52c43836ee52795aa7f20fa3fbc39f52bfd9e970061e0484800f1b1500c6edc5c7f3094d45cfaf302d4df7d93066a51e1
+  checksum: 10c0/2503f8cf65e62915997073b6053423bf8091b9470cb397560b417ef2f1628ea162c49e821b787cf153afb86828482d941f051c3f2aa642a1fa58c3de227e0113
   languageName: node
   linkType: hard
 
