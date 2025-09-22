@@ -33,7 +33,7 @@ __metadata:
     eslint-config-next: "npm:15.3.3"
     eslint-plugin-storybook: "npm:0.12.0"
     framer-motion: "npm:12.23.18"
-    lucide-react: "npm:0.527.0"
+    lucide-react: "npm:0.544.0"
     next: "npm:15.3.3"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.11.0"
@@ -9554,12 +9554,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:0.527.0":
-  version: 0.527.0
-  resolution: "lucide-react@npm:0.527.0"
+"lucide-react@npm:0.544.0":
+  version: 0.544.0
+  resolution: "lucide-react@npm:0.544.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/eb0b43fa961cb5bae42b81d790d33cd52c43836ee52795aa7f20fa3fbc39f52bfd9e970061e0484800f1b1500c6edc5c7f3094d45cfaf302d4df7d93066a51e1
+  checksum: 10c0/2503f8cf65e62915997073b6053423bf8091b9470cb397560b417ef2f1628ea162c49e821b787cf153afb86828482d941f051c3f2aa642a1fa58c3de227e0113
   languageName: node
   linkType: hard
 
