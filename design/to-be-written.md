@@ -3,7 +3,7 @@
 
 To do:
 
-- CI/CD: GitHub Actions Workflows, pre-commit, GitHub Pages
+- Website hosting via GitHub Pages
 - Package Management: yarn
 - Testing Strategy: Vitest
 - Component Development & Documentation: Storybook
