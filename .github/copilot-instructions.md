@@ -24,8 +24,13 @@ problems. If any issues are found, fix them, and re-run the script. Continue to
 iterate until no issues are found. **This must be done any time files are
 modified and before telling the user that changes are complete.**
 
+**All files in the repository must use LF (Unix-style) line endings.** After any
+modification, check and fix line endings for all files. No linting errors of any
+kind (including line endings, formatting, etc.) are permitted.
+
 All markdown files must comply with markdownlint rules (line length,
-formatting, etc.).
+formatting, etc.). Markdown and YAML files must not have blank lines before the
+document start and must use LF line endings.
 
 ## Testing
 

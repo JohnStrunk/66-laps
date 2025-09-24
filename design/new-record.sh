@@ -146,7 +146,7 @@ bulleted list of options with a short description of each.}
 {This section is optional. It can be used to provide additional information
 that is relevant to the decision, such as links to related documents, diagrams,
 or other resources. If there is no additional information, this section should
-be omitted.}
+be omitted. If other MADRs are referenced, they should be listed here.}
 EOF
     echo "$filename"
 }
