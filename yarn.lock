@@ -36,7 +36,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.13.2"
     playwright: "npm:1.55.1"
-    posthog-js: "npm:1.268.2"
+    posthog-js: "npm:1.268.4"
     react: "npm:19.1.1"
     react-dom: "npm:19.1.1"
     storybook: "npm:9.1.8"
@@ -3219,10 +3219,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/core@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@posthog/core@npm:1.2.0"
-  checksum: 10c0/5d20d817ab95ac8eec707ba566c414a95074ea36524b88f41b463af9d72eb3b81f58fc05f51f991bb155961774f4b32d913922f41d75f04648318907dfcc0868
+"@posthog/core@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@posthog/core@npm:1.2.1"
+  checksum: 10c0/666088605d586aa7a2afb3248a0694e23db5f01f5d65b860494a8a03e5b9cedbe104cd1cb076334182c0319746651fceeb6b4faaab0e94399bc40540b450ca95
   languageName: node
   linkType: hard
 
@@ -10171,11 +10171,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.268.2":
-  version: 1.268.2
-  resolution: "posthog-js@npm:1.268.2"
+"posthog-js@npm:1.268.4":
+  version: 1.268.4
+  resolution: "posthog-js@npm:1.268.4"
   dependencies:
-    "@posthog/core": "npm:1.2.0"
+    "@posthog/core": "npm:1.2.1"
     core-js: "npm:^3.38.1"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.19.3"
@@ -10188,7 +10188,7 @@ __metadata:
       optional: true
     rrweb-snapshot:
       optional: true
-  checksum: 10c0/822b421a3297a25311087ce6d14b41036d5775f1f369b59d9501e642b5a6402c7653b06ea1d9c9459ee62d78ddb021ee183b2c8eb74daf10fdae39a536ca69a8
+  checksum: 10c0/724905c35903e0fd9e7a7d226dffc408534eafc5478a9a61455eddecc1001faa85b3b87cfe5603121c303e67c1530300df7555b3f991a5a1552e158deaf84c87
   languageName: node
   linkType: hard
 
