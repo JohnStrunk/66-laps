@@ -3,13 +3,7 @@
 
 To do:
 
-- Website hosting via GitHub Pages
-- Package Management: yarn
-- Testing Strategy: Vitest
-- Component Development & Documentation: Storybook
-- Styling Approach: TailwindCSS
-- UI Components: @heroui/react
+- Must work and look good on both mobile and desktop
 - Iconography: Lucide React
-- 2D Rendering: Pixi.js and @pixi/react
 - Error Tracking: Sentry Integration
 - Analytics: PostHog Integration
