@@ -36,7 +36,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.13.2"
     playwright: "npm:1.55.1"
-    posthog-js: "npm:1.268.4"
+    posthog-js: "npm:1.268.5"
     react: "npm:19.1.1"
     react-dom: "npm:19.1.1"
     storybook: "npm:9.1.8"
@@ -10171,9 +10171,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.268.4":
-  version: 1.268.4
-  resolution: "posthog-js@npm:1.268.4"
+"posthog-js@npm:1.268.5":
+  version: 1.268.5
+  resolution: "posthog-js@npm:1.268.5"
   dependencies:
     "@posthog/core": "npm:1.2.1"
     core-js: "npm:^3.38.1"
@@ -10188,7 +10188,7 @@ __metadata:
       optional: true
     rrweb-snapshot:
       optional: true
-  checksum: 10c0/724905c35903e0fd9e7a7d226dffc408534eafc5478a9a61455eddecc1001faa85b3b87cfe5603121c303e67c1530300df7555b3f991a5a1552e158deaf84c87
+  checksum: 10c0/153d926f443329ce1516a08ec4f28dac99cf9eaa65f6ff30cbc7284026f4c1c2657ecb4508a5b8e700e9d085d71557c11bfd9782566bc77a6d06068b187a644b
   languageName: node
   linkType: hard
 
