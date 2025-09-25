@@ -139,14 +139,14 @@ justification.}
 ## Other options considered
 
 {Describe other options that were considered, but not chosen. This should be a
-list of options with a short description of each.}
+bulleted list of options with a short description of each.}
 
 ## Additional information
 
 {This section is optional. It can be used to provide additional information
 that is relevant to the decision, such as links to related documents, diagrams,
 or other resources. If there is no additional information, this section should
-be omitted.}
+be omitted. If other MADRs are referenced, they should be listed here.}
 EOF
     echo "$filename"
 }
