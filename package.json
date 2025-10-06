@@ -14,7 +14,7 @@
     "test": "vitest run --project unit-tests"
   },
   "dependencies": {
-    "@heroui/react": "2.8.4",
+    "@heroui/react": "2.8.5",
     "@pixi/react": "8.0.3",
     "@sentry/nextjs": "10.17.0",
     "framer-motion": "12.23.22",
