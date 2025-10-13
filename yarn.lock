@@ -34,7 +34,7 @@ __metadata:
     lucide-react: "npm:0.544.0"
     next: "npm:15.5.4"
     next-themes: "npm:0.4.6"
-    pixi.js: "npm:8.13.2"
+    pixi.js: "npm:8.14.0"
     playwright: "npm:1.55.1"
     posthog-js: "npm:1.271.0"
     react: "npm:19.2.0"
@@ -9549,9 +9549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixi.js@npm:8.13.2":
-  version: 8.13.2
-  resolution: "pixi.js@npm:8.13.2"
+"pixi.js@npm:8.14.0":
+  version: 8.14.0
+  resolution: "pixi.js@npm:8.14.0"
   dependencies:
     "@pixi/colord": "npm:^2.9.6"
     "@types/css-font-loading-module": "npm:^0.0.12"
@@ -9564,7 +9564,7 @@ __metadata:
     ismobilejs: "npm:^1.1.1"
     parse-svg-path: "npm:^0.1.2"
     tiny-lru: "npm:^11.4.5"
-  checksum: 10c0/0d3f75c9d82178ac1f697e88b6e3a7b29f60cf3f9bf7af92e79e3e6e96ef6bc0c040bf698b90740b8c59f68dc58f4ed230571f7391725d3a0f5345bddc56059d
+  checksum: 10c0/a455215bafe471685a3c568c1d4b551b3a14e17dd3184dec3785784a3c0ea8cd23477f86be904232234f392f710c81ca2cea355de158e4bd189ac4e082065f40
   languageName: node
   linkType: hard
 
