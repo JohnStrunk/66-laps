@@ -37,7 +37,7 @@
     "@storybook/react": "9.1.16",
     "@tailwindcss/postcss": "4.1.17",
     "@tailwindcss/typography": "0.5.19",
-    "@types/node": "22.18.12",
+    "@types/node": "22.19.1",
     "@types/react": "19.2.6",
     "@types/react-dom": "19.2.3",
     "@vitest/browser": "3.2.4",
