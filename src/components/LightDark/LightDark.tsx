@@ -13,6 +13,8 @@ export default function LightDark() {
     const postHog = usePostHog();
 
     useEffect(() => {
+        // Prevent hydration mismatch by only rendering after mount
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true)
     }, [])
 
