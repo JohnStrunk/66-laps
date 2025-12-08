@@ -1,7 +1,11 @@
 ---
 # https://docs.mergify.com/
+merge_queue:
+  max_parallel_checks: 1
+
 queue_rules:
   - name: default
+    batch_size: 1  # Don't combine PRs into draft multi-merge PRs
     queue_conditions:
       - or:
           - author=JohnStrunk
