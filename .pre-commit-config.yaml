@@ -53,7 +53,7 @@ repos:
         args: ["--strict", "-c", ".github/yamllint-config.yaml"]
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: "v0.46.0"
+    rev: "v0.47.0"
     hooks:
       # Lint markdown files
       - id: markdownlint
