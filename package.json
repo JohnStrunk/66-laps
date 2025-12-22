@@ -16,7 +16,7 @@
   "dependencies": {
     "@heroui/react": "2.8.7",
     "@pixi/react": "8.0.5",
-    "@sentry/nextjs": "10.29.0",
+    "@sentry/nextjs": "10.32.1",
     "framer-motion": "12.23.25",
     "lucide-react": "0.562.0",
     "next": "16.0.10",
