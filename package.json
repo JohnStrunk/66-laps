@@ -14,7 +14,7 @@
     "test": "vitest run --project unit-tests"
   },
   "dependencies": {
-    "@heroui/react": "2.8.5",
+    "@heroui/react": "2.8.7",
     "@pixi/react": "8.0.5",
     "@sentry/nextjs": "10.29.0",
     "framer-motion": "12.23.25",
@@ -37,7 +37,7 @@
     "@storybook/react": "10.1.10",
     "@tailwindcss/postcss": "4.1.17",
     "@tailwindcss/typography": "0.5.19",
-    "@types/node": "24.10.1",
+    "@types/node": "24.10.4",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitest/browser": "4.0.15",
