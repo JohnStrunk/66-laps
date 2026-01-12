@@ -22,7 +22,7 @@ __metadata:
     "@storybook/react": "npm:10.1.11"
     "@tailwindcss/postcss": "npm:4.1.18"
     "@tailwindcss/typography": "npm:0.5.19"
-    "@types/node": "npm:24.10.4"
+    "@types/node": "npm:24.10.7"
     "@types/react": "npm:19.2.8"
     "@types/react-dom": "npm:19.2.3"
     "@vitest/browser": "npm:4.0.16"
@@ -35,7 +35,7 @@ __metadata:
     lucide-react: "npm:0.562.0"
     next: "npm:16.1.1"
     next-themes: "npm:0.4.6"
-    pixi.js: "npm:8.14.3"
+    pixi.js: "npm:8.15.0"
     playwright: "npm:1.57.0"
     posthog-js: "npm:1.309.1"
     react: "npm:19.2.3"
@@ -5718,12 +5718,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.10.4":
-  version: 24.10.4
-  resolution: "@types/node@npm:24.10.4"
+"@types/node@npm:24.10.7":
+  version: 24.10.7
+  resolution: "@types/node@npm:24.10.7"
   dependencies:
     undici-types: "npm:~7.16.0"
-  checksum: 10c0/069639cb7233ee747df1897b5e784f6b6c5da765c96c94773c580aac888fa1a585048d2a6e95eb8302d89c7a9df75801c8b5a0b7d0221d4249059cf09a5f4228
+  checksum: 10c0/dcc1b8caf16c7b54dfccbe5c23cf4156e924cebcd9ab0a00147c841279f8151a10888c76fd82dda76e0a849aaf5a57097ee2b156308a355959900c1e647d7e61
   languageName: node
   linkType: hard
 
@@ -10096,9 +10096,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixi.js@npm:8.14.3":
-  version: 8.14.3
-  resolution: "pixi.js@npm:8.14.3"
+"pixi.js@npm:8.15.0":
+  version: 8.15.0
+  resolution: "pixi.js@npm:8.15.0"
   dependencies:
     "@pixi/colord": "npm:^2.9.6"
     "@types/css-font-loading-module": "npm:^0.0.12"
@@ -10111,7 +10111,7 @@ __metadata:
     ismobilejs: "npm:^1.1.1"
     parse-svg-path: "npm:^0.1.2"
     tiny-lru: "npm:^11.4.5"
-  checksum: 10c0/d9a729d418851a4dc71ebb7d9ce7aa5a48efbca6db82f7e99655877fc3632b8e1780e7ce79e6c1058d5736d56d07573e25ff5f140dc006406997818c2092deb5
+  checksum: 10c0/061c29c09e5f395dd1ee651b80d1847b46adcbce3d41596be25c0a1d03f4e6c546e4374f564c93b322e39e823a3008a462b44537368c8dd04f3c796e78759741
   languageName: node
   linkType: hard
 
