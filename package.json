@@ -52,7 +52,7 @@
     "eslint": "9.39.2",
     "eslint-config-next": "16.1.4",
     "eslint-plugin-storybook": "10.2.0",
-    "playwright": "1.58.0",
+    "playwright": "1.58.1",
     "storybook": "10.2.0",
     "tailwindcss": "4.1.18",
     "typescript": "5.9.3",
