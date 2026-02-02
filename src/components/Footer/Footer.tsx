@@ -18,7 +18,7 @@ export default function Footer() {
                         feedback@66-laps.com
                     </Link>
                 </div>
-                <div className="mx-6 min-w-[32px]">
+                <div className="mx-6 min-w-8">
                     <Link
                         isExternal
                         onPress={() => {
@@ -29,7 +29,7 @@ export default function Footer() {
                             );
                         }}
                         href="https://github.com/JohnStrunk/66-laps">
-                        <Image className="invert h-[32px] w-[32px]" src="/images/github-mark.svg" alt="GitHub" width={32} height={32} />
+                        <Image className="invert h-8 w-8" src="/images/github-mark.svg" alt="GitHub" width={32} height={32} />
                     </Link>
                 </div>
             </div>
