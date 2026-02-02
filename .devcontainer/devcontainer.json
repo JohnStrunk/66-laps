@@ -1,30 +1,46 @@
 {
-	// For format details, see https://aka.ms/devcontainer.json.
-	// Other base images: https://github.com/devcontainers/images
-	"name": "Node.js & TypeScript",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:4.0.4-22@sha256:8f3fcad0ce98bbfe0acec0fade100b238b63fccc5f597db55def37431eaff279",
-	// Available features: https://containers.dev/features
-	"features": {
-		"ghcr.io/devcontainers-extra/features/act:1.0.15": {},
-		"ghcr.io/devcontainers/features/github-cli:1.0.15": {},
-		"ghcr.io/devcontainers-extra/features/pre-commit:2.0.18": {}
-	},
-	"containerEnv": {
-		// Disable Next.js telemetry
-		// https://nextjs.org/telemetry
-		"NEXT_TELEMETRY_DISABLED": "1"
-	},
-	"postCreateCommand": {
-		// Install pre-commit hooks in the background since they can take a
-		// while, and we want to minimize waiting during `git commit`
-		"Initialize pre-commit environment": "nohup sh -c 'pre-commit install -f --install-hooks &' < /dev/null > /dev/null 2>&1",
-		"Enable corepack": "sudo corepack enable"
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"bradlc.vscode-tailwindcss"
-			]
-		}
-	}
+    // For format details, see https://aka.ms/devcontainer.json.
+    // Other base images: https://github.com/devcontainers/images
+    "name": "Node.js & TypeScript",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:4.0.4-22@sha256:8f3fcad0ce98bbfe0acec0fade100b238b63fccc5f597db55def37431eaff279",
+    // Available features: https://containers.dev/features
+    "features": {
+        "ghcr.io/devcontainers-extra/features/act:1.0.15": {},
+        "ghcr.io/devcontainers/features/github-cli:1.0.15": {},
+        "ghcr.io/devcontainers/features/go:1.3.2":{},
+        "ghcr.io/devcontainers-extra/features/pre-commit:2.0.18": {},
+        "ghcr.io/devcontainers-extra/features/shellcheck:1.1.0": {},
+        "ghcr.io/devcontainers-extra/features/uv:1.0.2": {},
+    },
+    "containerEnv": {
+        // Disable Next.js telemetry
+        // https://nextjs.org/telemetry
+        "NEXT_TELEMETRY_DISABLED": "1",
+        // Ensure UV cache is on the same volume for fast access
+        "UV_CACHE_DIR": "${containerWorkspaceFolder}/.uv_cache",
+    },
+    "postCreateCommand": {
+        "Enable corepack": "sudo corepack enable && corepack install -g yarn",
+        "Initialize pre-commit environment": "nohup sh -c 'pre-commit install -f --install-hooks &' < /dev/null > /dev/null 2>&1",
+        "Install beads": "go install github.com/steveyegge/beads/cmd/bd@latest",
+        "Install npm tools": "npm install -g --no-fund @google/gemini-cli markdownlint-cli opencode-ai",
+    },
+    "mounts": [
+        // Map in the user's GCP credentials for Vertex AI access
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/gcloud/application_default_credentials.json,target=/home/vscode/.config/gcloud/application_default_credentials.json,type=bind,ro",
+        // Map in user's OpenCode config from host
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/opencode,target=/home/vscode/.config/opencode,type=bind,consistency=cached",
+    ],
+    "remoteEnv": {
+        // Pass through Context7 API key for MCP access
+        "CONTEXT7_API_KEY": "${localEnv:CONTEXT7_API_KEY}",
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bradlc.vscode-tailwindcss",
+                "sst-dev.opencode",
+            ]
+        }
+    }
 }

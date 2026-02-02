@@ -1,13 +1,7 @@
 {
     "chat.tools.terminal.autoApprove": {
         "pre-commit run": true,
-        "./.github/lint-all.sh": true,
-        ".github/lint-all.sh": true,
-        "bash .github/lint-all.sh": {
-            "approve": true,
-            "matchCommandLine": true
-        },
-        "./design/new-record.sh": true,
-        "design/new-record.sh": true
-    }
+        ".github/lint-all.sh": true
+    },
+    "terminal.integrated.sendKeybindingsToShell": true
 }
