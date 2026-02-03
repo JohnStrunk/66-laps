@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "10.2.9",
-    "@heroui/react": "2.8.7",
+    "@heroui/react": "2.8.8",
     "@pixi/react": "8.0.5",
     "@sentry/nextjs": "10.36.0",
     "framer-motion": "12.29.2",
