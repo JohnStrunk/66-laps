@@ -35,6 +35,7 @@ __metadata:
     "@vitest/browser": "npm:4.0.18"
     "@vitest/browser-playwright": "npm:4.0.18"
     "@vitest/coverage-v8": "npm:4.0.18"
+    baseline-browser-mapping: "npm:2.9.19"
     eslint: "npm:9.39.2"
     eslint-config-next: "npm:16.1.4"
     eslint-plugin-storybook: "npm:10.2.0"
@@ -8893,25 +8894,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"baseline-browser-mapping@npm:^2.8.3":
-  version: 2.9.11
-  resolution: "baseline-browser-mapping@npm:2.9.11"
-  bin:
-    baseline-browser-mapping: dist/cli.js
-  checksum: 10c0/eba49fcc1b33ab994aeeb73a4848f2670e06a0886dd5b903689ae6f60d47e7f1bea9262dbb2548c48179e858f7eda2b82ddf941ae783b862f4dcc51085a246f2
-  languageName: node
-  linkType: hard
-
-"baseline-browser-mapping@npm:^2.8.9":
-  version: 2.8.12
-  resolution: "baseline-browser-mapping@npm:2.8.12"
-  bin:
-    baseline-browser-mapping: dist/cli.js
-  checksum: 10c0/4c09bfbe4c1597148a29852663d9319ccac3b2ec7b567b615a02ad320dc0efb70a4ea4465a6a24968105f6ece515538203471f2aca4facf7403bc0f9cd6cadd8
-  languageName: node
-  linkType: hard
-
-"baseline-browser-mapping@npm:^2.9.0":
+"baseline-browser-mapping@npm:2.9.19, baseline-browser-mapping@npm:^2.8.3, baseline-browser-mapping@npm:^2.8.9, baseline-browser-mapping@npm:^2.9.0":
   version: 2.9.19
   resolution: "baseline-browser-mapping@npm:2.9.19"
   bin:
