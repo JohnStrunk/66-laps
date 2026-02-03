@@ -99,7 +99,7 @@ digraph feature_spec {
 - [ ] Keep scenarios simple (3-7 steps) and focused on behavior
 - [ ] Ensure all scenarios are independently executable
 - [ ] Identify the correct validation tool based on project language:
-  - TypeScript/JavaScript: `npx cucumber-js --dry-run`
+  - TypeScript/JavaScript: `yarn test:bdd --dry-run`
   - Python: `uvx behave -d`
   - Other: Follow project convention
 - [ ] Run the tool to check for undefined steps

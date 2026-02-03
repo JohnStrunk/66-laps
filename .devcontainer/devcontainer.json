@@ -22,7 +22,7 @@
     "postCreateCommand": {
         "Enable corepack": "sudo corepack enable && corepack install -g yarn",
         "Initialize pre-commit environment": "nohup sh -c 'pre-commit install -f --install-hooks &' < /dev/null > /dev/null 2>&1",
-        "Install beads": "go install github.com/steveyegge/beads/cmd/bd@latest",
+        "Install beads": "sudo apt-get update && sudo apt-get install -y gcc g++ libzstd-dev libicu-dev && go install github.com/steveyegge/beads/cmd/bd@latest",
         "Install npm tools": "npm install -g --no-fund @google/gemini-cli markdownlint-cli opencode-ai",
     },
     "mounts": [
@@ -38,6 +38,7 @@
     "customizations": {
         "vscode": {
             "extensions": [
+                "alexkrechik.cucumberautocomplete",
                 "bradlc.vscode-tailwindcss",
                 "sst-dev.opencode",
             ]
