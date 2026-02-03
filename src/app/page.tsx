@@ -62,7 +62,7 @@ export default function Home() {
                     <Card
                         className="max-w-xs h-96 mx-auto mt-6 drop-shadow-2xl hover:drop-shadow-content4"
                         isPressable
-                        onPress={() => navTo("/app")}
+                        onPress={() => navTo("/practice")}
                     >
                         <CardHeader className="flex flex-row items-center">
                             <MonitorPlay className="w-[2em] h-[2em]" />
