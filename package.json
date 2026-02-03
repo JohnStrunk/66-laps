@@ -14,7 +14,7 @@
     "test": "NODE_OPTIONS=\"--import tsx\" cucumber-js"
   },
   "dependencies": {
-    "@ducanh2912/next-pwa": "^10.2.9",
+    "@ducanh2912/next-pwa": "10.2.9",
     "@heroui/react": "2.8.7",
     "@pixi/react": "8.0.5",
     "@sentry/nextjs": "10.36.0",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "5.0.0",
-    "@cucumber/cucumber": "^12.6.0",
+    "@cucumber/cucumber": "12.6.0",
     "@eslint/eslintrc": "3.3.3",
     "@opentelemetry/api": "1.9.0",
     "@opentelemetry/context-async-hooks": "2.5.0",
@@ -57,7 +57,7 @@
     "playwright": "1.58.1",
     "storybook": "10.2.0",
     "tailwindcss": "4.1.18",
-    "tsx": "^4.21.0",
+    "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vite": "7.2.4",
     "vitest": "4.0.18",

@@ -10,8 +10,8 @@ __metadata:
   resolution: "66-laps@workspace:."
   dependencies:
     "@chromatic-com/storybook": "npm:5.0.0"
-    "@cucumber/cucumber": "npm:^12.6.0"
-    "@ducanh2912/next-pwa": "npm:^10.2.9"
+    "@cucumber/cucumber": "npm:12.6.0"
+    "@ducanh2912/next-pwa": "npm:10.2.9"
     "@eslint/eslintrc": "npm:3.3.3"
     "@heroui/react": "npm:2.8.7"
     "@opentelemetry/api": "npm:1.9.0"
@@ -50,7 +50,7 @@ __metadata:
     react-dom: "npm:19.2.3"
     storybook: "npm:10.2.0"
     tailwindcss: "npm:4.1.18"
-    tsx: "npm:^4.21.0"
+    tsx: "npm:4.21.0"
     typescript: "npm:5.9.3"
     vite: "npm:7.2.4"
     vitest: "npm:4.0.18"
@@ -1453,7 +1453,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:^12.6.0":
+"@cucumber/cucumber@npm:12.6.0":
   version: 12.6.0
   resolution: "@cucumber/cucumber@npm:12.6.0"
   dependencies:
@@ -1650,7 +1650,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ducanh2912/next-pwa@npm:^10.2.9":
+"@ducanh2912/next-pwa@npm:10.2.9":
   version: 10.2.9
   resolution: "@ducanh2912/next-pwa@npm:10.2.9"
   dependencies:
@@ -14974,7 +14974,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^4.21.0":
+"tsx@npm:4.21.0":
   version: 4.21.0
   resolution: "tsx@npm:4.21.0"
   dependencies:
