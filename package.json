@@ -6,15 +6,12 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev-notp": "next dev",
-    "dev-test": "npx vitest dev --project unit-tests",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "vitest run --project unit-tests && NODE_OPTIONS=\"--import tsx\" cucumber-js",
-    "test:unit": "vitest run --project unit-tests",
-    "test:bdd": "NODE_OPTIONS=\"--import tsx\" cucumber-js"
+    "test": "NODE_OPTIONS=\"--import tsx\" cucumber-js"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
