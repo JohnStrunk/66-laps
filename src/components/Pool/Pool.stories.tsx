@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 import { SwimmerModel } from '@/modules/SwimmerModel';
 import Pool, { PoolLength } from './Pool';

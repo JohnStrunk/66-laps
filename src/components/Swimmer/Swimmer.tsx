@@ -35,7 +35,7 @@ function getPosition(startEnd: PointData, turnEnd: PointData, location: number):
 
 export default function Swimmer(props: SwimmerProps) {
     // When first created, pick a random emoji from the list
-    const [useChar,] = useState<string>(emojis[Math.floor(Math.random() * emojis.length)]);
+    const [useChar] = useState<string>(() => emojis[Math.floor(Math.random() * emojis.length)]);
     const [usePosition, setPosition] = useState<PointData>({ x: 0, y: 0 });
 
     useTick(() => {

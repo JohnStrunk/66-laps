@@ -13,7 +13,8 @@ export default function LightDark() {
     const postHog = usePostHog();
 
     useEffect(() => {
-        setMounted(true)
+        const handle = requestAnimationFrame(() => setMounted(true));
+        return () => cancelAnimationFrame(handle);
     }, [])
 
     if (!mounted) return null
