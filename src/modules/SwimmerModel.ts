@@ -1,10 +1,12 @@
 /** The direction of the swimmer */
-export enum Direction {
+export const Direction = {
     /** The swimmer is moving toward the start end of the pool */
-    TOSTART,
+    TOSTART: 0,
     /** The swimmer is moving toward the turn end of the pool */
-    TOTURN,
-}
+    TOTURN: 1,
+} as const;
+
+export type Direction = (typeof Direction)[keyof typeof Direction];
 
 /** The position and direction of a swimmer */
 export type SwimVector = {
