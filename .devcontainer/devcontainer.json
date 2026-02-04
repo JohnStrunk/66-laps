@@ -24,6 +24,7 @@
         "Initialize pre-commit environment": "nohup sh -c 'pre-commit install -f --install-hooks &' < /dev/null > /dev/null 2>&1",
         "Install beads": "sudo apt-get update && sudo apt-get install -y gcc g++ libzstd-dev libicu-dev && go install github.com/steveyegge/beads/cmd/bd@latest",
         "Install npm tools": "npm install -g --no-fund @google/gemini-cli markdownlint-cli opencode-ai",
+        "Install Playwright browsers": "sudo npx -y playwright install --with-deps"
     },
     "mounts": [
         // Map in the user's GCP credentials for Vertex AI access
