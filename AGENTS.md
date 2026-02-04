@@ -19,12 +19,23 @@ This document provides essential information for AI agents working on the
 ## Repository Structure
 
 - `src/app/`: Next.js App Router pages and layouts.
+  - **Main Site**: Core routes including `/` (home), `/counting`, `/practice`,
+    and `/sheets`.
+  - **PWA ("Bell Lap")**: Mobile-focused application code located under
+    `src/app/(pwa)/app/`.
 - `src/components/`: Feature-based component organization (e.g., `Pool/`,
   `Swimmer/`).
 - `src/modules/`: Domain logic and models.
 - `src/stories/`: Storybook stories.
 - `.github/instructions/`: Detailed coding standards and workflows (CRITICAL).
 - `.github/lint-all.sh`: script to run all linting and type checks.
+
+## Project Terminology
+
+- **Main Site**: Refers to the public-facing pages: `/`, `/counting`,
+  `/practice`, and `/sheets`.
+- **PWA / Bell Lap / "the app"**: Refers specifically to the Progressive Web
+  App located at the `/app` route (source code in `src/app/(pwa)/app/`).
 
 ## Essential Commands
 
