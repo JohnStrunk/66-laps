@@ -8,7 +8,7 @@ Feature: Lane Stack
 
   Rule: Lane Configuration
     Scenario Outline: Correct number of lanes are rendered
-      Given the app is configured for a <count>-lane event
+      Given Bell Lap is configured for a <count>-lane event
       Then there should be <count> lane rows displayed
 
       Examples:
@@ -19,28 +19,28 @@ Feature: Lane Stack
 
   Rule: Layout and Appearance
     Scenario: Lane rows display two distinct functional zones
-      Given the app is configured for an 8-lane event
+      Given Bell Lap is configured for an 8-lane event
       Then each lane row should be split into Zone A and Zone B
       And Zone A should occupy approximately 35% of the width
       And Zone B should occupy approximately 65% of the width
 
     Scenario: Zone B displays the lane number
-      Given the app is configured for an 8-lane event
+      Given Bell Lap is configured for an 8-lane event
       Then each lane's Zone B should display its corresponding lane number as a watermark
 
   Rule: Manual and Touch Interaction
     Scenario: Tapping the Touch Pad (Zone B) increments count
-      Given the app is configured for an 8-lane event
+      Given Bell Lap is configured for an 8-lane event
       When I tap the Zone B area for Lane 1
       Then the lap count for Lane 1 should be 2
 
     Scenario: Using the manual plus button increments count
-      Given the app is configured for an 8-lane event
+      Given Bell Lap is configured for an 8-lane event
       When I tap the "+" button in Zone A for Lane 3
       Then the lap count for Lane 3 should be 2
 
     Scenario: Using the manual minus button decrements count
-      Given the app is configured for an 8-lane event
+      Given Bell Lap is configured for an 8-lane event
       And Lane 5 has a lap count of 4
       When I tap the "-" button in Zone A for Lane 5
       Then the lap count for Lane 5 should be 2

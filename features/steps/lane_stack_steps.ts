@@ -1,6 +1,6 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 
-Given('the app is configured for a/an {int}-lane event', async function (laneCount: number) {
+Given('Bell Lap is configured for a/an {int}-lane event', async function (laneCount: number) {
   return 'pending';
 });
 
