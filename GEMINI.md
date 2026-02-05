@@ -37,6 +37,12 @@ This document provides essential information for AI agents working on the
 - **PWA / Bell Lap / "the app"**: Refers specifically to the Progressive Web
   App located at the `/app` route (source code in `src/app/(pwa)/app/`).
 
+## Important Constraints
+
+- **Package Management:** This project strictly uses **Yarn**. Never use `npm`
+  for installing packages or running scripts. Ensure `yarn.lock` is updated and
+  not `package-lock.json`.
+
 ## Essential Commands
 
 - **Development:** `yarn dev`

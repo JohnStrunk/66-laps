@@ -15,9 +15,9 @@ export default function LaneRow({
   onDecrement,
 }: LaneRowProps) {
   return (
-    <div className="flex w-full h-24 border-b border-divider last:border-b-0">
+    <div className="flex w-full h-24 border-b border-divider last:border-b-0" data-testid="lane-row" data-lane-number={laneNumber}>
       {/* Zone A: Manual Controls (35%) */}
-      <div className="flex-[0.35] flex flex-row items-center justify-center gap-2 border-r border-divider bg-content2 p-2">
+      <div className="flex-[0.35] flex flex-row items-center justify-center gap-2 border-r border-divider bg-content2 p-2" data-testid="lane-zone-a">
         <Button
           isIconOnly
           color="danger"
@@ -44,6 +44,7 @@ export default function LaneRow({
       {/* Zone B: Touch Pad (65%) */}
       <div
         className="flex-[0.65] relative flex items-center justify-center cursor-pointer active:bg-content3 transition-colors bg-content1"
+        data-testid="lane-zone-b"
         onClick={onIncrement}
         role="button"
         tabIndex={0}
@@ -57,7 +58,7 @@ export default function LaneRow({
         </div>
 
         {/* Current Count Display (Optional but helpful for feedback) */}
-         <span className="z-10 text-4xl font-bold text-foreground">
+         <span className="z-10 text-4xl font-bold text-foreground" data-testid="lane-count">
             {count}
           </span>
       </div>

@@ -44,3 +44,18 @@ Feature: Lane Stack
       And Lane 5 has a lap count of 4
       When I tap the "-" button in Zone A for Lane 5
       Then the lap count for Lane 5 should be 2
+
+    Scenario: Manual minus button is disabled at zero
+      Given Bell Lap is configured for an 8-lane event
+      Then the "-" button in Zone A for Lane 1 should be disabled
+
+    Scenario: Tapping Zone B multiple times increments count accordingly
+      Given Bell Lap is configured for an 8-lane event
+      When I tap the Zone B area for Lane 2
+      And I tap the Zone B area for Lane 2
+      Then the lap count for Lane 2 should be 4
+
+    Scenario: Touch Pad aria-label updates with count
+      Given Bell Lap is configured for an 8-lane event
+      When I tap the Zone B area for Lane 4
+      Then the aria-label for Lane 4's Zone B should include "Current count: 2"

@@ -21,6 +21,7 @@ playwright-cli --session=public snapshot
 ## Session Isolation Properties
 
 Each session has independent:
+
 - Cookies
 - LocalStorage / SessionStorage
 - IndexedDB
