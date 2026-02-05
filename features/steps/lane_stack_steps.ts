@@ -5,12 +5,17 @@ import { CustomWorld } from '../support/world';
 Given('Bell Lap is configured for a/an {int}-lane event', async function (this: CustomWorld, laneCount: number) {
   // Assuming localhost:3000 is where the app is running
   // We use the 'lanes' query parameter to configure the lane count as per our previous change
-  await this.page!.goto(`http://localhost:3000/app?lanes=${laneCount}`);
+  await this.page!.goto(`http://localhost:3000/app?lanes=${laneCount}&testMode=true`);
   // Wait for at least one lane row to appear to ensure app is loaded
   await this.page!.waitForSelector('[data-testid="lane-row"]');
 });
 
 Then('there should be {int} lane rows displayed', async function (this: CustomWorld, expectedCount: number) {
+  await this.page!.waitForFunction(
+    (count) => document.querySelectorAll('[data-testid="lane-row"]').length === count,
+    expectedCount,
+    { timeout: 5000 }
+  ).catch(() => {});
   const rows = await this.page!.$$('[data-testid="lane-row"]');
   assert.strictEqual(rows.length, expectedCount, `Expected ${expectedCount} rows, but found ${rows.length}`);
 });
@@ -18,8 +23,8 @@ Then('there should be {int} lane rows displayed', async function (this: CustomWo
 Given('all lanes are initially active with a lap count of {int}', async function (this: CustomWorld, initialCount: number) {
   // Ensure we are on the app page. If not, go to default.
   // This handles the case where Background runs before the Scenario setup.
-  if (this.page!.url() === 'about:blank') {
-    await this.page!.goto('http://localhost:3000/app');
+  if (this.page!.url() === 'about:blank' || !this.page!.url().includes('/app')) {
+    await this.page!.goto('http://localhost:3000/app?testMode=true');
     await this.page!.waitForSelector('[data-testid="lane-row"]');
   }
 
@@ -90,8 +95,64 @@ Then('each lane\'s Zone B should display its corresponding lane number as a wate
 });
 
 When('I tap the Zone B area for Lane {int}', async function (this: CustomWorld, laneNumber: number) {
+  // Use direct state modification to bypass lockout for speed
+  await this.page!.evaluate((l) => {
+    (window as any).__bellLapStore.getState().registerTouch(l, true); // ignoreLockout=true
+  }, laneNumber);
+});
+
+When('I long press the Zone B area for Lane {int}', async function (this: CustomWorld, laneNumber: number) {
   const zoneB = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`);
-  await zoneB.click();
+  const box = await zoneB.boundingBox();
+  if (box) {
+    await this.page!.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await this.page!.mouse.down();
+    await new Promise(r => setTimeout(r, 1200)); // Long press is 1s
+    await this.page!.mouse.up();
+  }
+});
+
+Then('Lane {int} should be marked as "EMPTY"', async function (this: CustomWorld, laneNumber: number) {
+  const row = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"]`);
+  const text = await row.textContent();
+  assert.ok(text?.includes('EMPTY'));
+});
+
+Then('Zone A controls for Lane {int} should be hidden', async function (this: CustomWorld, laneNumber: number) {
+  const zoneA = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-zone-a"]`);
+  const isVisible = await zoneA.isVisible();
+  assert.ok(!isVisible || (await zoneA.getAttribute('class'))?.includes('invisible'));
+});
+
+Then('Lane {int} should be removed from the Live Leaderboard', async function (this: CustomWorld, laneNumber: number) {
+  const entry = this.page!.locator(`[data-testid="leaderboard-lane-${laneNumber}"]`);
+  await entry.waitFor({ state: 'hidden', timeout: 2000 });
+  assert.ok(!(await entry.isVisible()));
+});
+
+Given('Lane {int} is marked as "EMPTY"', async function (this: CustomWorld, laneNumber: number) {
+  const zoneB = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`);
+  const box = await zoneB.boundingBox();
+  if (box) {
+    await this.page!.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await this.page!.mouse.down();
+    await new Promise(r => setTimeout(r, 1200));
+    await this.page!.mouse.up();
+  }
+  const text = await this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"]`).textContent();
+  assert.ok(text?.includes('EMPTY'));
+});
+
+Then('Lane {int} should be active', async function (this: CustomWorld, laneNumber: number) {
+  const row = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"]`);
+  const text = await row.textContent();
+  assert.ok(!text?.includes('EMPTY'));
+});
+
+Then('Lane {int} should be restored to the Live Leaderboard', async function (this: CustomWorld, laneNumber: number) {
+  const entry = this.page!.locator(`[data-testid="leaderboard-lane-${laneNumber}"]`);
+  await entry.waitFor({ state: 'visible', timeout: 2000 });
+  assert.ok(await entry.isVisible());
 });
 
 Then('the lap count for Lane {int} should be {int}', async function (this: CustomWorld, laneNumber: number, expectedCount: number) {

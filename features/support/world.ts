@@ -6,7 +6,7 @@ export class CustomWorld extends World {
   context?: BrowserContext;
   page?: Page;
 
-  [key: string]: any;
+  [key: string]: unknown;
 
   constructor(options: IWorldOptions) {
     super(options);

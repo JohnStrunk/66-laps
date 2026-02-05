@@ -1,34 +1,39 @@
 'use client'
 
-import Nav from "@/components/Nav/Nav";
 import Footer from "@/components/Footer/Footer";
 import LaneStack from "@/components/LaneStack/LaneStack";
+import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
+import { useBellLapStore } from "@/modules/bellLapStore";
 
-function LaneStackContent() {
+function BellLapContent() {
   const searchParams = useSearchParams();
-  // Safe parsing of the 'lanes' query parameter
-  const lanesParam = searchParams.get('lanes');
-  let laneCount = 8; // Default
-  if (lanesParam) {
-    const parsed = parseInt(lanesParam, 10);
-    if (!isNaN(parsed) && parsed > 0) {
-      laneCount = parsed;
-    }
-  }
+  const setLaneCount = useBellLapStore(state => state.setLaneCount);
+  const initialized = useRef(false);
 
-  return <LaneStack laneCount={laneCount} />;
+  useEffect(() => {
+    if (initialized.current) return;
+    const lanesParam = searchParams.get('lanes');
+    if (lanesParam) {
+      const parsed = parseInt(lanesParam, 10);
+      if (!isNaN(parsed) && parsed > 0) {
+        setLaneCount(parsed);
+      }
+    }
+    initialized.current = true;
+  }, [searchParams, setLaneCount]);
+
+  return <LaneStack />;
 }
 
 export default function PWALandingPage() {
   return (
     <div className="w-full flex flex-col min-h-screen">
-      <Nav />
+      <BellLapHeader />
       <main className="flex flex-col items-center justify-start grow p-4 gap-4">
-        <h1 className="text-2xl font-bold my-4">Bell Lap</h1>
         <Suspense fallback={<div>Loading lanes...</div>}>
-          <LaneStackContent />
+          <BellLapContent />
         </Suspense>
       </main>
       <Footer />
