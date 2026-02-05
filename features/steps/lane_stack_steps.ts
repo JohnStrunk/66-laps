@@ -2,10 +2,12 @@ import { Given, When, Then } from '@cucumber/cucumber';
 import assert from 'node:assert';
 import { CustomWorld } from '../support/world';
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+
 Given('Bell Lap is configured for a/an {int}-lane event', async function (this: CustomWorld, laneCount: number) {
   // Assuming localhost:3000 is where the app is running
   // We use the 'lanes' query parameter to configure the lane count as per our previous change
-  await this.page!.goto(`http://localhost:3000/app?lanes=${laneCount}&testMode=true`);
+  await this.page!.goto(`${BASE_URL}/app?lanes=${laneCount}&testMode=true`);
   // Wait for at least one lane row to appear to ensure app is loaded
   await this.page!.waitForSelector('[data-testid="lane-row"]');
 });
@@ -24,7 +26,7 @@ Given('all lanes are initially active with a lap count of {int}', async function
   // Ensure we are on the app page. If not, go to default.
   // This handles the case where Background runs before the Scenario setup.
   if (this.page!.url() === 'about:blank' || !this.page!.url().includes('/app')) {
-    await this.page!.goto('http://localhost:3000/app?testMode=true');
+    await this.page!.goto(`${BASE_URL}/app?testMode=true`);
     await this.page!.waitForSelector('[data-testid="lane-row"]');
   }
 

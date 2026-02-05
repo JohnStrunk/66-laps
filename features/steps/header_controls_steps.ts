@@ -12,9 +12,11 @@ const getColorClass = (className: string | null) => {
   );
 };
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+
 // Background
 Given('the app is loaded', async function (this: CustomWorld) {
-  await this.page!.goto('http://localhost:3000/app');
+  await this.page!.goto(`${BASE_URL}/app`);
   await this.page!.waitForSelector('[data-testid="lane-stack"]', { state: 'visible', timeout: 10000 });
 });
 
@@ -28,7 +30,7 @@ When('I select {string} from the Event Dropdown', async function (this: CustomWo
   await item.click({ force: true });
 });
 
-Then('the total lap count should be {int}', async function (this: CustomWorld) {
+Then('the total lap count should be {int}', async function (this: CustomWorld, _laps: number) {
   // We check if the dropdown button text updated to the event name associated with this lap count.
   // The examples are: 500 SC -> 20, 1000 SC -> 40, etc.
   // So if laps=20, dropdown should contain "500 SC"
@@ -45,7 +47,7 @@ Then('the total lap count should be {int}', async function (this: CustomWorld) {
   assert.ok(text?.includes('SC') || text?.includes('LC'), `Dropdown text "${text}" is not a valid event`);
 });
 
-Then('the lockout duration should be {int} seconds', async function (this: CustomWorld) {
+Then('the lockout duration should be {int} seconds', async function (this: CustomWorld, _seconds: number) {
   return;
 });
 
@@ -177,7 +179,7 @@ Then('the modal should close', async function (this: CustomWorld) {
 });
 
 // Rule: Live Leaderboard Status
-Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWorld) {
+Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWorld, _l1: number, _l2: number, _l3: number) {
   return;
 });
 
@@ -254,7 +256,7 @@ Then('Lane {int} and Lane {int} should have different colors in the Leaderboard'
   assert.notStrictEqual(color1, color2, `Lanes ${l1} and ${l2} should have different colors, but both are ${color1}`);
 });
 
-Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: CustomWorld, eventName: string) {
+Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: CustomWorld, eventName: string, _laps: number) {
   const dropdown = this.page!.locator('button:has-text("SC"), button:has-text("LC")').first();
   await dropdown.click();
   const popover = this.page!.locator('[role="menu"], [role="listbox"], .z-50').last();
@@ -263,7 +265,7 @@ Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: C
   await item.click({ force: true });
 });
 
-Then('Lane {int} should display the color associated with Lap {int}', async function (this: CustomWorld, lane: number) {
+Then('Lane {int} should display the color associated with Lap {int}', async function (this: CustomWorld, lane: number, _lap: number) {
   const c = await this.page!.locator(`[data-testid="leaderboard-lane-${lane}"]`).getAttribute('class');
   const color = getColorClass(c);
   assert.ok(color && color !== 'text-success' && color !== 'text-foreground/50', `Lane ${lane} should have lap color, got ${color}`);
