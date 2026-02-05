@@ -16,26 +16,20 @@
         // Disable Next.js telemetry
         // https://nextjs.org/telemetry
         "NEXT_TELEMETRY_DISABLED": "1",
+        // https://github.com/microsoft/playwright-cli#environment
+        "PLAYWRIGHT_MCP_CAPS": "vision",
+        "PLAYWRIGHT_MCP_HEADLESS": "true",
         // Ensure UV cache is on the same volume for fast access
         "UV_CACHE_DIR": "${containerWorkspaceFolder}/.uv_cache",
     },
     "postCreateCommand": {
         "Enable corepack": "sudo corepack enable && corepack install -g yarn",
         "Initialize pre-commit environment": "nohup sh -c 'pre-commit install -f --install-hooks &' < /dev/null > /dev/null 2>&1",
-        "Install beads": "sudo apt-get update && sudo apt-get install -y gcc g++ libzstd-dev libicu-dev && go install github.com/steveyegge/beads/cmd/bd@latest",
-        "Install npm tools": "npm install -g --no-fund @google/gemini-cli markdownlint-cli opencode-ai",
-        "Install Playwright browsers": "sudo npx -y playwright install --with-deps"
+        "Install Playwright browsers & beads": "npx -y playwright install --with-deps && sudo apt-get update && sudo apt-get install -y gcc g++ libzstd-dev libicu-dev && go install github.com/steveyegge/beads/cmd/bd@latest",
+        "Install npm tools": "npm install -g --no-fund @google/gemini-cli markdownlint-cli @playwright/cli",
     },
     "mounts": [
-        // Map in the user's GCP credentials for Vertex AI access
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.config/gcloud/application_default_credentials.json,target=/home/mounts/.config/gcloud/application_default_credentials.json,type=bind,ro",
-        // Map in user's OpenCode auth from host
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.local/share/opencode/auth.json,target=/home/mounts/.local/share/opencode/auth.json,type=bind,ro",
     ],
-    "postAttachCommand": {
-        "GCP credentials": "mkdir -p /home/node/.config/gcloud/ && ln -s /home/mounts/.config/gcloud/application_default_credentials.json /home/node/.config/gcloud/application_default_credentials.json",
-        "opencode auth": "mkdir -p /home/node/.local/share/opencode/ && ln -s /home/mounts/.local/share/opencode/auth.json /home/node/.local/share/opencode/auth.json",
-    },
     "remoteEnv": {
         // Pass through Context7 API key for MCP access
         "CONTEXT7_API_KEY": "${localEnv:CONTEXT7_API_KEY}",
@@ -45,7 +39,6 @@
             "extensions": [
                 "alexkrechik.cucumberautocomplete",
                 "bradlc.vscode-tailwindcss",
-                "sst-dev.opencode",
             ]
         }
     }
