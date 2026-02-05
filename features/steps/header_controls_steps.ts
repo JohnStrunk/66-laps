@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Given, When, Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../support/world';
 import assert from 'node:assert';
@@ -31,25 +30,27 @@ When('I select {string} from the Event Dropdown', async function (this: CustomWo
   await item.click({ force: true });
 });
 
-Then('the total lap count should be {int}', async function (this: CustomWorld, _laps: number) {
-  // We check if the dropdown button text updated to the event name associated with this lap count.
-  // The examples are: 500 SC -> 20, 1000 SC -> 40, etc.
-  // So if laps=20, dropdown should contain "500 SC"
-  const dropdown = this.page!.locator('button:has-text("SC"), button:has-text("LC")').first();
-  await this.page!.waitForFunction(
-    () => {
-      const btn = document.querySelector('button');
-      return btn && (btn.textContent?.includes("SC") || btn.textContent?.includes("LC"));
-    }
-  ).catch(() => {});
-
-  const text = await dropdown.textContent();
-  // Check if text is one of the valid events
-  assert.ok(text?.includes('SC') || text?.includes('LC'), `Dropdown text "${text}" is not a valid event`);
+Then('the total lap count should be {int}', async function (this: CustomWorld, laps: number) {
+  const stateLaps = await this.page!.evaluate(() => {
+    const state = window.__bellLapStore.getState();
+    // Use standard config matching src/modules/bellLapStore.ts
+    const config: Record<string, number> = {
+      '500 SC': 20, '1000 SC': 40, '1650 SC': 66, '800 LC': 16, '1500 LC': 30
+    };
+    return config[state.event];
+  });
+  assert.strictEqual(stateLaps, laps, `Expected total laps to be ${laps} but got ${stateLaps}`);
 });
 
-Then('the lockout duration should be {int} seconds', async function (this: CustomWorld, _seconds: number) {
-  return;
+Then('the lockout duration should be {int} seconds', async function (this: CustomWorld, seconds: number) {
+  const stateLockout = await this.page!.evaluate(() => {
+    const state = window.__bellLapStore.getState();
+    const config: Record<string, number> = {
+      '500 SC': 15, '1000 SC': 15, '1650 SC': 15, '800 LC': 30, '1500 LC': 30
+    };
+    return config[state.event];
+  });
+  assert.strictEqual(stateLockout, seconds, `Expected lockout to be ${seconds}s but got ${stateLockout}s`);
 });
 
 When('I select {string} from the Lane Dropdown', async function (this: CustomWorld, laneOption: string) {
@@ -156,16 +157,26 @@ Then('all lane counts should be {int}', async function (this: CustomWorld, count
 });
 
 Then('all split history should be cleared', async function (this: CustomWorld) {
-  return;
+  const historyEmpty = await this.page!.evaluate(() => {
+    return window.__bellLapStore.getState().lanes.every(l => l.history.length === 0);
+  });
+  assert.ok(historyEmpty, 'Split history should be empty after reset');
 });
 
 Then('any disabled lanes should be re-enabled', async function (this: CustomWorld) {
+  const allActive = await this.page!.evaluate(() => {
+    return window.__bellLapStore.getState().lanes.every(l => !l.isEmpty);
+  });
+  assert.ok(allActive, 'All lanes should be re-enabled after reset');
   const emptyText = await this.page!.locator('text="EMPTY"').count();
   assert.strictEqual(emptyText, 0);
 });
 
 Then('the Live Leaderboard should be cleared', async function (this: CustomWorld) {
-  return;
+  const allZero = await this.page!.evaluate(() => {
+    return window.__bellLapStore.getState().lanes.every(l => l.count === 0);
+  });
+  assert.ok(allZero, 'Leaderboard counts should be zeroed');
 });
 
 Then('the lane counts should remain unchanged', async function (this: CustomWorld) {
@@ -180,14 +191,22 @@ Then('the modal should close', async function (this: CustomWorld) {
 });
 
 // Rule: Live Leaderboard Status
-Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWorld, _l1: number, _l2: number, _l3: number) {
-  return;
+Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWorld, l1: number, l2: number, l3: number) {
+  await this.page!.evaluate((args) => {
+    const store = window.__bellLapStore.getState();
+    [args.l1, args.l2, args.l3].forEach(laneNum => {
+      const lane = store.lanes.find(l => l.laneNumber === laneNum);
+      if (lane?.isEmpty) store.toggleLaneEmpty(laneNum);
+    });
+  }, { l1, l2, l3 });
 });
 
 Given('lanes {int}, {int}, and {int} are empty', async function (this: CustomWorld, l1: number, l2: number, l3: number) {
   for (const lane of [l1, l2, l3]) {
     await this.page!.evaluate((l) => {
-      window.__bellLapStore.getState().toggleLaneEmpty(l);
+      const store = window.__bellLapStore.getState();
+      const laneObj = store.lanes.find(lo => lo.laneNumber === l);
+      if (laneObj && !laneObj.isEmpty) store.toggleLaneEmpty(l);
     }, lane);
   }
 });
@@ -210,7 +229,8 @@ Then('the Live Leaderboard should not display lanes {int}, {int}, and {int}', as
 
 Given('Lane {int} is on Lap {int}', async function (this: CustomWorld, lane: number, lap: number) {
   await this.page!.evaluate((args) => {
-    window.__bellLapStore.getState().updateLaneCount(args.lane, args.lap);
+    const store = window.__bellLapStore.getState();
+    store.updateLaneCount(args.lane, args.lap);
   }, { lane, lap });
 });
 
@@ -257,19 +277,28 @@ Then('Lane {int} and Lane {int} should have different colors in the Leaderboard'
   assert.notStrictEqual(color1, color2, `Lanes ${l1} and ${l2} should have different colors, but both are ${color1}`);
 });
 
-Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: CustomWorld, eventName: string, _laps: number) {
+Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: CustomWorld, eventName: string, laps: number) {
   const dropdown = this.page!.locator('button:has-text("SC"), button:has-text("LC")').first();
   await dropdown.click();
   const popover = this.page!.locator('[role="menu"], [role="listbox"], .z-50').last();
   await popover.waitFor({ state: 'visible' });
   const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(eventName, { exact: true });
   await item.click({ force: true });
+
+  const stateLaps = await this.page!.evaluate(() => {
+    const state = window.__bellLapStore.getState();
+    const config: Record<string, number> = {
+      '500 SC': 20, '1000 SC': 40, '1650 SC': 66, '800 LC': 16, '1500 LC': 30
+    };
+    return config[state.event];
+  });
+  assert.strictEqual(stateLaps, laps, `Failed to configure event ${eventName}. Store has ${stateLaps} laps instead of ${laps}`);
 });
 
-Then('Lane {int} should display the color associated with Lap {int}', async function (this: CustomWorld, lane: number, _lap: number) {
+Then('Lane {int} should display the color associated with Lap {int}', async function (this: CustomWorld, lane: number, lap: number) {
   const c = await this.page!.locator(`[data-testid="leaderboard-lane-${lane}"]`).getAttribute('class');
   const color = getColorClass(c);
-  assert.ok(color && color !== 'text-success' && color !== 'text-foreground/50', `Lane ${lane} should have lap color, got ${color}`);
+  assert.ok(color && color !== 'text-success' && color !== 'text-foreground/50', `Lane ${lane} should have lap color for lap ${lap}, got ${color}`);
 });
 
 Then('Lane {int} should not be displayed in Green', async function (this: CustomWorld, lane: number) {

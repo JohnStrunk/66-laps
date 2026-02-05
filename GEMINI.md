@@ -78,6 +78,14 @@ This document provides essential information for AI agents working on the
   - `yarn test`
   - `./.github/lint-all.sh`
 
+## Testing Standards
+
+- **Meaningful Tests:** Never create tests that "pass" without actually
+  verifying the intended functionality. Steps that are not yet implemented
+  should use Cucumber's `return 'pending';` rather than a "noop" return. Once a
+  feature is implemented, tests must accurately and rigorously verify the logic.
+  "Fake" passing tests are strictly unacceptable.
+
 ## Critical Instructions
 
 Refer to these files for detailed guidance on specific topics:
