@@ -60,7 +60,8 @@ repos:
         args: ["--fix", "--config", ".github/markdownlint-config.yaml"]
         exclude: |
           (?x)^(
-                .github/pull_request_template.md
+                .github/pull_request_template.md |
+                .gemini/skills/.*
             )$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
