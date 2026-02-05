@@ -57,10 +57,13 @@ export const useBellLapStore = create<BellLapState>((set) => ({
 
   setEvent: (event) => set({ event }),
 
-  setLaneCount: (laneCount) => set(() => ({
-    laneCount,
-    lanes: createDefaultLanes(laneCount),
-  })),
+  setLaneCount: (laneCount) => set((state) => {
+    if (state.laneCount === laneCount) return state;
+    return {
+      laneCount,
+      lanes: createDefaultLanes(laneCount),
+    };
+  }),
 
   toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
 

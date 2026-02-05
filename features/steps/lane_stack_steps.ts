@@ -159,6 +159,14 @@ Then('Lane {int} should be restored to the Live Leaderboard', async function (th
 
 Then('the lap count for Lane {int} should be {int}', async function (this: CustomWorld, laneNumber: number, expectedCount: number) {
   const countEl = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-count"]`);
+  await this.page!.waitForFunction(
+    ({ lane, expected }) => {
+      const el = document.querySelector(`[data-testid="lane-row"][data-lane-number="${lane}"] [data-testid="lane-count"]`);
+      return parseInt(el?.textContent || '0', 10) === expected;
+    },
+    { lane: laneNumber, expected: expectedCount },
+    { timeout: 5000 }
+  );
   const text = await countEl.textContent();
   assert.strictEqual(parseInt(text || '0', 10), expectedCount);
 });
@@ -213,6 +221,14 @@ Then('the {string} button in Zone A for Lane {int} should be disabled', async fu
 
 Then('the aria-label for Lane {int}\'s Zone B should include {string}', async function (this: CustomWorld, laneNumber: number, expectedText: string) {
   const zoneB = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`);
+  await this.page!.waitForFunction(
+    ({ lane, expected }) => {
+      const el = document.querySelector(`[data-testid="lane-row"][data-lane-number="${lane}"] [data-testid="lane-zone-b"]`);
+      return el?.getAttribute('aria-label')?.includes(expected);
+    },
+    { lane: laneNumber, expected: expectedText },
+    { timeout: 5000 }
+  );
   const ariaLabel = await zoneB.getAttribute('aria-label');
   assert.ok(ariaLabel?.includes(expectedText), `Aria-label "${ariaLabel}" does not include "${expectedText}"`);
 });
