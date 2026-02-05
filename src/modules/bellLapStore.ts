@@ -182,8 +182,38 @@ export const useBellLapStore = create<BellLapState>((set) => ({
 
 // Expose store for tests if in browser
 
+
+
+declare global {
+
+
+
+  interface Window {
+
+
+
+    __bellLapStore: typeof useBellLapStore;
+
+
+
+  }
+
+
+
+}
+
+
+
+
+
+
+
 if (typeof window !== 'undefined') {
 
-  (window as any).__bellLapStore = useBellLapStore;
+
+
+  window.__bellLapStore = useBellLapStore;
+
+
 
 }

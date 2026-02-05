@@ -97,7 +97,7 @@ Then('each lane\'s Zone B should display its corresponding lane number as a wate
 When('I tap the Zone B area for Lane {int}', async function (this: CustomWorld, laneNumber: number) {
   // Use direct state modification to bypass lockout for speed
   await this.page!.evaluate((l) => {
-    (window as any).__bellLapStore.getState().registerTouch(l, true); // ignoreLockout=true
+    window.__bellLapStore.getState().registerTouch(l, true); // ignoreLockout=true
   }, laneNumber);
 });
 

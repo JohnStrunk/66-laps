@@ -28,15 +28,15 @@ When('I select {string} from the Event Dropdown', async function (this: CustomWo
   await item.click({ force: true });
 });
 
-Then('the total lap count should be {int}', async function (this: CustomWorld, lapCount: number) {
+Then('the total lap count should be {int}', async function (this: CustomWorld) {
   // We check if the dropdown button text updated to the event name associated with this lap count.
   // The examples are: 500 SC -> 20, 1000 SC -> 40, etc.
   // So if laps=20, dropdown should contain "500 SC"
   const dropdown = this.page!.locator('button:has-text("SC"), button:has-text("LC")').first();
   await this.page!.waitForFunction(
     () => {
-      const btn = document.querySelector('button:has-text("SC"), button:has-text("LC")');
-      return btn && btn.textContent !== "";
+      const btn = document.querySelector('button');
+      return btn && (btn.textContent?.includes("SC") || btn.textContent?.includes("LC"));
     }
   ).catch(() => {});
 
@@ -45,7 +45,7 @@ Then('the total lap count should be {int}', async function (this: CustomWorld, l
   assert.ok(text?.includes('SC') || text?.includes('LC'), `Dropdown text "${text}" is not a valid event`);
 });
 
-Then('the lockout duration should be {int} seconds', async function (this: CustomWorld, _seconds: number) {
+Then('the lockout duration should be {int} seconds', async function (this: CustomWorld) {
   return;
 });
 
@@ -70,7 +70,7 @@ Then('the lane stack should display {int} rows', async function (this: CustomWor
 Given('the lane stack is currently ordered {int} to {int}', async function (this: CustomWorld, start: number, end: number) {
   if (end === 10) {
     await this.page!.evaluate(() => {
-      (window as any).__bellLapStore.getState().setLaneCount(10);
+      window.__bellLapStore.getState().setLaneCount(10);
     });
   }
   const firstRow = this.page!.locator('[data-testid="lane-row"]').first();
@@ -120,7 +120,7 @@ Then('a confirmation modal should appear with the title {string}', async functio
 
 Given('a race is in progress with non-zero counts', async function (this: CustomWorld) {
   await this.page!.evaluate(() => {
-    (window as any).__bellLapStore.getState().registerTouch(1, true);
+    window.__bellLapStore.getState().registerTouch(1, true);
   });
   await this.page!.waitForFunction(
     () => document.querySelector('[data-lane-number="1"] [data-testid="lane-count"]')?.textContent === '2'
@@ -177,14 +177,14 @@ Then('the modal should close', async function (this: CustomWorld) {
 });
 
 // Rule: Live Leaderboard Status
-Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWorld, _l1: number, _l2: number, _l3: number) {
+Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWorld) {
   return;
 });
 
 Given('lanes {int}, {int}, and {int} are empty', async function (this: CustomWorld, l1: number, l2: number, l3: number) {
   for (const lane of [l1, l2, l3]) {
     await this.page!.evaluate((l) => {
-      (window as any).__bellLapStore.getState().toggleLaneEmpty(l);
+      window.__bellLapStore.getState().toggleLaneEmpty(l);
     }, lane);
   }
 });
@@ -207,19 +207,19 @@ Then('the Live Leaderboard should not display lanes {int}, {int}, and {int}', as
 
 Given('Lane {int} is on Lap {int}', async function (this: CustomWorld, lane: number, lap: number) {
   await this.page!.evaluate((args) => {
-    (window as any).__bellLapStore.getState().updateLaneCount(args.lane, args.lap);
+    window.__bellLapStore.getState().updateLaneCount(args.lane, args.lap);
   }, { lane, lap });
 });
 
 Given('Lane {int} is on Lap {int} but touched earlier than Lane {int}', async function (this: CustomWorld, l1: number, lap: number, l2: number) {
   await this.page!.evaluate((args) => {
-    const store = (window as any).__bellLapStore.getState();
-    const lanes = store.lanes.map((l: any) => {
+    const store = window.__bellLapStore.getState();
+    const lanes = store.lanes.map((l) => {
       if (l.laneNumber === args.l1) return { ...l, count: args.lap, history: [Date.now() - 1000] };
       if (l.laneNumber === args.l2) return { ...l, count: args.lap, history: [Date.now()] };
       return l;
     });
-    (window as any).__bellLapStore.setState({ lanes });
+    window.__bellLapStore.setState({ lanes });
   }, { l1, l2, lap });
 });
 
@@ -254,7 +254,7 @@ Then('Lane {int} and Lane {int} should have different colors in the Leaderboard'
   assert.notStrictEqual(color1, color2, `Lanes ${l1} and ${l2} should have different colors, but both are ${color1}`);
 });
 
-Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: CustomWorld, eventName: string, _totalLaps: string) {
+Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: CustomWorld, eventName: string) {
   const dropdown = this.page!.locator('button:has-text("SC"), button:has-text("LC")').first();
   await dropdown.click();
   const popover = this.page!.locator('[role="menu"], [role="listbox"], .z-50').last();
@@ -263,7 +263,7 @@ Given(/^the race is a (.*) event \((\d+) laps total\)$/, async function (this: C
   await item.click({ force: true });
 });
 
-Then('Lane {int} should display the color associated with Lap {int}', async function (this: CustomWorld, lane: number, _lap: number) {
+Then('Lane {int} should display the color associated with Lap {int}', async function (this: CustomWorld, lane: number) {
   const c = await this.page!.locator(`[data-testid="leaderboard-lane-${lane}"]`).getAttribute('class');
   const color = getColorClass(c);
   assert.ok(color && color !== 'text-success' && color !== 'text-foreground/50', `Lane ${lane} should have lap color, got ${color}`);
@@ -276,7 +276,7 @@ Then('Lane {int} should not be displayed in Green', async function (this: Custom
 
 Given('Lane {int} has completed {int} laps', async function (this: CustomWorld, lane: number, laps: number) {
   await this.page!.evaluate((args) => {
-    (window as any).__bellLapStore.getState().updateLaneCount(args.lane, args.laps);
+    window.__bellLapStore.getState().updateLaneCount(args.lane, args.laps);
   }, { lane, laps });
 });
 
