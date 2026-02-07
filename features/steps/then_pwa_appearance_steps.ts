@@ -54,3 +54,24 @@ Then(`the Zone B area for Lane {int} should display {string}`, async function (t
   const text = await zoneB?.textContent();
   assert.ok(text?.toUpperCase().includes(expectedText.toUpperCase()), `Text "${expectedText}" not found in Zone B for lane ${laneNumber}. Found: ${text}`);
 });
+
+Then(`the background of Zone A for Lane {int} should be white`, async function (this: CustomWorld, laneNumber: number) {
+  const zoneA = await this.page!.$(`[data-lane-number="${laneNumber}"] [data-testid="lane-zone-a"]`);
+  assert.ok(zoneA, `Zone A for lane ${laneNumber} not found`);
+  const classes = await zoneA.getAttribute('class');
+  assert.ok(classes?.includes('bg-white'), `Zone A for lane ${laneNumber} is not white. Classes: ${classes}`);
+});
+
+Then(`the minus button in Zone A for Lane {int} should be red`, async function (this: CustomWorld, laneNumber: number) {
+  const button = await this.page!.$(`[data-lane-number="${laneNumber}"] [aria-label="Decrement lane ${laneNumber}"]`);
+  assert.ok(button, `Minus button for lane ${laneNumber} not found`);
+  const classes = await button.getAttribute('class');
+  assert.ok(classes?.includes('bg-danger'), `Minus button for lane ${laneNumber} is not red. Classes: ${classes}`);
+});
+
+Then(`the plus button in Zone A for Lane {int} should be green`, async function (this: CustomWorld, laneNumber: number) {
+  const button = await this.page!.$(`[data-lane-number="${laneNumber}"] [aria-label="Increment lane ${laneNumber}"]`);
+  assert.ok(button, `Plus button for lane ${laneNumber} not found`);
+  const classes = await button.getAttribute('class');
+  assert.ok(classes?.includes('bg-success'), `Plus button for lane ${laneNumber} is not green. Classes: ${classes}`);
+});

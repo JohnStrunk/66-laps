@@ -68,11 +68,11 @@ export default function LaneRow({
       data-lane-number={laneNumber}
     >
       {/* Zone A: Manual Controls (35%) */}
-      <div className={`basis-[35%] flex flex-row items-center justify-center gap-4 border-r border-divider bg-content2 p-2 ${lane.isEmpty ? 'invisible' : ''}`} data-testid="lane-zone-a">
+      <div className={`basis-[35%] flex flex-row items-center justify-center gap-4 border-r border-divider bg-white text-black p-2 ${lane.isEmpty ? 'invisible' : ''}`} data-testid="lane-zone-a">
         <Button
           isIconOnly
           color="danger"
-          variant="flat"
+          variant="solid"
           onPress={() => updateLaneCount(laneNumber, -2)}
           isDisabled={lane.count <= 0}
           aria-label={`Decrement lane ${laneNumber}`}
@@ -81,15 +81,15 @@ export default function LaneRow({
           <Minus size={24} />
         </Button>
         <div className="flex flex-col items-center min-w-[3rem]">
-          <span className="text-4xl font-black text-foreground" data-testid="lane-count">
+          <span className="text-4xl font-black" data-testid="lane-count">
             {lane.count}
           </span>
-          <span className="text-[10px] uppercase font-bold text-foreground/50">Laps</span>
+          <span className="text-[10px] uppercase font-bold opacity-50">Laps</span>
         </div>
         <Button
           isIconOnly
           color="success"
-          variant="flat"
+          variant="solid"
           onPress={() => updateLaneCount(laneNumber, 2)}
           aria-label={`Increment lane ${laneNumber}`}
           className="w-12 h-12"

@@ -43,3 +43,8 @@ Feature: PWA Appearance and Interaction
     Then Lane 2 should be marked as "EMPTY"
     And the Zone B area for Lane 2 should be grey
     And the Zone B area for Lane 2 should display "EMPTY"
+
+  Scenario: Zone A manual control colors
+    Then the background of Zone A for Lane 1 should be white
+    And the minus button in Zone A for Lane 1 should be red
+    And the plus button in Zone A for Lane 1 should be green
