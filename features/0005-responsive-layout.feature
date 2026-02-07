@@ -28,6 +28,13 @@ Feature: Responsive Layout and Scaling
     Given the device has a "20px" top safe area inset
     Then the UI should respect the top safe area inset
 
-  Scenario: Portrait orientation is enforced
+  Scenario: Portrait orientation is enforced on small screens
+    Given the viewport is "390x844"
     When the device is rotated to landscape
     Then the UI should remain in portrait orientation
+
+  Scenario: Tablets and large screens allow flexible orientation and width
+    Given the viewport is "768x1024"
+    When the device is rotated to landscape
+    Then the UI should adapt to landscape orientation
+    And the UI width should not be constrained to portrait dimensions

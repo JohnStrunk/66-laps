@@ -6,7 +6,7 @@ Then('the UI should remain in portrait orientation', async function (this: Custo
   if (!this.page) throw new Error('No page found');
   const width = await this.page.locator('main').evaluate(el => el.getBoundingClientRect().width);
 
-  // We expect the width to be constrained to max-w-md (448px)
+  // We expect the width to be constrained to portrait (~448px)
   // even if the screen is wider (landscape).
   assert.ok(width <= 449, `UI width ${width} should be constrained to portrait (~448px) but is too wide.`);
 });
