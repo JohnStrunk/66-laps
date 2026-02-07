@@ -62,7 +62,10 @@ export default function BellLapHeader() {
   };
 
   return (
-    <header className="w-full flex flex-col gap-2 p-2 bg-background border-b sticky top-0 z-50">
+    <header
+      className="w-full flex flex-col gap-2 p-2 bg-background border-b sticky top-0 z-50"
+      style={{ paddingTop: 'var(--simulated-safe-area-top, env(safe-area-inset-top, 0px))' }}
+    >
       {/* Row 1: Config & Reset */}
       <div className="flex flex-row items-center justify-between gap-2">
         <Dropdown>

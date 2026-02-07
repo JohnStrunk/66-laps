@@ -1,6 +1,5 @@
 'use client'
 
-import Footer from "@/components/Footer/Footer";
 import LaneStack from "@/components/LaneStack/LaneStack";
 import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
 import { useSearchParams } from "next/navigation";
@@ -29,14 +28,15 @@ function BellLapContent() {
 
 export default function PWALandingPage() {
   return (
-    <div className="w-full flex flex-col min-h-screen">
-      <BellLapHeader />
-      <main className="flex flex-col items-center justify-start grow p-4 gap-4">
-        <Suspense fallback={<div>Loading lanes...</div>}>
-          <BellLapContent />
-        </Suspense>
-      </main>
-      <Footer />
+    <div className="w-full h-dvh flex justify-center bg-background overflow-hidden">
+      <div className="w-full max-w-md h-full flex flex-col overflow-hidden border-x shadow-2xl">
+        <BellLapHeader />
+        <main className="flex-1 w-full overflow-hidden p-2">
+          <Suspense fallback={<div>Loading lanes...</div>}>
+            <BellLapContent />
+          </Suspense>
+        </main>
+      </div>
     </div>
   );
 }
