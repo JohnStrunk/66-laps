@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Use when user requests creating a feature specification or feature spec, before starting any implementation work
+description: Use when user requests creating or updating a feature
 ---
 
 # Writing BDD Feature Specifications
@@ -13,7 +13,7 @@ SpecFlow, and other BDD tools.
 
 Use this skill when the user requests:
 
-- "Create a feature spec for..."
+- "Create a feature for..."
 - "Write a feature specification for..."
 - "I need a spec for..."
 - "Create a BDD feature for..."

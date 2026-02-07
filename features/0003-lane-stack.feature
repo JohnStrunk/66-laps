@@ -26,7 +26,7 @@ Feature: Lane Stack
 
     Scenario: Zone B displays the lane number
       Given Bell Lap is configured for an 8-lane event
-      Then each lane's Zone B should display its corresponding lane number as a watermark
+      Then each lane's Zone B should display "LANE" and its corresponding lane number
 
   Rule: Manual and Touch Interaction
     Scenario: Tapping the Touch Pad (Zone B) increments count

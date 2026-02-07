@@ -11,3 +11,11 @@ Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWo
     });
   }, { l1, l2, l3 });
 });
+
+Given('lane {int} is active', async function (this: CustomWorld, laneNumber: number) {
+  await this.page!.evaluate((laneNum) => {
+    const store = (window as unknown as TestWindow).__bellLapStore.getState();
+    const lane = store.lanes.find((l) => l.laneNumber === laneNum);
+    if (lane?.isEmpty) store.toggleLaneEmpty(laneNum);
+  }, laneNumber);
+});
