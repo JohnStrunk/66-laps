@@ -1,0 +1,7 @@
+description = "Commit any outstanding changes to the repository"
+prompt = """
+- Commit any outstanding changes in this repository.
+- If there are no changes, respond with "No changes to commit." and stop.
+- If there are changes, commit them according to the repository's guidelines
+and best practices.
+"""
