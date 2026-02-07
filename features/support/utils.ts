@@ -1,5 +1,5 @@
-import { CustomWorld } from './world';
 import { Locator, Page } from 'playwright';
+import { BellLapState } from '../../src/modules/bellLapStore';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -32,6 +32,6 @@ export const selectEvent = async (page: Page, eventName: string) => {
   await item.click({ force: true });
 };
 
-export const getStoreState = async (page: Page): Promise<any> => {
-  return await page.evaluate(() => (window as any).__bellLapStore.getState());
+export const getStoreState = async (page: Page): Promise<BellLapState> => {
+  return await page.evaluate(() => (window as unknown as { __bellLapStore: { getState: () => BellLapState } }).__bellLapStore.getState());
 };

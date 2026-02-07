@@ -22,7 +22,7 @@ export interface LaneState {
   history: number[]; // timestamps of touches
 }
 
-interface BellLapState {
+export interface BellLapState {
   event: EventType;
   laneCount: number;
   isFlipped: boolean;

@@ -1,11 +1,12 @@
 import { Given } from '@cucumber/cucumber';
 import assert from 'node:assert';
 import { CustomWorld } from '../support/world';
+import { TestWindow } from '../support/store-type';
 
 Given('the lane stack is currently ordered {int} to {int}', async function (this: CustomWorld, start: number, end: number) {
   if (end === 10) {
     await this.page!.evaluate(() => {
-      (window as any).__bellLapStore.getState().setLaneCount(10);
+      (window as unknown as TestWindow).__bellLapStore.getState().setLaneCount(10);
     });
   }
   const firstRow = this.page!.locator('[data-testid="lane-row"]').first();

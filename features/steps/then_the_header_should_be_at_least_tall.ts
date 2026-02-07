@@ -1,7 +1,4 @@
 import { Then } from '@cucumber/cucumber';
-import { CustomWorld } from '../support/world';
-
-import { Then } from '@cucumber/cucumber';
 import assert from 'node:assert';
 import { CustomWorld } from '../support/world';
 
