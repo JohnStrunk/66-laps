@@ -1,10 +1,9 @@
 'use client'
 
-import Footer from "@/components/Footer/Footer";
 import LaneStack from "@/components/LaneStack/LaneStack";
 import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useBellLapStore } from "@/modules/bellLapStore";
 
 function BellLapContent() {
@@ -28,15 +27,49 @@ function BellLapContent() {
 }
 
 export default function PWALandingPage() {
+  const [maxWidth, setMaxWidth] = useState<string>('448px');
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMaxWidth('none');
+      } else {
+        setMaxWidth('448px');
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleFullscreen = () => {
+      const isSmallDevice = window.innerWidth <= 768 || window.innerHeight <= 768;
+      if (isSmallDevice && document.documentElement.requestFullscreen && !document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {
+          // Silently fail as it often requires a user gesture
+        });
+      }
+    };
+
+    handleFullscreen();
+    window.addEventListener('click', handleFullscreen, { once: true });
+    return () => window.removeEventListener('click', handleFullscreen);
+  }, []);
+
   return (
-    <div className="w-full flex flex-col min-h-screen">
-      <BellLapHeader />
-      <main className="flex flex-col items-center justify-start grow p-4 gap-4">
-        <Suspense fallback={<div>Loading lanes...</div>}>
-          <BellLapContent />
-        </Suspense>
-      </main>
-      <Footer />
+    <div className="w-full h-dvh flex justify-center bg-background overflow-hidden">
+      <div
+        style={{ maxWidth }}
+        className="w-full h-full flex flex-col overflow-hidden border-x shadow-2xl transition-all duration-300"
+      >
+        <BellLapHeader />
+        <main className="flex-1 w-full overflow-hidden p-2">
+          <Suspense fallback={<div>Loading lanes...</div>}>
+            <BellLapContent />
+          </Suspense>
+        </main>
+      </div>
     </div>
   );
 }

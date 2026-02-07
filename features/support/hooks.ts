@@ -11,7 +11,9 @@ Before(async function (this: CustomWorld) {
   // but detecting which test is running inside the hook requires tags.
   // We'll launch it for now.
   this.browser = await chromium.launch({ headless: true });
-  this.context = await this.browser.newContext();
+  this.context = await this.browser.newContext({
+    viewport: { width: 1280, height: 800 } // Large enough to not trigger fullscreen
+  });
   this.page = await this.context.newPage();
 });
 

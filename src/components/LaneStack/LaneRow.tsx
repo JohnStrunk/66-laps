@@ -40,12 +40,12 @@ export default function LaneRow({
 
   return (
     <div
-      className={`flex w-full h-24 border-b border-divider last:border-b-0 transition-opacity ${lane.isEmpty ? 'opacity-40 bg-content2' : ''}`}
+      className={`flex w-full flex-1 min-h-0 border-b border-divider last:border-b-0 transition-opacity ${lane.isEmpty ? 'opacity-40 bg-content2' : ''}`}
       data-testid="lane-row"
       data-lane-number={laneNumber}
     >
       {/* Zone A: Manual Controls (35%) */}
-      <div className={`flex-[0.35] flex flex-row items-center justify-center gap-2 border-r border-divider bg-content2 p-2 ${lane.isEmpty ? 'invisible' : ''}`} data-testid="lane-zone-a">
+      <div className={`basis-[35%] flex flex-row items-center justify-center gap-2 border-r border-divider bg-content2 p-2 ${lane.isEmpty ? 'invisible' : ''}`} data-testid="lane-zone-a">
         <Button
           isIconOnly
           color="danger"
@@ -74,7 +74,7 @@ export default function LaneRow({
 
       {/* Zone B: Touch Pad (65%) */}
       <div
-        className={`flex-[0.65] relative flex items-center justify-center transition-colors ${lane.isEmpty ? 'cursor-default' : 'cursor-pointer active:bg-content3 bg-content1'}`}
+        className={`basis-[65%] relative flex items-center justify-center transition-colors ${lane.isEmpty ? 'cursor-default' : 'cursor-pointer active:bg-content3 bg-content1'}`}
         data-testid="lane-zone-b"
         onMouseDown={handleTouchStart}
         onMouseUp={handleTouchEnd}
