@@ -103,12 +103,19 @@ digraph feature_spec {
   - Python: `uvx behave -d`
   - Other: Follow project convention
 - [ ] Run the tool to check for undefined steps
-- [ ] Scaffold ANY undefined steps found:
-  - Create a NEW file for EACH step in `features/steps/` with correct extension
-    (e.g., `features/steps/step_user_logs_in.py` or `.ts`)
-  - Use appropriate pending syntax for the body (e.g., `return 'pending'` or
-    `raise StepNotImplementedError`)
-  - Ensure validation command passes successfully
+- [ ] For EACH undefined step found:
+  - **Search First:** Search `features/steps/` for existing steps that match or can be easily adapted.
+  - **Re-use:** If an existing step works, update the scenario to use that exact phrasing.
+  - **Modify (CAUTION):** If an existing step needs modification to be re-usable:
+    - You **MUST** obtain explicit approval from the user.
+    - Your request for approval must describe the change and the actions taken to ensure coverage of existing features is maintained.
+  - **Scaffold New:** If no match exists, create a NEW file for that specific step.
+- [ ] Scaffold NEW steps:
+  - Create a NEW file for EACH new step in `features/steps/`
+  - Filename convention: `{keyword}_{snake_case_description}.{ext}` (e.g., `given_user_is_logged_in.ts`)
+  - Use `features/support/utils.ts` for shared logic/constants to keep steps DRY.
+  - Use appropriate pending syntax for the body (e.g., `return 'pending'`).
+  - Ensure validation command passes (no undefined steps remaining).
 
 ## The Template
 
