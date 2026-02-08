@@ -97,7 +97,7 @@ export default function BellLapHeader() {
       <Card className="shadow-md bg-content1">
         <CardBody className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-3">
           {/* Row 1: Config & Reset */}
-          <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
+          <div className="flex flex-row items-center justify-between gap-1">
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
@@ -153,29 +153,27 @@ export default function BellLapHeader() {
               </DropdownMenu>
             </Dropdown>
 
-            <div className="flex flex-row gap-1">
-              <Button
-                isIconOnly
-                color="danger"
-                variant="flat"
-                size="sm"
-                onPress={() => setResetModalOpen(true)}
-                aria-label="New Race"
-              >
-                <RotateCcw size={18} />
-              </Button>
+            <Button
+              isIconOnly
+              color="danger"
+              variant="flat"
+              size="sm"
+              onPress={() => setResetModalOpen(true)}
+              aria-label="New Race"
+            >
+              <RotateCcw size={18} />
+            </Button>
 
-              <Button
-                isIconOnly
-                variant="flat"
-                size="sm"
-                onPress={toggleTheme}
-                aria-label="Toggle light/dark mode"
-                data-testid="theme-toggle"
-              >
-                {renderThemeIcon()}
-              </Button>
-            </div>
+            <Button
+              isIconOnly
+              variant="flat"
+              size="sm"
+              onPress={toggleTheme}
+              aria-label="Toggle light/dark mode"
+              data-testid="theme-toggle"
+            >
+              {renderThemeIcon()}
+            </Button>
           </div>
 
           {/* Row 2: Live Leaderboard */}
