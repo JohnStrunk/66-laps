@@ -29,12 +29,12 @@ export default function LaneRow({
   const progress = isLocked ? (elapsed / lockoutMs) * 100 : 0;
 
   const isFinished = lane?.count === config.laps;
-  const isWhiteFlag = lane?.count === config.laps - 2;
+  const isRedSquare = lane?.count === config.laps - 2;
   const isBellLap = lane?.count === config.laps - 4;
 
   let symbol = "";
   if (isFinished) symbol = "🏁";
-  else if (isWhiteFlag) symbol = "🏳️";
+  else if (isRedSquare) symbol = "🟥";
   else if (isBellLap) symbol = "🔔";
 
   useEffect(() => {

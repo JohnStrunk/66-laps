@@ -17,9 +17,9 @@ Feature: Race end symbols
     Given Lane 1 is on Lap 16
     Then the Zone B area for Lane 1 should display "🔔 LANE 1 🔔"
 
-  Scenario: Display white flag emojis at N-2 laps
+  Scenario: Display red square emojis at N-2 laps
     Given Lane 1 is on Lap 18
-    Then the Zone B area for Lane 1 should display "🏳️ LANE 1 🏳️"
+    Then the Zone B area for Lane 1 should display "🟥 LANE 1 🟥"
 
   Scenario: Display checkered flag emojis and disable Zone B at N laps
     Given Lane 1 is on Lap 20

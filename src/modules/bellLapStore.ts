@@ -34,6 +34,7 @@ export interface BellLapState {
   setLaneCount: (count: number) => void;
   toggleFlip: () => void;
   updateLaneCount: (laneNumber: number, delta: number) => void;
+  setLaneCountValue: (laneNumber: number, count: number) => void;
   toggleLaneEmpty: (laneNumber: number) => void;
   registerTouch: (laneNumber: number, ignoreLockout?: boolean) => void;
   resetRace: () => void;
@@ -83,6 +84,24 @@ export const useBellLapStore = create<BellLapState>((set) => ({
                 : lane.history.slice(0, -1).map((h, i, arr) =>
                     i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
                   )
+            }
+          : lane
+      ),
+    };
+  }),
+
+  setLaneCountValue: (laneNumber, count) => set((state) => {
+    const config = EVENT_CONFIGS[state.event];
+    const lockoutMs = config.lockout * 1000;
+    const agedTimestamp = Date.now() - lockoutMs - 1;
+
+    return {
+      lanes: state.lanes.map((lane) =>
+        lane.laneNumber === laneNumber
+          ? {
+              ...lane,
+              count: Math.max(0, Math.min(config.laps, count)),
+              history: [...lane.history, agedTimestamp]
             }
           : lane
       ),
