@@ -141,7 +141,7 @@ export default function BellLapHeader() {
 
           {/* Row 2: Live Leaderboard */}
           <div className="flex flex-row items-center gap-2 overflow-x-auto min-h-[1.5rem]" data-testid="live-leaderboard">
-            <span className="text-xl sm:text-3xl font-black text-foreground/50 uppercase whitespace-nowrap">Order:</span>
+            <span className="text-xl sm:text-3xl font-black text-foreground/50 whitespace-nowrap">Order:</span>
             <div className="flex flex-row gap-2">
               {activeLanes.map((lane) => (
                 <span
