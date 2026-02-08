@@ -94,7 +94,10 @@ export default function LaneRow({
               isIconOnly
               color="danger"
               variant="solid"
-              onPress={() => updateLaneCount(laneNumber, -2)}
+              onPress={() => {
+                updateLaneCount(laneNumber, -2);
+                setNow(Date.now());
+              }}
               isDisabled={lane.count <= 0}
               aria-label={`Decrement lane ${laneNumber}`}
               className="w-12 h-12"
@@ -111,7 +114,10 @@ export default function LaneRow({
               isIconOnly
               color="success"
               variant="solid"
-              onPress={() => updateLaneCount(laneNumber, 2)}
+              onPress={() => {
+                updateLaneCount(laneNumber, 2);
+                setNow(Date.now());
+              }}
               aria-label={`Increment lane ${laneNumber}`}
               className="w-12 h-12"
             >
