@@ -120,7 +120,6 @@ export default function LaneRow({
                 <span className="text-4xl font-black" data-testid="lane-count">
                   {lane.count}
                 </span>
-                <span className="text-[10px] uppercase font-bold opacity-50">Laps</span>
               </div>
               <Button
                 isIconOnly
