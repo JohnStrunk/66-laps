@@ -6,7 +6,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Switch,
   Modal,
   ModalContent,
   ModalHeader,
@@ -67,6 +66,7 @@ export default function BellLapHeader() {
     <header
       className="z-50 p-2 pb-0"
       style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
+      data-testid="bell-lap-header"
     >
       <Card className="shadow-md bg-content1">
         <CardBody className="flex flex-col gap-2 p-3">

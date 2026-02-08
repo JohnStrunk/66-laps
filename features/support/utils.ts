@@ -24,7 +24,8 @@ export const longPress = async (locator: Locator) => {
 };
 
 export const selectEvent = async (page: Page, eventName: string) => {
-  const dropdown = page.locator('button:has-text("SC"), button:has-text("LC")').first();
+  const header = page.locator('[data-testid="bell-lap-header"]');
+  const dropdown = header.locator('button:has-text("SC"), button:has-text("LC")').first();
   await dropdown.click();
   const popover = page.locator('[role="menu"], [role="listbox"], .z-50').last();
   await popover.waitFor({ state: 'visible' });

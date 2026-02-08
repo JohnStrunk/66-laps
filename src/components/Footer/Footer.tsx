@@ -1,3 +1,5 @@
+'use client'
+
 import { ph_event_link_out } from "@/modules/phEvents";
 import { Link } from "@heroui/react";
 import Image from "next/image";

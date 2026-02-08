@@ -99,7 +99,7 @@ export default function LaneRow({
           <>
             {/* Zone A: Manual Controls (35%) */}
             <div
-              className="basis-[35%] flex flex-row items-center justify-center gap-2 border-r border-divider bg-white text-black p-2"
+              className="basis-[35%] w-[35%] flex-none flex flex-row items-center justify-center gap-2 border-r border-divider bg-white text-black p-2 overflow-hidden"
               data-testid="lane-zone-a"
             >
               <Button
@@ -111,6 +111,8 @@ export default function LaneRow({
                   setNow(Date.now());
                 }}
                 isDisabled={lane.count <= 0}
+                data-disabled={lane.count <= 0}
+                data-testid={`decrement-button-lane-${laneNumber}`}
                 aria-label={`Decrement lane ${laneNumber}`}
                 className="w-12 h-12 min-w-12"
               >
@@ -130,6 +132,8 @@ export default function LaneRow({
                   setNow(Date.now());
                 }}
                 isDisabled={lane.count >= config.laps}
+                data-disabled={lane.count >= config.laps}
+                data-testid={`increment-button-lane-${laneNumber}`}
                 aria-label={`Increment lane ${laneNumber}`}
                 className="w-12 h-12 min-w-12"
               >

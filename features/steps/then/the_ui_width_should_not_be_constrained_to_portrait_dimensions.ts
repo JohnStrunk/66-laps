@@ -4,7 +4,7 @@ import { CustomWorld } from '../../support/world';
 
 Then('the UI width should not be constrained to portrait dimensions', async function (this: CustomWorld) {
   if (!this.page) throw new Error('No page found');
-  const width = await this.page.locator('main').evaluate(el => el.getBoundingClientRect().width);
+  const width = await this.page.locator('[data-testid="pwa-main"]').evaluate(el => el.getBoundingClientRect().width);
   const viewport = this.page.viewportSize();
 
   if (viewport && viewport.width > 800) {
