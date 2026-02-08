@@ -48,7 +48,25 @@ This document provides essential information for AI agents working on the
 - **Development:** `yarn dev`
 - **Build:** `yarn build`
 - **Linting:** `yarn lint`
-- **Testing:** `yarn test`
+- **Testing:**
+  - `yarn test`: Runs the full suite against the dev server with 2 parallel
+    workers. Good for general regression checks during development.
+  - `yarn test:unit`: Runs only non-browser logic tests (Extremely fast, <1s).
+    Use this frequently during domain logic or model development.
+  - `yarn test:static`: Builds the project and runs tests against the static
+    export. This is the **most stable and fastest** way to run the full suite.
+    Use this for final verification before committing or in CI.
+  - `yarn test:e2e`: Runs only browser-dependent tests.
+- **Subset Testing (for faster dev cycles):**
+  - Ensure `yarn dev` is running in the background.
+  - Run a single feature:
+    `NODE_OPTIONS="--import tsx" npx cucumber-js features/file.feature`
+  - Run by scenario name:
+    `NODE_OPTIONS="--import tsx" npx cucumber-js --name "Scenario Name"`
+  - Run by tags (if added to .feature):
+    `NODE_OPTIONS="--import tsx" npx cucumber-js --tags "@yourtag"`
+  - Run by line number:
+    `NODE_OPTIONS="--import tsx" npx cucumber-js features/file.feature:10`
 - **Type Check:** `yarn tsc --noEmit`
 - **Storybook:** `yarn storybook`
 - **All-in-one Lint:** `./.github/lint-all.sh`
@@ -65,6 +83,9 @@ This document provides essential information for AI agents working on the
 5. **Organization:** Group components, hooks, and services by feature in
    `src/components/`.
 6. **Documentation:** Write Storybook stories for UI components.
+7. **Verification:** While subset testing is useful during development, a full
+   `yarn test` run is **MANDATORY** before declaring a task complete to ensure
+   no regressions were introduced.
 
 ## Commit Workflow
 
@@ -80,6 +101,11 @@ This document provides essential information for AI agents working on the
 
 ## Testing Standards
 
+- **Mandatory Testing:** Any code modification MUST include tests that ensure
+  the functionality works as expected.
+- **Bug Fixes (TDD):** When fixing a bug or addressing functionality that is
+  broken, you MUST write the tests first, confirm that they fail, then implement
+  the fix, and finally confirm that the tests pass.
 - **Feature Coverage:** All features that are implemented or changed MUST be
   described in a feature file (`features/*.feature`) and have corresponding
   test scenarios that verify the functionality.

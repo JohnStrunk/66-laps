@@ -1,3 +1,4 @@
+@browser
 Feature: Manual Override of Lockout
 
   As a swim meet official

@@ -11,7 +11,10 @@
     "lint": "eslint .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "start-server-and-test 'yarn dev -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js'"
+    "test": "start-server-and-test 'yarn dev -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js --parallel 2'",
+    "test:static": "yarn build && start-server-and-test 'npx serve out -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js --parallel 2'",
+    "test:unit": "NODE_OPTIONS=\"--import tsx\" cucumber-js --tags \"not @browser\"",
+    "test:e2e": "start-server-and-test 'yarn dev -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js --tags @browser --parallel 2'"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "10.2.9",

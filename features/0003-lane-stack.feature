@@ -1,3 +1,4 @@
+@browser
 Feature: Lane Stack
   When setting up a swimming heat
   I want to interact with a vertical stack of lane rows

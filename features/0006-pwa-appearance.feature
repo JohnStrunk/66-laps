@@ -1,3 +1,4 @@
+@browser
 Feature: PWA Appearance and Interaction
 
   As a swim meet official using the Bell Lap app
