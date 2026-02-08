@@ -6,6 +6,7 @@ Then('the header should be at least {string} tall', async function (this: Custom
   if (!this.page) throw new Error('No page found');
   const minHeight = parseInt(minHeightStr, 10);
   const header = this.page.locator('[data-testid="bell-lap-header"]');
+  await header.waitFor({ state: 'visible' });
   const box = await header.boundingBox();
   if (!box) throw new Error('Header not found');
   assert.ok(box.height >= minHeight, `Header height ${box.height} is less than ${minHeight}`);
