@@ -141,12 +141,12 @@ export default function BellLapHeader() {
 
           {/* Row 2: Live Leaderboard */}
           <div className="flex flex-row items-center gap-2 overflow-x-auto min-h-[1.5rem]" data-testid="live-leaderboard">
-            <span className="text-[10px] font-bold text-foreground/50 uppercase whitespace-nowrap">Leaderboard:</span>
+            <span className="text-xl sm:text-3xl font-black text-foreground/50 uppercase whitespace-nowrap">Oof:</span>
             <div className="flex flex-row gap-2">
               {activeLanes.map((lane) => (
                 <span
                   key={lane.laneNumber}
-                  className={`font-black text-lg transition-colors ${getLapColor(lane.count)}`}
+                  className={`font-black text-xl sm:text-3xl transition-colors ${getLapColor(lane.count)}`}
                   data-testid={`leaderboard-lane-${lane.laneNumber}`}
                 >
                   {lane.laneNumber}

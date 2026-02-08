@@ -7,7 +7,8 @@ export const getColorClass = (className: string | null): string | null => {
   if (!className) return null;
   return className.split(' ').find(c =>
     c.startsWith('text-') &&
-    c !== 'text-lg' &&
+    !c.match(/^text-(xs|sm|base|lg|xl|[2-9]xl|\[.*\])$/) &&
+    !c.match(/^sm:text-.*$/) &&
     c !== 'font-black' &&
     c !== 'transition-colors'
   ) || null;
