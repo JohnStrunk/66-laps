@@ -3,7 +3,7 @@
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import { Card, CardBody, CardHeader, Divider, Image } from "@heroui/react";
-import { ClipboardList, FolderOpen, MonitorPlay } from "lucide-react";
+import { ClipboardList, FolderOpen, MonitorPlay, MonitorSmartphone } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -76,6 +76,26 @@ export default function Home() {
                                 alt="Pool preview"
                                 className="w-full h-full object-contain" />
                             <p>Practice counting for distance events</p>
+                        </CardBody>
+                    </Card>
+
+                    <Card
+                        className="max-w-xs h-96 mx-auto mt-6 drop-shadow-2xl hover:drop-shadow-content4"
+                        isPressable
+                        onPress={() => navTo("/app")}
+                    >
+                        <CardHeader className="flex flex-row items-center">
+                            <MonitorSmartphone className="w-[2em] h-[2em]" />
+                            <p className="ml-2 text-xl font-bold">Counting app</p>
+                        </CardHeader>
+                        <Divider />
+                        <CardBody className="items-center justify-center">
+                            <Image
+                                removeWrapper
+                                src="/images/app.png"
+                                alt="App preview"
+                                className="w-full h-full object-contain" />
+                            <p>Use the app to count laps</p>
                         </CardBody>
                     </Card>
                 </div>

@@ -16,6 +16,7 @@ export default function Nav() {
         { name: "How-to", path: "/counting" },
         { name: "Sheets", path: "/sheets" },
         { name: "Practice", path: "/practice" },
+        { name: "Count", path: "/app" },
     ];
 
     const menuIcon = (isOpen: boolean = false) => {
