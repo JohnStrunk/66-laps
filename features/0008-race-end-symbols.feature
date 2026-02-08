@@ -51,6 +51,8 @@ Feature: Race end symbols
     When Lane 1 is on Lap <lap>
     Then the Zone B area for Lane 1 should display "<expected_text>"
     And the text in Zone B for Lane 1 should not wrap or overflow
+    And the content in Zone A for Lane 1 should not wrap or overflow
+    And the font size in Zone A and Zone B for Lane 1 should be the same
 
     Examples:
       | event   | total_laps | lap | expected_text |

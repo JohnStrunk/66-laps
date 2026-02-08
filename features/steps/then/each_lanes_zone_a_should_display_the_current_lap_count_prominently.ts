@@ -10,7 +10,7 @@ Then(`each lane's Zone A should display the current lap count prominently`, asyn
       const lapCount = await zoneA.$('[data-testid="lane-count"]');
       assert.ok(lapCount, 'Zone A should contain lap count element');
       const classes = await lapCount.getAttribute('class');
-      assert.ok(classes?.includes('text-4xl'), 'Lap count should be prominent (text-4xl)');
+      assert.ok(classes?.includes('text-xl') && classes?.includes('sm:text-3xl'), 'Lap count should be prominent (text-xl sm:text-3xl)');
     }
   }
 });

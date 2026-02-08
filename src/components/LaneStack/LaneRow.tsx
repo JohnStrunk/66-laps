@@ -97,9 +97,9 @@ export default function LaneRow({
           </div>
         ) : (
           <>
-            {/* Zone A: Manual Controls (35%) */}
+            {/* Zone A: Manual Controls (50%) */}
             <div
-              className="basis-[35%] w-[35%] flex-none flex flex-row items-center justify-center gap-2 border-r border-divider bg-white text-black p-2 overflow-hidden"
+              className="basis-[50%] w-[50%] flex-none flex flex-row items-center justify-center gap-1 sm:gap-2 border-r border-divider bg-white text-black p-2 overflow-hidden"
               data-testid="lane-zone-a"
             >
               <Button
@@ -118,8 +118,11 @@ export default function LaneRow({
               >
                 <Minus size={24} />
               </Button>
-              <div className="flex flex-col items-center min-w-[3rem]">
-                <span className="text-4xl font-black" data-testid="lane-count">
+              <div className="flex flex-col items-center min-w-[2rem] sm:min-w-[3rem]">
+                <span
+                  className="text-xl sm:text-3xl font-black select-none whitespace-nowrap"
+                  data-testid="lane-count"
+                >
                   {lane.count}
                 </span>
               </div>
@@ -141,9 +144,9 @@ export default function LaneRow({
               </Button>
             </div>
 
-            {/* Zone B: Touch Pad (65%) */}
+            {/* Zone B: Touch Pad (50%) */}
             <div
-              className={`basis-[65%] relative flex items-center justify-center overflow-hidden transition-colors ${
+              className={`basis-[50%] relative flex items-center justify-center overflow-hidden transition-colors ${
                 isFinished
                   ? 'bg-white text-black pointer-events-none'
                   : isLocked
