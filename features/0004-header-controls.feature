@@ -7,7 +7,7 @@ Feature: Header Controls
     Given the app is loaded
 
   Rule: Configuration Controls
-    Scenario Outline: Event selection updates race parameters
+    Scenario Outline: Event selection updates race parameters (SC: 15s lockout, LC: 30s lockout)
       When I select "<event>" from the Event Dropdown
       Then the total lap count should be <laps>
       And the lockout duration should be <lockout> seconds

@@ -15,6 +15,7 @@ Before(async function (this: CustomWorld) {
     viewport: { width: 1280, height: 800 } // Large enough to not trigger fullscreen
   });
   this.page = await this.context.newPage();
+  await this.page.clock.install();
 });
 
 After(async function (this: CustomWorld) {

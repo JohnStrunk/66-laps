@@ -42,21 +42,6 @@ export default function PWALandingPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const handleFullscreen = () => {
-      const isSmallDevice = window.innerWidth <= 768 || window.innerHeight <= 768;
-      if (isSmallDevice && document.documentElement.requestFullscreen && !document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {
-          // Silently fail as it often requires a user gesture
-        });
-      }
-    };
-
-    handleFullscreen();
-    window.addEventListener('click', handleFullscreen, { once: true });
-    return () => window.removeEventListener('click', handleFullscreen);
-  }, []);
-
   return (
     <div className="w-full h-dvh flex justify-center bg-background overflow-hidden">
       <div

@@ -38,7 +38,3 @@ Feature: Responsive Layout and Scaling
     When the device is rotated to landscape
     Then the UI should adapt to landscape orientation
     And the UI width should not be constrained to portrait dimensions
-
-  Scenario: Automatic fullscreen on small devices
-    Given the viewport is "390x844"
-    Then the UI should automatically request fullscreen mode

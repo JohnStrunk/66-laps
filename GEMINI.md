@@ -80,11 +80,23 @@ This document provides essential information for AI agents working on the
 
 ## Testing Standards
 
+- **Feature Coverage:** All features that are implemented or changed MUST be
+  described in a feature file (`features/*.feature`) and have corresponding
+  test scenarios that verify the functionality.
 - **Meaningful Tests:** Never create tests that "pass" without actually
   verifying the intended functionality. Steps that are not yet implemented
   should use Cucumber's `return 'pending';` rather than a "noop" return. Once a
   feature is implemented, tests must accurately and rigorously verify the logic.
   "Fake" passing tests are strictly unacceptable.
+- **Step Organization:** Step definitions must be organized into subdirectories
+  by keyword:
+  - `features/steps/given/`
+  - `features/steps/when/`
+  - `features/steps/then/`
+- **One Step Per File:** Each step definition MUST reside in its own separate
+  TypeScript file. Files should be named descriptively based on the step
+  text, without the keyword prefix
+  (e.g., `features/steps/then/lane_should_be_active.ts`).
 
 ## Critical Instructions
 
