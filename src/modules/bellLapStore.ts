@@ -33,6 +33,7 @@ export interface BellLapState {
   setEvent: (event: EventType) => void;
   setLaneCount: (count: number) => void;
   toggleFlip: () => void;
+  setIsFlipped: (isFlipped: boolean) => void;
   updateLaneCount: (laneNumber: number, delta: number) => void;
   setLaneCountValue: (laneNumber: number, count: number) => void;
   toggleLaneEmpty: (laneNumber: number) => void;
@@ -67,6 +68,8 @@ export const useBellLapStore = create<BellLapState>((set) => ({
   }),
 
   toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
+
+  setIsFlipped: (isFlipped) => set({ isFlipped }),
 
   updateLaneCount: (laneNumber, delta) => set((state) => {
     const config = EVENT_CONFIGS[state.event];

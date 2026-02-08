@@ -25,9 +25,9 @@ Feature: Header Controls
       When I select "6 lanes" from the Lane Dropdown
       Then the lane stack should display 6 rows
 
-    Scenario: Flip toggle reverses lane order
+    Scenario: Lane order dropdown reverses lane order
       Given the lane stack is currently ordered 1 to 10
-      When I toggle the Flip switch
+      When I select "Bottom to top" from the Lane Order Dropdown
       Then the lane stack should be ordered 10 to 1
 
   Rule: New Race Reset
