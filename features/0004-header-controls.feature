@@ -52,6 +52,15 @@ Feature: Header Controls
       Then the lane counts should remain unchanged
       And the modal should close
 
+    Scenario: Theme toggle cycles through modes
+      Given the app is loaded
+      When I tap the theme toggle button
+      Then the theme should be "dark"
+      When I tap the theme toggle button
+      Then the theme should be "light"
+      When I tap the theme toggle button
+      Then the theme should be "system"
+
     Scenario: Header fits on smallest mobile screens
       Given the app is loaded
       And the viewport is "320x568"

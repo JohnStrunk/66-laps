@@ -15,8 +15,11 @@ import {
   CardBody,
 } from "@heroui/react";
 import { useBellLapStore, EventType, EVENT_CONFIGS } from "@/modules/bellLapStore";
-import { RotateCcw, ChevronDown } from "lucide-react";
-import { useMemo } from "react";
+import { RotateCcw, ChevronDown, Moon, Sun, SunMoon } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { usePostHog } from "posthog-js/react";
+import { ph_event_set_theme } from "@/modules/phEvents";
 
 export default function BellLapHeader() {
   const {
@@ -31,6 +34,14 @@ export default function BellLapHeader() {
     resetRace,
     lanes
   } = useBellLapStore();
+
+  const { theme, setTheme } = useTheme();
+  const postHog = usePostHog();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const activeLanes = useMemo(() => {
     return lanes
@@ -60,6 +71,21 @@ export default function BellLapHeader() {
     // Map lap count to palette. Using count/2 because it increments by 2.
     const index = (count / 2) % palette.length;
     return palette[Math.floor(index)];
+  };
+
+  const toggleTheme = () => {
+    const modes: ("system" | "dark" | "light")[] = ["system", "dark", "light"];
+    const currentIndex = modes.indexOf(theme as "system" | "dark" | "light");
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    setTheme(nextMode);
+    ph_event_set_theme(postHog, nextMode);
+  };
+
+  const renderThemeIcon = () => {
+    if (!mounted) return <SunMoon size={18} />;
+    if (theme === "system") return <SunMoon size={18} />;
+    if (theme === "dark") return <Moon size={18} />;
+    return <Sun size={18} />;
   };
 
   return (
@@ -127,16 +153,29 @@ export default function BellLapHeader() {
               </DropdownMenu>
             </Dropdown>
 
-            <Button
-              isIconOnly
-              color="danger"
-              variant="flat"
-              size="sm"
-              onPress={() => setResetModalOpen(true)}
-              aria-label="New Race"
-            >
-              <RotateCcw size={18} />
-            </Button>
+            <div className="flex flex-row gap-1">
+              <Button
+                isIconOnly
+                color="danger"
+                variant="flat"
+                size="sm"
+                onPress={() => setResetModalOpen(true)}
+                aria-label="New Race"
+              >
+                <RotateCcw size={18} />
+              </Button>
+
+              <Button
+                isIconOnly
+                variant="flat"
+                size="sm"
+                onPress={toggleTheme}
+                aria-label="Toggle light/dark mode"
+                data-testid="theme-toggle"
+              >
+                {renderThemeIcon()}
+              </Button>
+            </div>
           </div>
 
           {/* Row 2: Live Leaderboard */}
