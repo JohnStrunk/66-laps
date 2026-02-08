@@ -17,10 +17,17 @@ export const getColorClass = (className: string | null): string | null => {
 export const longPress = async (locator: Locator) => {
   const box = await locator.boundingBox();
   if (box) {
-    await locator.page().mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await locator.page().mouse.down();
-    await new Promise(r => setTimeout(r, 1200)); // Long press is 1s
-    await locator.page().mouse.up();
+    const page = locator.page();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    try {
+      // Advance clock if it's installed
+      await page.clock.fastForward(1200);
+    } catch {
+      // Fallback for real time if clock is not installed
+      await new Promise(r => setTimeout(r, 1200));
+    }
+    await page.mouse.up();
   }
 };
 

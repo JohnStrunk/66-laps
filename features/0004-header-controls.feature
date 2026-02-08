@@ -61,13 +61,18 @@ Feature: Header Controls
       When I tap the theme toggle button
       Then the theme should be "system"
 
-    Scenario: Header fits on smallest mobile screens
+    Scenario Outline: Header fits on various mobile screens
       Given the app is loaded
-      And the viewport is "320x568"
+      And the viewport is "<viewport>"
       And Bell Lap is configured for a 10-lane event
       And all lanes are active
       And all lanes have a lap count of 20
       Then the header should not overflow or scroll
+
+      Examples:
+        | viewport |
+        | 320x568  |
+        | 430x932  |
     Scenario: Leaderboard lists active lanes
       Given lanes 1, 3, and 5 are active
       And lanes 2, 4, and 6 are empty

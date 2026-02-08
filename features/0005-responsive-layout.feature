@@ -7,18 +7,21 @@ Feature: Responsive Layout and Scaling
   Background:
     Given the app is loaded
 
-  Scenario Outline: UI fits for different lane counts on small screen
+  Scenario Outline: UI fits for different lane counts and mobile viewports
     Given Bell Lap is configured for a <count>-lane event
-    And the viewport is "360x640"
+    And the viewport is "<viewport>"
     Then the entire UI should fit on-screen without scrolling
     And the header should be at least "48px" tall
     And the lane stack should fill the remaining space
 
     Examples:
-      | count |
-      | 6     |
-      | 8     |
-      | 10    |
+      | count | viewport |
+      | 6     | 360x640  |
+      | 8     | 360x640  |
+      | 10    | 360x640  |
+      | 6     | 430x932  |
+      | 8     | 430x932  |
+      | 10    | 430x932  |
 
   Scenario: UI scales on a large phone screen
     Given the viewport is "430x932"
@@ -29,10 +32,15 @@ Feature: Responsive Layout and Scaling
     Given the device has a "20px" top safe area inset
     Then the UI should respect the top safe area inset
 
-  Scenario: Portrait orientation is enforced on small screens
-    Given the viewport is "390x844"
+  Scenario Outline: Portrait orientation is enforced on mobile screens
+    Given the viewport is "<viewport>"
     When the device is rotated to landscape
     Then the UI should remain in portrait orientation
+
+    Examples:
+      | viewport |
+      | 390x844  |
+      | 430x932  |
 
   Scenario: Tablets and large screens allow flexible orientation and width
     Given the viewport is "768x1024"
