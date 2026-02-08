@@ -49,6 +49,16 @@ This document provides essential information for AI agents working on the
 - **Build:** `yarn build`
 - **Linting:** `yarn lint`
 - **Testing:** `yarn test`
+- **Subset Testing (for faster dev cycles):**
+  - Ensure `yarn dev` is running in the background.
+  - Run a single feature:
+    `NODE_OPTIONS="--import tsx" npx cucumber-js features/file.feature`
+  - Run by scenario name:
+    `NODE_OPTIONS="--import tsx" npx cucumber-js --name "Scenario Name"`
+  - Run by tags (if added to .feature):
+    `NODE_OPTIONS="--import tsx" npx cucumber-js --tags "@yourtag"`
+  - Run by line number:
+    `NODE_OPTIONS="--import tsx" npx cucumber-js features/file.feature:10`
 - **Type Check:** `yarn tsc --noEmit`
 - **Storybook:** `yarn storybook`
 - **All-in-one Lint:** `./.github/lint-all.sh`
@@ -65,6 +75,9 @@ This document provides essential information for AI agents working on the
 5. **Organization:** Group components, hooks, and services by feature in
    `src/components/`.
 6. **Documentation:** Write Storybook stories for UI components.
+7. **Verification:** While subset testing is useful during development, a full
+   `yarn test` run is **MANDATORY** before declaring a task complete to ensure
+   no regressions were introduced.
 
 ## Commit Workflow
 
