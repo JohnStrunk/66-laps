@@ -25,8 +25,17 @@ export default function LaneRow({
   const lastTouch = lane?.history[lane.history.length - 1] || 0;
   const lockoutMs = config.lockout * 1000;
   const elapsed = now - lastTouch;
-  const isLocked = !!lane && !lane.isEmpty && elapsed < lockoutMs;
+  const isFinished = lane?.count === config.laps;
+  const isLocked = !!lane && !lane.isEmpty && elapsed < lockoutMs && !isFinished;
   const progress = isLocked ? (elapsed / lockoutMs) * 100 : 0;
+
+  const isRedSquare = lane?.count === config.laps - 2;
+  const isBellLap = lane?.count === config.laps - 4;
+
+  let symbol = "";
+  if (isFinished) symbol = "🏁";
+  else if (isRedSquare) symbol = "🟥";
+  else if (isBellLap) symbol = "🔔";
 
   useEffect(() => {
     if (isLocked) {
@@ -128,7 +137,11 @@ export default function LaneRow({
           {/* Zone B: Touch Pad (65%) */}
           <div
             className={`basis-[65%] relative flex items-center justify-center overflow-hidden transition-colors ${
-              isLocked ? 'bg-content3 cursor-wait' : 'bg-success cursor-pointer active:opacity-80'
+              isFinished
+                ? 'bg-white text-black pointer-events-none'
+                : isLocked
+                ? 'bg-content3 cursor-wait'
+                : 'bg-success cursor-pointer active:opacity-80'
             }`}
             data-testid="lane-zone-b"
             onMouseDown={handleTouchStart}
@@ -157,10 +170,12 @@ export default function LaneRow({
             {/* Content */}
             <span
               className={`z-10 text-4xl font-black select-none ${
-                isLocked ? 'text-foreground/60' : 'text-white'
+                isFinished ? 'text-black' : isLocked ? 'text-foreground/60' : 'text-white'
               }`}
             >
+              {symbol && `${symbol} `}
               {`LANE ${laneNumber}`}
+              {symbol && ` ${symbol}`}
             </span>
           </div>
         </>
