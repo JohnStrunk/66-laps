@@ -169,7 +169,7 @@ export default function LaneRow({
 
             {/* Content */}
             <span
-              className={`z-10 text-4xl font-black select-none ${
+              className={`z-10 text-xl sm:text-3xl font-black select-none whitespace-nowrap ${
                 isFinished ? 'text-black' : isLocked ? 'text-foreground/60' : 'text-white'
               }`}
             >
