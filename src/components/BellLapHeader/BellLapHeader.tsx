@@ -69,12 +69,12 @@ export default function BellLapHeader() {
       data-testid="bell-lap-header"
     >
       <Card className="shadow-md bg-content1">
-        <CardBody className="flex flex-col gap-2 p-3">
+        <CardBody className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-3">
           {/* Row 1: Config & Reset */}
-          <div className="flex flex-row items-center justify-between gap-2">
+          <div className="flex flex-row items-center justify-between gap-1 sm:gap-2">
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />}>
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
                   {event}
                 </Button>
               </DropdownTrigger>
@@ -94,7 +94,7 @@ export default function BellLapHeader() {
 
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />}>
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
                   {laneCount} lanes
                 </Button>
               </DropdownTrigger>
@@ -112,7 +112,7 @@ export default function BellLapHeader() {
 
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
                   {isFlipped ? `${laneCount} - 1` : `1 - ${laneCount}`}
                 </Button>
               </DropdownTrigger>
@@ -140,9 +140,9 @@ export default function BellLapHeader() {
           </div>
 
           {/* Row 2: Live Leaderboard */}
-          <div className="flex flex-row items-center gap-2 overflow-x-auto min-h-[1.5rem]" data-testid="live-leaderboard">
+          <div className="flex flex-row items-center gap-1 sm:gap-2 overflow-hidden" data-testid="live-leaderboard">
             <span className="text-xl sm:text-3xl font-black text-foreground/50 whitespace-nowrap">Order:</span>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-1 sm:gap-2">
               {activeLanes.map((lane) => (
                 <span
                   key={lane.laneNumber}

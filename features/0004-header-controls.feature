@@ -52,7 +52,13 @@ Feature: Header Controls
       Then the lane counts should remain unchanged
       And the modal should close
 
-  Rule: Live Leaderboard Status
+    Scenario: Header fits on smallest mobile screens
+      Given the app is loaded
+      And the viewport is "320x568"
+      And Bell Lap is configured for a 10-lane event
+      And all lanes are active
+      And all lanes have a lap count of 10
+      Then the header should not overflow or scroll
     Scenario: Leaderboard lists active lanes
       Given lanes 1, 3, and 5 are active
       And lanes 2, 4, and 6 are empty
