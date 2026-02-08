@@ -5,7 +5,9 @@ import { CustomWorld } from '../../support/world';
 Then('the lane stack should be taller than on a {string} viewport', async function (this: CustomWorld, otherViewport: string) {
   if (!this.page) throw new Error('No page found');
 
-  const currentHeight = await this.page.locator('[data-testid="lane-stack"]').boundingBox().then(b => b?.height || 0);
+  const locator = this.page.locator('[data-testid="lane-stack"]');
+  await locator.waitFor({ state: 'visible' });
+  const currentHeight = await locator.boundingBox().then(b => b?.height || 0);
 
   const currentViewport = this.page.viewportSize();
   const [ow, oh] = otherViewport.split('x').map(Number);

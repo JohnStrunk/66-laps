@@ -73,7 +73,7 @@ export default function LaneRow({
   return (
     <Card
       className={`flex-1 min-h-0 transition-opacity shadow-sm ${
-        lane.isEmpty ? 'bg-neutral-200 opacity-60' : 'bg-content1'
+        lane.isEmpty ? 'bg-neutral-200 dark:bg-neutral-900 opacity-60' : 'bg-content1'
       }`}
       data-testid="lane-row"
       data-lane-number={laneNumber}
@@ -97,9 +97,9 @@ export default function LaneRow({
           </div>
         ) : (
           <>
-            {/* Zone A: Manual Controls (35%) */}
+            {/* Zone A: Manual Controls (50%) */}
             <div
-              className="basis-[35%] flex flex-row items-center justify-center gap-2 border-r border-divider bg-white text-black p-2"
+              className="basis-[50%] w-[50%] flex-none flex flex-row items-center justify-center gap-1 sm:gap-2 border-r border-divider p-2 overflow-hidden"
               data-testid="lane-zone-a"
             >
               <Button
@@ -111,13 +111,18 @@ export default function LaneRow({
                   setNow(Date.now());
                 }}
                 isDisabled={lane.count <= 0}
+                data-disabled={lane.count <= 0}
+                data-testid={`decrement-button-lane-${laneNumber}`}
                 aria-label={`Decrement lane ${laneNumber}`}
                 className="w-12 h-12 min-w-12"
               >
                 <Minus size={24} />
               </Button>
-              <div className="flex flex-col items-center min-w-[3rem]">
-                <span className="text-4xl font-black" data-testid="lane-count">
+              <div className="flex flex-col items-center min-w-[2rem] sm:min-w-[3rem]">
+                <span
+                  className="text-xl sm:text-3xl font-black select-none whitespace-nowrap"
+                  data-testid="lane-count"
+                >
                   {lane.count}
                 </span>
               </div>
@@ -130,6 +135,8 @@ export default function LaneRow({
                   setNow(Date.now());
                 }}
                 isDisabled={lane.count >= config.laps}
+                data-disabled={lane.count >= config.laps}
+                data-testid={`increment-button-lane-${laneNumber}`}
                 aria-label={`Increment lane ${laneNumber}`}
                 className="w-12 h-12 min-w-12"
               >
@@ -137,9 +144,9 @@ export default function LaneRow({
               </Button>
             </div>
 
-            {/* Zone B: Touch Pad (65%) */}
+            {/* Zone B: Touch Pad (50%) */}
             <div
-              className={`basis-[65%] relative flex items-center justify-center overflow-hidden transition-colors ${
+              className={`basis-[50%] relative flex items-center justify-center overflow-hidden transition-colors ${
                 isFinished
                   ? 'bg-white text-black pointer-events-none'
                   : isLocked

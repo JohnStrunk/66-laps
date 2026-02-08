@@ -6,7 +6,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Switch,
   Modal,
   ModalContent,
   ModalHeader,
@@ -16,8 +15,11 @@ import {
   CardBody,
 } from "@heroui/react";
 import { useBellLapStore, EventType, EVENT_CONFIGS } from "@/modules/bellLapStore";
-import { RotateCcw, ChevronDown } from "lucide-react";
-import { useMemo } from "react";
+import { RotateCcw, ChevronDown, Moon, Sun, SunMoon } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { usePostHog } from "posthog-js/react";
+import { ph_event_set_theme } from "@/modules/phEvents";
 
 export default function BellLapHeader() {
   const {
@@ -32,6 +34,15 @@ export default function BellLapHeader() {
     resetRace,
     lanes
   } = useBellLapStore();
+
+  const { theme, setTheme } = useTheme();
+  const postHog = usePostHog();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   const activeLanes = useMemo(() => {
     return lanes
@@ -63,18 +74,34 @@ export default function BellLapHeader() {
     return palette[Math.floor(index)];
   };
 
+  const toggleTheme = () => {
+    const modes: ("system" | "dark" | "light")[] = ["system", "dark", "light"];
+    const currentIndex = modes.indexOf(theme as "system" | "dark" | "light");
+    const nextMode = modes[(currentIndex + 1) % modes.length];
+    setTheme(nextMode);
+    ph_event_set_theme(postHog, nextMode);
+  };
+
+  const renderThemeIcon = () => {
+    if (!mounted) return <SunMoon size={18} />;
+    if (theme === "system") return <SunMoon size={18} />;
+    if (theme === "dark") return <Moon size={18} />;
+    return <Sun size={18} />;
+  };
+
   return (
     <header
       className="z-50 p-2 pb-0"
       style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
+      data-testid="bell-lap-header"
     >
       <Card className="shadow-md bg-content1">
-        <CardBody className="flex flex-col gap-2 p-3">
+        <CardBody className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-3">
           {/* Row 1: Config & Reset */}
-          <div className="flex flex-row items-center justify-between gap-2">
+          <div className="flex flex-row items-center justify-between gap-1">
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />}>
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
                   {event}
                 </Button>
               </DropdownTrigger>
@@ -94,7 +121,7 @@ export default function BellLapHeader() {
 
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />}>
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
                   {laneCount} lanes
                 </Button>
               </DropdownTrigger>
@@ -112,8 +139,8 @@ export default function BellLapHeader() {
 
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
-                  {isFlipped ? "Bottom to top" : "Top to bottom"}
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
+                  {isFlipped ? `${laneCount} - 1` : `1 - ${laneCount}`}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -122,8 +149,8 @@ export default function BellLapHeader() {
                 selectedKeys={[isFlipped ? "bottom-to-top" : "top-to-bottom"]}
                 selectionMode="single"
               >
-                <DropdownItem key="top-to-bottom">Top to bottom</DropdownItem>
-                <DropdownItem key="bottom-to-top">Bottom to top</DropdownItem>
+                <DropdownItem key="top-to-bottom">{`1 - ${laneCount}`}</DropdownItem>
+                <DropdownItem key="bottom-to-top">{`${laneCount} - 1`}</DropdownItem>
               </DropdownMenu>
             </Dropdown>
 
@@ -137,16 +164,27 @@ export default function BellLapHeader() {
             >
               <RotateCcw size={18} />
             </Button>
+
+            <Button
+              isIconOnly
+              variant="flat"
+              size="sm"
+              onPress={toggleTheme}
+              aria-label="Toggle light/dark mode"
+              data-testid="theme-toggle"
+            >
+              {renderThemeIcon()}
+            </Button>
           </div>
 
           {/* Row 2: Live Leaderboard */}
-          <div className="flex flex-row items-center gap-2 overflow-x-auto min-h-[1.5rem]" data-testid="live-leaderboard">
-            <span className="text-[10px] font-bold text-foreground/50 uppercase whitespace-nowrap">Leaderboard:</span>
-            <div className="flex flex-row gap-2">
+          <div className="flex flex-row items-center gap-1 sm:gap-2 overflow-hidden" data-testid="live-leaderboard">
+            <span className="text-xl sm:text-3xl font-black text-foreground/50 whitespace-nowrap">Order:</span>
+            <div className="flex flex-row gap-1 sm:gap-2">
               {activeLanes.map((lane) => (
                 <span
                   key={lane.laneNumber}
-                  className={`font-black text-lg transition-colors ${getLapColor(lane.count)}`}
+                  className={`font-black text-xl sm:text-3xl transition-colors ${getLapColor(lane.count)}`}
                   data-testid={`leaderboard-lane-${lane.laneNumber}`}
                 >
                   {lane.laneNumber}

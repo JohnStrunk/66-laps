@@ -6,5 +6,7 @@ When('the device is rotated to landscape', async function (this: CustomWorld) {
   const viewport = this.page.viewportSize();
   if (viewport && viewport.height > viewport.width) {
     await this.page.setViewportSize({ width: viewport.height, height: viewport.width });
+    // Give some time for the app to react to the new viewport size
+    await this.page.waitForSelector('[data-testid="pwa-main"]', { state: 'visible', timeout: 5000 });
   }
 });

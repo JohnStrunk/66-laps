@@ -22,8 +22,8 @@ Feature: Lane Stack
     Scenario: Lane rows display two distinct functional zones
       Given Bell Lap is configured for an 8-lane event
       Then each lane row should be split into Zone A and Zone B
-      And Zone A should occupy approximately 35% of the width
-      And Zone B should occupy approximately 65% of the width
+      And Zone A should occupy approximately 50% of the width
+      And Zone B should occupy approximately 50% of the width
 
     Scenario: Zone B displays the lane number
       Given Bell Lap is configured for an 8-lane event

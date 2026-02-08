@@ -42,8 +42,10 @@ Feature: PWA Appearance and Interaction
   Scenario: Inactive lanes appear grey with "Empty" text
     When I long press the row for Lane 2
     Then Lane 2 should be displayed as a full-width empty state
+    When I tap the theme toggle button
+    Then the background of Lane 2 should be darker
 
   Scenario: Zone A manual control colors
-    Then the background of Zone A for Lane 1 should be white
+    Then the background of Zone A for Lane 1 should follow the theme
     And the minus button in Zone A for Lane 1 should be red
     And the plus button in Zone A for Lane 1 should be green

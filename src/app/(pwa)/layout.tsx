@@ -1,3 +1,4 @@
+import ResponsivePWAWrapper from "@/components/ResponsivePWAWrapper/ResponsivePWAWrapper";
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
@@ -21,5 +22,9 @@ export default function PWALayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <ResponsivePWAWrapper>
+      {children}
+    </ResponsivePWAWrapper>
+  );
 }

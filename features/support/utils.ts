@@ -7,24 +7,35 @@ export const getColorClass = (className: string | null): string | null => {
   if (!className) return null;
   return className.split(' ').find(c =>
     c.startsWith('text-') &&
-    c !== 'text-lg' &&
+    !c.match(/^text-(xs|sm|base|lg|xl|[2-9]xl|\[.*\])$/) &&
+    !c.match(/^sm:text-.*$/) &&
     c !== 'font-black' &&
     c !== 'transition-colors'
   ) || null;
 };
 
 export const longPress = async (locator: Locator) => {
+  await locator.waitFor({ state: 'visible' });
   const box = await locator.boundingBox();
-  if (box) {
-    await locator.page().mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await locator.page().mouse.down();
-    await new Promise(r => setTimeout(r, 1200)); // Long press is 1s
-    await locator.page().mouse.up();
+  if (!box) {
+    throw new Error('Could not get bounding box for long press');
   }
+  const page = locator.page();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  try {
+    // Advance clock if it's installed
+    await page.clock.fastForward(1200);
+  } catch {
+    // Fallback for real time if clock is not installed
+    await new Promise(r => setTimeout(r, 1200));
+  }
+  await page.mouse.up();
 };
 
 export const selectEvent = async (page: Page, eventName: string) => {
-  const dropdown = page.locator('button:has-text("SC"), button:has-text("LC")').first();
+  const header = page.locator('[data-testid="bell-lap-header"]');
+  const dropdown = header.locator('button:has-text("SC"), button:has-text("LC")').first();
   await dropdown.click();
   const popover = page.locator('[role="menu"], [role="listbox"], .z-50').last();
   await popover.waitFor({ state: 'visible' });

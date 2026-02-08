@@ -45,15 +45,20 @@ Feature: Race end symbols
       | 800 LC  | 16         | 12       | 14             |
       | 1500 LC | 30         | 26       | 28             |
 
-  Scenario Outline: Symbols fit on a single line on small mobile screens
-    Given the viewport is "360x640"
+  Scenario Outline: Symbols fit on a single line on various mobile screens
+    Given the viewport is "<viewport>"
     And the race is a <event> event (<total_laps> laps total)
     When Lane 1 is on Lap <lap>
     Then the Zone B area for Lane 1 should display "<expected_text>"
     And the text in Zone B for Lane 1 should not wrap or overflow
+    And the content in Zone A for Lane 1 should not wrap or overflow
+    And the font size in Zone A and Zone B for Lane 1 should be the same
 
     Examples:
-      | event   | total_laps | lap | expected_text |
-      | 500 SC  | 20         | 16  | 🔔 LANE 1 🔔  |
-      | 500 SC  | 20         | 18  | 🟥 LANE 1 🟥  |
-      | 500 SC  | 20         | 20  | 🏁 LANE 1 🏁  |
+      | viewport | event  | total_laps | lap | expected_text |
+      | 360x640  | 500 SC | 20         | 16  | 🔔 LANE 1 🔔  |
+      | 360x640  | 500 SC | 20         | 18  | 🟥 LANE 1 🟥  |
+      | 360x640  | 500 SC | 20         | 20  | 🏁 LANE 1 🏁  |
+      | 430x932  | 500 SC | 20         | 16  | 🔔 LANE 1 🔔  |
+      | 430x932  | 500 SC | 20         | 18  | 🟥 LANE 1 🟥  |
+      | 430x932  | 500 SC | 20         | 20  | 🏁 LANE 1 🏁  |
