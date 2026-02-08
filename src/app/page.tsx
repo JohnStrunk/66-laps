@@ -17,9 +17,9 @@ export default function Home() {
             <div className="w-full flex flex-col min-h-screen">
 
                 <Nav />
-                <div className="flex flex-col lg:flex-row justify-center items-center grow gap-4 mx-4">
+                <div className="flex flex-col lg:flex-row justify-center items-center grow gap-4 mx-4 py-6">
                     <Card
-                        className="max-w-xs h-96 mx-auto mt-6 drop-shadow-2xl hover:drop-shadow-content4"
+                        className="w-80 h-96 drop-shadow-2xl hover:drop-shadow-content4"
                         isPressable
                         shadow="none"
                         onPress={() => navTo("/counting")}
@@ -40,7 +40,7 @@ export default function Home() {
                     </Card>
 
                     <Card
-                        className="max-w-xs h-96 mx-auto mt-6 drop-shadow-2xl hover:drop-shadow-content4"
+                        className="w-80 h-96 drop-shadow-2xl hover:drop-shadow-content4"
                         isPressable
                         shadow="none"
                         onPress={() => navTo("/sheets")}
@@ -61,7 +61,7 @@ export default function Home() {
                     </Card>
 
                     <Card
-                        className="max-w-xs h-96 mx-auto mt-6 drop-shadow-2xl hover:drop-shadow-content4"
+                        className="w-80 h-96 drop-shadow-2xl hover:drop-shadow-content4"
                         isPressable
                         shadow="none"
                         onPress={() => navTo("/practice")}
@@ -82,7 +82,7 @@ export default function Home() {
                     </Card>
 
                     <Card
-                        className="max-w-xs h-96 mx-auto mt-6 drop-shadow-2xl hover:drop-shadow-content4"
+                        className="w-80 h-96 drop-shadow-2xl hover:drop-shadow-content4"
                         isPressable
                         shadow="none"
                         onPress={() => navTo("/app")}
