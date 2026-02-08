@@ -36,7 +36,7 @@ export default function ResponsivePWAWrapper({ children }: { children: React.Rea
         <div className="shrink-0">
           <Nav />
         </div>
-        <main className="flex-1 flex flex-col items-center justify-center overflow-hidden bg-content2 p-4 sm:p-8">
+        <main className="flex-1 flex flex-col items-center justify-center overflow-hidden bg-background p-4 sm:p-8">
           <FauxMobileDevice>
             {children}
           </FauxMobileDevice>
