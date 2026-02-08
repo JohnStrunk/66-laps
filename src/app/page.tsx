@@ -17,7 +17,7 @@ export default function Home() {
             <div className="w-full flex flex-col min-h-screen">
 
                 <Nav />
-                <div className="flex flex-col lg:flex-row justify-center items-center grow gap-4 mx-4 py-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-items-center grow gap-8 mx-8 py-12">
                     <Card
                         className="w-80 h-96 drop-shadow-2xl hover:drop-shadow-content4"
                         isPressable
