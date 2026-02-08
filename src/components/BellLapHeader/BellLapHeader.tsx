@@ -113,7 +113,7 @@ export default function BellLapHeader() {
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
-                  {isFlipped ? "Bottom to top" : "Top to bottom"}
+                  {isFlipped ? `${laneCount} - 1` : `1 - ${laneCount}`}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -122,8 +122,8 @@ export default function BellLapHeader() {
                 selectedKeys={[isFlipped ? "bottom-to-top" : "top-to-bottom"]}
                 selectionMode="single"
               >
-                <DropdownItem key="top-to-bottom">Top to bottom</DropdownItem>
-                <DropdownItem key="bottom-to-top">Bottom to top</DropdownItem>
+                <DropdownItem key="top-to-bottom">{`1 - ${laneCount}`}</DropdownItem>
+                <DropdownItem key="bottom-to-top">{`${laneCount} - 1`}</DropdownItem>
               </DropdownMenu>
             </Dropdown>
 
