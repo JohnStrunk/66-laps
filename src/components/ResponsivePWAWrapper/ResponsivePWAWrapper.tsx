@@ -40,6 +40,10 @@ export default function ResponsivePWAWrapper({ children }: { children: React.Rea
           <FauxMobileDevice>
             {children}
           </FauxMobileDevice>
+          <p className="mt-4 text-center text-foreground/60 font-medium whitespace-pre-line" data-testid="mobile-usage-message">
+            Count laps from your phone:{"\n"}
+            <span className="text-foreground font-bold">66-laps.com/app</span>
+          </p>
         </main>
         <div className="shrink-0">
           <Footer />

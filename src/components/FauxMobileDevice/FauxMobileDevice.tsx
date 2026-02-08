@@ -6,7 +6,7 @@ interface FauxMobileDeviceProps {
 
 export default function FauxMobileDevice({ children }: FauxMobileDeviceProps) {
   return (
-    <div className="relative mx-auto border-gray-900 dark:border-zinc-800 bg-gray-900 border-[14px] rounded-[2.5rem] h-full max-h-[844px] w-[448px] shadow-2xl flex flex-col overflow-hidden">
+    <div className="relative mx-auto border-gray-900 dark:border-zinc-800 bg-gray-900 border-[14px] rounded-[2.5rem] h-full max-h-[844px] w-[448px] shadow-2xl flex flex-col overflow-hidden" data-testid="faux-mobile-device">
       {/* Notch */}
       <div className="w-[148px] h-[18px] bg-gray-900 top-0 left-1/2 -translate-x-1/2 rounded-b-[1rem] absolute z-20"></div>
 

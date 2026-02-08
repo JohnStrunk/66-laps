@@ -39,3 +39,8 @@ Feature: Responsive Layout and Scaling
     When the device is rotated to landscape
     Then the UI should adapt to landscape orientation
     And the UI width should not be constrained to portrait dimensions
+
+  Scenario: Desktop layout displays simulated mobile device and mobile usage message
+    Given the viewport is "1280x900"
+    Then a simulated mobile device should be visible
+    And it should display the message "Count laps from your phone:\n66-laps.com/app" below the device
