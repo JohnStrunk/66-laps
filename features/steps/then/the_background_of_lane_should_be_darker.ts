@@ -15,7 +15,7 @@ Then('the background of Lane {int} should be darker', async function (this: Cust
   const labMatch = bgColor.match(/lab\((\d+\.?\d*)/);
 
   if (rgbMatch) {
-    const [_, r, g, b] = rgbMatch.map(Number);
+    const [, r, g, b] = rgbMatch.map(Number);
     // Darker means lower RGB values. neutral-200 is 229,229,229.
     assert.ok(r < 100 && g < 100 && b < 100, `Expected background to be dark (RGB), but got ${bgColor}`);
   } else if (labMatch) {
