@@ -45,3 +45,4 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 *storybook.log
+/.playwright-cli/

@@ -72,7 +72,7 @@ export default function Home() {
                         <CardBody className="items-center justify-center">
                             <Image
                                 removeWrapper
-                                src="/images/app.png"
+                                src="/images/practice.png"
                                 alt="Pool preview"
                                 className="w-full h-full object-contain" />
                             <p>Practice counting for distance events</p>
