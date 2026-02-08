@@ -26,7 +26,7 @@ export default function BellLapHeader() {
     laneCount,
     setLaneCount,
     isFlipped,
-    toggleFlip,
+    setIsFlipped,
     isResetModalOpen,
     setResetModalOpen,
     resetRace,
@@ -110,15 +110,22 @@ export default function BellLapHeader() {
               </DropdownMenu>
             </Dropdown>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium">{isFlipped ? "10-1" : "1-10"}</span>
-              <Switch
-                isSelected={isFlipped}
-                onValueChange={toggleFlip}
-                size="sm"
-                aria-label="Flip Lane Order"
-              />
-            </div>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
+                  {isFlipped ? "Bottom to top" : "Top to bottom"}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Lane Order Selection"
+                onAction={(key) => setIsFlipped(key === "bottom-to-top")}
+                selectedKeys={[isFlipped ? "bottom-to-top" : "top-to-bottom"]}
+                selectionMode="single"
+              >
+                <DropdownItem key="top-to-bottom">Top to bottom</DropdownItem>
+                <DropdownItem key="bottom-to-top">Bottom to top</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
 
             <Button
               isIconOnly

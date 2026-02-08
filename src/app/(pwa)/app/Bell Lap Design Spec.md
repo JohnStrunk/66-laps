@@ -121,13 +121,12 @@ The app monitors pace (time per 2 lengths) to flag potential errors.
    - **Row 1 (Config & Reset):**
      - ![Event Dropdown][image1](Dropdown: 500 SCY, etc.).
      - ![Lane Dropdown][image2](Dropdown: 6, 8, 10).
-     - ![Flip Toggle][image3](Toggle Button: "1-10" vs "10-1").
+     - ![Flip Dropdown][image3](Dropdown: "Top to bottom" vs "Bottom to top").
      - ![New Race Button][image4](Button: "New Race" / Refresh Icon).
    - **Row 2 (Status Area):** Displays the "Live Leaderboard" (see Section 7).
 2. **The Lane Stack (All Lanes):**
    - A full-height list containing all configured lane rows.
-   - **Order:** Determined by the [Flip] toggle setting (Ascending or
-     Descending).
+   - **Order:** Determined by the [Flip] dropdown setting.
    - **Layout:** Uniform rows split into Control Panel + Touch Pad.
 
 ## **7. Header Status Logic (Live Leaderboard)**
