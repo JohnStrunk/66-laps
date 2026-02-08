@@ -18,5 +18,5 @@ Then('Lane {int} should be displayed as a full-width empty state', async functio
   assert.ok(text?.includes('EMPTY'), 'Should display EMPTY text');
 
   const classes = await row.getAttribute('class');
-  assert.ok(classes?.includes('bg-content2'), 'Background should be grey (bg-content2)');
+  assert.ok(classes?.includes('bg-neutral-200'), 'Background should be grey (bg-neutral-200)');
 });

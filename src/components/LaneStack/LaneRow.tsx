@@ -64,7 +64,7 @@ export default function LaneRow({
   return (
     <div
       className={`flex w-full flex-1 min-h-0 border-b border-divider last:border-b-0 transition-opacity ${
-        lane.isEmpty ? 'bg-content2' : ''
+        lane.isEmpty ? 'bg-neutral-200' : ''
       }`}
       data-testid="lane-row"
       data-lane-number={laneNumber}
