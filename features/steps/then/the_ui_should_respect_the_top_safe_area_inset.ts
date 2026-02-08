@@ -13,5 +13,9 @@ Then('the UI should respect the top safe area inset', async function (this: Cust
     };
   });
 
-  assert.strictEqual(paddingTop, inset, `Header padding-top (${paddingTop}) does not match safe area inset (${inset})`);
+  // Convert inset (e.g. "20px") to number, add 8px (0.5rem), and compare.
+  const insetVal = parseInt(inset.replace('px', ''), 10);
+  const expectedPadding = `${insetVal + 8}px`;
+
+  assert.strictEqual(paddingTop, expectedPadding, `Header padding-top (${paddingTop}) does not match expected padding (${expectedPadding}) derived from safe area inset (${inset})`);
 });

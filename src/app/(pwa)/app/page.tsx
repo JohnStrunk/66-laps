@@ -46,7 +46,7 @@ export default function PWALandingPage() {
     <div className="w-full h-dvh flex justify-center bg-background overflow-hidden">
       <div
         style={{ maxWidth }}
-        className="w-full h-full flex flex-col overflow-hidden border-x shadow-2xl transition-all duration-300"
+        className="w-full h-full flex flex-col overflow-hidden shadow-2xl transition-all duration-300 bg-transparent"
       >
         <BellLapHeader />
         <main className="flex-1 w-full overflow-hidden p-2">
