@@ -80,6 +80,11 @@ This document provides essential information for AI agents working on the
 
 ## Testing Standards
 
+- **Mandatory Testing:** Any code modification MUST include tests that ensure
+  the functionality works as expected.
+- **Bug Fixes (TDD):** When fixing a bug or addressing functionality that is
+  broken, you MUST write the tests first, confirm that they fail, then implement
+  the fix, and finally confirm that the tests pass.
 - **Feature Coverage:** All features that are implemented or changed MUST be
   described in a feature file (`features/*.feature`) and have corresponding
   test scenarios that verify the functionality.
