@@ -129,6 +129,7 @@ export default function LaneRow({
                   updateLaneCount(laneNumber, 2);
                   setNow(Date.now());
                 }}
+                isDisabled={lane.count >= config.laps}
                 aria-label={`Increment lane ${laneNumber}`}
                 className="w-12 h-12 min-w-12"
               >

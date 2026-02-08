@@ -81,7 +81,7 @@ export const useBellLapStore = create<BellLapState>((set) => ({
         lane.laneNumber === laneNumber
           ? {
               ...lane,
-              count: Math.max(0, lane.count + delta),
+              count: Math.max(0, Math.min(config.laps, lane.count + delta)),
               history: delta > 0
                 ? [...lane.history, agedTimestamp]
                 : lane.history.slice(0, -1).map((h, i, arr) =>
