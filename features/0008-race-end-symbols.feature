@@ -44,3 +44,16 @@ Feature: Race end symbols
       | 1650 SC | 66         | 62       | 64             |
       | 800 LC  | 16         | 12       | 14             |
       | 1500 LC | 30         | 26       | 28             |
+
+  Scenario Outline: Symbols fit on a single line on small mobile screens
+    Given the viewport is "360x640"
+    And the race is a <event> event (<total_laps> laps total)
+    When Lane 1 is on Lap <lap>
+    Then the Zone B area for Lane 1 should display "<expected_text>"
+    And the text in Zone B for Lane 1 should not wrap or overflow
+
+    Examples:
+      | event   | total_laps | lap | expected_text |
+      | 500 SC  | 20         | 16  | 🔔 LANE 1 🔔  |
+      | 500 SC  | 20         | 18  | 🟥 LANE 1 🟥  |
+      | 500 SC  | 20         | 20  | 🏁 LANE 1 🏁  |
