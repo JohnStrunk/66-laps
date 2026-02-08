@@ -12,6 +12,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Card,
+  CardBody,
 } from "@heroui/react";
 import { useBellLapStore, EventType, EVENT_CONFIGS } from "@/modules/bellLapStore";
 import { RotateCcw, ChevronDown } from "lucide-react";
@@ -63,85 +65,90 @@ export default function BellLapHeader() {
 
   return (
     <header
-      className="w-full flex flex-col gap-2 p-2 bg-background border-b sticky top-0 z-50"
-      style={{ paddingTop: 'var(--simulated-safe-area-top, env(safe-area-inset-top, 0px))' }}
+      className="z-50 p-2 pb-0"
+      style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
     >
-      {/* Row 1: Config & Reset */}
-      <div className="flex flex-row items-center justify-between gap-2">
-        <Dropdown>
-          <DropdownTrigger>
-            <Button variant="flat" endContent={<ChevronDown size={16} />}>
-              {event}
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Event Selection"
-            onAction={(key) => setEvent(key as EventType)}
-            selectedKeys={[event]}
-            selectionMode="single"
-          >
-            <DropdownItem key="500 SC">500 SC</DropdownItem>
-            <DropdownItem key="1000 SC">1000 SC</DropdownItem>
-            <DropdownItem key="1650 SC">1650 SC</DropdownItem>
-            <DropdownItem key="800 LC">800 LC</DropdownItem>
-            <DropdownItem key="1500 LC">1500 LC</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+      <Card className="shadow-md bg-content1">
+        <CardBody className="flex flex-col gap-2 p-3">
+          {/* Row 1: Config & Reset */}
+          <div className="flex flex-row items-center justify-between gap-2">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />}>
+                  {event}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Event Selection"
+                onAction={(key) => setEvent(key as EventType)}
+                selectedKeys={[event]}
+                selectionMode="single"
+              >
+                <DropdownItem key="500 SC">500 SC</DropdownItem>
+                <DropdownItem key="1000 SC">1000 SC</DropdownItem>
+                <DropdownItem key="1650 SC">1650 SC</DropdownItem>
+                <DropdownItem key="800 LC">800 LC</DropdownItem>
+                <DropdownItem key="1500 LC">1500 LC</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
 
-        <Dropdown>
-          <DropdownTrigger>
-            <Button variant="flat" endContent={<ChevronDown size={16} />}>
-              {laneCount} lanes
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Lane Count"
-            onAction={(key) => setLaneCount(Number(key))}
-            selectedKeys={[String(laneCount)]}
-            selectionMode="single"
-          >
-            <DropdownItem key="6">6 lanes</DropdownItem>
-            <DropdownItem key="8">8 lanes</DropdownItem>
-            <DropdownItem key="10">10 lanes</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="flat" size="sm" endContent={<ChevronDown size={14} />}>
+                  {laneCount} lanes
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Lane Count"
+                onAction={(key) => setLaneCount(Number(key))}
+                selectedKeys={[String(laneCount)]}
+                selectionMode="single"
+              >
+                <DropdownItem key="6">6 lanes</DropdownItem>
+                <DropdownItem key="8">8 lanes</DropdownItem>
+                <DropdownItem key="10">10 lanes</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
 
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium">{isFlipped ? "10-1" : "1-10"}</span>
-          <Switch
-            isSelected={isFlipped}
-            onValueChange={toggleFlip}
-            size="sm"
-            aria-label="Flip Lane Order"
-          />
-        </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium">{isFlipped ? "10-1" : "1-10"}</span>
+              <Switch
+                isSelected={isFlipped}
+                onValueChange={toggleFlip}
+                size="sm"
+                aria-label="Flip Lane Order"
+              />
+            </div>
 
-        <Button
-          isIconOnly
-          color="danger"
-          variant="flat"
-          onPress={() => setResetModalOpen(true)}
-          aria-label="New Race"
-        >
-          <RotateCcw size={20} />
-        </Button>
-      </div>
-
-      {/* Row 2: Live Leaderboard */}
-      <div className="flex flex-row items-center gap-2 overflow-x-auto py-1 min-h-[2rem]" data-testid="live-leaderboard">
-        <span className="text-xs font-bold text-foreground/50 uppercase whitespace-nowrap">Leaderboard:</span>
-        <div className="flex flex-row gap-2">
-          {activeLanes.map((lane) => (
-            <span
-              key={lane.laneNumber}
-              className={`font-black text-lg transition-colors ${getLapColor(lane.count)}`}
-              data-testid={`leaderboard-lane-${lane.laneNumber}`}
+            <Button
+              isIconOnly
+              color="danger"
+              variant="flat"
+              size="sm"
+              onPress={() => setResetModalOpen(true)}
+              aria-label="New Race"
             >
-              {lane.laneNumber}
-            </span>
-          ))}
-        </div>
-      </div>
+              <RotateCcw size={18} />
+            </Button>
+          </div>
+
+          {/* Row 2: Live Leaderboard */}
+          <div className="flex flex-row items-center gap-2 overflow-x-auto min-h-[1.5rem]" data-testid="live-leaderboard">
+            <span className="text-[10px] font-bold text-foreground/50 uppercase whitespace-nowrap">Leaderboard:</span>
+            <div className="flex flex-row gap-2">
+              {activeLanes.map((lane) => (
+                <span
+                  key={lane.laneNumber}
+                  className={`font-black text-lg transition-colors ${getLapColor(lane.count)}`}
+                  data-testid={`leaderboard-lane-${lane.laneNumber}`}
+                >
+                  {lane.laneNumber}
+                </span>
+              ))}
+            </div>
+          </div>
+        </CardBody>
+      </Card>
 
       {/* New Race Confirmation Modal */}
       <Modal isOpen={isResetModalOpen} onClose={() => setResetModalOpen(false)}>
