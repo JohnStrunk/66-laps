@@ -63,74 +63,102 @@ export default function LaneRow({
 
   return (
     <div
-      className={`flex w-full flex-1 min-h-0 border-b border-divider last:border-b-0 transition-opacity ${lane.isEmpty ? 'bg-content2' : ''}`}
+      className={`flex w-full flex-1 min-h-0 border-b border-divider last:border-b-0 transition-opacity ${
+        lane.isEmpty ? 'bg-content2' : ''
+      }`}
       data-testid="lane-row"
       data-lane-number={laneNumber}
+      onMouseDown={lane.isEmpty ? handleTouchStart : undefined}
+      onMouseUp={lane.isEmpty ? handleTouchEnd : undefined}
+      onMouseLeave={lane.isEmpty ? () => { if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; } } : undefined}
+      onTouchStart={lane.isEmpty ? handleTouchStart : undefined}
+      onTouchEnd={lane.isEmpty ? handleTouchEnd : undefined}
     >
-      {/* Zone A: Manual Controls (35%) */}
-      <div className={`basis-[35%] flex flex-row items-center justify-center gap-4 border-r border-divider bg-white text-black p-2 ${lane.isEmpty ? 'invisible' : ''}`} data-testid="lane-zone-a">
-        <Button
-          isIconOnly
-          color="danger"
-          variant="solid"
-          onPress={() => updateLaneCount(laneNumber, -2)}
-          isDisabled={lane.count <= 0}
-          aria-label={`Decrement lane ${laneNumber}`}
-          className="w-12 h-12"
+      {lane.isEmpty ? (
+        <div
+          className="flex-1 flex items-center justify-center"
+          data-testid="lane-empty-state"
         >
-          <Minus size={24} />
-        </Button>
-        <div className="flex flex-col items-center min-w-[3rem]">
-          <span className="text-4xl font-black" data-testid="lane-count">
-            {lane.count}
+          <span className="text-4xl font-black select-none text-foreground/40">
+            EMPTY
           </span>
-          <span className="text-[10px] uppercase font-bold opacity-50">Laps</span>
         </div>
-        <Button
-          isIconOnly
-          color="success"
-          variant="solid"
-          onPress={() => updateLaneCount(laneNumber, 2)}
-          aria-label={`Increment lane ${laneNumber}`}
-          className="w-12 h-12"
-        >
-          <Plus size={24} />
-        </Button>
-      </div>
-
-      {/* Zone B: Touch Pad (65%) */}
-      <div
-        className={`basis-[65%] relative flex items-center justify-center overflow-hidden transition-colors ${
-          lane.isEmpty
-            ? 'bg-content2 cursor-default'
-            : isLocked
-              ? 'bg-content3 cursor-wait'
-              : 'bg-success cursor-pointer active:opacity-80'
-        }`}
-        data-testid="lane-zone-b"
-        onMouseDown={handleTouchStart}
-        onMouseUp={handleTouchEnd}
-        onMouseLeave={() => { if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; } }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        role="button"
-        tabIndex={0}
-        aria-label={`Lane ${laneNumber} touch pad. ${lane.isEmpty ? 'EMPTY' : `Current count: ${lane.count}`}`}
-      >
-        {/* Lockout Progress Bar */}
-        {isLocked && (
+      ) : (
+        <>
+          {/* Zone A: Manual Controls (35%) */}
           <div
-            className="absolute inset-0 bg-foreground/20 origin-left transition-transform duration-100 ease-linear"
-            style={{ transform: `scaleX(${progress / 100})` }}
-            data-testid="lockout-progress"
-          />
-        )}
+            className="basis-[35%] flex flex-row items-center justify-center gap-4 border-r border-divider bg-white text-black p-2"
+            data-testid="lane-zone-a"
+          >
+            <Button
+              isIconOnly
+              color="danger"
+              variant="solid"
+              onPress={() => updateLaneCount(laneNumber, -2)}
+              isDisabled={lane.count <= 0}
+              aria-label={`Decrement lane ${laneNumber}`}
+              className="w-12 h-12"
+            >
+              <Minus size={24} />
+            </Button>
+            <div className="flex flex-col items-center min-w-[3rem]">
+              <span className="text-4xl font-black" data-testid="lane-count">
+                {lane.count}
+              </span>
+              <span className="text-[10px] uppercase font-bold opacity-50">Laps</span>
+            </div>
+            <Button
+              isIconOnly
+              color="success"
+              variant="solid"
+              onPress={() => updateLaneCount(laneNumber, 2)}
+              aria-label={`Increment lane ${laneNumber}`}
+              className="w-12 h-12"
+            >
+              <Plus size={24} />
+            </Button>
+          </div>
 
-        {/* Content */}
-        <span className={`z-10 text-4xl font-black select-none ${lane.isEmpty ? 'text-foreground/40' : isLocked ? 'text-foreground/60' : 'text-white'}`}>
-          {lane.isEmpty ? "EMPTY" : `LANE ${laneNumber}`}
-        </span>
-      </div>
+          {/* Zone B: Touch Pad (65%) */}
+          <div
+            className={`basis-[65%] relative flex items-center justify-center overflow-hidden transition-colors ${
+              isLocked ? 'bg-content3 cursor-wait' : 'bg-success cursor-pointer active:opacity-80'
+            }`}
+            data-testid="lane-zone-b"
+            onMouseDown={handleTouchStart}
+            onMouseUp={handleTouchEnd}
+            onMouseLeave={() => {
+              if (longPressTimer.current) {
+                clearTimeout(longPressTimer.current);
+                longPressTimer.current = null;
+              }
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            role="button"
+            tabIndex={0}
+            aria-label={`Lane ${laneNumber} touch pad. Current count: ${lane.count}`}
+          >
+            {/* Lockout Progress Bar */}
+            {isLocked && (
+              <div
+                className="absolute inset-0 bg-foreground/20 origin-left transition-transform duration-100 ease-linear"
+                style={{ transform: `scaleX(${progress / 100})` }}
+                data-testid="lockout-progress"
+              />
+            )}
+
+            {/* Content */}
+            <span
+              className={`z-10 text-4xl font-black select-none ${
+                isLocked ? 'text-foreground/60' : 'text-white'
+              }`}
+            >
+              {`LANE ${laneNumber}`}
+            </span>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -61,16 +61,15 @@ Feature: Lane Stack
       Then the aria-label for Lane 4's Zone B should include "Current count: 2"
 
   Rule: Lane Disabling (Long Press)
-    Scenario: Long pressing Zone B disables a lane
+    Scenario: Long pressing a lane disables it
       Given Bell Lap is configured for an 8-lane event
-      When I long press the Zone B area for Lane 1
-      Then Lane 1 should be marked as "EMPTY"
-      And Zone A controls for Lane 1 should be hidden
+      When I long press the row for Lane 1
+      Then Lane 1 should be displayed as a full-width empty state
       And Lane 1 should be removed from the Live Leaderboard
 
     Scenario: Long pressing an empty lane re-enables it
       Given Bell Lap is configured for an 8-lane event
       And Lane 2 is marked as "EMPTY"
-      When I long press the Zone B area for Lane 2
+      When I long press the row for Lane 2
       Then Lane 2 should be active
       And Lane 2 should be restored to the Live Leaderboard

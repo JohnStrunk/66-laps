@@ -39,10 +39,8 @@ Feature: PWA Appearance and Interaction
     Then the Zone B area for Lane 1 should be green
 
   Scenario: Inactive lanes appear grey with "Empty" text
-    When I long press the Zone B area for Lane 2
-    Then Lane 2 should be marked as "EMPTY"
-    And the Zone B area for Lane 2 should be grey
-    And the Zone B area for Lane 2 should display "EMPTY"
+    When I long press the row for Lane 2
+    Then Lane 2 should be displayed as a full-width empty state
 
   Scenario: Zone A manual control colors
     Then the background of Zone A for Lane 1 should be white
