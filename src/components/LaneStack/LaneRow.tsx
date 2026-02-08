@@ -99,7 +99,7 @@ export default function LaneRow({
           <>
             {/* Zone A: Manual Controls (50%) */}
             <div
-              className="basis-[50%] w-[50%] flex-none flex flex-row items-center justify-center gap-1 sm:gap-2 border-r border-divider bg-white text-black p-2 overflow-hidden"
+              className="basis-[50%] w-[50%] flex-none flex flex-row items-center justify-center gap-1 sm:gap-2 border-r border-divider p-2 overflow-hidden"
               data-testid="lane-zone-a"
             >
               <Button

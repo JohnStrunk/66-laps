@@ -44,6 +44,6 @@ Feature: PWA Appearance and Interaction
     Then Lane 2 should be displayed as a full-width empty state
 
   Scenario: Zone A manual control colors
-    Then the background of Zone A for Lane 1 should be white
+    Then the background of Zone A for Lane 1 should follow the theme
     And the minus button in Zone A for Lane 1 should be red
     And the plus button in Zone A for Lane 1 should be green
