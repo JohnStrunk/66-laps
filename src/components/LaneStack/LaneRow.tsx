@@ -73,7 +73,7 @@ export default function LaneRow({
   return (
     <Card
       className={`flex-1 min-h-0 transition-opacity shadow-sm ${
-        lane.isEmpty ? 'bg-neutral-200 opacity-60' : 'bg-content1'
+        lane.isEmpty ? 'bg-neutral-200 dark:bg-neutral-900 opacity-60' : 'bg-content1'
       }`}
       data-testid="lane-row"
       data-lane-number={laneNumber}
