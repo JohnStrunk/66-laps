@@ -57,7 +57,7 @@ Feature: Header Controls
       And the viewport is "320x568"
       And Bell Lap is configured for a 10-lane event
       And all lanes are active
-      And all lanes have a lap count of 10
+      And all lanes have a lap count of 20
       Then the header should not overflow or scroll
     Scenario: Leaderboard lists active lanes
       Given lanes 1, 3, and 5 are active
