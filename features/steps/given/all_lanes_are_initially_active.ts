@@ -6,6 +6,7 @@ import { BASE_URL } from '../../support/utils';
 Given('all lanes are initially active with a lap count of {int}', async function (this: CustomWorld, initialCount: number) {
   if (this.page!.url() === 'about:blank' || !this.page!.url().includes('/app')) {
     await this.page!.goto(`${BASE_URL}/app?testMode=true`);
+    await this.page!.waitForSelector('[data-mounted="true"]', { timeout: 10000 });
     await this.page!.waitForSelector('[data-testid="lane-row"]');
   }
 
