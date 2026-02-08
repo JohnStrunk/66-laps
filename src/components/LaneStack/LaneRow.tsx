@@ -25,10 +25,10 @@ export default function LaneRow({
   const lastTouch = lane?.history[lane.history.length - 1] || 0;
   const lockoutMs = config.lockout * 1000;
   const elapsed = now - lastTouch;
-  const isLocked = !!lane && !lane.isEmpty && elapsed < lockoutMs;
+  const isFinished = lane?.count === config.laps;
+  const isLocked = !!lane && !lane.isEmpty && elapsed < lockoutMs && !isFinished;
   const progress = isLocked ? (elapsed / lockoutMs) * 100 : 0;
 
-  const isFinished = lane?.count === config.laps;
   const isRedSquare = lane?.count === config.laps - 2;
   const isBellLap = lane?.count === config.laps - 4;
 

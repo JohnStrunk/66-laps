@@ -34,6 +34,7 @@ Feature: Race end symbols
     Then the Zone B area for Lane 1 should display "🏁 LANE 1 🏁"
     And the Zone B area for Lane 1 should have white background and black text
     And the Zone B area for Lane 1 should be disabled
+    And the Zone B area for Lane 1 should not display a progress indicator for the lockout duration
 
     Examples:
       | event   | total_laps | bell_lap | red_square_lap |
