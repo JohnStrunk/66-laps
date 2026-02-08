@@ -1,3 +1,4 @@
+@browser
 Feature: Header Controls
   When managing a swimming heat
   I want to use the header controls

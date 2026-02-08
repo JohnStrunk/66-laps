@@ -48,7 +48,15 @@ This document provides essential information for AI agents working on the
 - **Development:** `yarn dev`
 - **Build:** `yarn build`
 - **Linting:** `yarn lint`
-- **Testing:** `yarn test`
+- **Testing:**
+  - `yarn test`: Runs the full suite against the dev server with 2 parallel
+    workers. Good for general regression checks during development.
+  - `yarn test:unit`: Runs only non-browser logic tests (Extremely fast, <1s).
+    Use this frequently during domain logic or model development.
+  - `yarn test:static`: Builds the project and runs tests against the static
+    export. This is the **most stable and fastest** way to run the full suite.
+    Use this for final verification before committing or in CI.
+  - `yarn test:e2e`: Runs only browser-dependent tests.
 - **Subset Testing (for faster dev cycles):**
   - Ensure `yarn dev` is running in the background.
   - Run a single feature:

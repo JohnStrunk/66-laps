@@ -1,3 +1,4 @@
+@browser
 Feature: Race end symbols
 
   As a lane counter

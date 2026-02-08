@@ -1,3 +1,4 @@
+@browser
 Feature: Responsive Layout and Scaling
   When using the Bell Lap PWA on various mobile devices
   I want the UI to automatically scale and fit within the viewport without scrolling
