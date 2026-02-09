@@ -15,20 +15,40 @@ export const getColorClass = (className: string | null): string | null => {
 };
 
 export const longPress = async (locator: Locator) => {
-  await locator.waitFor({ state: 'visible' });
-  const box = await locator.boundingBox();
-  if (!box) {
-    throw new Error('Could not get bounding box for long press');
+  // Wait for the element to be visible and stable
+  await locator.first().waitFor({ state: 'visible' });
+
+  // Try to scroll into view, but don't fail if it detaches - we will retry getting bounding box
+  try {
+    await locator.first().scrollIntoViewIfNeeded();
+  } catch {
+    // Ignore detachment here, we'll handle it below
   }
-  const page = locator.page();
+
+  let box = await locator.first().boundingBox();
+  if (!box) {
+    // If it's gone, it might have re-rendered. Wait and try again once.
+    await new Promise(r => setTimeout(r, 200));
+    await locator.first().waitFor({ state: 'visible' });
+    box = await locator.first().boundingBox();
+  }
+
+  if (!box) {
+    throw new Error(`Element is visible but has no bounding box (detached or hidden)`);
+  }
+
+  await performPress(locator.page(), box);
+};
+
+const performPress = async (page: Page, box: { x: number; y: number; width: number; height: number }) => {
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   try {
     // Advance clock if it's installed
-    await page.clock.fastForward(1200);
+    await page.clock.fastForward(1500); // Increased from 1200 for safety
   } catch {
     // Fallback for real time if clock is not installed
-    await new Promise(r => setTimeout(r, 1200));
+    await new Promise(r => setTimeout(r, 1500));
   }
   await page.mouse.up();
 };
