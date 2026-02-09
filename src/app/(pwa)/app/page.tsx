@@ -3,7 +3,7 @@
 import LaneStack from "@/components/LaneStack/LaneStack";
 import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useBellLapStore } from "@/modules/bellLapStore";
 
 function BellLapContent() {
