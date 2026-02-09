@@ -9,7 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "66-laps@workspace:."
   dependencies:
-    "@chromatic-com/storybook": "npm:5.0.0"
+    "@chromatic-com/storybook": "npm:5.0.1"
     "@cucumber/cucumber": "npm:12.6.0"
     "@ducanh2912/next-pwa": "npm:10.2.9"
     "@eslint/eslintrc": "npm:3.3.3"
@@ -29,7 +29,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:4.1.18"
     "@tailwindcss/typography": "npm:0.5.19"
     "@testing-library/dom": "npm:10.4.1"
-    "@types/node": "npm:24.10.9"
+    "@types/node": "npm:24.10.12"
     "@types/react": "npm:19.2.9"
     "@types/react-dom": "npm:19.2.3"
     "@vitest/browser": "npm:4.0.18"
@@ -1418,9 +1418,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chromatic-com/storybook@npm:5.0.0":
-  version: 5.0.0
-  resolution: "@chromatic-com/storybook@npm:5.0.0"
+"@chromatic-com/storybook@npm:5.0.1":
+  version: 5.0.1
+  resolution: "@chromatic-com/storybook@npm:5.0.1"
   dependencies:
     "@neoconfetti/react": "npm:^1.0.0"
     chromatic: "npm:^13.3.4"
@@ -1429,7 +1429,7 @@ __metadata:
     strip-ansi: "npm:^7.1.0"
   peerDependencies:
     storybook: ^0.0.0-0 || ^10.1.0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0
-  checksum: 10c0/8e4dcba6c70b2943a5b68fd3d690084328844d757fffccef26adebf1eadfc3b0d2fee80280e57c40d6897dee3ab9c6c202de46eb1de39991d316df5e36b4fe89
+  checksum: 10c0/feb76f32347b09cc45bde04e2dc4374510bbcd9410f4cef67b08f82be4d2ae625da2347f9495e7bb5cfa368fd5af40f97ef2fcd054313365d3bd20c175cf3975
   languageName: node
   linkType: hard
 
@@ -7650,12 +7650,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.10.9":
-  version: 24.10.9
-  resolution: "@types/node@npm:24.10.9"
+"@types/node@npm:24.10.12":
+  version: 24.10.12
+  resolution: "@types/node@npm:24.10.12"
   dependencies:
     undici-types: "npm:~7.16.0"
-  checksum: 10c0/e9e436fcd2136bddb1bbe3271a89f4653910bcf6ee8047c4117f544c7905a106c039e2720ee48f28505ef2560e22fb9ead719f28bf5e075fdde0c1120e38e3b2
+  checksum: 10c0/fa39b88c8d82a2cec41544bee3426c4b78a13cc3c5ccf6fcb6c9528a68466ffcc73772833c612c7bb7e5fe1bc8e38002d1d543152e43b20b0600096cf6f210d1
   languageName: node
   linkType: hard
 
