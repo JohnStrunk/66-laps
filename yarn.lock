@@ -41,6 +41,7 @@ __metadata:
     eslint-plugin-storybook: "npm:10.2.0"
     framer-motion: "npm:12.29.2"
     lucide-react: "npm:0.563.0"
+    monocart-coverage-reports: "npm:2.12.9"
     next: "npm:16.1.5"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.15.0"
@@ -8537,7 +8538,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.14.0, acorn@npm:^8.15.0, acorn@npm:^8.8.1":
+"acorn-loose@npm:^8.5.2":
+  version: 8.5.2
+  resolution: "acorn-loose@npm:8.5.2"
+  dependencies:
+    acorn: "npm:^8.15.0"
+  checksum: 10c0/169a85ad2df888586fe6eda2af9ff8fbcca7174ce83d00632cea5fffa73476218012af91be0cd6b68e4df6183baffa463506fd2ab54800903378140e679302fd
+  languageName: node
+  linkType: hard
+
+"acorn-walk@npm:^8.3.4":
+  version: 8.3.4
+  resolution: "acorn-walk@npm:8.3.4"
+  dependencies:
+    acorn: "npm:^8.11.0"
+  checksum: 10c0/76537ac5fb2c37a64560feaf3342023dadc086c46da57da363e64c6148dc21b57d49ace26f949e225063acb6fb441eabffd89f7a3066de5ad37ab3e328927c62
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.11.0, acorn@npm:^8.14.0, acorn@npm:^8.15.0, acorn@npm:^8.8.1":
   version: 8.15.0
   resolution: "acorn@npm:8.15.0"
   bin:
@@ -9385,6 +9404,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"console-grid@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "console-grid@npm:2.2.3"
+  checksum: 10c0/cd1a27c9995c2c03b79bacbef46ea193860501c6f819b86c71fd76a2cf6f075afcdb64ec0066ca0e4895e5f7876f698f6e53b5ba5c16cc93044b103e90e86895
+  languageName: node
+  linkType: hard
+
 "convert-source-map@npm:^2.0.0":
   version: 2.0.0
   resolution: "convert-source-map@npm:2.0.0"
@@ -9692,6 +9718,13 @@ __metadata:
   version: 0.2.0
   resolution: "eastasianwidth@npm:0.2.0"
   checksum: 10c0/26f364ebcdb6395f95124fda411f63137a4bfb5d3a06453f7f23dfe52502905bd84e0488172e0f9ec295fdc45f05c23d5d91baf16bd26f0fe9acd777a188dc39
+  languageName: node
+  linkType: hard
+
+"eight-colors@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "eight-colors@npm:1.3.1"
+  checksum: 10c0/af37c6302b4879e1d756d3fcf9dbf21b0e8bb95d662e2725700aa451a756c9996d37a66cb05cbdbd156663e93398b8224199180f3683d1780542f3c9fd553d7d
   languageName: node
   linkType: hard
 
@@ -12477,6 +12510,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lz-utils@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "lz-utils@npm:2.1.0"
+  checksum: 10c0/539efdaaedef7721abf1c732a2b6d7f2d8ffe13873a029149c6afaa5499f9989b6173c5dc9672323019a9b4a1762c55f4eeeb30c3b3bc0e55f5d7d8f770d6456
+  languageName: node
+  linkType: hard
+
 "magic-string@npm:0.30.8":
   version: 0.30.8
   resolution: "magic-string@npm:0.30.8"
@@ -12768,6 +12808,35 @@ __metadata:
   version: 1.0.4
   resolution: "module-details-from-path@npm:1.0.4"
   checksum: 10c0/10863413e96dab07dee917eae07afe46f7bf853065cc75a7d2a718adf67574857fb64f8a2c0c9af12ac733a9a8cf652db7ed39b95f7a355d08106cb9cc50c83b
+  languageName: node
+  linkType: hard
+
+"monocart-coverage-reports@npm:2.12.9":
+  version: 2.12.9
+  resolution: "monocart-coverage-reports@npm:2.12.9"
+  dependencies:
+    acorn: "npm:^8.15.0"
+    acorn-loose: "npm:^8.5.2"
+    acorn-walk: "npm:^8.3.4"
+    commander: "npm:^14.0.0"
+    console-grid: "npm:^2.2.3"
+    eight-colors: "npm:^1.3.1"
+    foreground-child: "npm:^3.3.1"
+    istanbul-lib-coverage: "npm:^3.2.2"
+    istanbul-lib-report: "npm:^3.0.1"
+    istanbul-reports: "npm:^3.2.0"
+    lz-utils: "npm:^2.1.0"
+    monocart-locator: "npm:^1.0.2"
+  bin:
+    mcr: lib/cli.js
+  checksum: 10c0/716886f7c80b7937960ed54481264f6d52464be89ca64fb1cd48b1c607ad86ec9473b6c0fe20193882b048d88a337418508264b1da316e5512fe95a01c2b5c8f
+  languageName: node
+  linkType: hard
+
+"monocart-locator@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "monocart-locator@npm:1.0.2"
+  checksum: 10c0/911d76b845eca3acb3db42429c5d31b878bf6e78796d42b0b333f1d176d61e0c597e50c18b755365b7b5c114f933add9e20bf1dc51b8f35fb13e1d30f9aa6fee
   languageName: node
   linkType: hard
 
