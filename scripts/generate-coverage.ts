@@ -19,7 +19,7 @@ async function generateReport() {
 
   console.log(`Processing ${files.length} coverage files...`);
 
-  const coverageOptions = {
+  const coverageOptions: MCR.CoverageReportOptions = {
     name: '66 Laps Coverage Report',
     outputDir: REPORT_DIR,
     reports: [
@@ -31,17 +31,17 @@ async function generateReport() {
         file: 'lcov.info'
       }]
     ],
-    entryFilter: (entry: any) => {
+    entryFilter: (entry: MCR.V8CoverageEntry) => {
       // Focus on application code
       return entry.url.includes('localhost:3000') &&
              !entry.url.includes('node_modules') &&
              !entry.url.includes('hmr-client');
     },
     // Attempt to resolve source maps from local filesystem if they are not in the URL
-    sourceMap: {
+    // sourceMap: {
         // Next.js with Turbopack stores maps in .next/build/chunks or similar
         // This is a complex mapping, but MCR can sometimes handle it if we point it to the root
-    }
+    // }
   };
 
   const mcr = MCR(coverageOptions);
