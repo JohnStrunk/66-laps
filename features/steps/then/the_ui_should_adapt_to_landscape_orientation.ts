@@ -7,11 +7,10 @@ Then('the UI should adapt to landscape orientation', async function (this: Custo
   const viewport = this.page.viewportSize();
   if (!viewport) throw new Error('No viewport found');
 
-  // If it adapts to landscape, the width should be significantly larger than portrait max-w-md (448px)
-  // assuming the viewport is large enough (like 1024).
   const width = await this.page.locator('[data-testid="pwa-main"]').evaluate(el => el.getBoundingClientRect().width);
 
-  if (viewport.width > 500) {
-    assert.ok(width > 450, `UI width ${width} should be wider than portrait constraint on landscape tablet.`);
-  }
+  // In landscape, we expect the UI to take up most or all of the viewport width
+  // (allowing for some padding/margins if applicable, but definitely not constrained to 448px)
+  assert.ok(width > 450, `UI width ${width} should be wider than portrait constraint in landscape mode.`);
+  assert.ok(Math.abs(width - viewport.width) < 50, `UI width ${width} should be close to viewport width ${viewport.width}`);
 });

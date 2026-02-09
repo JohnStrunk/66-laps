@@ -32,10 +32,10 @@ Feature: Responsive Layout and Scaling
     Given the device has a "20px" top safe area inset
     Then the UI should respect the top safe area inset
 
-  Scenario Outline: Portrait orientation is enforced on mobile screens
+  Scenario Outline: UI adapts to landscape orientation on mobile screens
     Given the viewport is "<viewport>"
     When the device is rotated to landscape
-    Then the UI should remain in portrait orientation
+    Then the UI should adapt to landscape orientation
 
     Examples:
       | viewport |

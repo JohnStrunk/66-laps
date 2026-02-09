@@ -27,25 +27,9 @@ function BellLapContent() {
 }
 
 export default function PWALandingPage() {
-  const [maxWidth, setMaxWidth] = useState<string>('448px');
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setMaxWidth('none');
-      } else {
-        setMaxWidth('448px');
-      }
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   return (
     <div className="w-full h-full flex justify-center bg-background overflow-hidden">
       <div
-        style={{ maxWidth }}
         className="w-full h-full flex flex-col overflow-hidden shadow-2xl transition-all duration-300 bg-transparent"
       >
         <BellLapHeader />
