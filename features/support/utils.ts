@@ -15,27 +15,28 @@ export const getColorClass = (className: string | null): string | null => {
 };
 
 export const longPress = async (locator: Locator) => {
-  // Try to find the element and ensure it's attached
-  await locator.waitFor({ state: 'attached' });
-  await locator.scrollIntoViewIfNeeded();
+  // Wait for the element to be visible and stable
+  await locator.first().waitFor({ state: 'visible' });
 
-  // Re-verify it's still there after scroll
-  if (await locator.count() === 0) {
-     // If it's gone, it might have re-rendered. locator will re-find if we wait for it.
-     await locator.waitFor({ state: 'visible' });
+  // Try to scroll into view, but don't fail if it detaches - we will retry getting bounding box
+  try {
+    await locator.first().scrollIntoViewIfNeeded();
+  } catch {
+    // Ignore detachment here, we'll handle it below
   }
 
-  const box = await locator.boundingBox();
+  let box = await locator.first().boundingBox();
   if (!box) {
-    // If we still can't get it, wait a tiny bit and try one last time
+    // If it's gone, it might have re-rendered. Wait and try again once.
     await new Promise(r => setTimeout(r, 200));
-    const boxRetry = await locator.boundingBox();
-    if (!boxRetry) {
-       throw new Error(`Element is visible but has no bounding box (detached or hidden)`);
-    }
-    await performPress(locator.page(), boxRetry);
-    return;
+    await locator.first().waitFor({ state: 'visible' });
+    box = await locator.first().boundingBox();
   }
+
+  if (!box) {
+    throw new Error(`Element is visible but has no bounding box (detached or hidden)`);
+  }
+
   await performPress(locator.page(), box);
 };
 
