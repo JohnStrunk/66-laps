@@ -1,9 +1,10 @@
 {
   "name": "66-laps",
   "short_name": "66-laps",
-  "description": "A swimming lap counter and simulation tool.",
+  "description": "A swimming lap counter.",
   "start_url": "/app",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
