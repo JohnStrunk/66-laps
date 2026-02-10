@@ -1,5 +1,4 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
 

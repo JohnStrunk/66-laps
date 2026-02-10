@@ -1,5 +1,4 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
 
@@ -14,7 +13,7 @@ Then('the total lap count should be {int}', async function (this: CustomWorld, l
       };
       return config[state.event] === expectedLaps;
     }, laps, { timeout: 5000 });
-  } catch (e) {
+  } catch {
     const state = await this.page.evaluate(() => (window as unknown as TestWindow).__bellLapStore.getState());
     throw new Error(`Total lap count check failed. Expected laps for event "${state.event}" to match ${laps}. Current state event: "${state.event}"`);
   }
