@@ -89,6 +89,8 @@ This document provides essential information for AI agents working on the
 
 ## Commit Workflow
 
+- **Linting:** Before committing code changes, you MUST run `yarn lint` and fix
+  any warnings or errors.
 - **Sign-off:** All commits **MUST** include a sign-off
   (`git commit --signoff`) for DCO compliance.
 - **Pre-commit:** This repository enforces pre-commit hooks. Ensure all checks
@@ -123,6 +125,11 @@ This document provides essential information for AI agents working on the
   TypeScript file. Files should be named descriptively based on the step
   text, without the keyword prefix
   (e.g., `features/steps/then/lane_should_be_active.ts`).
+- **Browser Test Stability:** Minimize flakiness by using `waitForFunction` or
+  `waitForSelector` instead of immediate assertions for asynchronous state or
+  layout changes. Avoid CSS transitions on elements whose dimensions are
+  verified by tests. Explicitly wait for UI elements (like menus) to be fully
+  visible before interaction.
 
 ## Critical Instructions
 

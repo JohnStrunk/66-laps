@@ -55,12 +55,26 @@ const performPress = async (page: Page, box: { x: number; y: number; width: numb
 
 export const selectEvent = async (page: Page, eventName: string) => {
   const header = page.locator('[data-testid="bell-lap-header"]');
-  const dropdown = header.locator('button:has-text("SC"), button:has-text("LC")').first();
+  const dropdown = header.locator('button').filter({ hasText: /SC|LC/ }).first();
   await dropdown.click();
-  const popover = page.locator('[role="menu"], [role="listbox"], .z-50').last();
-  await popover.waitFor({ state: 'visible' });
+
+  // Wait for the dropdown menu to appear and contain the target event
+  const popover = page.locator('[role="menu"], [role="listbox"]').filter({
+    has: page.locator('button, li, [role="menuitem"], [role="option"]').getByText(eventName, { exact: true })
+  }).last();
+
+  await popover.waitFor({ state: 'visible', timeout: 5000 });
   const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(eventName, { exact: true });
   await item.click({ force: true });
+
+  // Wait for the dropdown to close or the button text to update to ensure the action is processed
+  await page.waitForFunction((expected) => {
+    const header = document.querySelector('[data-testid="bell-lap-header"]');
+    const btn = header?.querySelector('button');
+    return btn?.textContent?.trim() === expected;
+  }, eventName, { timeout: 3000 }).catch(() => {
+    // Ignore timeout here, the next step will verify the store state
+  });
 };
 
 export const getStoreState = async (page: Page): Promise<BellLapState> => {
