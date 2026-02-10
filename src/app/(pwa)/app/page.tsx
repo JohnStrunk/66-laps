@@ -30,7 +30,7 @@ export default function PWALandingPage() {
   return (
     <div className="w-full h-full flex justify-center bg-background overflow-hidden">
       <div
-        className="w-full h-full flex flex-col overflow-hidden shadow-2xl transition-all duration-300 bg-transparent"
+        className="w-full h-full flex flex-col overflow-hidden shadow-2xl bg-transparent"
       >
         <BellLapHeader />
         <main className="flex-1 w-full overflow-hidden p-2" data-testid="pwa-main">

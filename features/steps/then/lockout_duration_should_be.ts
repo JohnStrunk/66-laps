@@ -4,12 +4,13 @@ import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
 
 Then('the lockout duration should be {int} seconds', async function (this: CustomWorld, seconds: number) {
-  const stateLockout = await this.page!.evaluate(() => {
+  if (!this.page) throw new Error('No page found');
+
+  await this.page.waitForFunction((expectedSeconds) => {
     const state = (window as unknown as TestWindow).__bellLapStore.getState();
     const config: Record<string, number> = {
       '500 SC': 15, '1000 SC': 15, '1650 SC': 15, '800 LC': 30, '1500 LC': 30
     };
-    return config[state.event];
-  });
-  assert.strictEqual(stateLockout, seconds, `Expected lockout to be ${seconds}s but got ${stateLockout}s`);
+    return config[state.event] === expectedSeconds;
+  }, seconds, { timeout: 5000 });
 });
