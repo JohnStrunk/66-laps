@@ -53,28 +53,33 @@ const performPress = async (page: Page, box: { x: number; y: number; width: numb
   await page.mouse.up();
 };
 
-export const selectEvent = async (page: Page, eventName: string) => {
-  const header = page.locator('[data-testid="bell-lap-header"]');
-  const dropdown = header.locator('button').filter({ hasText: /SC|LC/ }).first();
-  await dropdown.click();
+export const selectDropdownItem = async (page: Page, triggerTestId: string, itemText: string) => {
+  const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
+  await trigger.click();
 
-  // Wait for the dropdown menu to appear and contain the target event
   const popover = page.locator('[role="menu"], [role="listbox"]').filter({
-    has: page.locator('button, li, [role="menuitem"], [role="option"]').getByText(eventName, { exact: true })
+    has: page.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true })
   }).last();
 
   await popover.waitFor({ state: 'visible', timeout: 5000 });
-  const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(eventName, { exact: true });
-  await item.click({ force: true });
+  const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true });
+  await item.click();
 
-  // Wait for the dropdown to close or the button text to update to ensure the action is processed
+  // Wait for the trigger text to update
+  await page.waitForFunction(({ testId, expected }) => {
+    const trigger = document.querySelector(`[data-testid="${testId}"]`);
+    return trigger?.textContent?.trim() === expected;
+  }, { testId: triggerTestId, expected: itemText }, { timeout: 3000 }).catch(() => {});
+};
+
+export const selectEvent = async (page: Page, eventName: string) => {
+  await selectDropdownItem(page, 'event-dropdown-trigger', eventName);
+
+  // Additional wait for store state
   await page.waitForFunction((expected) => {
-    const header = document.querySelector('[data-testid="bell-lap-header"]');
-    const btn = header?.querySelector('button');
-    return btn?.textContent?.trim() === expected;
-  }, eventName, { timeout: 3000 }).catch(() => {
-    // Ignore timeout here, the next step will verify the store state
-  });
+    const store = (window as any).__bellLapStore?.getState();
+    return store?.event === expected;
+  }, eventName, { timeout: 3000 }).catch(() => {});
 };
 
 export const getStoreState = async (page: Page): Promise<BellLapState> => {
