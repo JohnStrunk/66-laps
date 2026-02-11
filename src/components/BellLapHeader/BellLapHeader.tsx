@@ -101,7 +101,7 @@ export default function BellLapHeader() {
           <div className="flex flex-row items-center justify-between gap-1">
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} data-testid="event-dropdown-trigger">
                   {event}
                 </Button>
               </DropdownTrigger>
@@ -121,7 +121,7 @@ export default function BellLapHeader() {
 
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />}>
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} data-testid="lane-count-dropdown-trigger">
                   {laneCount} lanes
                 </Button>
               </DropdownTrigger>
@@ -139,7 +139,7 @@ export default function BellLapHeader() {
 
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} aria-label="Lane Order">
+                <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} aria-label="Lane Order" data-testid="lane-order-dropdown-trigger">
                   {isFlipped ? `${laneCount} - 1` : `1 - ${laneCount}`}
                 </Button>
               </DropdownTrigger>
