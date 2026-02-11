@@ -22,7 +22,7 @@
     "@ducanh2912/next-pwa": "10.2.9",
     "@heroui/react": "2.8.8",
     "@pixi/react": "8.0.5",
-    "@sentry/nextjs": "10.36.0",
+    "@sentry/nextjs": "10.38.0",
     "lucide-react": "0.563.0",
     "motion": "12.29.2",
     "next": "16.1.6",
