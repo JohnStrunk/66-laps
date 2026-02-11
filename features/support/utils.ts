@@ -1,5 +1,6 @@
 import { Locator, Page } from 'playwright';
 import { BellLapState } from '../../src/modules/bellLapStore';
+import { TestWindow } from './store-type';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -77,7 +78,7 @@ export const selectEvent = async (page: Page, eventName: string) => {
 
   // Additional wait for store state
   await page.waitForFunction((expected) => {
-    const store = (window as any).__bellLapStore?.getState();
+    const store = (window as unknown as TestWindow).__bellLapStore?.getState();
     return store?.event === expected;
   }, eventName, { timeout: 3000 }).catch(() => {});
 };

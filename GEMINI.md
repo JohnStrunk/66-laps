@@ -89,8 +89,8 @@ This document provides essential information for AI agents working on the
 
 ## Commit Workflow
 
-- **Linting:** Before committing code changes, you MUST run `yarn lint` and fix
-  any warnings or errors.
+- **Linting:** You MUST run `yarn lint` after editing any code or tests and
+  before committing to ensure code quality and fix any warnings or errors.
 - **Sign-off:** All commits **MUST** include a sign-off
   (`git commit --signoff`) for DCO compliance.
 - **Pre-commit:** This repository enforces pre-commit hooks. Ensure all checks
