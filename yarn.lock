@@ -44,7 +44,7 @@ __metadata:
     motion: "npm:12.29.2"
     next: "npm:16.1.5"
     next-themes: "npm:0.4.6"
-    pixi.js: "npm:8.15.0"
+    pixi.js: "npm:8.16.0"
     playwright: "npm:1.58.2"
     posthog-js: "npm:1.335.2"
     react: "npm:19.2.3"
@@ -7549,13 +7549,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/css-font-loading-module@npm:^0.0.12":
-  version: 0.0.12
-  resolution: "@types/css-font-loading-module@npm:0.0.12"
-  checksum: 10c0/b969a8f14f1b6c1f677d4cd7072683766dff3c9cbcb18edd6072f3b10b7c83ed50a5ee3cd050ad6a95bfd1df1ab677339e33a6e34bafc20193014cb6566cc8f3
-  languageName: node
-  linkType: hard
-
 "@types/deep-eql@npm:*":
   version: 4.0.2
   resolution: "@types/deep-eql@npm:4.0.2"
@@ -8476,14 +8469,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webgpu/types@npm:^0.1.40":
-  version: 0.1.65
-  resolution: "@webgpu/types@npm:0.1.65"
-  checksum: 10c0/cc9de41ae18432f292b5e41b1ef1198d200317fd3af424893a75b861fdcff272083e7cb2d51ba79b4deee4d1e93ecec8063d9e6f87d57c69217b48505971c858
+"@webgpu/types@npm:^0.1.69":
+  version: 0.1.69
+  resolution: "@webgpu/types@npm:0.1.69"
+  checksum: 10c0/52b95a176de5ee918fd1d7132103c35029006a0b4eb321767479a9e430560d272926c0994c3795a5bbaa22cebcc7dce71e66ba8b6496e01c90c0d179a02bd968
   languageName: node
   linkType: hard
 
-"@xmldom/xmldom@npm:^0.8.10":
+"@xmldom/xmldom@npm:^0.8.11":
   version: 0.8.11
   resolution: "@xmldom/xmldom@npm:0.8.11"
   checksum: 10c0/e768623de72c95d3dae6b5da8e33dda0d81665047811b5498d23a328d45b13feb5536fe921d0308b96a4a8dd8addf80b1f6ef466508051c0b581e63e0dc74ed5
@@ -13449,22 +13442,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixi.js@npm:8.15.0":
-  version: 8.15.0
-  resolution: "pixi.js@npm:8.15.0"
+"pixi.js@npm:8.16.0":
+  version: 8.16.0
+  resolution: "pixi.js@npm:8.16.0"
   dependencies:
     "@pixi/colord": "npm:^2.9.6"
-    "@types/css-font-loading-module": "npm:^0.0.12"
     "@types/earcut": "npm:^3.0.0"
-    "@webgpu/types": "npm:^0.1.40"
-    "@xmldom/xmldom": "npm:^0.8.10"
+    "@webgpu/types": "npm:^0.1.69"
+    "@xmldom/xmldom": "npm:^0.8.11"
     earcut: "npm:^3.0.2"
     eventemitter3: "npm:^5.0.1"
     gifuct-js: "npm:^2.1.2"
     ismobilejs: "npm:^1.1.1"
     parse-svg-path: "npm:^0.1.2"
-    tiny-lru: "npm:^11.4.5"
-  checksum: 10c0/061c29c09e5f395dd1ee651b80d1847b46adcbce3d41596be25c0a1d03f4e6c546e4374f564c93b322e39e823a3008a462b44537368c8dd04f3c796e78759741
+    tiny-lru: "npm:^11.4.7"
+  checksum: 10c0/c10e25fe3433c0265d32003615b3f1b56edbd8c0afd0e1300bc4ba6683250a8fe200379b9122baf174569c42e7f0644b7931330efeac1661a451a4d6ec4e2fc3
   languageName: node
   linkType: hard
 
@@ -15222,10 +15214,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-lru@npm:^11.4.5":
-  version: 11.4.5
-  resolution: "tiny-lru@npm:11.4.5"
-  checksum: 10c0/87bea4e12dcbeab7f59fdb8bfd7f23767ae88b4e3f71a466110e7ea75e0a386248869be3281d6bf4e896b3b9d5a244a0578286cf3123d48939ab763dc611e5c3
+"tiny-lru@npm:^11.4.7":
+  version: 11.4.7
+  resolution: "tiny-lru@npm:11.4.7"
+  checksum: 10c0/2cd65b987396e331ddcef57133b3f0cb30c832641a215a2e627af04941c839ca6772f216b238e96500b4747f39b434d129cec4c0a25db3beb08c8f3d448a2705
   languageName: node
   linkType: hard
 
