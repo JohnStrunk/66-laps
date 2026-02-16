@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "10.2.9",
-    "@heroui/react": "2.8.8",
+    "@heroui/react": "2.8.9",
     "@pixi/react": "8.0.5",
     "@sentry/nextjs": "10.38.0",
     "lucide-react": "0.564.0",
