@@ -9,7 +9,7 @@ Feature: Lap count boundaries
     Given the app is loaded
 
   Scenario Outline: Lap count cannot exceed max laps for <event>
-    Given the race is a <event> event (<total_laps> laps total)
+    Given Bell Lap is configured for a "<event>" event
     When Lane 1 is on Lap <total_laps>
     And I attempt to tap the "+" button in Zone A for Lane 1
     Then the lap count for Lane 1 should be <total_laps>
@@ -24,7 +24,7 @@ Feature: Lap count boundaries
       | 1500 LC | 30         |
 
   Scenario Outline: Lap count cannot go below 0 for <event>
-    Given the race is a <event> event (<total_laps> laps total)
+    Given Bell Lap is configured for a "<event>" event
     When Lane 1 is on Lap 0
     And I attempt to tap the "-" button in Zone A for Lane 1
     Then the lap count for Lane 1 should be 0

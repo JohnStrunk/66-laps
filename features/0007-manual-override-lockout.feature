@@ -7,7 +7,7 @@ Feature: Manual Override of Lockout
 
   Background:
     Given the app is loaded
-    And the race is a 500 SC event (20 laps total)
+    And Bell Lap is configured for a "500 SC" event
 
   Scenario: Pressing + disables lockout
     When I tap the Zone B area for Lane 1

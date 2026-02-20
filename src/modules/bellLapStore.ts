@@ -61,9 +61,25 @@ export const useBellLapStore = create<BellLapState>((set) => ({
 
   setLaneCount: (laneCount) => set((state) => {
     if (state.laneCount === laneCount) return state;
+
+    let newLanes = [...state.lanes];
+    if (laneCount > state.lanes.length) {
+      // Add more lanes
+      const additional = Array.from({ length: laneCount - state.lanes.length }, (_, i) => ({
+        laneNumber: state.lanes.length + i + 1,
+        count: 0,
+        isEmpty: false,
+        history: [],
+      }));
+      newLanes = [...state.lanes, ...additional];
+    }
+    // We don't remove lanes from the array even if laneCount is smaller,
+    // so that data is preserved if the user switches back.
+    // However, the UI should only show 'laneCount' lanes.
+
     return {
       laneCount,
-      lanes: createDefaultLanes(laneCount),
+      lanes: newLanes,
     };
   }),
 

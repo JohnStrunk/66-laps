@@ -9,7 +9,7 @@ Feature: Race end symbols
     Given the app is loaded
 
   Scenario Outline: Do not display symbols before N-4 laps
-    Given the race is a <event> event (<total_laps> laps total)
+    Given Bell Lap is configured for a "<event>" event
     When Lane 1 is on Lap <pre_bell_lap>
     Then the Zone B area for Lane 1 should display "LANE 1"
     And the Zone B area for Lane 1 should not display any emojis
@@ -20,7 +20,7 @@ Feature: Race end symbols
       | 800 LC  | 16         | 10           |
 
   Scenario Outline: Display symbols at correct laps for various race distances
-    Given the race is a <event> event (<total_laps> laps total)
+    Given Bell Lap is configured for a "<event>" event
 
     # N-4: Bell
     When Lane 1 is on Lap <bell_lap>
@@ -47,7 +47,7 @@ Feature: Race end symbols
 
   Scenario Outline: Symbols fit on a single line on various mobile screens
     Given the viewport is "<viewport>"
-    And the race is a <event> event (<total_laps> laps total)
+    And Bell Lap is configured for a "<event>" event
     When Lane 1 is on Lap <lap>
     Then the Zone B area for Lane 1 should display "<expected_text>"
     And the text in Zone B for Lane 1 should not wrap or overflow

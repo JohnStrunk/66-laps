@@ -56,20 +56,40 @@ const performPress = async (page: Page, box: { x: number; y: number; width: numb
 
 export const selectDropdownItem = async (page: Page, triggerTestId: string, itemText: string) => {
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
-  await trigger.click();
 
-  const popover = page.locator('[role="menu"], [role="listbox"]').filter({
-    has: page.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true })
-  }).last();
+  // Click trigger, with retry if popover doesn't appear
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      await trigger.click({ force: true });
+      // Wait for animation
+      await page.waitForTimeout(500);
+    } catch (e) {
+      if (attempt === 2) throw e;
+      continue;
+    }
 
-  await popover.waitFor({ state: 'visible', timeout: 5000 });
-  const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true });
-  await item.click();
+    const popover = page.locator('[role="menu"], [role="listbox"]').filter({
+      has: page.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true })
+    }).last();
+
+    try {
+      await popover.waitFor({ state: 'visible', timeout: 2000 });
+      const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true });
+      await item.click({ force: true });
+      break; // Success
+    } catch (e) {
+      // Click elsewhere to close any stuck popover and try again
+      await page.mouse.click(0, 0);
+      await page.waitForTimeout(500);
+      if (attempt === 2) throw e;
+    }
+  }
 
   // Wait for the trigger text to update
   await page.waitForFunction(({ testId, expected }) => {
     const trigger = document.querySelector(`[data-testid="${testId}"]`);
-    return trigger?.textContent?.trim() === expected;
+    const text = trigger?.textContent?.trim() || "";
+    return text.includes(expected);
   }, { testId: triggerTestId, expected: itemText }, { timeout: 3000 }).catch(() => {});
 };
 
