@@ -24,7 +24,7 @@ Feature: New Race Configuration
     And I select "6 lanes" from the Lanes dropdown
     And I enter "15" in the Event Number field
     And I enter "2" in the Heat Number field
-    And I tap "Start Race"
+    And I tap the "Start Race" setup button
     Then the "New Race Setup" dialog should be closed
     And the header should display "1000 SC"
     And the header should display "Event 15"
@@ -37,7 +37,7 @@ Feature: New Race Configuration
     And I select "8 lanes" from the Lanes dropdown
     And I clear the Event Number field
     And I clear the Heat Number field
-    And I tap "Start Race"
+    And I tap the "Start Race" setup button
     Then the "New Race Setup" dialog should be closed
     And the header should display "500 SC"
     And the header should not display "Event"
@@ -56,14 +56,14 @@ Feature: New Race Configuration
   Scenario: Starting a new race clears all previous data
     Given a race is in progress with non-zero counts
     And the "New Race Setup" dialog is open
-    When I tap "Start Race"
+    When I tap the "Start Race" setup button
     Then all lane counts should be 0
     And all split history should be cleared
 
   Scenario: Canceling the dialog preserves current data and closes the dialog
     Given a race is in progress with non-zero counts
     And the "New Race Setup" dialog is open
-    When I tap "Cancel"
+    When I tap the "Cancel" setup button
     Then the lane counts should remain unchanged
     And the "New Race Setup" dialog should be closed
 

@@ -1,30 +1,24 @@
+'use client';
+
 import ResponsivePWAWrapper from "@/components/ResponsivePWAWrapper/ResponsivePWAWrapper";
-import type { Metadata, Viewport } from "next";
-
-export const metadata: Metadata = {
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "66 Laps",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#000000",
-};
+import { useEffect, useState } from "react";
 
 export default function PWALayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <ResponsivePWAWrapper>
-      {children}
-    </ResponsivePWAWrapper>
+    <div data-mounted={mounted ? "true" : "false"}>
+      <ResponsivePWAWrapper>
+        {children}
+      </ResponsivePWAWrapper>
+    </div>
   );
 }

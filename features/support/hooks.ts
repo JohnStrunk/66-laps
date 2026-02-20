@@ -1,4 +1,4 @@
-import { Before, After, BeforeAll, AfterAll, setDefaultTimeout } from '@cucumber/cucumber';
+import { Before, After, BeforeAll, AfterAll, setDefaultTimeout, ITestCaseHookParameter } from '@cucumber/cucumber';
 import { chromium, Browser } from 'playwright';
 import { CustomWorld } from './world';
 import { join } from 'node:path';
@@ -16,7 +16,7 @@ BeforeAll(async function () {
   }
 });
 
-Before({ tags: '@browser' }, async function (this: CustomWorld) {
+Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
   if (!globalBrowser) {
     globalBrowser = await chromium.launch({ headless: true });
   }
@@ -24,6 +24,7 @@ Before({ tags: '@browser' }, async function (this: CustomWorld) {
   // We still provide the browser to the world for convenience,
   // though we don't close it in After.
   this.browser = globalBrowser;
+  this.scenarioName = scenario.pickle.name;
 
   this.context = await this.browser.newContext({
     viewport: { width: 1280, height: 800 } // Large enough to not trigger fullscreen

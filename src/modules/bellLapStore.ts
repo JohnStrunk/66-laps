@@ -25,13 +25,17 @@ export interface LaneState {
 export interface BellLapState {
   event: EventType;
   laneCount: number;
+  eventNumber: string;
+  heatNumber: string;
   isFlipped: boolean;
   lanes: LaneState[];
-  isResetModalOpen: boolean;
+  isSetupDialogOpen: boolean;
 
   // Actions
   setEvent: (event: EventType) => void;
   setLaneCount: (count: number) => void;
+  setEventNumber: (num: string) => void;
+  setHeatNumber: (num: string) => void;
   toggleFlip: () => void;
   setIsFlipped: (isFlipped: boolean) => void;
   updateLaneCount: (laneNumber: number, delta: number) => void;
@@ -39,7 +43,8 @@ export interface BellLapState {
   toggleLaneEmpty: (laneNumber: number) => void;
   registerTouch: (laneNumber: number, ignoreLockout?: boolean) => void;
   resetRace: () => void;
-  setResetModalOpen: (open: boolean) => void;
+  startRace: (event: EventType, laneCount: number, eventNumber: string, heatNumber: string) => void;
+  setSetupDialogOpen: (open: boolean) => void;
 }
 
 const createDefaultLanes = (count: number): LaneState[] =>
@@ -53,9 +58,11 @@ const createDefaultLanes = (count: number): LaneState[] =>
 export const useBellLapStore = create<BellLapState>((set) => ({
   event: '500 SC',
   laneCount: 8,
+  eventNumber: '',
+  heatNumber: '',
   isFlipped: false,
   lanes: createDefaultLanes(8),
-  isResetModalOpen: false,
+  isSetupDialogOpen: true,
 
   setEvent: (event) => set({ event }),
 
@@ -82,6 +89,9 @@ export const useBellLapStore = create<BellLapState>((set) => ({
       lanes: newLanes,
     };
   }),
+
+  setEventNumber: (eventNumber) => set({ eventNumber }),
+  setHeatNumber: (heatNumber) => set({ heatNumber }),
 
   toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
 
@@ -159,10 +169,19 @@ export const useBellLapStore = create<BellLapState>((set) => ({
 
   resetRace: () => set((state) => ({
     lanes: createDefaultLanes(state.laneCount),
-    isResetModalOpen: false,
+    isSetupDialogOpen: false,
   })),
 
-  setResetModalOpen: (isResetModalOpen) => set({ isResetModalOpen }),
+  startRace: (event, laneCount, eventNumber, heatNumber) => set(() => ({
+    event,
+    laneCount,
+    eventNumber,
+    heatNumber,
+    lanes: createDefaultLanes(laneCount),
+    isSetupDialogOpen: false,
+  })),
+
+  setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
 }));
 
 // Expose store for tests if in browser

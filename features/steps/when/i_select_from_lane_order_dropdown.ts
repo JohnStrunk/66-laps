@@ -1,12 +1,13 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { selectDropdownItem } from '../../support/utils';
+import { TestWindow } from '../../support/store-type';
 
 When('I select {string} from the Lane Order Dropdown', async function (this: CustomWorld, orderOption: string) {
-  // Get current lane count to know what the labels should be
-  const laneCountButton = this.page!.locator('[data-testid="lane-count-dropdown-trigger"]');
-  const laneCountText = await laneCountButton.textContent();
-  const laneCount = laneCountText?.trim().split(' ')[0] || '10';
+  // Get current lane count from store
+  const laneCount = await this.page!.evaluate(() => {
+    return (window as unknown as TestWindow).__bellLapStore.getState().laneCount;
+  });
 
   let targetText = orderOption;
   if (orderOption === 'Top to bottom') targetText = `1 - ${laneCount}`;
