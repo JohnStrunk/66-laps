@@ -30,6 +30,19 @@ Feature: Header Controls
       When I select "Bottom to top" from the Lane Order Dropdown
       Then the lane stack should be ordered 10 to 1
 
+  Rule: Each event has the correct number of laps
+    Scenario Outline: Event selection updates race parameters
+      Given Bell Lap is configured for a "<event>" event
+      Then the total lap count should be <laps>
+
+      Examples:
+        | event   | laps |
+        | 500 SC  | 20   |
+        | 1000 SC | 40   |
+        | 1650 SC | 66   |
+        | 800 LC  | 16   |
+        | 1500 LC | 30   |
+
   Rule: New Race Reset
     Scenario: New Race button requires confirmation
       When I tap the "New Race" button
@@ -93,12 +106,12 @@ Feature: Header Controls
       And Lane 1 and Lane 5 should have different colors in the Leaderboard
 
     Scenario: Active lanes use distinct palette colors and are not Green
-      Given the race is a 500 SC event (20 laps total)
+      Given Bell Lap is configured for a "500 SC" event
       And Lane 2 is on Lap 18
       Then Lane 2 should display the color associated with Lap 18
       And Lane 2 should not be displayed in Green
 
     Scenario: Finished lanes are displayed in Green
-      Given the race is a 500 SC event (20 laps total)
+      Given Bell Lap is configured for a "500 SC" event
       And Lane 4 has completed 20 laps
       Then Lane 4 should be displayed in Green in the Leaderboard

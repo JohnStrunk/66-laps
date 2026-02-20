@@ -16,7 +16,7 @@ Feature: PWA Appearance and Interaction
     Then each lane's Zone A should display the current lap count prominently
 
   Scenario: Zone B visual feedback for active and locked states (SC: 15s lockout)
-    Given the race is a 500 SC event (20 laps total)
+    Given Bell Lap is configured for a "500 SC" event
     And lane 1 is active
     Then the Zone B area for Lane 1 should be green
 
@@ -28,7 +28,7 @@ Feature: PWA Appearance and Interaction
     Then the Zone B area for Lane 1 should be green
 
   Scenario: Zone B visual feedback for active and locked states (LC: 30s lockout)
-    Given the race is a 1500 LC event (30 laps total)
+    Given Bell Lap is configured for a "1500 LC" event
     And lane 1 is active
     Then the Zone B area for Lane 1 should be green
 

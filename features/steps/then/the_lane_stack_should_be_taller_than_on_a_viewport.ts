@@ -7,6 +7,13 @@ Then('the lane stack should be taller than on a {string} viewport', async functi
 
   const locator = this.page.locator('[data-testid="lane-stack"]');
   await locator.waitFor({ state: 'visible' });
+
+  // Wait for height to be > 0
+  await this.page.waitForFunction(() => {
+    const el = document.querySelector('[data-testid="lane-stack"]');
+    return (el?.getBoundingClientRect().height || 0) > 0;
+  }, { timeout: 5000 }).catch(() => {});
+
   const currentHeight = await locator.boundingBox().then(b => b?.height || 0);
 
   const currentViewport = this.page.viewportSize();
@@ -14,7 +21,11 @@ Then('the lane stack should be taller than on a {string} viewport', async functi
 
   await this.page.setViewportSize({ width: ow, height: oh });
   // Wait a bit for layout to settle if there's any transition
-  await this.page.waitForTimeout(100);
+  await this.page.waitForFunction(() => {
+    const el = document.querySelector('[data-testid="lane-stack"]');
+    return (el?.getBoundingClientRect().height || 0) > 0;
+  }, { timeout: 5000 }).catch(() => {});
+
   const otherHeight = await this.page.locator('[data-testid="lane-stack"]').boundingBox().then(b => b?.height || 0);
 
   if (currentViewport) {
