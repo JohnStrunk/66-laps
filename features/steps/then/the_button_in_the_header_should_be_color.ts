@@ -7,7 +7,6 @@ Then('the {string} button in the header should be {string}', async function (thi
   if (buttonName === "Exit") {
     // Try both history and race exit buttons
     const historyExit = this.page!.locator('[data-testid="exit-history-button"]');
-    const raceExit = this.page!.locator('[data-testid="exit-button"]');
     if (await historyExit.isVisible()) {
       selector = '[data-testid="exit-history-button"]';
     } else {

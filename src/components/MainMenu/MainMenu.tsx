@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useBellLapStore } from "@/modules/bellLapStore";
 import { Play, History } from "lucide-react";
 

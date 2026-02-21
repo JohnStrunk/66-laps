@@ -1,17 +1,20 @@
 'use client';
 
 import { useBellLapStore, RaceRecord } from "@/modules/bellLapStore";
-import { Button, Card, CardBody, ScrollShadow } from "@heroui/react";
-import { DoorOpen, History } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Card, CardBody, ScrollShadow } from "@heroui/react";
+import { History } from "lucide-react";
+import { useSyncExternalStore } from "react";
+
+const subscribe = () => () => {};
 
 export default function HistoryView() {
-  const { history, setView, exitRace } = useBellLapStore();
-  const [mounted, setMounted] = useState(false);
+  const { history } = useBellLapStore();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
   if (!mounted) {
     return <div className="flex-1 bg-background" data-testid="history-view-loading" />;
