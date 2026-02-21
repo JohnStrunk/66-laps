@@ -1,0 +1,19 @@
+description = "Audit the codebase for proper style, formatting, best practices, and good design patterns."
+prompt = """
+- Review the software architecture and design patterns used in the codebase.
+  Identify any areas where the design could be improved for better
+  maintainability, scalability, or performance.
+- Analyze the tests:
+  - Ensure that all test steps have appropriate assertions to validate the
+    expected outcomes and that they are testing the intended functionality
+    effectively. Ensure that their name reflects the functionality being tested.
+  - Ensure that all steps are used by at least one test. If there are any steps
+    that are not used by any tests, identify them and suggest whether they
+    should be removed or if additional tests should be created to utilize them.
+  - Review the test coverage to ensure that all critical paths and edge cases are
+    adequately tested. Identify any gaps in test coverage and suggest areas
+    where additional tests should be added.
+- Based on your findings from the above steps, make any necessary improvements
+  to the GEMINI.md file to ensure that the codebase will be well-maintained and
+  adhere to best practices in the future.
+"""
