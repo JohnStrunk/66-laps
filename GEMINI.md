@@ -87,6 +87,21 @@ This document provides essential information for AI agents working on the
    `yarn test` run is **MANDATORY** before declaring a task complete to ensure
    no regressions were introduced.
 
+## Coding Best Practices
+
+- **Hydration Safety:** When checking for client-side mounting (e.g., to avoid
+  SSR mismatches), use `useSyncExternalStore` instead of `useEffect` with
+  `useState`. This is more idiomatic in React 18/19 and avoids unnecessary
+  re-renders and lint warnings.
+- **Avoid Syncing State in Effects:** Never use `useEffect` to synchronize local
+  state with props or global store state. Perform such updates in event
+  handlers (e.g., `onPress`) or derive values during rendering using `useMemo`.
+  Strict linting (`react-hooks/set-state-in-effect`) is enforced.
+- **Cucumber Step Parameters:** All parameters defined in Cucumber expressions
+  (e.g., `{string}`) MUST be used in the step implementation. Use them for
+  assertions or logging to ensure tests are rigorous and satisfy linting rules.
+  Do not use `eslint-disable` to bypass unused variable warnings.
+
 ## Commit Workflow
 
 - **Linting:** You MUST run `yarn lint` after editing any code or tests and
