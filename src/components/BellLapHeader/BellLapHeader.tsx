@@ -6,20 +6,12 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Card,
   CardBody,
-  Input,
-  Select,
-  SelectItem,
 } from "@heroui/react";
-import { useBellLapStore, EventType, EVENT_CONFIGS } from "@/modules/bellLapStore";
-import { RotateCcw, ChevronDown, Moon, Sun, SunMoon } from "lucide-react";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
+import { ChevronDown, Moon, Sun, SunMoon, DoorOpen } from "lucide-react";
+import { useMemo, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
 import { ph_event_set_theme } from "@/modules/phEvents";
@@ -28,15 +20,14 @@ const subscribe = () => () => {};
 
 export default function BellLapHeader() {
   const {
+    view,
     event,
     laneCount,
     eventNumber,
     heatNumber,
     isFlipped,
     setIsFlipped,
-    isSetupDialogOpen,
-    setSetupDialogOpen,
-    startRace,
+    exitRace,
     lanes
   } = useBellLapStore();
 
@@ -49,12 +40,6 @@ export default function BellLapHeader() {
     () => true,
     () => false
   );
-
-  // Local state for the dialog
-  const [localEvent, setLocalEvent] = useState<EventType>(event);
-  const [localLaneCount, setLocalLaneCount] = useState<number>(laneCount);
-  const [localEventNumber, setLocalEventNumber] = useState<string>(eventNumber);
-  const [localHeatNumber, setLocalHeatNumber] = useState<string>(heatNumber);
 
   const activeLanes = useMemo(() => {
     const count = typeof laneCount === 'number' && !isNaN(laneCount) ? laneCount : 8;
@@ -82,7 +67,7 @@ export default function BellLapHeader() {
 
   const getLapColor = (count: number) => {
     if (count === 0) return "text-foreground/50";
-    if (count >= EVENT_CONFIGS[event].laps) return "text-success";
+    if (count >= (EVENT_CONFIGS[event]?.laps || 20)) return "text-success";
     const index = (count / 2) % palette.length;
     return palette[Math.floor(index)];
   };
@@ -102,11 +87,72 @@ export default function BellLapHeader() {
     return <Sun size={18} />;
   };
 
-  const handleStartRace = () => {
-    startRace(localEvent, localLaneCount, localEventNumber, localHeatNumber);
-  };
-
   const safeLaneCount = typeof laneCount === 'number' && !isNaN(laneCount) ? laneCount : 8;
+
+  if (view === 'main-menu') {
+    return (
+      <header
+        className="z-50 p-2 pb-0"
+        style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
+        data-testid="bell-lap-header"
+      >
+        <Card className="shadow-md bg-content1">
+          <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
+            <h1 className="text-xl font-bold px-2">66 Laps</h1>
+            <Button
+              isIconOnly
+              variant="flat"
+              size="sm"
+              onPress={toggleTheme}
+              aria-label="Toggle light/dark mode"
+              data-testid="theme-toggle"
+            >
+              {renderThemeIcon()}
+            </Button>
+          </CardBody>
+        </Card>
+      </header>
+    );
+  }
+
+  if (view === 'history') {
+    return (
+      <header
+        className="z-50 p-2 pb-0"
+        style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
+        data-testid="bell-lap-header"
+      >
+        <Card className="shadow-md bg-content1">
+          <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
+            <h1 className="text-xl font-bold px-2">Race History</h1>
+            <div className="flex gap-1">
+              <Button
+                isIconOnly
+                color="danger"
+                variant="flat"
+                size="sm"
+                onPress={exitRace}
+                aria-label="Exit to Main Menu"
+                data-testid="exit-history-button"
+              >
+                <DoorOpen size={18} />
+              </Button>
+              <Button
+                isIconOnly
+                variant="flat"
+                size="sm"
+                onPress={toggleTheme}
+                aria-label="Toggle light/dark mode"
+                data-testid="theme-toggle"
+              >
+                {renderThemeIcon()}
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </header>
+    );
+  }
 
   return (
     <header
@@ -147,17 +193,11 @@ export default function BellLapHeader() {
                 color="danger"
                 variant="flat"
                 size="sm"
-                onPress={() => {
-                  setLocalEvent(event);
-                  setLocalLaneCount(laneCount);
-                  setLocalEventNumber(eventNumber);
-                  setLocalHeatNumber(heatNumber);
-                  setSetupDialogOpen(true);
-                }}
-                aria-label="Reset"
-                data-testid="reset-button"
+                onPress={exitRace}
+                aria-label="Exit to Main Menu"
+                data-testid="exit-button"
               >
-                <RotateCcw size={18} />
+                <DoorOpen size={18} />
               </Button>
 
               <Button
@@ -190,77 +230,6 @@ export default function BellLapHeader() {
           </div>
         </CardBody>
       </Card>
-
-      {/* New Race Setup Modal */}
-      <Modal
-        isOpen={isSetupDialogOpen}
-        onClose={() => setSetupDialogOpen(false)}
-        data-testid="new-race-setup-dialog"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>New Race Setup</ModalHeader>
-              <ModalBody className="flex flex-col gap-4">
-                <Select
-                  label="Event Selection"
-                  selectedKeys={[localEvent]}
-                  onSelectionChange={(keys) => {
-                    const selected = Array.from(keys)[0] as EventType;
-                    if (selected) setLocalEvent(selected);
-                  }}
-                  data-testid="event-selection-dropdown"
-                >
-                  <SelectItem key="500 SC">500 SC</SelectItem>
-                  <SelectItem key="1000 SC">1000 SC</SelectItem>
-                  <SelectItem key="1650 SC">1650 SC</SelectItem>
-                  <SelectItem key="800 LC">800 LC</SelectItem>
-                  <SelectItem key="1500 LC">1500 LC</SelectItem>
-                </Select>
-
-                <Select
-                  label="Lanes"
-                  selectedKeys={[String(localLaneCount)]}
-                  onSelectionChange={(keys) => {
-                    const selected = Number(Array.from(keys)[0]);
-                    if (!isNaN(selected)) setLocalLaneCount(selected);
-                  }}
-                  data-testid="lanes-dropdown"
-                >
-                  <SelectItem key="6">6 lanes</SelectItem>
-                  <SelectItem key="8">8 lanes</SelectItem>
-                  <SelectItem key="10">10 lanes</SelectItem>
-                </Select>
-
-                <div className="flex gap-4">
-                  <Input
-                    label="Event Number"
-                    value={localEventNumber}
-                    onValueChange={setLocalEventNumber}
-                    placeholder="e.g. 15"
-                    data-testid="event-number-input"
-                  />
-                  <Input
-                    label="Heat Number"
-                    value={localHeatNumber}
-                    onValueChange={setLocalHeatNumber}
-                    placeholder="e.g. 2"
-                    data-testid="heat-number-input"
-                  />
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="light" onPress={onClose} data-testid="cancel-setup-button">
-                  Cancel
-                </Button>
-                <Button color="primary" onPress={handleStartRace} data-testid="start-race-button">
-                  Start Race
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </header>
   );
 }

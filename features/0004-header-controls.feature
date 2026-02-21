@@ -6,6 +6,7 @@ Feature: Header Controls
 
   Background:
     Given the app is loaded
+    And a race is in progress
 
   Rule: Header Display
     Scenario: Header displays current race info

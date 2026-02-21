@@ -31,7 +31,21 @@ export interface LaneState {
   events: LapEvent[]; // detailed history of changes
 }
 
+export interface RaceRecord {
+  id: string;
+  startTime: number;
+  event: EventType;
+  laneCount: number;
+  eventNumber: string;
+  heatNumber: string;
+  lanes: LaneState[];
+}
+
+export type ViewState = 'main-menu' | 'race' | 'history';
+
 export interface BellLapState {
+  view: ViewState;
+  history: RaceRecord[];
   event: EventType;
   laneCount: number;
   eventNumber: string;
@@ -41,6 +55,7 @@ export interface BellLapState {
   isSetupDialogOpen: boolean;
 
   // Actions
+  setView: (view: ViewState) => void;
   setEvent: (event: EventType) => void;
   setLaneCount: (count: number) => void;
   setEventNumber: (num: string) => void;
@@ -54,6 +69,8 @@ export interface BellLapState {
   resetRace: () => void;
   startRace: (event: EventType, laneCount: number, eventNumber: string, heatNumber: string) => void;
   setSetupDialogOpen: (open: boolean) => void;
+  exitRace: () => void;
+  clearHistory: () => void;
 }
 
 const createDefaultLanes = (count: number): LaneState[] =>
@@ -68,13 +85,17 @@ const createDefaultLanes = (count: number): LaneState[] =>
 export const useBellLapStore = create<BellLapState>()(
   persist(
     (set) => ({
+      view: 'main-menu',
+      history: [],
       event: '500 SC',
       laneCount: 8,
       eventNumber: '',
       heatNumber: '',
       isFlipped: false,
       lanes: createDefaultLanes(8),
-      isSetupDialogOpen: true,
+      isSetupDialogOpen: false,
+
+      setView: (view) => set({ view }),
 
       setEvent: (event) => set({ event }),
 
@@ -189,6 +210,7 @@ export const useBellLapStore = create<BellLapState>()(
       resetRace: () => set((state) => ({
         lanes: createDefaultLanes(state.laneCount),
         isSetupDialogOpen: false,
+        view: 'main-menu',
       })),
 
       startRace: (event, laneCount, eventNumber, heatNumber) => set(() => ({
@@ -198,7 +220,56 @@ export const useBellLapStore = create<BellLapState>()(
         heatNumber,
         lanes: createDefaultLanes(laneCount),
         isSetupDialogOpen: false,
+        view: 'race',
       })),
+
+      exitRace: () => set((state) => {
+        if (state.view !== 'race') {
+            return { view: 'main-menu' };
+        }
+
+        // Check if race has any data worth saving (any lane with count > 0)
+        const hasData = state.lanes.some(l => l.count > 0);
+
+        let newHistory = state.history;
+        if (hasData) {
+            // Find the earliest timestamp from all lanes events to use as start time
+            let startTime = Date.now();
+            let foundEvent = false;
+            state.lanes.forEach(lane => {
+                if (lane.events.length > 0) {
+                    const firstEvent = lane.events[0].timestamp;
+                    if (firstEvent < startTime) {
+                        startTime = firstEvent;
+                        foundEvent = true;
+                    }
+                }
+            });
+
+            const record: RaceRecord = {
+                id: crypto.randomUUID(),
+                startTime: foundEvent ? startTime : Date.now(),
+                event: state.event,
+                laneCount: state.laneCount,
+                eventNumber: state.eventNumber,
+                heatNumber: state.heatNumber,
+                lanes: state.lanes,
+            };
+
+            newHistory = [record, ...state.history].slice(0, 50); // Keep only recent 50
+        }
+
+        return {
+            view: 'main-menu',
+            history: newHistory,
+            // Clear current race state so next start is clean
+            lanes: createDefaultLanes(state.laneCount),
+            eventNumber: '',
+            heatNumber: '',
+        };
+      }),
+
+      clearHistory: () => set({ history: [] }),
 
       setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
     }),
@@ -212,6 +283,8 @@ export const useBellLapStore = create<BellLapState>()(
         heatNumber: state.heatNumber,
         isFlipped: state.isFlipped,
         lanes: state.lanes,
+        history: state.history,
+        view: state.view,
       }),
     }
   )
