@@ -19,10 +19,12 @@ import {
 } from "@heroui/react";
 import { useBellLapStore, EventType, EVENT_CONFIGS } from "@/modules/bellLapStore";
 import { RotateCcw, ChevronDown, Moon, Sun, SunMoon } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
 import { ph_event_set_theme } from "@/modules/phEvents";
+
+const subscribe = () => () => {};
 
 export default function BellLapHeader() {
   const {
@@ -40,31 +42,19 @@ export default function BellLapHeader() {
 
   const { theme, setTheme } = useTheme();
   const postHog = usePostHog();
-  const [mounted, setMounted] = useState(false);
+
+  // Modern idiomatic way to handle "is client" for hydration
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
   // Local state for the dialog
   const [localEvent, setLocalEvent] = useState<EventType>(event);
   const [localLaneCount, setLocalLaneCount] = useState<number>(laneCount);
   const [localEventNumber, setLocalEventNumber] = useState<string>(eventNumber);
   const [localHeatNumber, setLocalHeatNumber] = useState<string>(heatNumber);
-
-  useEffect(() => {
-    const handle = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(handle);
-  }, []);
-
-  // Update local state when dialog opens
-  useEffect(() => {
-    if (isSetupDialogOpen) {
-      const handle = requestAnimationFrame(() => {
-        setLocalEvent(event);
-        setLocalLaneCount(laneCount);
-        setLocalEventNumber(eventNumber);
-        setLocalHeatNumber(heatNumber);
-      });
-      return () => cancelAnimationFrame(handle);
-    }
-  }, [isSetupDialogOpen, event, laneCount, eventNumber, heatNumber]);
 
   const activeLanes = useMemo(() => {
     const count = typeof laneCount === 'number' && !isNaN(laneCount) ? laneCount : 8;
@@ -157,7 +147,13 @@ export default function BellLapHeader() {
                 color="danger"
                 variant="flat"
                 size="sm"
-                onPress={() => setSetupDialogOpen(true)}
+                onPress={() => {
+                  setLocalEvent(event);
+                  setLocalLaneCount(laneCount);
+                  setLocalEventNumber(eventNumber);
+                  setLocalHeatNumber(heatNumber);
+                  setSetupDialogOpen(true);
+                }}
                 aria-label="Reset"
                 data-testid="reset-button"
               >
