@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type EventType = '500 SC' | '1000 SC' | '1650 SC' | '800 LC' | '1500 LC';
 
@@ -47,6 +48,7 @@ export interface BellLapState {
   toggleFlip: () => void;
   setIsFlipped: (isFlipped: boolean) => void;
   updateLaneCount: (laneNumber: number, delta: number) => void;
+  setLaneCountValue: (laneNumber: number, count: number) => void;
   toggleLaneEmpty: (laneNumber: number) => void;
   registerTouch: (laneNumber: number, ignoreLockout?: boolean) => void;
   resetRace: () => void;
@@ -63,137 +65,157 @@ const createDefaultLanes = (count: number): LaneState[] =>
     events: [],
   }));
 
-export const useBellLapStore = create<BellLapState>((set) => ({
-  event: '500 SC',
-  laneCount: 8,
-  eventNumber: '',
-  heatNumber: '',
-  isFlipped: false,
-  lanes: createDefaultLanes(8),
-  isSetupDialogOpen: true,
+export const useBellLapStore = create<BellLapState>()(
+  persist(
+    (set) => ({
+      event: '500 SC',
+      laneCount: 8,
+      eventNumber: '',
+      heatNumber: '',
+      isFlipped: false,
+      lanes: createDefaultLanes(8),
+      isSetupDialogOpen: true,
 
-  setEvent: (event) => set({ event }),
+      setEvent: (event) => set({ event }),
 
-  setLaneCount: (laneCount) => set((state) => {
-    if (state.laneCount === laneCount) return state;
+      setLaneCount: (laneCount) => set((state) => {
+        if (state.laneCount === laneCount) return state;
 
-    let newLanes = [...state.lanes];
-    if (laneCount > state.lanes.length) {
-      // Add more lanes
-      const additional = Array.from({ length: laneCount - state.lanes.length }, (_, i) => ({
-        laneNumber: state.lanes.length + i + 1,
-        count: 0,
-        isEmpty: false,
-        history: [],
-        events: [],
-      }));
-      newLanes = [...state.lanes, ...additional];
+        let newLanes = [...state.lanes];
+        if (laneCount > state.lanes.length) {
+          // Add more lanes
+          const additional = Array.from({ length: laneCount - state.lanes.length }, (_, i) => ({
+            laneNumber: state.lanes.length + i + 1,
+            count: 0,
+            isEmpty: false,
+            history: [],
+            events: [],
+          }));
+          newLanes = [...state.lanes, ...additional];
+        }
+        return {
+          laneCount,
+          lanes: newLanes,
+        };
+      }),
+
+      setEventNumber: (eventNumber) => set({ eventNumber }),
+      setHeatNumber: (heatNumber) => set({ heatNumber }),
+
+      toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
+
+      setIsFlipped: (isFlipped) => set({ isFlipped }),
+
+      updateLaneCount: (laneNumber, delta) => set((state) => {
+        const config = EVENT_CONFIGS[state.event];
+        const lockoutMs = config.lockout * 1000;
+        const now = Date.now();
+        const agedTimestamp = now - lockoutMs - 1;
+
+        return {
+          lanes: state.lanes.map((lane) => {
+            if (lane.laneNumber !== laneNumber) return lane;
+            const newCount = Math.max(0, Math.min(config.laps, lane.count + delta));
+            if (newCount === lane.count) return lane;
+
+            const event: LapEvent = {
+              timestamp: now,
+              type: delta > 0 ? 'manual_increment' : 'manual_decrement',
+              prevCount: lane.count,
+              newCount: newCount,
+            };
+
+            return {
+              ...lane,
+              count: newCount,
+              history: delta > 0
+                ? [...lane.history, agedTimestamp]
+                : lane.history.slice(0, -1).map((h, i, arr) =>
+                    i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
+                  ),
+              events: [...lane.events, event],
+            };
+          }),
+        };
+      }),
+
+      setLaneCountValue: (laneNumber, count) => set((state) => ({
+        lanes: state.lanes.map((lane) =>
+          lane.laneNumber === laneNumber
+            ? { ...lane, count: Math.max(0, count) }
+            : lane
+        ),
+      })),
+
+      toggleLaneEmpty: (laneNumber) => set((state) => ({
+        lanes: state.lanes.map((lane) =>
+          lane.laneNumber === laneNumber
+            ? { ...lane, isEmpty: !lane.isEmpty }
+            : lane
+        ),
+      })),
+
+      registerTouch: (laneNumber, ignoreLockout = false) => set((state) => {
+        const config = EVENT_CONFIGS[state.event];
+        const now = Date.now();
+
+        return {
+          lanes: state.lanes.map((lane) => {
+            if (lane.laneNumber !== laneNumber || lane.isEmpty) return lane;
+
+            const lastTouch = lane.history[lane.history.length - 1] || 0;
+            if (!ignoreLockout && now - lastTouch < config.lockout * 1000) return lane;
+
+            if (lane.count >= config.laps) return lane;
+
+            const newCount = Math.min(config.laps, lane.count + 2);
+            const event: LapEvent = {
+              timestamp: now,
+              type: 'touch',
+              prevCount: lane.count,
+              newCount: newCount,
+            };
+
+            return {
+              ...lane,
+              count: newCount,
+              history: [...lane.history, now],
+              events: [...lane.events, event],
+            };
+          }),
+        };
+      }),
+
+      resetRace: () => set((state) => ({
+        lanes: createDefaultLanes(state.laneCount),
+        isSetupDialogOpen: false,
+      })),
+
+      startRace: (event, laneCount, eventNumber, heatNumber) => set(() => ({
+        event,
+        laneCount,
+        eventNumber,
+        heatNumber,
+        lanes: createDefaultLanes(laneCount),
+        isSetupDialogOpen: false,
+      })),
+
+      setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
+    }),
+    {
+      name: 'bell-lap-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        event: state.event,
+        laneCount: state.laneCount,
+        eventNumber: state.eventNumber,
+        heatNumber: state.heatNumber,
+        isFlipped: state.isFlipped,
+        lanes: state.lanes,
+      }),
     }
-    // We don't remove lanes from the array even if laneCount is smaller,
-    // so that data is preserved if the user switches back.
-    // However, the UI should only show 'laneCount' lanes.
-
-    return {
-      laneCount,
-      lanes: newLanes,
-    };
-  }),
-
-  setEventNumber: (eventNumber) => set({ eventNumber }),
-  setHeatNumber: (heatNumber) => set({ heatNumber }),
-
-  toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
-
-  setIsFlipped: (isFlipped) => set({ isFlipped }),
-
-  updateLaneCount: (laneNumber, delta) => set((state) => {
-    const config = EVENT_CONFIGS[state.event];
-    const lockoutMs = config.lockout * 1000;
-    const now = Date.now();
-    const agedTimestamp = now - lockoutMs - 1;
-
-    return {
-      lanes: state.lanes.map((lane) => {
-        if (lane.laneNumber !== laneNumber) return lane;
-        const newCount = Math.max(0, Math.min(config.laps, lane.count + delta));
-        if (newCount === lane.count) return lane;
-
-        const event: LapEvent = {
-          timestamp: now,
-          type: delta > 0 ? 'manual_increment' : 'manual_decrement',
-          prevCount: lane.count,
-          newCount: newCount,
-        };
-
-        return {
-          ...lane,
-          count: newCount,
-          history: delta > 0
-            ? [...lane.history, agedTimestamp]
-            : lane.history.slice(0, -1).map((h, i, arr) =>
-                i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
-              ),
-          events: [...lane.events, event],
-        };
-      }),
-    };
-  }),
-
-  toggleLaneEmpty: (laneNumber) => set((state) => ({
-    lanes: state.lanes.map((lane) =>
-      lane.laneNumber === laneNumber
-        ? { ...lane, isEmpty: !lane.isEmpty }
-        : lane
-    ),
-  })),
-
-  registerTouch: (laneNumber, ignoreLockout = false) => set((state) => {
-    const config = EVENT_CONFIGS[state.event];
-    const now = Date.now();
-
-    return {
-      lanes: state.lanes.map((lane) => {
-        if (lane.laneNumber !== laneNumber || lane.isEmpty) return lane;
-
-        const lastTouch = lane.history[lane.history.length - 1] || 0;
-        if (!ignoreLockout && now - lastTouch < config.lockout * 1000) return lane;
-
-        if (lane.count >= config.laps) return lane;
-
-        const newCount = Math.min(config.laps, lane.count + 2);
-        const event: LapEvent = {
-          timestamp: now,
-          type: 'touch',
-          prevCount: lane.count,
-          newCount: newCount,
-        };
-
-        return {
-          ...lane,
-          count: newCount,
-          history: [...lane.history, now],
-          events: [...lane.events, event],
-        };
-      }),
-    };
-  }),
-
-  resetRace: () => set((state) => ({
-    lanes: createDefaultLanes(state.laneCount),
-    isSetupDialogOpen: false,
-  })),
-
-  startRace: (event, laneCount, eventNumber, heatNumber) => set(() => ({
-    event,
-    laneCount,
-    eventNumber,
-    heatNumber,
-    lanes: createDefaultLanes(laneCount),
-    isSetupDialogOpen: false,
-  })),
-
-  setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
-}));
+  )
+);
 
 // Expose store for tests if in browser
 declare global {

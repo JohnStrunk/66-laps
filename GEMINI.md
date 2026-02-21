@@ -87,6 +87,27 @@ This document provides essential information for AI agents working on the
    `yarn test` run is **MANDATORY** before declaring a task complete to ensure
    no regressions were introduced.
 
+## Architectural Patterns
+
+- **State Management (Zustand):**
+  - The `bellLapStore` is the source of truth for race state.
+  - It uses the `persist` middleware to save race data (lanes, counts, history)
+    to `localStorage`.
+  - UI-only state (like dialog visibility) is excluded from persistence.
+  - **Hydration Safety:** When using the store in Next.js components, use
+    `useSyncExternalStore` or ensure components only render store-dependent
+    data after mounting to avoid SSR mismatches.
+- **Simulation Model (`SwimmerModel`):**
+  - Encapsulates the logic for calculating a swimmer's position based on lap
+    times and elapsed time.
+  - Used primarily in the `/practice` feature.
+- **Graphics (PixiJS):**
+  - Integrated via `@pixi/react`.
+  - **Performance Optimization:** Avoid using React state (e.g., `useState`)
+    inside `useTick` for high-frequency updates (like position). Use `useRef`
+    to manipulate Pixi objects directly to bypass React's render cycle for
+    smoother performance.
+
 ## Coding Best Practices
 
 - **Hydration Safety:** When checking for client-side mounting (e.g., to avoid
@@ -145,6 +166,13 @@ This document provides essential information for AI agents working on the
   layout changes. Avoid CSS transitions on elements whose dimensions are
   verified by tests. Explicitly wait for UI elements (like menus) to be fully
   visible before interaction.
+- **Testing Maintenance:**
+  - **Unused Steps:** Regularly audit `features/steps/` to identify and remove
+    unused step definitions. This keeps the test suite clean and maintainable.
+  - **Effective Assertions:** Ensure `Then` steps contain rigorous assertions
+    that verify the state of the application, not just its visual appearance
+    where possible (e.g., check the Zustand store state via
+    `window.__bellLapStore`).
 
 ## Critical Instructions
 

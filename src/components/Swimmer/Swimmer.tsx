@@ -2,7 +2,7 @@
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { extend, useTick } from "@pixi/react";
 import { Container, Graphics, GraphicsContext, PointData, Sprite, Text, TextStyle } from "pixi.js";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 extend({ Container, Graphics, GraphicsContext, Sprite, Text });
 const emojis = [
@@ -36,16 +36,19 @@ function getPosition(startEnd: PointData, turnEnd: PointData, location: number):
 export default function Swimmer(props: SwimmerProps) {
     // When first created, pick a random emoji from the list
     const [useChar] = useState<string>(() => emojis[Math.floor(Math.random() * emojis.length)]);
-    const [usePosition, setPosition] = useState<PointData>({ x: 0, y: 0 });
+    const textRef = useRef<Text>(null);
 
     useTick(() => {
+        if (!textRef.current) return;
         const swimmer = props.swimmer.where();
         const position = getPosition(props.startEnd, props.turnEnd, swimmer.location);
-        setPosition(position);
+        textRef.current.position.set(position.x, position.y);
+        textRef.current.anchor.set(swimmer.location, 0.5);
     });
 
     return (
         <pixiText
+            ref={textRef}
             text={useChar}
             style={new TextStyle({
                 fontSize: props.laneWidth * 0.5,
@@ -53,8 +56,6 @@ export default function Swimmer(props: SwimmerProps) {
                 fontFamily: "Noto Color Emoji",
                 fontStyle: "normal",
             })}
-            position={usePosition}
-            anchor={{ x: props.swimmer.where().location, y: 0.5 }}
         />
     )
 };
