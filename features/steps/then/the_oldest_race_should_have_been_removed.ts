@@ -1,7 +1,6 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { TestWindow } from '../../support/store-type';
-import { RaceRecord } from '../../src/modules/bellLapStore';
+import { TestWindow, RaceRecord } from '../../support/store-type';
 import assert from 'node:assert';
 
 Then('the oldest race should have been removed', async function (this: CustomWorld) {
