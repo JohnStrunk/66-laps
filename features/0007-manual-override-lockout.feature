@@ -7,6 +7,7 @@ Feature: Manual Override of Lockout
 
   Background:
     Given the app is loaded
+    And a race is in progress
     And Bell Lap is configured for a "500 SC" event
 
   Scenario: Pressing + disables lockout

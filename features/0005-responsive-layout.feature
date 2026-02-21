@@ -6,6 +6,7 @@ Feature: Responsive Layout and Scaling
 
   Background:
     Given the app is loaded
+    And a race is in progress
 
   Scenario Outline: UI fits for different lane counts and mobile viewports
     Given Bell Lap is configured for a <count>-lane event
