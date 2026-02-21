@@ -15,11 +15,19 @@ export const EVENT_CONFIGS: Record<EventType, EventConfig> = {
   '1500 LC': { laps: 30, lockout: 30 },
 };
 
+export interface LapEvent {
+  timestamp: number;
+  type: 'touch' | 'manual_increment' | 'manual_decrement';
+  prevCount: number;
+  newCount: number;
+}
+
 export interface LaneState {
   laneNumber: number;
   count: number;
   isEmpty: boolean;
-  history: number[]; // timestamps of touches
+  history: number[]; // timestamps of touches for lockout
+  events: LapEvent[]; // detailed history of changes
 }
 
 export interface BellLapState {
@@ -39,7 +47,6 @@ export interface BellLapState {
   toggleFlip: () => void;
   setIsFlipped: (isFlipped: boolean) => void;
   updateLaneCount: (laneNumber: number, delta: number) => void;
-  setLaneCountValue: (laneNumber: number, count: number) => void;
   toggleLaneEmpty: (laneNumber: number) => void;
   registerTouch: (laneNumber: number, ignoreLockout?: boolean) => void;
   resetRace: () => void;
@@ -53,6 +60,7 @@ const createDefaultLanes = (count: number): LaneState[] =>
     count: 0,
     isEmpty: false,
     history: [],
+    events: [],
   }));
 
 export const useBellLapStore = create<BellLapState>((set) => ({
@@ -77,6 +85,7 @@ export const useBellLapStore = create<BellLapState>((set) => ({
         count: 0,
         isEmpty: false,
         history: [],
+        events: [],
       }));
       newLanes = [...state.lanes, ...additional];
     }
@@ -100,40 +109,33 @@ export const useBellLapStore = create<BellLapState>((set) => ({
   updateLaneCount: (laneNumber, delta) => set((state) => {
     const config = EVENT_CONFIGS[state.event];
     const lockoutMs = config.lockout * 1000;
-    const agedTimestamp = Date.now() - lockoutMs - 1;
+    const now = Date.now();
+    const agedTimestamp = now - lockoutMs - 1;
 
     return {
-      lanes: state.lanes.map((lane) =>
-        lane.laneNumber === laneNumber
-          ? {
-              ...lane,
-              count: Math.max(0, Math.min(config.laps, lane.count + delta)),
-              history: delta > 0
-                ? [...lane.history, agedTimestamp]
-                : lane.history.slice(0, -1).map((h, i, arr) =>
-                    i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
-                  )
-            }
-          : lane
-      ),
-    };
-  }),
+      lanes: state.lanes.map((lane) => {
+        if (lane.laneNumber !== laneNumber) return lane;
+        const newCount = Math.max(0, Math.min(config.laps, lane.count + delta));
+        if (newCount === lane.count) return lane;
 
-  setLaneCountValue: (laneNumber, count) => set((state) => {
-    const config = EVENT_CONFIGS[state.event];
-    const lockoutMs = config.lockout * 1000;
-    const agedTimestamp = Date.now() - lockoutMs - 1;
+        const event: LapEvent = {
+          timestamp: now,
+          type: delta > 0 ? 'manual_increment' : 'manual_decrement',
+          prevCount: lane.count,
+          newCount: newCount,
+        };
 
-    return {
-      lanes: state.lanes.map((lane) =>
-        lane.laneNumber === laneNumber
-          ? {
-              ...lane,
-              count: Math.max(0, Math.min(config.laps, count)),
-              history: [...lane.history, agedTimestamp]
-            }
-          : lane
-      ),
+        return {
+          ...lane,
+          count: newCount,
+          history: delta > 0
+            ? [...lane.history, agedTimestamp]
+            : lane.history.slice(0, -1).map((h, i, arr) =>
+                i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
+              ),
+          events: [...lane.events, event],
+        };
+      }),
     };
   }),
 
@@ -158,10 +160,19 @@ export const useBellLapStore = create<BellLapState>((set) => ({
 
         if (lane.count >= config.laps) return lane;
 
+        const newCount = Math.min(config.laps, lane.count + 2);
+        const event: LapEvent = {
+          timestamp: now,
+          type: 'touch',
+          prevCount: lane.count,
+          newCount: newCount,
+        };
+
         return {
           ...lane,
-          count: Math.min(config.laps, lane.count + 2),
+          count: newCount,
           history: [...lane.history, now],
+          events: [...lane.events, event],
         };
       }),
     };
