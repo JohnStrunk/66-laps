@@ -1,6 +1,5 @@
 import { Locator, Page } from 'playwright';
 import { BellLapState } from '../../src/modules/bellLapStore';
-import { TestWindow } from './store-type';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 

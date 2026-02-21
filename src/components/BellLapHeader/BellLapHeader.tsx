@@ -56,10 +56,13 @@ export default function BellLapHeader() {
   // Update local state when dialog opens
   useEffect(() => {
     if (isSetupDialogOpen) {
-      setLocalEvent(event);
-      setLocalLaneCount(laneCount);
-      setLocalEventNumber(eventNumber);
-      setLocalHeatNumber(heatNumber);
+      const handle = requestAnimationFrame(() => {
+        setLocalEvent(event);
+        setLocalLaneCount(laneCount);
+        setLocalEventNumber(eventNumber);
+        setLocalHeatNumber(heatNumber);
+      });
+      return () => cancelAnimationFrame(handle);
     }
   }, [isSetupDialogOpen, event, laneCount, eventNumber, heatNumber]);
 

@@ -2,7 +2,8 @@ import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import assert from 'node:assert';
 
-Given('the {string} dialog is open', async function (this: CustomWorld, _dialogTitle: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+Given('the {string} dialog is open', async function (this: CustomWorld, _: string) {
   const dialog = this.page!.getByTestId('new-race-setup-dialog');
 
   if (!(await dialog.isVisible())) {
