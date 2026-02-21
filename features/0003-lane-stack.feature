@@ -5,7 +5,9 @@ Feature: Lane Stack
   So that I can track lap counts for each swimmer using manual or touch controls
 
   Background:
-    Given all lanes are initially active with a lap count of 0
+    Given the app is loaded
+    And a race is in progress
+    And all lanes are initially active with a lap count of 0
 
   Rule: Lane Configuration
     Scenario Outline: Correct number of lanes are rendered

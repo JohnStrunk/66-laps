@@ -6,6 +6,7 @@ Feature: Header Controls
 
   Background:
     Given the app is loaded
+    And a race is in progress
 
   Rule: Header Display
     Scenario: Header displays current race info
@@ -24,14 +25,16 @@ Feature: Header Controls
 
   Rule: Lane Order Control
     Scenario: Lane order dropdown reverses lane order
-      Given the lane stack is currently ordered 1 to 10
+      Given Bell Lap is configured for a "500 SC" event
+      And the lane stack is currently ordered 1 to 10
       When I select "Bottom to top" from the Lane Order Dropdown
       Then the lane stack should be ordered 10 to 1
 
-  Rule: Race Setup Trigger
-    Scenario: Reset button opens the setup dialog
-      When I tap the "Reset" button
-      Then the "New Race Setup" dialog should be visible
+  Rule: Navigation Control
+    Scenario: Exit button returns to the main menu
+      Given a race is in progress
+      When I tap the "Exit" button in the header
+      Then I should be on the main menu
 
   Rule: Theme Control
     Scenario: Theme toggle cycles through modes

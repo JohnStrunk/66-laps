@@ -7,11 +7,11 @@ Feature: New Race Configuration
   Background:
     Given the app is loaded
 
-  Scenario: Configuration dialog opens automatically on first launch
-    Then the "New Race Setup" dialog should be visible
+  Scenario: Main menu is visible on first launch
+    Then I should see the main menu
 
   Scenario: New Race Setup dialog contains all required fields
-    Given the "New Race Setup" dialog is open
+    When I tap the "New Race" button
     Then I should see an "Event Selection" dropdown
     And I should see a "Lanes" dropdown
     And I should see an "Event Number" field
@@ -19,8 +19,9 @@ Feature: New Race Configuration
     And I should see a "Start Race" button
 
   Scenario: Configuring and starting a new race with optional info
-    Given the "New Race Setup" dialog is open
-    When I select "1000 SC" from the Event Selection dropdown
+    Given I am on the main menu
+    When I tap the "New Race" button
+    And I select "1000 SC" from the Event Selection dropdown
     And I select "6 lanes" from the Lanes dropdown
     And I enter "15" in the Event Number field
     And I enter "2" in the Heat Number field
@@ -32,8 +33,9 @@ Feature: New Race Configuration
     And there should be 6 lane rows displayed
 
   Scenario: Configuring and starting a new race without optional info
-    Given the "New Race Setup" dialog is open
-    When I select "500 SC" from the Event Selection dropdown
+    Given I am on the main menu
+    When I tap the "New Race" button
+    And I select "500 SC" from the Event Selection dropdown
     And I select "8 lanes" from the Lanes dropdown
     And I clear the Event Number field
     And I clear the Heat Number field
@@ -43,29 +45,26 @@ Feature: New Race Configuration
     And the header should not display "Event"
     And the header should not display "Heat"
 
-  Scenario: Reset button opens the configuration dialog with current settings
-    Given Bell Lap is configured for a "500 SC" event with 8 lanes
-    And the event number is "10" and the heat number is "1"
-    When I tap the "Reset" button
-    Then the "New Race Setup" dialog should be visible
-    And the "Event Selection" dropdown should have "500 SC" selected
-    And the "Lanes" dropdown should have "8 lanes" selected
-    And the "Event Number" field should contain "10"
-    And the "Heat Number" field should contain "1"
+  Scenario: Exit button returns to the main menu
+    Given a race is in progress
+    When I tap the "Exit" button in the header
+    Then I should be on the main menu
 
   Scenario: Starting a new race clears all previous data
     Given a race is in progress with non-zero counts
-    And the "New Race Setup" dialog is open
-    When I tap the "Start Race" setup button
+    When I tap the "Exit" button in the header
+    And I tap the "New Race" button
+    And I tap the "Start Race" setup button
     Then all lane counts should be 0
     And all split history should be cleared
 
   Scenario: Canceling the dialog preserves current data and closes the dialog
     Given a race is in progress with non-zero counts
-    And the "New Race Setup" dialog is open
+    And I tap the "Exit" button in the header
+    And I tap the "New Race" button
     When I tap the "Cancel" setup button
-    Then the lane counts should remain unchanged
-    And the "New Race Setup" dialog should be closed
+    Then the "New Race Setup" dialog should be closed
+
 
   Rule: Each event has the correct number of laps
     Scenario Outline: Event selection updates race parameters

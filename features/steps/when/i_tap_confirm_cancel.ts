@@ -15,7 +15,9 @@ When('I tap the {string} setup button', async function (this: CustomWorld, butto
 
   const btn = this.page!.locator(selector);
   await btn.waitFor({ state: 'visible', timeout: 5000 });
-  await btn.click({ force: true });
+
+  await btn.evaluate(el => (el as HTMLElement).click());
+
   // Wait for potential modal close animation
-  await this.page!.waitForTimeout(500);
+  await this.page!.waitForTimeout(1000);
 });

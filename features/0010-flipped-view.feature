@@ -7,6 +7,7 @@ Feature: Flipped View
 
   Background:
     Given the app is loaded
+    And a race is in progress
 
   Scenario: Toggling lane order reverses the stack
     Given Bell Lap is configured for an 8-lane event

@@ -7,6 +7,7 @@ Feature: PWA Appearance and Interaction
 
   Background:
     Given the app is loaded
+    And a race is in progress
 
   Scenario: Zone B displays "Lane X" text
     Then each lane's Zone B should display "Lane" followed by its lane number
@@ -17,7 +18,6 @@ Feature: PWA Appearance and Interaction
 
   Scenario: Zone B visual feedback for active and locked states (SC: 15s lockout)
     Given Bell Lap is configured for a "500 SC" event
-    And lane 1 is active
     Then the Zone B area for Lane 1 should be green
 
     When I tap the Zone B area for Lane 1

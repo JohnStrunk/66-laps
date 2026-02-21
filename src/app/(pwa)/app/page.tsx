@@ -2,6 +2,9 @@
 
 import LaneStack from "@/components/LaneStack/LaneStack";
 import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
+import MainMenu from "@/components/MainMenu/MainMenu";
+import HistoryView from "@/components/HistoryView/HistoryView";
+import NewRaceSetupModal from "@/components/NewRaceSetupModal/NewRaceSetupModal";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
 import { useBellLapStore } from "@/modules/bellLapStore";
@@ -10,6 +13,7 @@ function BellLapContent() {
   const searchParams = useSearchParams();
   const setLaneCount = useBellLapStore(state => state.setLaneCount);
   const setSetupDialogOpen = useBellLapStore(state => state.setSetupDialogOpen);
+  const view = useBellLapStore(state => state.view);
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -30,6 +34,14 @@ function BellLapContent() {
     initialized.current = true;
   }, [searchParams, setLaneCount, setSetupDialogOpen]);
 
+  if (view === 'main-menu') {
+    return <MainMenu />;
+  }
+
+  if (view === 'history') {
+    return <HistoryView />;
+  }
+
   return <LaneStack />;
 }
 
@@ -41,10 +53,11 @@ export default function PWALandingPage() {
       >
         <BellLapHeader />
         <main className="flex-1 w-full overflow-hidden p-2" data-testid="pwa-main">
-          <Suspense fallback={<div>Loading lanes...</div>}>
+          <Suspense fallback={<div>Loading...</div>}>
             <BellLapContent />
           </Suspense>
         </main>
+        <NewRaceSetupModal />
       </div>
     </div>
   );

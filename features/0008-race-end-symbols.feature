@@ -7,6 +7,7 @@ Feature: Race end symbols
 
   Background:
     Given the app is loaded
+    And a race is in progress
 
   Scenario Outline: Do not display symbols before N-4 laps
     Given Bell Lap is configured for a "<event>" event
