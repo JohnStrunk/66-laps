@@ -9,6 +9,7 @@ import { useBellLapStore } from "@/modules/bellLapStore";
 function BellLapContent() {
   const searchParams = useSearchParams();
   const setLaneCount = useBellLapStore(state => state.setLaneCount);
+  const setSetupDialogOpen = useBellLapStore(state => state.setSetupDialogOpen);
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -20,8 +21,14 @@ function BellLapContent() {
         setLaneCount(parsed);
       }
     }
+
+    const testMode = searchParams.get('testMode');
+    if (testMode === 'true') {
+      setSetupDialogOpen(false);
+    }
+
     initialized.current = true;
-  }, [searchParams, setLaneCount]);
+  }, [searchParams, setLaneCount, setSetupDialogOpen]);
 
   return <LaneStack />;
 }

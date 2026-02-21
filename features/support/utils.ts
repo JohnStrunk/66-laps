@@ -1,6 +1,5 @@
 import { Locator, Page } from 'playwright';
 import { BellLapState } from '../../src/modules/bellLapStore';
-import { TestWindow } from './store-type';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -56,51 +55,37 @@ const performPress = async (page: Page, box: { x: number; y: number; width: numb
 
 export const selectDropdownItem = async (page: Page, triggerTestId: string, itemText: string) => {
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
+  await trigger.waitFor({ state: 'visible' });
 
   // Click trigger, with retry if popover doesn't appear
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       await trigger.click({ force: true });
-      // Wait for animation
+      // Wait for animation or popover
       await page.waitForTimeout(500);
     } catch (e) {
-      if (attempt === 2) throw e;
+      if (attempt === 3) throw e;
       continue;
     }
 
-    const popover = page.locator('[role="menu"], [role="listbox"]').filter({
-      has: page.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true })
+    const popover = page.locator('[role="menu"], [role="listbox"], .heroui-popover').filter({
+      has: page.locator('button, li, [role="menuitem"], [role="option"], .heroui-listbox-item').getByText(itemText, { exact: false })
     }).last();
 
-    try {
-      await popover.waitFor({ state: 'visible', timeout: 2000 });
-      const item = popover.locator('button, li, [role="menuitem"], [role="option"]').getByText(itemText, { exact: true });
+    if (await popover.isVisible()) {
+      const item = popover.locator('button, li, [role="menuitem"], [role="option"], .heroui-listbox-item').getByText(itemText, { exact: false });
       await item.click({ force: true });
       break; // Success
-    } catch (e) {
+    } else {
       // Click elsewhere to close any stuck popover and try again
       await page.mouse.click(0, 0);
       await page.waitForTimeout(500);
-      if (attempt === 2) throw e;
+      if (attempt === 3) throw new Error(`Could not find popover for ${itemText}`);
     }
   }
 
-  // Wait for the trigger text to update
-  await page.waitForFunction(({ testId, expected }) => {
-    const trigger = document.querySelector(`[data-testid="${testId}"]`);
-    const text = trigger?.textContent?.trim() || "";
-    return text.includes(expected);
-  }, { testId: triggerTestId, expected: itemText }, { timeout: 3000 }).catch(() => {});
-};
-
-export const selectEvent = async (page: Page, eventName: string) => {
-  await selectDropdownItem(page, 'event-dropdown-trigger', eventName);
-
-  // Additional wait for store state
-  await page.waitForFunction((expected) => {
-    const store = (window as unknown as TestWindow).__bellLapStore?.getState();
-    return store?.event === expected;
-  }, eventName, { timeout: 3000 }).catch(() => {});
+  // Brief wait for any state transitions
+  await page.waitForTimeout(300);
 };
 
 export const getStoreState = async (page: Page): Promise<BellLapState> => {

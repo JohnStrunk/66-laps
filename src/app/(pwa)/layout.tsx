@@ -1,30 +1,26 @@
+'use client';
+
 import ResponsivePWAWrapper from "@/components/ResponsivePWAWrapper/ResponsivePWAWrapper";
-import type { Metadata, Viewport } from "next";
+import { useSyncExternalStore } from "react";
 
-export const metadata: Metadata = {
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "66 Laps",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#000000",
-};
+const subscribe = () => () => {};
 
 export default function PWALayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const mounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
+
   return (
-    <ResponsivePWAWrapper>
-      {children}
-    </ResponsivePWAWrapper>
+    <div data-mounted={mounted ? "true" : "false"}>
+      <ResponsivePWAWrapper>
+        {children}
+      </ResponsivePWAWrapper>
+    </div>
   );
 }
