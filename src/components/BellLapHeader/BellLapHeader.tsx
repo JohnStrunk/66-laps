@@ -10,7 +10,7 @@ import {
   CardBody,
 } from "@heroui/react";
 import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
-import { ChevronDown, Moon, Sun, SunMoon, DoorOpen } from "lucide-react";
+import { ChevronDown, Moon, Sun, SunMoon, DoorOpen, ArrowLeft } from "lucide-react";
 import { useMemo, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
@@ -28,11 +28,19 @@ export default function BellLapHeader() {
     isFlipped,
     setIsFlipped,
     exitRace,
-    lanes
+    lanes,
+    history,
+    selectedRaceId,
+    setView,
+    setSelectedRaceId
   } = useBellLapStore();
 
   const { theme, setTheme } = useTheme();
   const postHog = usePostHog();
+
+  const selectedRace = useMemo(() => {
+    return history.find(r => r.id === selectedRaceId);
+  }, [history, selectedRaceId]);
 
   // Modern idiomatic way to handle "is client" for hydration
   const mounted = useSyncExternalStore(
@@ -87,6 +95,11 @@ export default function BellLapHeader() {
     return <Sun size={18} />;
   };
 
+  const handleBackToHistory = () => {
+    setSelectedRaceId(null);
+    setView('history');
+  };
+
   const safeLaneCount = typeof laneCount === 'number' && !isNaN(laneCount) ? laneCount : 8;
 
   if (view === 'main-menu') {
@@ -137,6 +150,58 @@ export default function BellLapHeader() {
               >
                 <DoorOpen size={18} />
               </Button>
+              <Button
+                isIconOnly
+                variant="flat"
+                size="sm"
+                onPress={toggleTheme}
+                aria-label="Toggle light/dark mode"
+                data-testid="theme-toggle"
+              >
+                {renderThemeIcon()}
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </header>
+    );
+  }
+
+  if (view === 'race-details') {
+    return (
+      <header
+        className="z-50 p-2 pb-0"
+        style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
+        data-testid="bell-lap-header"
+      >
+        <Card className="shadow-md bg-content1">
+          <CardBody className="flex flex-col gap-1 p-2 sm:p-3">
+            <div className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2 overflow-hidden">
+                <Button
+                  isIconOnly
+                  variant="flat"
+                  size="sm"
+                  onPress={handleBackToHistory}
+                  aria-label="Back to History"
+                  data-testid="back-to-history-button"
+                >
+                  <ArrowLeft size={18} />
+                </Button>
+                <div className="flex flex-col overflow-hidden">
+                  <h1 className="text-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis">
+                    {selectedRace ? selectedRace.event : 'Race Details'}
+                  </h1>
+                  {selectedRace && (
+                    <div className="flex gap-2 text-[10px] sm:text-xs text-default-500 whitespace-nowrap">
+                      <span>{new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span>{selectedRace.laneCount} Lanes</span>
+                      {selectedRace.eventNumber && <span>Ev {selectedRace.eventNumber}</span>}
+                      {selectedRace.heatNumber && <span>Ht {selectedRace.heatNumber}</span>}
+                    </div>
+                  )}
+                </div>
+              </div>
               <Button
                 isIconOnly
                 variant="flat"

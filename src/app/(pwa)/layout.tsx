@@ -17,7 +17,7 @@ export default function PWALayout({
   );
 
   return (
-    <div data-mounted={mounted ? "true" : "false"}>
+    <div data-mounted={mounted ? "true" : "false"} className="fixed inset-0 overflow-hidden">
       <ResponsivePWAWrapper>
         {children}
       </ResponsivePWAWrapper>

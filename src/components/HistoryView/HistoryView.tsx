@@ -8,13 +8,18 @@ import { useSyncExternalStore } from "react";
 const subscribe = () => () => {};
 
 export default function HistoryView() {
-  const { history } = useBellLapStore();
+  const { history, setSelectedRaceId, setView } = useBellLapStore();
 
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,
     () => false
   );
+
+  const handleRecordClick = (id: string) => {
+    setSelectedRaceId(id);
+    setView('race-details');
+  };
 
   if (!mounted) {
     return <div className="flex-1 bg-background" data-testid="history-view-loading" />;
@@ -31,7 +36,13 @@ export default function HistoryView() {
         ) : (
           <div className="flex flex-col gap-3 pb-safe-bottom">
             {history.map((record: RaceRecord) => (
-              <Card key={record.id} className="w-full" data-testid="history-record">
+              <Card
+                key={record.id}
+                className="w-full"
+                isPressable
+                onPress={() => handleRecordClick(record.id)}
+                data-testid="history-record"
+              >
                 <CardBody className="flex flex-row items-center justify-between p-3 sm:p-4">
                   <div className="flex flex-col gap-1">
                     <div className="flex items-baseline gap-2">
