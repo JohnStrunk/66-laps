@@ -53,7 +53,6 @@ function PoolContents(props: PoolProps) {
         // Determine if the canvas size has changed
         const canvas = app.app.renderer?.screen || new Rectangle();
         if (canvas.width !== canvasRect.width || canvas.height !== canvasRect.height) {
-            // console.log("Canvas size changed", canvas.width, canvas.height);
             const canvasCopy = new Rectangle();
             canvasCopy.copyFrom(canvas);
             setCanvasRect(canvasCopy);
@@ -84,7 +83,6 @@ function PoolContents(props: PoolProps) {
         g.clear();
         // Draw the pool deck
         g.roundRect(offsetX, offsetY, (poolLengthPixels + 2 * poolEdgePixels), (poolWidthPixels + 2 * poolEdgePixels), poolEdgePixels / 3)
-            // .fill(0xCEC9BB);
             .fill({
                 texture: deckImg,
             });
