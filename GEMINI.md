@@ -84,8 +84,8 @@ This document provides essential information for AI agents working on the
    `src/components/`.
 6. **Documentation:** Write Storybook stories for UI components.
 7. **Verification:** While subset testing is useful during development, a full
-   `yarn test` run is **MANDATORY** before declaring a task complete to ensure
-   no regressions were introduced.
+   `yarn test` run and `yarn lint` run is **MANDATORY** before declaring a
+   task complete to ensure no regressions were introduced.
 
 ## Architectural Patterns
 
