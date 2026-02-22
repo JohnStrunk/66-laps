@@ -18,6 +18,24 @@ import { Suspense, useEffect } from "react";
 
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider } from 'posthog-js/react';
+import { useBellLapStore } from '@/modules/bellLapStore';
+
+function GlobalTimer() {
+    const view = useBellLapStore(state => state.view);
+    const tick = useBellLapStore(state => state.tick);
+
+    useEffect(() => {
+        if (view !== 'race') return;
+
+        const interval = setInterval(() => {
+            tick();
+        }, 100);
+
+        return () => clearInterval(interval);
+    }, [view, tick]);
+
+    return null;
+}
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -76,6 +94,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     return (
         <PostHogProvider>
+            <GlobalTimer />
             <HeroUIProvider navigate={router.push}>
                 <ThemeProvider attribute="class" scriptProps={{ 'data-cfasync': 'false' }}>
                     {children}

@@ -3,7 +3,7 @@
 import { Button, Card, CardBody } from "@heroui/react";
 import { Minus, Plus } from "lucide-react";
 import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 
 interface LaneRowProps {
   laneNumber: number;
@@ -13,12 +13,12 @@ export default function LaneRow({
   laneNumber,
 }: LaneRowProps) {
   const lane = useBellLapStore(state => state.lanes.find(l => l.laneNumber === laneNumber));
+  const now = useBellLapStore(state => state.now);
   const event = useBellLapStore(state => state.event);
   const updateLaneCount = useBellLapStore(state => state.updateLaneCount);
   const toggleLaneEmpty = useBellLapStore(state => state.toggleLaneEmpty);
   const registerTouch = useBellLapStore(state => state.registerTouch);
 
-  const [now, setNow] = useState(() => Date.now());
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
   const config = EVENT_CONFIGS[event];
@@ -37,19 +37,6 @@ export default function LaneRow({
   else if (isRedSquare) symbol = "🟥";
   else if (isBellLap) symbol = "🔔";
 
-  useEffect(() => {
-    if (isLocked) {
-      const interval = setInterval(() => {
-        const currentNow = Date.now();
-        setNow(currentNow);
-        if (currentNow - lastTouch >= lockoutMs) {
-          clearInterval(interval);
-        }
-      }, 100);
-      return () => clearInterval(interval);
-    }
-  }, [isLocked, lastTouch, lockoutMs]);
-
   if (!lane) return null;
 
   const handleTouchStart = () => {
@@ -65,7 +52,6 @@ export default function LaneRow({
       longPressTimer.current = null;
       if (!lane.isEmpty) {
         registerTouch(laneNumber);
-        setNow(Date.now());
       }
     }
   };
@@ -108,7 +94,6 @@ export default function LaneRow({
                 variant="flat"
                 onPress={() => {
                   updateLaneCount(laneNumber, -2);
-                  setNow(Date.now());
                 }}
                 isDisabled={lane.count <= 0}
                 data-disabled={lane.count <= 0}
@@ -132,7 +117,6 @@ export default function LaneRow({
                 variant="flat"
                 onPress={() => {
                   updateLaneCount(laneNumber, 2);
-                  setNow(Date.now());
                 }}
                 isDisabled={lane.count >= config.laps}
                 data-disabled={lane.count >= config.laps}

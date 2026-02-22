@@ -85,3 +85,87 @@ export function ph_event_set_theme(
         theme: themeName,
     });
 }
+
+/**
+ * Event to be triggered when a new race is started in the Bell Lap PWA.
+ *
+ * @param postHog - The PostHog client instance
+ * @param event - The event type (e.g., "500 SC")
+ * @param laneCount - The number of lanes
+ * @param eventNumber - Optional event number
+ * @param heatNumber - Optional heat number
+ */
+export function ph_event_bell_lap_race_start(
+    postHog: PostHog | undefined,
+    event: string,
+    laneCount: number,
+    eventNumber: string,
+    heatNumber: string
+) {
+    return postHog?.capture("bell_lap_race_start", {
+        event,
+        laneCount,
+        eventNumber,
+        heatNumber
+    });
+}
+
+/**
+ * Event to be triggered when a lane is touched (automatic increment).
+ *
+ * @param postHog - The PostHog client instance
+ * @param laneNumber - The lane number
+ * @param currentCount - The count before the touch
+ * @param event - The event type
+ */
+export function ph_event_bell_lap_lane_touch(
+    postHog: PostHog | undefined,
+    laneNumber: number,
+    currentCount: number,
+    event: string
+) {
+    return postHog?.capture("bell_lap_lane_touch", {
+        laneNumber,
+        currentCount,
+        event
+    });
+}
+
+/**
+ * Event to be triggered when a lane count is manually overridden.
+ *
+ * @param postHog - The PostHog client instance
+ * @param laneNumber - The lane number
+ * @param delta - The change in count (+2 or -2)
+ * @param currentCount - The count before the override
+ */
+export function ph_event_bell_lap_lane_override(
+    postHog: PostHog | undefined,
+    laneNumber: number,
+    delta: number,
+    currentCount: number
+) {
+    return postHog?.capture("bell_lap_lane_override", {
+        laneNumber,
+        delta,
+        currentCount
+    });
+}
+
+/**
+ * Event to be triggered when a lane's empty state is toggled.
+ *
+ * @param postHog - The PostHog client instance
+ * @param laneNumber - The lane number
+ * @param isEmpty - The new empty state
+ */
+export function ph_event_bell_lap_lane_toggle_empty(
+    postHog: PostHog | undefined,
+    laneNumber: number,
+    isEmpty: boolean
+) {
+    return postHog?.capture("bell_lap_lane_toggle_empty", {
+        laneNumber,
+        isEmpty
+    });
+}
