@@ -78,7 +78,7 @@ export interface BellLapState {
   resetRace: () => void;
   startRace: (event: EventType, laneCount: number, eventNumber: string, heatNumber: string) => void;
   setSetupDialogOpen: (open: boolean) => void;
-  exitRace: () => void;
+  exitRace: (options?: { skipViewChange?: boolean }) => void;
   clearHistory: () => void;
   setSelectedRaceId: (id: string | null) => void;
   tick: () => void;
@@ -252,9 +252,9 @@ export const useBellLapStore = create<BellLapState>()(
 
       setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
 
-      exitRace: () => set((state) => {
+      exitRace: (options) => set((state) => {
         if (state.view !== 'race') {
-            return { view: 'main-menu' };
+            return { view: options?.skipViewChange ? state.view : 'main-menu' };
         }
 
         // Check if race has any data worth saving (any lane with count > 0)
@@ -289,7 +289,7 @@ export const useBellLapStore = create<BellLapState>()(
         }
 
         return {
-            view: 'main-menu',
+            view: options?.skipViewChange ? state.view : 'main-menu',
             history: newHistory,
             // Clear current race state so next start is clean
             lanes: createDefaultLanes(state.laneCount),

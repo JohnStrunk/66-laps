@@ -9,5 +9,9 @@ prompt = """
   introduced.
 - The PR description should provide a detailed explanation of the changes made,
   including any relevant context.
-- When using the gh cli, use a temporary file for the PR body (e.g., `gh pr create --body-file pr_body.txt`) to avoid shell escaping issues and misinterpretation of special characters or command-like strings.
+- When using the gh cli, use a temporary file for the PR body (e.g., `gh pr
+  create --body-file /tmp/pr_body.txt`) to avoid shell escaping issues and
+  misinterpretation of special characters or command-like strings. Make sure to
+  place the temporary file in the system's temporary directory so that it does
+  not accidentally get committed to the repository.
 """

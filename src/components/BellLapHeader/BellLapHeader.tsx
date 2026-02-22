@@ -31,8 +31,6 @@ export default function BellLapHeader() {
     lanes,
     history,
     selectedRaceId,
-    setView,
-    setSelectedRaceId
   } = useBellLapStore();
 
   const { theme, setTheme } = useTheme();
@@ -96,8 +94,12 @@ export default function BellLapHeader() {
   };
 
   const handleBackToHistory = () => {
-    setSelectedRaceId(null);
-    setView('history');
+    window.history.back();
+  };
+
+  const handleExit = () => {
+    exitRace({ skipViewChange: true });
+    window.history.back();
   };
 
   const safeLaneCount = typeof laneCount === 'number' && !isNaN(laneCount) ? laneCount : 8;
@@ -144,7 +146,7 @@ export default function BellLapHeader() {
                 color="danger"
                 variant="flat"
                 size="sm"
-                onPress={exitRace}
+                onPress={handleExit}
                 aria-label="Exit to Main Menu"
                 data-testid="exit-history-button"
               >
@@ -258,7 +260,7 @@ export default function BellLapHeader() {
                 color="danger"
                 variant="flat"
                 size="sm"
-                onPress={exitRace}
+                onPress={handleExit}
                 aria-label="Exit to Main Menu"
                 data-testid="exit-button"
               >
