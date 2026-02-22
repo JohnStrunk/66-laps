@@ -4,6 +4,7 @@ import LaneStack from "@/components/LaneStack/LaneStack";
 import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
 import MainMenu from "@/components/MainMenu/MainMenu";
 import HistoryView from "@/components/HistoryView/HistoryView";
+import RaceDetailsView from "@/components/RaceDetailsView/RaceDetailsView";
 import NewRaceSetupModal from "@/components/NewRaceSetupModal/NewRaceSetupModal";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef } from "react";
@@ -42,6 +43,10 @@ function BellLapContent() {
     return <HistoryView />;
   }
 
+  if (view === 'race-details') {
+    return <RaceDetailsView />;
+  }
+
   return <LaneStack />;
 }
 
@@ -52,7 +57,7 @@ export default function PWALandingPage() {
         className="w-full h-full flex flex-col overflow-hidden shadow-2xl bg-transparent"
       >
         <BellLapHeader />
-        <main className="flex-1 w-full overflow-hidden p-2" data-testid="pwa-main">
+        <main className="flex-1 min-h-0 w-full overflow-hidden p-2" data-testid="pwa-main">
           <Suspense fallback={<div>Loading...</div>}>
             <BellLapContent />
           </Suspense>

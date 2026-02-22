@@ -24,7 +24,7 @@ export default function ResponsivePWAWrapper({ children }: { children: React.Rea
 
   if (!mounted) {
     return (
-      <div key="unmounted" className="w-full h-dvh bg-background" data-mounted="false">
+      <div key="unmounted" className="w-full h-full bg-background" data-mounted="false">
         {children}
       </div>
     );
@@ -32,7 +32,7 @@ export default function ResponsivePWAWrapper({ children }: { children: React.Rea
 
   if (isDesktop) {
     return (
-      <div key="desktop" className="flex flex-col h-screen w-screen overflow-hidden bg-background" data-mounted="true">
+      <div key="desktop" className="flex flex-col h-full w-full overflow-hidden bg-background" data-mounted="true">
         <div className="shrink-0">
           <Nav />
         </div>
@@ -53,7 +53,7 @@ export default function ResponsivePWAWrapper({ children }: { children: React.Rea
   }
 
   return (
-    <div key="mobile" className="w-full h-dvh overflow-hidden bg-background" data-mounted="true">
+    <div key="mobile" className="w-full h-full overflow-hidden bg-background" data-mounted="true">
       {children}
     </div>
   );

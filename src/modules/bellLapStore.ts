@@ -41,7 +41,7 @@ export interface RaceRecord {
   lanes: LaneState[];
 }
 
-export type ViewState = 'main-menu' | 'race' | 'history';
+export type ViewState = 'main-menu' | 'race' | 'history' | 'race-details';
 
 export interface BellLapState {
   view: ViewState;
@@ -53,6 +53,7 @@ export interface BellLapState {
   isFlipped: boolean;
   lanes: LaneState[];
   isSetupDialogOpen: boolean;
+  selectedRaceId: string | null;
 
   // Actions
   setView: (view: ViewState) => void;
@@ -71,6 +72,7 @@ export interface BellLapState {
   setSetupDialogOpen: (open: boolean) => void;
   exitRace: () => void;
   clearHistory: () => void;
+  setSelectedRaceId: (id: string | null) => void;
 }
 
 const createDefaultLanes = (count: number): LaneState[] =>
@@ -94,6 +96,7 @@ export const useBellLapStore = create<BellLapState>()(
       isFlipped: false,
       lanes: createDefaultLanes(8),
       isSetupDialogOpen: false,
+      selectedRaceId: null,
 
       setView: (view) => set({ view }),
 
@@ -272,6 +275,8 @@ export const useBellLapStore = create<BellLapState>()(
       clearHistory: () => set({ history: [] }),
 
       setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
+
+      setSelectedRaceId: (selectedRaceId) => set({ selectedRaceId }),
     }),
     {
       name: 'bell-lap-storage',
@@ -285,6 +290,7 @@ export const useBellLapStore = create<BellLapState>()(
         lanes: state.lanes,
         history: state.history,
         view: state.view,
+        selectedRaceId: state.selectedRaceId,
       }),
     }
   )
