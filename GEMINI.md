@@ -137,6 +137,30 @@ This document provides essential information for AI agents working on the
   - `yarn test`
   - `./.github/lint-all.sh`
 
+## Performance Optimization
+
+- **Consolidate Timers:** Avoid creating individual `setInterval` or
+  `setTimeout` timers in components that are rendered multiple times (e.g.,
+  `LaneRow`). Instead, use a single global timer, a store-level tick, or
+  `requestAnimationFrame` to manage time-based state updates like lockout
+  progress.
+- **Store Access:** When accessing specific items from a list in the store
+  (e.g., a single lane in `LaneRow`), prefer passing the data as props from the
+  parent or using a memoized selector to avoid re-running `find()` on every
+  store update.
+
+## Observability & Analytics
+
+- **PostHog Integration:** All core user actions in the Bell Lap PWA must be
+  tracked to understand user behavior. This includes:
+  - Starting a race (event type, lane count).
+  - Touch registration (manual vs automatic).
+  - Manual overrides (increments/decrements).
+  - Toggling lane empty state.
+  - Completing and exiting a race.
+- **Custom Events:** Use the helpers in `src/modules/phEvents.ts` to ensure
+  consistent event naming and properties.
+
 ## Testing Standards
 
 - **Mandatory Testing:** Any code modification MUST include tests that ensure
@@ -152,6 +176,14 @@ This document provides essential information for AI agents working on the
   should use Cucumber's `return 'pending';` rather than a "noop" return. Once a
   feature is implemented, tests must accurately and rigorously verify the logic.
   "Fake" passing tests are strictly unacceptable.
+- **Time-Based Logic:** For tests involving lockout or other time-based
+  behaviors, use `this.page.clock.install()` in the `Before` hook and
+  `this.page.clock.fastForward()` in step definitions to ensure fast and
+  reliable execution.
+- **Internal State Verification:** While primarily using UI-based assertions,
+  you can use `window.__bellLapStore` to perform rigorous assertions on the
+  underlying Zustand store state when the UI state is complex or hard to verify
+  directly.
 - **Step Organization:** Step definitions must be organized into subdirectories
   by keyword:
   - `features/steps/given/`
@@ -161,18 +193,14 @@ This document provides essential information for AI agents working on the
   TypeScript file. Files should be named descriptively based on the step
   text, without the keyword prefix
   (e.g., `features/steps/then/lane_should_be_active.ts`).
+- **Zombie Step Prevention:** Regularly audit `features/steps/` to identify and
+  remove unused step definitions. A step is considered "zombie" if it is not
+  referenced in any active `.feature` file.
 - **Browser Test Stability:** Minimize flakiness by using `waitForFunction` or
   `waitForSelector` instead of immediate assertions for asynchronous state or
   layout changes. Avoid CSS transitions on elements whose dimensions are
   verified by tests. Explicitly wait for UI elements (like menus) to be fully
   visible before interaction.
-- **Testing Maintenance:**
-  - **Unused Steps:** Regularly audit `features/steps/` to identify and remove
-    unused step definitions. This keeps the test suite clean and maintainable.
-  - **Effective Assertions:** Ensure `Then` steps contain rigorous assertions
-    that verify the state of the application, not just its visual appearance
-    where possible (e.g., check the Zustand store state via
-    `window.__bellLapStore`).
 
 ## Critical Instructions
 

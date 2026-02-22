@@ -1,5 +1,12 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import posthog from 'posthog-js';
+import {
+  ph_event_bell_lap_race_start,
+  ph_event_bell_lap_lane_touch,
+  ph_event_bell_lap_lane_override,
+  ph_event_bell_lap_lane_toggle_empty
+} from './phEvents';
 
 export type EventType = '500 SC' | '1000 SC' | '1650 SC' | '800 LC' | '1500 LC';
 
@@ -54,6 +61,7 @@ export interface BellLapState {
   lanes: LaneState[];
   isSetupDialogOpen: boolean;
   selectedRaceId: string | null;
+  now: number;
 
   // Actions
   setView: (view: ViewState) => void;
@@ -73,6 +81,7 @@ export interface BellLapState {
   exitRace: () => void;
   clearHistory: () => void;
   setSelectedRaceId: (id: string | null) => void;
+  tick: () => void;
 }
 
 const createDefaultLanes = (count: number): LaneState[] =>
@@ -97,6 +106,7 @@ export const useBellLapStore = create<BellLapState>()(
       lanes: createDefaultLanes(8),
       isSetupDialogOpen: false,
       selectedRaceId: null,
+      now: Date.now(),
 
       setView: (view) => set({ view }),
 
@@ -133,7 +143,7 @@ export const useBellLapStore = create<BellLapState>()(
       updateLaneCount: (laneNumber, delta) => set((state) => {
         const config = EVENT_CONFIGS[state.event];
         const lockoutMs = config.lockout * 1000;
-        const now = Date.now();
+        const now = state.now;
         const agedTimestamp = now - lockoutMs - 1;
 
         return {
@@ -141,6 +151,8 @@ export const useBellLapStore = create<BellLapState>()(
             if (lane.laneNumber !== laneNumber) return lane;
             const newCount = Math.max(0, Math.min(config.laps, lane.count + delta));
             if (newCount === lane.count) return lane;
+
+            ph_event_bell_lap_lane_override(posthog, laneNumber, delta, lane.count);
 
             const event: LapEvent = {
               timestamp: now,
@@ -171,17 +183,23 @@ export const useBellLapStore = create<BellLapState>()(
         ),
       })),
 
-      toggleLaneEmpty: (laneNumber) => set((state) => ({
-        lanes: state.lanes.map((lane) =>
-          lane.laneNumber === laneNumber
-            ? { ...lane, isEmpty: !lane.isEmpty }
-            : lane
-        ),
-      })),
+      toggleLaneEmpty: (laneNumber) => set((state) => {
+          const lane = state.lanes.find(l => l.laneNumber === laneNumber);
+          if (lane) {
+            ph_event_bell_lap_lane_toggle_empty(posthog, laneNumber, !lane.isEmpty);
+          }
+          return {
+            lanes: state.lanes.map((lane) =>
+              lane.laneNumber === laneNumber
+                ? { ...lane, isEmpty: !lane.isEmpty }
+                : lane
+            ),
+          };
+      }),
 
       registerTouch: (laneNumber, ignoreLockout = false) => set((state) => {
         const config = EVENT_CONFIGS[state.event];
-        const now = Date.now();
+        const now = state.now;
 
         return {
           lanes: state.lanes.map((lane) => {
@@ -191,6 +209,8 @@ export const useBellLapStore = create<BellLapState>()(
             if (!ignoreLockout && now - lastTouch < config.lockout * 1000) return lane;
 
             if (lane.count >= config.laps) return lane;
+
+            ph_event_bell_lap_lane_touch(posthog, laneNumber, lane.count, state.event);
 
             const newCount = Math.min(config.laps, lane.count + 2);
             const event: LapEvent = {
@@ -216,15 +236,21 @@ export const useBellLapStore = create<BellLapState>()(
         view: 'main-menu',
       })),
 
-      startRace: (event, laneCount, eventNumber, heatNumber) => set(() => ({
-        event,
-        laneCount,
-        eventNumber,
-        heatNumber,
-        lanes: createDefaultLanes(laneCount),
-        isSetupDialogOpen: false,
-        view: 'race',
-      })),
+      startRace: (event, laneCount, eventNumber, heatNumber) => {
+        ph_event_bell_lap_race_start(posthog, event, laneCount, eventNumber, heatNumber);
+        set(() => ({
+            event,
+            laneCount,
+            eventNumber,
+            heatNumber,
+            lanes: createDefaultLanes(laneCount),
+            isSetupDialogOpen: false,
+            view: 'race',
+            now: Date.now(), // Reset clock to now on race start
+        }));
+      },
+
+      setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
 
       exitRace: () => set((state) => {
         if (state.view !== 'race') {
@@ -237,7 +263,7 @@ export const useBellLapStore = create<BellLapState>()(
         let newHistory = state.history;
         if (hasData) {
             // Find the earliest timestamp from all lanes events to use as start time
-            let startTime = Date.now();
+            let startTime = state.now;
             let foundEvent = false;
             state.lanes.forEach(lane => {
                 if (lane.events.length > 0) {
@@ -251,7 +277,7 @@ export const useBellLapStore = create<BellLapState>()(
 
             const record: RaceRecord = {
                 id: crypto.randomUUID(),
-                startTime: foundEvent ? startTime : Date.now(),
+                startTime: foundEvent ? startTime : state.now,
                 event: state.event,
                 laneCount: state.laneCount,
                 eventNumber: state.eventNumber,
@@ -274,9 +300,9 @@ export const useBellLapStore = create<BellLapState>()(
 
       clearHistory: () => set({ history: [] }),
 
-      setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
-
       setSelectedRaceId: (selectedRaceId) => set({ selectedRaceId }),
+
+      tick: () => set({ now: Date.now() }),
     }),
     {
       name: 'bell-lap-storage',
