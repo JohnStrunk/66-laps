@@ -7,8 +7,10 @@ import HistoryView from "@/components/HistoryView/HistoryView";
 import RaceDetailsView from "@/components/RaceDetailsView/RaceDetailsView";
 import NewRaceSetupModal from "@/components/NewRaceSetupModal/NewRaceSetupModal";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useSyncExternalStore } from "react";
 import { useBellLapStore } from "@/modules/bellLapStore";
+
+const subscribe = () => () => {};
 
 function BellLapContent() {
   const searchParams = useSearchParams();
@@ -19,13 +21,9 @@ function BellLapContent() {
   const view = useBellLapStore(state => state.view);
   const selectedRaceId = useBellLapStore(state => state.selectedRaceId);
   const initialized = useRef(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
   const lastState = useRef<{ view: string, selectedRaceId: string | null } | null>(null);
   const isPopStateRef = useRef(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!mounted || initialized.current) return;
@@ -112,10 +110,7 @@ function BellLapContent() {
 }
 
 export default function PWALandingPage() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
 
   return (
     <div
