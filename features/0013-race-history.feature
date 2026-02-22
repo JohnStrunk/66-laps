@@ -4,6 +4,13 @@ Feature: Race History Recording and Viewing
   I want the app to keep a record of all races and their lap count changes
   So that I can review the races later or correct mistakes
 
+  Scenario: Empty history has no scrollbar
+    Given the app is loaded
+    And I have no races in my history
+    When I navigate to the "History" screen
+    Then I should see the "No race history recorded yet" message
+    And the history view should not be scrollable
+
   Scenario: Recording a touch event
     Given the app is loaded
     And Bell Lap is configured for a "500 SC" event

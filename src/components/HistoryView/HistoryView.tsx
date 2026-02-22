@@ -27,9 +27,9 @@ export default function HistoryView() {
 
   return (
     <div className="flex flex-col h-full w-full bg-background" data-testid="history-view">
-      <ScrollShadow className="flex-1 p-4">
+      <ScrollShadow className="flex-1 p-4 flex flex-col">
         {(!history || history.length === 0) ? (
-          <div className="flex flex-col items-center justify-center h-full text-default-400 mt-20">
+          <div className="flex flex-col items-center justify-center flex-1 text-default-400">
             <History size={48} className="mb-4 opacity-50" />
             <p>No race history recorded yet.</p>
           </div>
