@@ -10,7 +10,7 @@ Given('I have a(n) {string} race in my history with the following events:', asyn
 
     // Group events by lane
     const laneEventsMap: Record<number, LapEvent[]> = {};
-    eventsData.forEach((row: { Lane: string; Lap: string; Timestamp: string }) => {
+    (eventsData as { Lane: string; Lap: string; Timestamp: string }[]).forEach((row) => {
       const laneNum = parseInt(row.Lane);
       const lapNum = parseInt(row.Lap);
       const timestamp = parseInt(row.Timestamp);
@@ -64,7 +64,7 @@ Given('I have a race in my history with the following events:', async function (
 
     // Group events by lane
     const laneEventsMap: Record<number, LapEvent[]> = {};
-    eventsData.forEach((row: { Lane: string; Lap: string; Timestamp: string }) => {
+    (eventsData as { Lane: string; Lap: string; Timestamp: string }[]).forEach((row) => {
       const laneNum = parseInt(row.Lane);
       const lapNum = parseInt(row.Lap);
       const timestamp = parseInt(row.Timestamp);
