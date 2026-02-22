@@ -9,4 +9,7 @@ prompt = """
   introduced.
 - The PR description should provide a detailed explanation of the changes made,
   including any relevant context.
+- When using the gh cli, ensure the parameters are properly escaped to prevent
+  any issues with special characters in the title or description interfering
+  with the command execution and interpretation by the shell.
 """

@@ -195,7 +195,9 @@ This document provides essential information for AI agents working on the
   (e.g., `features/steps/then/lane_should_be_active.ts`).
 - **Zombie Step Prevention:** Regularly audit `features/steps/` to identify and
   remove unused step definitions. A step is considered "zombie" if it is not
-  referenced in any active `.feature` file.
+  referenced in any active `.feature` file. Use the following command to find
+  unused steps:
+  `./.github/find-unused-steps.sh`
 - **Browser Test Stability:** Minimize flakiness by using `waitForFunction` or
   `waitForSelector` instead of immediate assertions for asynchronous state or
   layout changes. Avoid CSS transitions on elements whose dimensions are
