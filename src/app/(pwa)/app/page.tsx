@@ -18,6 +18,7 @@ function BellLapContent() {
   const setSetupDialogOpen = useBellLapStore(state => state.setSetupDialogOpen);
   const setView = useBellLapStore(state => state.setView);
   const setSelectedRaceId = useBellLapStore(state => state.setSelectedRaceId);
+  const exitRace = useBellLapStore(state => state.exitRace);
   const view = useBellLapStore(state => state.view);
   const selectedRaceId = useBellLapStore(state => state.selectedRaceId);
   const initialized = useRef(false);
@@ -63,6 +64,11 @@ function BellLapContent() {
     if (!mounted) return;
     const handlePopState = (event: PopStateEvent) => {
       if (event.state && event.state.view) {
+        // If we are currently in a race and navigating away, save it
+        if (useBellLapStore.getState().view === 'race' && event.state.view !== 'race') {
+          exitRace({ skipViewChange: true });
+        }
+
         isPopStateRef.current = true;
         lastState.current = {
           view: event.state.view,
@@ -79,7 +85,7 @@ function BellLapContent() {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [mounted, setView, setSelectedRaceId]);
+  }, [mounted, setView, setSelectedRaceId, exitRace]);
 
   // Push to history when view/race selection changes from within the app
   useEffect(() => {
