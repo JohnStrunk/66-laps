@@ -19,13 +19,13 @@ export const externalSheets: Record<string, ExternalSheet> = {
     "Alaska": {
         // https://www.gomotionapp.com/team/wzaslsc/page/governance/officials-corner
         SC: {
-            "500": "http://www.teamunify.com/wzaslsc/__doc__/500lap.pdf",
-            "1000": "http://www.teamunify.com/wzaslsc/__doc__/1000lap.pdf",
-            "1650": "http://www.teamunify.com/wzaslsc/__doc__/1650lap.pdf",
+            "500": "https://www.teamunify.com/wzaslsc/__doc__/500lap.pdf",
+            "1000": "https://www.teamunify.com/wzaslsc/__doc__/1000lap.pdf",
+            "1650": "https://www.teamunify.com/wzaslsc/__doc__/1650lap.pdf",
         },
         LC: {
-            "800": "http://www.teamunify.com/wzaslsc/__doc__/800lap.pdf",
-            "1500": "http://www.teamunify.com/wzaslsc/__doc__/1500lap.pdf",
+            "800": "https://www.teamunify.com/wzaslsc/__doc__/800lap.pdf",
+            "1500": "https://www.teamunify.com/wzaslsc/__doc__/1500lap.pdf",
         },
     },
     "Arizona Swimming": {  // https://www.azswimming.org/document-library/
@@ -49,10 +49,10 @@ export const externalSheets: Record<string, ExternalSheet> = {
     },
     "Florida Swimming": {  // https://www.floridaswimming.org/page/officials/officials-forms
         SC: {
-            "SC": "http://www.floridaswimming.org/szfllsc/UserFiles/Image/Officials%20Info/OFFICIALS%20FORMS/OF%20Across%20the%20boards--yards.pdf",
+            "SC": "https://www.floridaswimming.org/szfllsc/UserFiles/Image/Officials%20Info/OFFICIALS%20FORMS/OF%20Across%20the%20boards--yards.pdf",
         },
         LC: {
-            "LC": "http://www.floridaswimming.org/szfllsc/UserFiles/Image/Officials%20Info/OFFICIALS%20FORMS/OF%20Across%20the%20boards--meters.pdf",
+            "LC": "https://www.floridaswimming.org/szfllsc/UserFiles/Image/Officials%20Info/OFFICIALS%20FORMS/OF%20Across%20the%20boards--meters.pdf",
         },
     },
     // Kentucky Swimming: https://www.gomotionapp.com/team/szkyslsc/page/officials/meet-forms
