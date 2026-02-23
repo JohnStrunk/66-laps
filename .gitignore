@@ -47,3 +47,4 @@ next-env.d.ts
 *storybook.log
 /.playwright-cli/
 /test-results/
+dev_server.log
