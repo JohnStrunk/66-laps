@@ -7,6 +7,10 @@ import { Providers } from "./providers";
 export const metadata: Metadata = {
   title: "66 Laps",
   description: "Practice counting laps for swimming",
+  other: {
+    "Content-Security-Policy":
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://us.i.posthog.com https://*.sentry.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://us.i.posthog.com; font-src 'self' data:; connect-src 'self' https://us.i.posthog.com https://*.sentry.io; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;",
+  },
 };
 
 // https://nextjs.org/docs/app/building-your-application/optimizing/fonts#with-tailwind-css
