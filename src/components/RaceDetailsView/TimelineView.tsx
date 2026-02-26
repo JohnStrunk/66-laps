@@ -83,9 +83,12 @@ export function TimelineView({ race }: TimelineViewProps) {
                 style={{ top: m.top, height: LINE_HEIGHT }}
               >
                 {m.isWholeMinute ? (
-                  <span className="font-bold text-default-600" data-testid={`time-label-${m.label}`}>{m.label}</span>
+                  <div className="w-full flex items-center justify-center relative h-full">
+                    <div className="absolute top-1/2 left-0 w-full h-[1px] bg-default-400" />
+                    <span className="relative font-bold text-default-600 bg-default-50 px-1 z-10" data-testid={`time-label-${m.label}`}>{m.label}</span>
+                  </div>
                 ) : (
-                  <div className="w-1 h-[1px] bg-default-200" data-testid={`time-marker-${m.label}`} />
+                  <div className="w-full h-[1px] bg-default-300" data-testid={`time-marker-${m.label}`} />
                 )}
               </div>
             ))}
@@ -93,15 +96,6 @@ export function TimelineView({ race }: TimelineViewProps) {
 
           {/* Grid and Events */}
           <div className="flex-1 relative">
-            {/* Horizontal Grid Lines */}
-            {markers.map((m, i) => (
-              <div
-                key={i}
-                className="absolute left-0 w-full h-[1px] bg-default-100 pointer-events-none"
-                style={{ top: m.top + (LINE_HEIGHT / 2) }}
-              />
-            ))}
-
             {/* Vertical Lane Dividers */}
             {laneNumbers.slice(0, -1).map(n => (
               <div
