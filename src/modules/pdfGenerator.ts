@@ -134,55 +134,55 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         };
     });
 
-    autoTable(doc, {
-        startY: headerBottom,
-        margin: { left: leftColX, right: pageWidth - (leftColX + columnWidth) },
-        head: [['LAP', 'ORDER OF FINISH']],
-        body: lapOOFData.map(d => [d.lap, d.oof]),
-        theme: 'striped',
-        headStyles: { fillColor: [44, 62, 80], textColor: 255, fontSize: 10 },
-        styles: { fontSize: 9, cellPadding: 2 },
-        columnStyles: {
-            0: { fontStyle: 'bold', cellWidth: 30 },
-            1: { fontSize: 11, fontStyle: 'bold' }
-        }
-    });
-
-    // --- Right Column: Laps by Time (Timeline) ---
-    const timelineStartY = headerBottom;
-    const timelineHeight = pageHeight - margin * 2 - 60 - 30; // 30 for footer
-
-    // Calculate duration
-    let maxTime = 0;
-    race.lanes.forEach(lane => {
-        lane.events.forEach(event => {
-            if (event.timestamp > maxTime) maxTime = event.timestamp;
+        autoTable(doc, {
+            startY: headerBottom,
+            margin: { left: leftColX, right: pageWidth - (leftColX + columnWidth) },
+            head: [['LAP', 'ORDER OF FINISH']],
+            body: lapOOFData.map(d => [d.lap, d.oof]),
+            theme: 'striped',
+            headStyles: { fillColor: [44, 62, 80], textColor: 255, fontSize: 10, halign: 'center' },
+            styles: { fontSize: 9, cellPadding: 2 },
+            columnStyles: {
+                0: { fontStyle: 'bold', cellWidth: 30, halign: 'center' },
+                1: { fontSize: 11, fontStyle: 'bold', halign: 'center' }
+            }
         });
-    });
-    const durationSeconds = maxTime > 0 ? (maxTime - race.startTime) / 1000 : 0;
 
-    // Scale timeline to fit
-    const SECONDS_PER_MARKER = 15;
-    const totalMarkers = Math.ceil(durationSeconds / SECONDS_PER_MARKER) + 1;
-    const lineHeight = Math.min(18, timelineHeight / (totalMarkers + 2.5)); // Extra buffer for headers
+        // --- Right Column: Laps by Time (Timeline) ---
+        const timelineStartY = headerBottom;
+        const timelineHeight = pageHeight - margin * 2 - 60 - 30; // 30 for footer
 
-    // Right Column Header (Reverse Text)
-    const headHeight = 16;
-    doc.setFillColor(44, 62, 80);
-    doc.rect(rightColX, timelineStartY, columnWidth, headHeight, 'F');
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255);
-    doc.text('TIME', rightColX + 5, timelineStartY + headHeight / 2, { baseline: 'middle' });
-    doc.text('LAP COUNT', rightColX + 35, timelineStartY + headHeight / 2, { baseline: 'middle' });
+        // Calculate duration
+        let maxTime = 0;
+        race.lanes.forEach(lane => {
+            lane.events.forEach(event => {
+                if (event.timestamp > maxTime) maxTime = event.timestamp;
+            });
+        });
+        const durationSeconds = maxTime > 0 ? (maxTime - race.startTime) / 1000 : 0;
 
-    // Timeline Grid
-    const timeColWidth = 35;
-    const gridX = rightColX + timeColWidth;
-    const gridWidth = columnWidth - timeColWidth;
-    const laneWidth = gridWidth / race.laneCount;
+        // Scale timeline to fit
+        const SECONDS_PER_MARKER = 15;
+        const totalMarkers = Math.ceil(durationSeconds / SECONDS_PER_MARKER) + 1;
+        const lineHeight = Math.min(18, timelineHeight / (totalMarkers + 2.5)); // Extra buffer for headers
 
-    // Draw Lane Headers
+        // Right Column Header (Reverse Text)
+        const headHeight = 16;
+        const timeColWidth = 35;
+        const gridX = rightColX + timeColWidth;
+        const gridWidth = columnWidth - timeColWidth;
+
+        doc.setFillColor(44, 62, 80);
+        doc.rect(rightColX, timelineStartY, columnWidth, headHeight, 'F');
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255);
+        doc.text('TIME', rightColX + timeColWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
+        doc.text('LAP COUNT', gridX + gridWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
+
+        // Timeline Grid
+        const laneWidth = gridWidth / race.laneCount;
+        // Draw Lane Headers
     doc.setFontSize(8);
     doc.setTextColor(100);
     for (let i = 1; i <= race.laneCount; i++) {
