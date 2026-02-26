@@ -198,12 +198,6 @@ export default function BellLapHeader() {
                   {selectedRace?.eventNumber && <span className="whitespace-nowrap">E {selectedRace.eventNumber}</span>}
                   {selectedRace?.heatNumber && <span className="text-default-300 font-normal">|</span>}
                   {selectedRace?.heatNumber && <span className="whitespace-nowrap">H {selectedRace.heatNumber}</span>}
-                  {selectedRace && <span className="text-default-300 font-normal">|</span>}
-                  {selectedRace && (
-                    <span className="text-default-500 font-normal whitespace-nowrap">
-                      {new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  )}
                 </div>
               </div>
               <div className="flex gap-1">
