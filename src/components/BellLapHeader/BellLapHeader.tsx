@@ -193,9 +193,9 @@ export default function BellLapHeader() {
                 <div className="flex flex-row items-center gap-x-2 overflow-hidden text-base sm:text-lg font-bold whitespace-nowrap" data-testid="header-race-info">
                   <span>{selectedRace ? selectedRace.event : 'Race Details'}</span>
                   {selectedRace?.eventNumber && <span className="text-default-300 font-normal">|</span>}
-                  {selectedRace?.eventNumber && <span className="whitespace-nowrap">Ev {selectedRace.eventNumber}</span>}
+                  {selectedRace?.eventNumber && <span className="whitespace-nowrap">E {selectedRace.eventNumber}</span>}
                   {selectedRace?.heatNumber && <span className="text-default-300 font-normal">|</span>}
-                  {selectedRace?.heatNumber && <span className="whitespace-nowrap">Ht {selectedRace.heatNumber}</span>}
+                  {selectedRace?.heatNumber && <span className="whitespace-nowrap">H {selectedRace.heatNumber}</span>}
                   {selectedRace && <span className="text-default-300 font-normal">|</span>}
                   {selectedRace && (
                     <span className="text-default-500 font-normal whitespace-nowrap">
@@ -233,8 +233,8 @@ export default function BellLapHeader() {
           <div className="flex flex-row items-center justify-between gap-1">
             <div className="flex flex-row items-center gap-2 flex-grow overflow-hidden">
               <span className="font-bold whitespace-nowrap text-small sm:text-medium" data-testid="header-event-name">{event}</span>
-              {eventNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-event-number">Ev {eventNumber}</span>}
-              {heatNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-heat-number">Ht {heatNumber}</span>}
+              {eventNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-event-number">E {eventNumber}</span>}
+              {heatNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-heat-number">H {heatNumber}</span>}
             </div>
 
             <div className="flex flex-row items-center gap-1">

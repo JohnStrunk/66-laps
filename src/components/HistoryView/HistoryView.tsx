@@ -57,9 +57,9 @@ export default function HistoryView() {
                       <span>{record.laneCount} Lanes</span>
                       {(record.eventNumber || record.heatNumber) && (
                         <span>
-                          {record.eventNumber && `Ev ${record.eventNumber}`}
+                          {record.eventNumber && `E ${record.eventNumber}`}
                           {record.eventNumber && record.heatNumber && ' • '}
-                          {record.heatNumber && `Ht ${record.heatNumber}`}
+                          {record.heatNumber && `H ${record.heatNumber}`}
                         </span>
                       )}
                     </div>

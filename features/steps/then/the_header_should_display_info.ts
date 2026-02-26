@@ -6,13 +6,13 @@ Then('the header should display {string}', async function (this: CustomWorld, te
   const header = this.page!.getByTestId('bell-lap-header');
   const headerText = await header.textContent();
 
-  // Handle "Event X" vs "Ev X" and "Heat Y" vs "Ht Y"
+  // Handle "Event X" vs "E X" and "Heat Y" vs "H Y"
   let match = headerText?.includes(text);
   if (!match) {
     if (text.startsWith('Event ')) {
-      match = headerText?.includes('Ev ' + text.substring(6));
+      match = headerText?.includes('E ' + text.substring(6));
     } else if (text.startsWith('Heat ')) {
-      match = headerText?.includes('Ht ' + text.substring(5));
+      match = headerText?.includes('H ' + text.substring(5));
     }
   }
 
@@ -26,9 +26,9 @@ Then('the header should not display {string}', async function (this: CustomWorld
   let match = headerText?.includes(text);
   if (!match) {
     if (text === 'Event') {
-       match = headerText?.includes('Ev ');
+       match = headerText?.includes('E ');
     } else if (text === 'Heat') {
-       match = headerText?.includes('Ht ');
+       match = headerText?.includes('H ');
     }
   }
 

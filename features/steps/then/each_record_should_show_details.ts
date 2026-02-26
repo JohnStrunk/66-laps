@@ -8,8 +8,8 @@ Then('each record should show the start time, distance, lane count, event, and h
     const text = await card.textContent() || '';
     assert.match(text, /SC|LC/, `Record should show distance, got "${text}"`);
     assert.match(text, /Lanes/, `Record should show lane count, got "${text}"`);
-    assert.match(text, /Ev/, `Record should show event number, got "${text}"`);
-    assert.match(text, /Ht/, `Record should show heat number, got "${text}"`);
+    assert.match(text, /E \d+/, `Record should show event number, got "${text}"`);
+    assert.match(text, /H \d+/, `Record should show heat number, got "${text}"`);
     assert.match(text, /\d+:\d+/, `Record should show time, got "${text}"`);
   }
 });
