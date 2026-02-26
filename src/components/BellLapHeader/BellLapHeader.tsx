@@ -191,11 +191,11 @@ export default function BellLapHeader() {
                   <ArrowLeft size={18} />
                 </Button>
                 <div className="flex flex-col overflow-hidden">
-                  <h1 className="text-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis">
+                  <h1 className="text-xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">
                     {selectedRace ? selectedRace.event : 'Race Details'}
                   </h1>
                   {selectedRace && (
-                    <div className="flex gap-2 text-[10px] sm:text-xs text-default-500 whitespace-nowrap">
+                    <div className="flex gap-2 text-sm sm:text-base text-default-500 whitespace-nowrap" data-testid="header-race-info">
                       <span>{new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       <span>{selectedRace.laneCount} Lanes</span>
                       {selectedRace.eventNumber && <span>Ev {selectedRace.eventNumber}</span>}
