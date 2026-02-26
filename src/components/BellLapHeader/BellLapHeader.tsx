@@ -190,17 +190,17 @@ export default function BellLapHeader() {
                 >
                   <ArrowLeft size={18} />
                 </Button>
-                <div className="flex flex-col overflow-hidden">
-                  <h1 className="text-xl font-bold whitespace-nowrap overflow-hidden text-ellipsis">
-                    {selectedRace ? selectedRace.event : 'Race Details'}
-                  </h1>
+                <div className="flex flex-row items-center gap-x-2 overflow-hidden text-base sm:text-lg font-bold whitespace-nowrap" data-testid="header-race-info">
+                  <span>{selectedRace ? selectedRace.event : 'Race Details'}</span>
+                  {selectedRace?.eventNumber && <span className="text-default-300 font-normal">|</span>}
+                  {selectedRace?.eventNumber && <span className="whitespace-nowrap">Ev {selectedRace.eventNumber}</span>}
+                  {selectedRace?.heatNumber && <span className="text-default-300 font-normal">|</span>}
+                  {selectedRace?.heatNumber && <span className="whitespace-nowrap">Ht {selectedRace.heatNumber}</span>}
+                  {selectedRace && <span className="text-default-300 font-normal">|</span>}
                   {selectedRace && (
-                    <div className="flex gap-2 text-sm sm:text-base text-default-500 whitespace-nowrap" data-testid="header-race-info">
-                      <span>{new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      <span>{selectedRace.laneCount} Lanes</span>
-                      {selectedRace.eventNumber && <span>Ev {selectedRace.eventNumber}</span>}
-                      {selectedRace.heatNumber && <span>Ht {selectedRace.heatNumber}</span>}
-                    </div>
+                    <span className="text-default-500 font-normal whitespace-nowrap">
+                      {new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                   )}
                 </div>
               </div>
