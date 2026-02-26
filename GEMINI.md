@@ -125,6 +125,8 @@ This document provides essential information for AI agents working on the
 
 ## Commit Workflow
 
+- **No Push/PR:** NEVER push to the remote repository or open a Pull Request
+  unless specifically instructed to do so by the user.
 - **Linting:** You MUST run `yarn lint` after editing any code or tests and
   before committing to ensure code quality and fix any warnings or errors.
 - **Sign-off:** All commits **MUST** include a sign-off
