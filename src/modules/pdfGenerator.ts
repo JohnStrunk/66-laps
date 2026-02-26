@@ -183,7 +183,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
                     // Scale timeline to fit
                     const { secondsPerMarker, lineHeight } = calculateTimelineScale(durationSeconds, timelineHeight);
 
-                    // @ts-ignore - attaching for tests
+                    // @ts-expect-error - attaching for tests
                     doc.__test_scale = { secondsPerMarker, lineHeight };
 
                     const totalMarkers = Math.ceil(durationSeconds / secondsPerMarker) + 1;
@@ -285,7 +285,7 @@ export async function downloadRacePDF(race: RaceRecord): Promise<void> {
     const doc = await generateRacePDF(race);
     const filename = getFilename(race);
     if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
-        (window as any).__lastPDFDoc = doc;
+        (window as unknown as { __lastPDFDoc: jsPDF }).__lastPDFDoc = doc;
         (window as unknown as { __lastDownloadName: string }).__lastDownloadName = filename;
         (window as unknown as { __downloadClicked: boolean }).__downloadClicked = true;
     }
@@ -297,7 +297,7 @@ export async function shareRacePDF(race: RaceRecord): Promise<void> {
     const pdfBlob = doc.output('blob');
     const fileName = getFilename(race);
     if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
-        (window as any).__lastPDFDoc = doc;
+        (window as unknown as { __lastPDFDoc: jsPDF }).__lastPDFDoc = doc;
         (window as unknown as { __lastDownloadName: string }).__lastDownloadName = fileName;
     }
     const file = new File([pdfBlob], fileName, { type: 'application/pdf' });

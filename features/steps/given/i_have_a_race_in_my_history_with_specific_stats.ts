@@ -1,6 +1,6 @@
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { TestWindow, RaceRecord } from '../../support/store-type';
+import { TestWindow, RaceRecord, LapEvent } from '../../support/store-type';
 
 Given('I have a race in my history that lasted {string}', async function (this: CustomWorld, duration: string) {
   let durationMs = 0;
@@ -54,7 +54,7 @@ Given('I have a race in my history with {string} laps', async function (this: Cu
     const startTime = now - 600000;
 
     // Generate many events
-    const events: any[] = [];
+    const events: LapEvent[] = [];
     const timestamps: number[] = [];
     for (let i = 1; i <= laps / 2; i++) {
         const ts = startTime + i * 10000;

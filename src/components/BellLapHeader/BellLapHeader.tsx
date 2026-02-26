@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
 import { downloadRacePDF, shareRacePDF } from "@/modules/pdfGenerator";
-import { ChevronDown, Moon, Sun, SunMoon, DoorOpen, ArrowLeft, Share2, Download } from "lucide-react";
+import { ChevronDown, Moon, Sun, SunMoon, ArrowLeft, Share2, Download } from "lucide-react";
 import { useMemo, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
