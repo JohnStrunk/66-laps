@@ -161,92 +161,105 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         });
         const durationSeconds = maxTime > 0 ? (maxTime - race.startTime) / 1000 : 0;
 
-        // Scale timeline to fit
-        const SECONDS_PER_MARKER = 15;
-        const totalMarkers = Math.ceil(durationSeconds / SECONDS_PER_MARKER) + 1;
-        const lineHeight = Math.min(18, timelineHeight / (totalMarkers + 2.5)); // Extra buffer for headers
+            // Scale timeline to fit
+            const MIN_LINE_HEIGHT = 8;
+            const POSSIBLE_MARKERS = [15, 30, 60, 120, 300, 600];
+            let secondsPerMarker = 15;
 
-        // Right Column Header (Reverse Text)
-        const headHeight = 16;
-        const timeColWidth = 35;
-        const gridX = rightColX + timeColWidth;
-        const gridWidth = columnWidth - timeColWidth;
+            for (const m of POSSIBLE_MARKERS) {
+                secondsPerMarker = m;
+                const markersCount = Math.ceil(durationSeconds / secondsPerMarker) + 1;
+                if (timelineHeight / (markersCount + 2.5) >= MIN_LINE_HEIGHT) {
+                    break;
+                }
+            }
 
-        doc.setFillColor(44, 62, 80);
-        doc.rect(rightColX, timelineStartY, columnWidth, headHeight, 'F');
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(255);
-        doc.text('TIME', rightColX + timeColWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
-        doc.text('LAP COUNT', gridX + gridWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
+            const totalMarkers = Math.ceil(durationSeconds / secondsPerMarker) + 1;
+            const lineHeight = Math.min(18, timelineHeight / (totalMarkers + 2.5)); // Extra buffer for headers
 
-        // Timeline Grid
-        const laneWidth = gridWidth / race.laneCount;
-        // Draw Lane Headers
-    doc.setFontSize(8);
-    doc.setTextColor(100);
-    for (let i = 1; i <= race.laneCount; i++) {
-        const lx = gridX + (i - 0.5) * laneWidth;
-        doc.text(i.toString(), lx, timelineStartY + headHeight + 10, { align: 'center' });
-    }
-    const timelineContentStartY = timelineStartY + headHeight + 20;
+            // Right Column Header (Reverse Text)
+            const headHeight = 16;
+            const timeColWidth = 35;
+            const gridX = rightColX + timeColWidth;
+            const gridWidth = columnWidth - timeColWidth;
 
-    // Draw Markers and Labels
-    for (let i = 0; i < totalMarkers; i++) {
-        const y = timelineContentStartY + i * lineHeight;
-        const seconds = i * SECONDS_PER_MARKER;
-        const minutes = Math.floor(seconds / 60);
-        const remSeconds = seconds % 60;
-        const label = `${minutes.toString().padStart(2, '0')}:${remSeconds.toString().padStart(2, '0')}`;
-        const isWholeMinute = remSeconds === 0;
-
-        if (isWholeMinute) {
-            doc.setDrawColor(180);
-            doc.setLineWidth(0.5);
-            doc.line(rightColX, y, rightColX + columnWidth, y);
-            doc.setFontSize(7);
+            doc.setFillColor(44, 62, 80);
+            doc.rect(rightColX, timelineStartY, columnWidth, headHeight, 'F');
+            doc.setFontSize(10);
             doc.setFont('helvetica', 'bold');
-            doc.setTextColor(80);
-            doc.text(label, rightColX, y, { baseline: 'middle' });
-        } else {
-            doc.setDrawColor(220);
-            doc.setLineWidth(0.3);
-            doc.line(gridX, y, gridX + gridWidth, y);
-            doc.setFontSize(6);
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(150);
-            doc.text(label, rightColX, y, { baseline: 'middle' });
-        }
-    }
+            doc.setTextColor(255);
+            doc.text('TIME', rightColX + timeColWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
+            doc.text('LAP COUNT', gridX + gridWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
 
-    // Draw Lane Vertical Dividers
-    doc.setDrawColor(230);
-    doc.setLineWidth(0.2);
-    for (let i = 0; i <= race.laneCount; i++) {
-        const lx = gridX + i * laneWidth;
-        doc.line(lx, timelineContentStartY, lx, timelineContentStartY + (totalMarkers - 1) * lineHeight);
-    }
+            // Timeline Grid
+            const laneWidth = gridWidth / race.laneCount;
 
-    // Draw Events
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0);
-    race.lanes.forEach(lane => {
-        lane.events
-            .filter(e => e.type === 'touch' || e.type === 'manual_increment')
-            .forEach(e => {
-                const elapsed = (e.timestamp - race.startTime) / 1000;
-                const y = timelineContentStartY + (elapsed / SECONDS_PER_MARKER) * lineHeight;
-                const x = gridX + (lane.laneNumber - 0.5) * laneWidth;
+            // Draw Lane Headers
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            for (let i = 1; i <= race.laneCount; i++) {
+                const lx = gridX + (i - 0.5) * laneWidth;
+                doc.text(i.toString(), lx, timelineStartY + headHeight + 10, { align: 'center' });
+            }
+            const timelineContentStartY = timelineStartY + headHeight + 20;
 
-                // Draw a small white circle background for readability
-                doc.setFillColor(255, 255, 255);
-                doc.circle(x, y, 5, 'F');
+            // Draw Markers and Labels
+            for (let i = 0; i < totalMarkers; i++) {
+                const y = timelineContentStartY + i * lineHeight;
+                const seconds = i * secondsPerMarker;
+                const minutes = Math.floor(seconds / 60);
+                const remSeconds = seconds % 60;
+                const label = `${minutes.toString().padStart(2, '0')}:${remSeconds.toString().padStart(2, '0')}`;
+                const isWholeMinute = remSeconds === 0;
 
-                // Draw just the lap number, vertically centered
-                doc.text(e.newCount.toString(), x, y, { align: 'center', baseline: 'middle' });
+                if (isWholeMinute) {
+                    doc.setDrawColor(180);
+                    doc.setLineWidth(0.5);
+                    doc.line(rightColX, y, rightColX + columnWidth, y);
+                    doc.setFontSize(7);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(80);
+                    doc.text(label, rightColX, y, { baseline: 'middle' });
+                } else {
+                    doc.setDrawColor(220);
+                    doc.setLineWidth(0.3);
+                    doc.line(gridX, y, gridX + gridWidth, y);
+                    doc.setFontSize(6);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(150);
+                    doc.text(label, rightColX, y, { baseline: 'middle' });
+                }
+            }
+
+            // Draw Lane Vertical Dividers
+            doc.setDrawColor(230);
+            doc.setLineWidth(0.2);
+            for (let i = 0; i <= race.laneCount; i++) {
+                const lx = gridX + i * laneWidth;
+                doc.line(lx, timelineContentStartY, lx, timelineContentStartY + (totalMarkers - 1) * lineHeight);
+            }
+
+            // Draw Events
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0);
+            race.lanes.forEach(lane => {
+                lane.events
+                    .filter(e => e.type === 'touch' || e.type === 'manual_increment')
+                    .forEach(e => {
+                        const elapsed = (e.timestamp - race.startTime) / 1000;
+                        const y = timelineContentStartY + (elapsed / secondsPerMarker) * lineHeight;
+                        const x = gridX + (lane.laneNumber - 0.5) * laneWidth;
+
+                        // Draw a small white circle background for readability
+                        doc.setFillColor(255, 255, 255);
+                        doc.circle(x, y, 5, 'F');
+
+                        // Draw just the lap number, vertically centered
+                        doc.text(e.newCount.toString(), x, y, { align: 'center', baseline: 'middle' });
+                    });
             });
-    });
+
 
     // --- Footer ---
     doc.setFontSize(9);

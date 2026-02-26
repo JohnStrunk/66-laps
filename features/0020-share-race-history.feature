@@ -39,3 +39,15 @@ Feature: Share Race History
     When I navigate to the "History" screen
     And I click the "share" button for the first race record
     Then a PDF file should be generated and downloaded as a fallback
+
+  Scenario: Download PDF for a 1-hour race
+    Given I have a race in my history that lasted "1 hour"
+    When I navigate to the "History" screen
+    And I click the "download" button for the first race record
+    Then a PDF file should be generated and downloaded
+
+  Scenario: Download PDF for a 66-lap race
+    Given I have a race in my history with "66" laps
+    When I navigate to the "History" screen
+    And I click the "download" button for the first race record
+    Then a PDF file should be generated and downloaded
