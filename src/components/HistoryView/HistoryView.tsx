@@ -49,7 +49,7 @@ export default function HistoryView() {
                       <span className="font-bold text-xl sm:text-2xl">{record.event}</span>
                       <span className="text-base sm:text-lg text-default-500">
                         {new Date(record.startTime).toLocaleString(undefined, {
-                          month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+                          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
                         })}
                       </span>
                     </div>
