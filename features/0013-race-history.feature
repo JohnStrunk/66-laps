@@ -46,3 +46,11 @@ Feature: Race History Recording and Viewing
     When I complete a new race
     Then the history should still only contain 50 races
     And the oldest race should have been removed
+
+  Scenario: Race info font size is accessible
+    Given the app is loaded
+    And I have completed several races
+    When I navigate to the "History" screen
+    Then the race info font size should be at least 14px
+    When I click on the first race record
+    Then the race info font size should be at least 14px

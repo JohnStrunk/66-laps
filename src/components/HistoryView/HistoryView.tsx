@@ -46,20 +46,20 @@ export default function HistoryView() {
                 <CardBody className="flex flex-row items-center justify-between p-3 sm:p-4">
                   <div className="flex flex-col gap-1">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-bold text-lg">{record.event}</span>
-                      <span className="text-small text-default-500">
+                      <span className="font-bold text-xl sm:text-2xl">{record.event}</span>
+                      <span className="text-base sm:text-lg text-default-500">
                         {new Date(record.startTime).toLocaleString(undefined, {
                           month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
                         })}
                       </span>
                     </div>
-                    <div className="flex gap-3 text-small text-default-500">
+                    <div className="flex gap-3 text-base sm:text-lg text-default-500" data-testid="history-record-info">
                       <span>{record.laneCount} Lanes</span>
                       {(record.eventNumber || record.heatNumber) && (
                         <span>
-                          {record.eventNumber && `Ev ${record.eventNumber}`}
+                          {record.eventNumber && `E ${record.eventNumber}`}
                           {record.eventNumber && record.heatNumber && ' • '}
-                          {record.heatNumber && `Ht ${record.heatNumber}`}
+                          {record.heatNumber && `H ${record.heatNumber}`}
                         </span>
                       )}
                     </div>

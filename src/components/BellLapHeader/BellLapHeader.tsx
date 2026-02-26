@@ -190,17 +190,17 @@ export default function BellLapHeader() {
                 >
                   <ArrowLeft size={18} />
                 </Button>
-                <div className="flex flex-col overflow-hidden">
-                  <h1 className="text-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis">
-                    {selectedRace ? selectedRace.event : 'Race Details'}
-                  </h1>
+                <div className="flex flex-row items-center gap-x-2 overflow-hidden text-base sm:text-lg font-bold whitespace-nowrap" data-testid="header-race-info">
+                  <span>{selectedRace ? selectedRace.event : 'Race Details'}</span>
+                  {selectedRace?.eventNumber && <span className="text-default-300 font-normal">|</span>}
+                  {selectedRace?.eventNumber && <span className="whitespace-nowrap">E {selectedRace.eventNumber}</span>}
+                  {selectedRace?.heatNumber && <span className="text-default-300 font-normal">|</span>}
+                  {selectedRace?.heatNumber && <span className="whitespace-nowrap">H {selectedRace.heatNumber}</span>}
+                  {selectedRace && <span className="text-default-300 font-normal">|</span>}
                   {selectedRace && (
-                    <div className="flex gap-2 text-[10px] sm:text-xs text-default-500 whitespace-nowrap">
-                      <span>{new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      <span>{selectedRace.laneCount} Lanes</span>
-                      {selectedRace.eventNumber && <span>Ev {selectedRace.eventNumber}</span>}
-                      {selectedRace.heatNumber && <span>Ht {selectedRace.heatNumber}</span>}
-                    </div>
+                    <span className="text-default-500 font-normal whitespace-nowrap">
+                      {new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                   )}
                 </div>
               </div>
@@ -233,8 +233,8 @@ export default function BellLapHeader() {
           <div className="flex flex-row items-center justify-between gap-1">
             <div className="flex flex-row items-center gap-2 flex-grow overflow-hidden">
               <span className="font-bold whitespace-nowrap text-small sm:text-medium" data-testid="header-event-name">{event}</span>
-              {eventNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-event-number">Ev {eventNumber}</span>}
-              {heatNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-heat-number">Ht {heatNumber}</span>}
+              {eventNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-event-number">E {eventNumber}</span>}
+              {heatNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-heat-number">H {heatNumber}</span>}
             </div>
 
             <div className="flex flex-row items-center gap-1">
