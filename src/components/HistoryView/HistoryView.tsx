@@ -1,8 +1,9 @@
 'use client';
 
 import { useBellLapStore, RaceRecord } from "@/modules/bellLapStore";
-import { Card, CardBody, ScrollShadow } from "@heroui/react";
-import { History } from "lucide-react";
+import { downloadRacePDF, shareRacePDF } from "@/modules/pdfGenerator";
+import { Button, Card, CardBody, ScrollShadow, Tooltip } from "@heroui/react";
+import { History, Share2, Download } from "lucide-react";
 import { useSyncExternalStore } from "react";
 
 const subscribe = () => () => {};
@@ -19,6 +20,16 @@ export default function HistoryView() {
   const handleRecordClick = (id: string) => {
     setSelectedRaceId(id);
     setView('race-details');
+  };
+
+  const handleDownload = async (e: React.MouseEvent, record: RaceRecord) => {
+    e.stopPropagation();
+    await downloadRacePDF(record);
+  };
+
+  const handleShare = async (e: React.MouseEvent, record: RaceRecord) => {
+    e.stopPropagation();
+    await shareRacePDF(record);
   };
 
   if (!mounted) {
@@ -39,12 +50,15 @@ export default function HistoryView() {
               <Card
                 key={record.id}
                 className="w-full"
-                isPressable
-                onPress={() => handleRecordClick(record.id)}
                 data-testid="history-record"
               >
-                <CardBody className="flex flex-row items-center justify-between p-3 sm:p-4">
-                  <div className="flex flex-col gap-1">
+                <CardBody className="flex flex-row items-center justify-between p-0">
+                  <div
+                    className="flex-1 flex flex-col gap-1 p-3 sm:p-4 cursor-pointer hover:bg-default-100 transition-colors"
+                    onClick={() => handleRecordClick(record.id)}
+                    role="button"
+                    tabIndex={0}
+                  >
                     <div className="flex items-baseline gap-2">
                       <span className="font-bold text-xl sm:text-2xl">{record.event}</span>
                       <span className="text-base sm:text-lg text-default-500">
@@ -63,6 +77,38 @@ export default function HistoryView() {
                         </span>
                       )}
                     </div>
+                  </div>
+                  <div className="flex gap-2 pr-3 sm:pr-4">
+                    <Tooltip content="Share PDF">
+                      <Button
+                        isIconOnly
+                        variant="light"
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            void handleShare(e as unknown as React.MouseEvent, record);
+                        }}
+                        aria-label="Share"
+                        data-testid="share-history-button"
+                      >
+                        <Share2 size={20} />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="Download PDF">
+                      <Button
+                        isIconOnly
+                        variant="light"
+                        size="sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            void handleDownload(e as unknown as React.MouseEvent, record);
+                        }}
+                        aria-label="Download"
+                        data-testid="download-history-button"
+                      >
+                        <Download size={20} />
+                      </Button>
+                    </Tooltip>
                   </div>
                 </CardBody>
               </Card>

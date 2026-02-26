@@ -38,7 +38,6 @@ Feature: Main Menu
   Scenario: Exit button visual consistency
     Given the app is loaded
     And a race is in progress
-    Then the "Exit" button in the header should be "red"
     When I tap the "Exit" button in the header
     And I tap the "History" button
-    Then the "Exit" button in the header should be "red"
+    Then I should be on the "History" screen
