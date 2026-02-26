@@ -199,7 +199,7 @@ export default function BellLapHeader() {
                   {selectedRace && <span className="text-default-300 font-normal">|</span>}
                   {selectedRace && (
                     <span className="text-default-500 font-normal whitespace-nowrap">
-                      {new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+                      {new Date(selectedRace.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   )}
                 </div>
