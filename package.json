@@ -23,6 +23,8 @@
     "@heroui/react": "2.8.9",
     "@pixi/react": "8.0.5",
     "@sentry/nextjs": "10.39.0",
+    "jspdf": "4.2.0",
+    "jspdf-autotable": "5.0.7",
     "lucide-react": "0.575.0",
     "motion": "12.34.3",
     "next": "16.1.6",

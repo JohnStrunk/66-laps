@@ -30,6 +30,11 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
     viewport: { width: 1280, height: 800 } // Large enough to not trigger fullscreen
   });
   this.page = await this.context.newPage();
+  this.page.on('console', msg => {
+    if (msg.type() === 'error' || msg.type() === 'warning' || msg.type() === 'log') {
+        console.log(`[BROWSER ${msg.type().toUpperCase()}] ${msg.text()}`);
+    }
+  });
   await this.page.clock.install();
 
   // Start coverage collection

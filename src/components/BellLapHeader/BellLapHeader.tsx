@@ -8,9 +8,11 @@ import {
   DropdownItem,
   Card,
   CardBody,
+  Tooltip,
 } from "@heroui/react";
 import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
-import { ChevronDown, Moon, Sun, SunMoon, DoorOpen, ArrowLeft } from "lucide-react";
+import { downloadRacePDF, shareRacePDF } from "@/modules/pdfGenerator";
+import { ChevronDown, Moon, Sun, SunMoon, DoorOpen, ArrowLeft, Share2, Download } from "lucide-react";
 import { useMemo, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
@@ -204,16 +206,46 @@ export default function BellLapHeader() {
                   )}
                 </div>
               </div>
-              <Button
-                isIconOnly
-                variant="flat"
-                size="sm"
-                onPress={toggleTheme}
-                aria-label="Toggle light/dark mode"
-                data-testid="theme-toggle"
-              >
-                {renderThemeIcon()}
-              </Button>
+              <div className="flex gap-1">
+                {selectedRace && (
+                  <>
+                    <Tooltip content="Share PDF">
+                      <Button
+                        isIconOnly
+                        variant="flat"
+                        size="sm"
+                        onPress={() => shareRacePDF(selectedRace)}
+                        aria-label="Share"
+                        data-testid="share-history-button"
+                      >
+                        <Share2 size={18} />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip content="Download PDF">
+                      <Button
+                        isIconOnly
+                        variant="flat"
+                        size="sm"
+                        onPress={() => downloadRacePDF(selectedRace)}
+                        aria-label="Download"
+                        data-testid="download-history-button"
+                      >
+                        <Download size={18} />
+                      </Button>
+                    </Tooltip>
+                  </>
+                )}
+                <Button
+                  isIconOnly
+                  variant="flat"
+                  size="sm"
+                  onPress={toggleTheme}
+                  aria-label="Toggle light/dark mode"
+                  data-testid="theme-toggle"
+                >
+                  {renderThemeIcon()}
+                </Button>
+              </div>
             </div>
           </CardBody>
         </Card>
