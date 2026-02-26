@@ -141,30 +141,29 @@ export default function BellLapHeader() {
       >
         <Card className="shadow-md bg-content1">
           <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
-            <h1 className="text-xl font-bold px-2">Race History</h1>
-            <div className="flex gap-1">
+            <div className="flex items-center gap-2">
               <Button
                 isIconOnly
-                color="danger"
                 variant="flat"
                 size="sm"
                 onPress={handleExit}
-                aria-label="Exit to Main Menu"
+                aria-label="Back to Main Menu"
                 data-testid="exit-history-button"
               >
-                <DoorOpen size={18} />
+                <ArrowLeft size={18} />
               </Button>
-              <Button
-                isIconOnly
-                variant="flat"
-                size="sm"
-                onPress={toggleTheme}
-                aria-label="Toggle light/dark mode"
-                data-testid="theme-toggle"
-              >
-                {renderThemeIcon()}
-              </Button>
+              <h1 className="text-xl font-bold px-2">Race History</h1>
             </div>
+            <Button
+              isIconOnly
+              variant="flat"
+              size="sm"
+              onPress={toggleTheme}
+              aria-label="Toggle light/dark mode"
+              data-testid="theme-toggle"
+            >
+              {renderThemeIcon()}
+            </Button>
           </CardBody>
         </Card>
       </header>
@@ -258,6 +257,16 @@ export default function BellLapHeader() {
           {/* Row 1: Race Info & Controls */}
           <div className="flex flex-row items-center justify-between gap-1">
             <div className="flex flex-row items-center gap-2 flex-grow overflow-hidden">
+              <Button
+                isIconOnly
+                variant="flat"
+                size="sm"
+                onPress={handleExit}
+                aria-label="Back to Main Menu"
+                data-testid="exit-button"
+              >
+                <ArrowLeft size={18} />
+              </Button>
               <span className="font-bold whitespace-nowrap text-small sm:text-medium" data-testid="header-event-name">{event}</span>
               {eventNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-event-number">E {eventNumber}</span>}
               {heatNumber && <span className="text-xs sm:text-sm text-foreground/70 whitespace-nowrap" data-testid="header-heat-number">H {heatNumber}</span>}
@@ -280,18 +289,6 @@ export default function BellLapHeader() {
                   <DropdownItem key="bottom-to-top">{`${safeLaneCount} - 1`}</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-
-              <Button
-                isIconOnly
-                color="danger"
-                variant="flat"
-                size="sm"
-                onPress={handleExit}
-                aria-label="Exit to Main Menu"
-                data-testid="exit-button"
-              >
-                <DoorOpen size={18} />
-              </Button>
 
               <Button
                 isIconOnly
