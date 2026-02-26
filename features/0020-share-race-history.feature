@@ -45,9 +45,12 @@ Feature: Share Race History
     When I navigate to the "History" screen
     And I click the "download" button for the first race record
     Then a PDF file should be generated and downloaded
+    And the PDF should have exactly 1 page
+    And the PDF timeline should use 60 second markers
 
   Scenario: Download PDF for a 66-lap race
     Given I have a race in my history with "66" laps
     When I navigate to the "History" screen
     And I click the "download" button for the first race record
     Then a PDF file should be generated and downloaded
+    And the PDF should have exactly 1 page

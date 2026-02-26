@@ -64,6 +64,25 @@ function getFilename(race: RaceRecord): string {
     return `${filename}.pdf`;
 }
 
+export function calculateTimelineScale(durationSeconds: number, availableHeight: number): { secondsPerMarker: number, lineHeight: number } {
+    const MIN_LINE_HEIGHT = 8;
+    const POSSIBLE_MARKERS = [15, 30, 60, 120, 300, 600];
+    let secondsPerMarker = 15;
+
+    for (const m of POSSIBLE_MARKERS) {
+        secondsPerMarker = m;
+        const markersCount = Math.ceil(durationSeconds / secondsPerMarker) + 1;
+        if (availableHeight / (markersCount + 2.5) >= MIN_LINE_HEIGHT) {
+            break;
+        }
+    }
+
+    const markersCount = Math.ceil(durationSeconds / secondsPerMarker) + 1;
+    const lineHeight = Math.min(18, availableHeight / (markersCount + 2.5));
+
+    return { secondsPerMarker, lineHeight };
+}
+
 export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
     const doc = new jsPDF({
         orientation: 'portrait',
@@ -161,23 +180,15 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         });
         const durationSeconds = maxTime > 0 ? (maxTime - race.startTime) / 1000 : 0;
 
-            // Scale timeline to fit
-            const MIN_LINE_HEIGHT = 8;
-            const POSSIBLE_MARKERS = [15, 30, 60, 120, 300, 600];
-            let secondsPerMarker = 15;
+                    // Scale timeline to fit
+                    const { secondsPerMarker, lineHeight } = calculateTimelineScale(durationSeconds, timelineHeight);
 
-            for (const m of POSSIBLE_MARKERS) {
-                secondsPerMarker = m;
-                const markersCount = Math.ceil(durationSeconds / secondsPerMarker) + 1;
-                if (timelineHeight / (markersCount + 2.5) >= MIN_LINE_HEIGHT) {
-                    break;
-                }
-            }
+                    // @ts-ignore - attaching for tests
+                    doc.__test_scale = { secondsPerMarker, lineHeight };
 
-            const totalMarkers = Math.ceil(durationSeconds / secondsPerMarker) + 1;
-            const lineHeight = Math.min(18, timelineHeight / (totalMarkers + 2.5)); // Extra buffer for headers
+                    const totalMarkers = Math.ceil(durationSeconds / secondsPerMarker) + 1;
+                                // Right Column Header (Reverse Text)
 
-            // Right Column Header (Reverse Text)
             const headHeight = 16;
             const timeColWidth = 35;
             const gridX = rightColX + timeColWidth;
@@ -274,6 +285,7 @@ export async function downloadRacePDF(race: RaceRecord): Promise<void> {
     const doc = await generateRacePDF(race);
     const filename = getFilename(race);
     if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
+        (window as any).__lastPDFDoc = doc;
         (window as unknown as { __lastDownloadName: string }).__lastDownloadName = filename;
         (window as unknown as { __downloadClicked: boolean }).__downloadClicked = true;
     }
@@ -285,6 +297,7 @@ export async function shareRacePDF(race: RaceRecord): Promise<void> {
     const pdfBlob = doc.output('blob');
     const fileName = getFilename(race);
     if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
+        (window as any).__lastPDFDoc = doc;
         (window as unknown as { __lastDownloadName: string }).__lastDownloadName = fileName;
     }
     const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
