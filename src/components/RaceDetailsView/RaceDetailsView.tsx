@@ -12,6 +12,7 @@ import {
   TableCell
 } from "@heroui/react";
 import { useMemo, useSyncExternalStore } from "react";
+import { TimelineView } from "./TimelineView";
 
 const subscribe = () => () => {};
 
@@ -81,7 +82,7 @@ export default function RaceDetailsView() {
         }}
         fullWidth
       >
-        <Tab key="lap-oof" title="Lap OOF" className="h-full flex flex-col min-h-0">
+        <Tab key="lap-oof" title="OOF by Lap" className="h-full flex flex-col min-h-0">
                               <Table
                                 aria-label="Lap Order of Finish"
                                 isHeaderSticky
@@ -118,6 +119,9 @@ export default function RaceDetailsView() {
                                                         </TableBody>
                                                                           </Table>
                             </Tab>
+        <Tab key="timeline" title="Laps by time" className="h-full flex flex-col min-h-0">
+          <TimelineView race={race} />
+        </Tab>
       </Tabs>
     </div>
   );

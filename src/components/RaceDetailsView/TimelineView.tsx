@@ -1,0 +1,135 @@
+'use client';
+
+import { RaceRecord } from "@/modules/bellLapStore";
+import { useMemo } from "react";
+
+interface TimelineViewProps {
+  race: RaceRecord;
+}
+
+const SECONDS_PER_LINE = 15;
+const LINE_HEIGHT = 24; // pixels per 15s
+
+export function TimelineView({ race }: TimelineViewProps) {
+  const duration = useMemo(() => {
+    let maxTime = 0;
+    race.lanes.forEach(lane => {
+      lane.events.forEach(event => {
+        if (event.timestamp > maxTime) maxTime = event.timestamp;
+      });
+    });
+
+    if (maxTime === 0) return 0;
+    return (maxTime - race.startTime) / 1000;
+  }, [race]);
+
+  // Generate markers every 15s
+  const markers = useMemo(() => {
+    const m = [];
+    const totalLines = Math.ceil(duration / SECONDS_PER_LINE) + 2; // Extra buffer
+    for (let i = 0; i <= totalLines; i++) {
+      const seconds = i * SECONDS_PER_LINE;
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      const label = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      const isWholeMinute = remainingSeconds === 0;
+
+      m.push({
+        label,
+        isWholeMinute,
+        top: i * LINE_HEIGHT
+      });
+    }
+    return m;
+  }, [duration]);
+
+  const laneEvents = useMemo(() => {
+    return race.lanes.map(lane => {
+      return lane.events
+        .filter(e => e.type === 'touch' || e.type === 'manual_increment')
+        .map(e => ({
+          lap: e.newCount,
+          top: ((e.timestamp - race.startTime) / 1000 / SECONDS_PER_LINE) * LINE_HEIGHT,
+          laneNumber: lane.laneNumber
+        }));
+    }).flat();
+  }, [race]);
+
+  const laneNumbers = useMemo(() => {
+    return Array.from({ length: race.laneCount }, (_, i) => i + 1);
+  }, [race.laneCount]);
+
+  const gridTemplateColumns = `3rem repeat(${race.laneCount}, 1fr)`;
+
+  return (
+    <div className="flex flex-col h-full w-full overflow-hidden relative border rounded-md border-default-100" data-testid="timeline-view">
+      {/* Scrollable Area */}
+      <div className="flex-1 overflow-auto relative">
+        <div className="min-w-fit" style={{ display: 'grid', gridTemplateColumns }}>
+          {/* Top-Left Corner (Sticky) */}
+          <div className="sticky top-0 left-0 z-40 bg-default-50 border-b border-r border-default-200 h-8 w-12 shrink-0" />
+
+          {/* Lane Headers (Sticky Top) */}
+          {laneNumbers.map(n => (
+            <div
+              key={n}
+              className="sticky top-0 z-30 bg-default-50 border-b border-r border-default-100 last:border-r-0 h-8 flex items-center justify-center text-xs font-bold text-default-500"
+              data-testid={`lane-header-${n}`}
+            >
+              {n}
+            </div>
+          ))}
+
+          {/* Time Column (Sticky Left) */}
+          <div className="sticky left-0 z-20 bg-default-50/90 border-r border-default-200 h-full w-12 shrink-0">
+            <div className="relative" style={{ height: (markers.length * LINE_HEIGHT) }}>
+              {markers.map((m, i) => (
+                <div
+                  key={i}
+                  className="absolute left-0 w-full flex items-center justify-center text-[10px] text-default-400"
+                  style={{ top: m.top, height: LINE_HEIGHT }}
+                >
+                  {m.isWholeMinute ? (
+                    <div className="w-full flex items-center justify-center relative h-full">
+                      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-default-400" />
+                      <span className="relative font-bold text-default-600 bg-default-50 px-1 z-10" data-testid={`time-label-${m.label}`}>{m.label}</span>
+                    </div>
+                  ) : (
+                    <div className="w-full h-[1px] bg-default-300" data-testid={`time-marker-${m.label}`} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Grid and Events Area */}
+          <div className="relative col-span-full col-start-2" style={{ height: (markers.length * LINE_HEIGHT) }}>
+            {/* Vertical Lane Dividers */}
+            {laneNumbers.slice(0, -1).map(n => (
+              <div
+                key={n}
+                className="absolute h-full border-r border-default-100 pointer-events-none"
+                style={{ left: `${(n / race.laneCount) * 100}%` }}
+              />
+            ))}
+
+            {/* Lap Counts */}
+            {laneEvents.map((ev, i) => (
+              <div
+                key={i}
+                className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center font-bold text-sm bg-background/80 rounded px-1 min-w-[1.2rem]"
+                style={{
+                  top: ev.top + (LINE_HEIGHT / 2),
+                  left: `${((ev.laneNumber - 0.5) / race.laneCount) * 100}%`
+                }}
+                data-testid={`lap-count-${ev.laneNumber}-${ev.lap}`}
+              >
+                {ev.lap}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

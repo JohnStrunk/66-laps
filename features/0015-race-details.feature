@@ -14,7 +14,7 @@ Feature: Race Details
     And I am on the "History" screen
     When I click on the first race record
     Then I should see the race details screen
-    And the "Lap OOF" tab should be active
+    And the "OOF by Lap" tab should be active
     And for lap 2, the order of finish should be "2, 1"
 
   @browser
