@@ -81,7 +81,7 @@ export default function RaceDetailsView() {
         }}
         fullWidth
       >
-        <Tab key="lap-oof" title="Lap OOF" className="h-full flex flex-col min-h-0">
+        <Tab key="lap-oof" title="OOF by Lap" className="h-full flex flex-col min-h-0">
                               <Table
                                 aria-label="Lap Order of Finish"
                                 isHeaderSticky
