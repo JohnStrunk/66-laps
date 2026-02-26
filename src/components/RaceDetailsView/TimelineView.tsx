@@ -59,43 +59,51 @@ export function TimelineView({ race }: TimelineViewProps) {
     return Array.from({ length: race.laneCount }, (_, i) => i + 1);
   }, [race.laneCount]);
 
+  const gridTemplateColumns = `3rem repeat(${race.laneCount}, 1fr)`;
+
   return (
     <div className="flex flex-col h-full w-full overflow-hidden relative border rounded-md border-default-100" data-testid="timeline-view">
-      {/* Header */}
-      <div className="flex shrink-0 border-b border-default-200 bg-default-50 sticky top-0 z-20">
-        <div className="w-12 shrink-0 border-r border-default-200" />
-        {laneNumbers.map(n => (
-          <div key={n} className="flex-1 text-center py-1 text-xs font-bold text-default-500 border-r border-default-100 last:border-r-0" data-testid={`lane-header-${n}`}>
-            {n}
-          </div>
-        ))}
-      </div>
-
       {/* Scrollable Area */}
-      <div className="flex-1 overflow-y-auto relative">
-        <div className="flex relative" style={{ height: (markers.length * LINE_HEIGHT) }}>
-          {/* Time Column */}
-          <div className="w-12 shrink-0 border-r border-default-200 bg-default-50/50 sticky left-0 z-10">
-            {markers.map((m, i) => (
-              <div
-                key={i}
-                className="absolute left-0 w-full flex items-center justify-center text-[10px] text-default-400"
-                style={{ top: m.top, height: LINE_HEIGHT }}
-              >
-                {m.isWholeMinute ? (
-                  <div className="w-full flex items-center justify-center relative h-full">
-                    <div className="absolute top-1/2 left-0 w-full h-[1px] bg-default-400" />
-                    <span className="relative font-bold text-default-600 bg-default-50 px-1 z-10" data-testid={`time-label-${m.label}`}>{m.label}</span>
-                  </div>
-                ) : (
-                  <div className="w-full h-[1px] bg-default-300" data-testid={`time-marker-${m.label}`} />
-                )}
-              </div>
-            ))}
+      <div className="flex-1 overflow-auto relative">
+        <div className="min-w-fit" style={{ display: 'grid', gridTemplateColumns }}>
+          {/* Top-Left Corner (Sticky) */}
+          <div className="sticky top-0 left-0 z-40 bg-default-50 border-b border-r border-default-200 h-8 w-12 shrink-0" />
+
+          {/* Lane Headers (Sticky Top) */}
+          {laneNumbers.map(n => (
+            <div
+              key={n}
+              className="sticky top-0 z-30 bg-default-50 border-b border-r border-default-100 last:border-r-0 h-8 flex items-center justify-center text-xs font-bold text-default-500"
+              data-testid={`lane-header-${n}`}
+            >
+              {n}
+            </div>
+          ))}
+
+          {/* Time Column (Sticky Left) */}
+          <div className="sticky left-0 z-20 bg-default-50/90 border-r border-default-200 h-full w-12 shrink-0">
+            <div className="relative" style={{ height: (markers.length * LINE_HEIGHT) }}>
+              {markers.map((m, i) => (
+                <div
+                  key={i}
+                  className="absolute left-0 w-full flex items-center justify-center text-[10px] text-default-400"
+                  style={{ top: m.top, height: LINE_HEIGHT }}
+                >
+                  {m.isWholeMinute ? (
+                    <div className="w-full flex items-center justify-center relative h-full">
+                      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-default-400" />
+                      <span className="relative font-bold text-default-600 bg-default-50 px-1 z-10" data-testid={`time-label-${m.label}`}>{m.label}</span>
+                    </div>
+                  ) : (
+                    <div className="w-full h-[1px] bg-default-300" data-testid={`time-marker-${m.label}`} />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Grid and Events */}
-          <div className="flex-1 relative">
+          {/* Grid and Events Area */}
+          <div className="relative col-span-full col-start-2" style={{ height: (markers.length * LINE_HEIGHT) }}>
             {/* Vertical Lane Dividers */}
             {laneNumbers.slice(0, -1).map(n => (
               <div
