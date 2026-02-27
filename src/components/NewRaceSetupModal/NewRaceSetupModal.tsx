@@ -28,7 +28,7 @@ export default function NewRaceSetupModal() {
     >
       <ModalContent>
         {(onClose) => (
-          isSetupDialogOpen ? <NewRaceSetupModalContent onClose={onClose} /> : null
+          <NewRaceSetupModalContent key={isSetupDialogOpen ? 'open' : 'closed'} onClose={onClose} />
         )}
       </ModalContent>
     </Modal>
