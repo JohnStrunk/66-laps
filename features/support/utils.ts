@@ -57,35 +57,37 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
   await trigger.waitFor({ state: 'visible' });
 
-  // Click trigger, with retry if popover doesn't appear
+  // Define the item locator with a visibility filter to avoid old popovers
+  const itemLocator = page.locator('[role="menu"], [role="listbox"], .heroui-popover')
+    .locator('button, li, [role="menuitem"], [role="option"], .heroui-listbox-item')
+    .getByText(itemText, { exact: false })
+    .filter({ visible: true });
+
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
+      // Click the trigger to open the dropdown
       await trigger.click({ force: true });
-      // Wait for animation or popover
-      await page.waitForTimeout(500);
+
+      // Wait for the item to be visible and ready for interaction
+      await itemLocator.first().waitFor({ state: 'visible', timeout: 3000 });
+
+      // Click the item
+      await itemLocator.first().click({ force: true });
+
+      // Wait for the dropdown to close (item becomes hidden)
+      await itemLocator.first().waitFor({ state: 'hidden', timeout: 3000 });
+
+      // Brief wait for any state transitions to settle
+      await page.waitForTimeout(200);
+      return; // Success
     } catch (e) {
-      if (attempt === 3) throw e;
-      continue;
-    }
+      if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);
 
-    const popover = page.locator('[role="menu"], [role="listbox"], .heroui-popover').filter({
-      has: page.locator('button, li, [role="menuitem"], [role="option"], .heroui-listbox-item').getByText(itemText, { exact: false })
-    }).last();
-
-    if (await popover.isVisible()) {
-      const item = popover.locator('button, li, [role="menuitem"], [role="option"], .heroui-listbox-item').getByText(itemText, { exact: false });
-      await item.click({ force: true });
-      break; // Success
-    } else {
-      // Click elsewhere to close any stuck popover and try again
+      // Try to reset by clicking elsewhere and waiting
       await page.mouse.click(0, 0);
       await page.waitForTimeout(500);
-      if (attempt === 3) throw new Error(`Could not find popover for ${itemText}`);
     }
   }
-
-  // Brief wait for any state transitions
-  await page.waitForTimeout(300);
 };
 
 export const getStoreState = async (page: Page): Promise<BellLapState> => {

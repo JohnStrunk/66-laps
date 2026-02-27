@@ -2,7 +2,7 @@
 
 import { Button, Card, CardBody } from "@heroui/react";
 import { Minus, Plus } from "lucide-react";
-import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
+import { useBellLapStore, EVENT_CONFIGS, getLaneStatus } from "@/modules/bellLapStore";
 import { useRef } from "react";
 
 interface LaneRowProps {
@@ -21,23 +21,11 @@ export default function LaneRow({
 
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const config = EVENT_CONFIGS[event];
-  const lastTouch = lane?.history[lane.history.length - 1] || 0;
-  const lockoutMs = config.lockout * 1000;
-  const elapsed = now - lastTouch;
-  const isFinished = !!lane && lane.count >= config.laps;
-  const isLocked = !!lane && !lane.isEmpty && elapsed < lockoutMs && !isFinished;
-  const progress = isLocked ? (elapsed / lockoutMs) * 100 : 0;
-
-  const isRedSquare = lane?.count === config.laps - 2;
-  const isBellLap = lane?.count === config.laps - 4;
-
-  let symbol = "";
-  if (isFinished) symbol = "🏁";
-  else if (isRedSquare) symbol = "🟥";
-  else if (isBellLap) symbol = "🔔";
+  const { isFinished, isLocked, progress, symbol } = getLaneStatus(lane, event, now);
 
   if (!lane) return null;
+
+  const config = EVENT_CONFIGS[event];
 
   const handleTouchStart = () => {
     longPressTimer.current = setTimeout(() => {

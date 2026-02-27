@@ -91,12 +91,20 @@ This document provides essential information for AI agents working on the
 
 - **State Management (Zustand):**
   - The `bellLapStore` is the source of truth for race state.
+  - **Store Slicing:** To maintain scalability, the store is divided into
+    logical slices (e.g., `race`, `history`, `ui`).
   - It uses the `persist` middleware to save race data (lanes, counts, history)
     to `localStorage`.
   - UI-only state (like dialog visibility) is excluded from persistence.
   - **Hydration Safety:** When using the store in Next.js components, use
     `useSyncExternalStore` or ensure components only render store-dependent
     data after mounting to avoid SSR mismatches.
+- **Logic & UI Separation:**
+  - **Business Logic in Store:** Core logic (e.g., determining lockout status,
+    lap symbols, or race completion) should reside in the Zustand store or
+    specialized selectors, not within UI components.
+  - **Representational Components:** Components like `LaneRow` should focus on
+    rendering state and delegating actions to the store.
 - **Simulation Model (`SwimmerModel`):**
   - Encapsulates the logic for calculating a swimmer's position based on lap
     times and elapsed time.
