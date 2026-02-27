@@ -17,11 +17,22 @@ When('I tap the {string} setup button', async function (this: CustomWorld, butto
   const btn = this.page!.locator(selector);
   await btn.waitFor({ state: 'visible', timeout: 5000 });
 
-  await btn.click({ force: true });
+  // Ensure the button is fully interactive
+  for (let i = 0; i < 5; i++) {
+    if (await btn.isEnabled()) break;
+    await advanceClock(this.page!, 200);
+  }
 
-  // Wait for potential modal close animation to finish
-  await advanceClock(this.page!, 500);
+  await btn.click();
 
-  // The setup modal has a data-testid or role="dialog"
-  await this.page!.locator('[role="dialog"], [data-testid="new-race-setup-dialog"]').waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+  // Wait for the modal close animation to finish.
+  // We use multiple small ticks to help Framer Motion animations settle if the clock is mocked.
+  const dialog = this.page!.locator('[role="dialog"], [data-testid="new-race-setup-dialog"]');
+  for (let i = 0; i < 20; i++) {
+    if (await dialog.count() === 0 || !(await dialog.first().isVisible())) break;
+    await advanceClock(this.page!, 200);
+  }
+
+  // Final wait for it to be fully hidden
+  await dialog.first().waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
 });
