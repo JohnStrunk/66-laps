@@ -14,21 +14,29 @@ export const getColorClass = (className: string | null): string | null => {
   ) || null;
 };
 
+export const advanceClock = async (page: Page, ms: number) => {
+  try {
+    await page.clock.fastForward(ms);
+  } catch {
+    await page.waitForTimeout(ms);
+  }
+};
+
 export const longPress = async (locator: Locator) => {
   // Wait for the element to be visible and stable
   await locator.first().waitFor({ state: 'visible' });
 
-  // Try to scroll into view, but don't fail if it detaches - we will retry getting bounding box
+  // Try to scroll into view
   try {
     await locator.first().scrollIntoViewIfNeeded();
   } catch {
-    // Ignore detachment here, we'll handle it below
+    // Ignore detachment
   }
 
   let box = await locator.first().boundingBox();
   if (!box) {
     // If it's gone, it might have re-rendered. Wait and try again once.
-    await new Promise(r => setTimeout(r, 200));
+    await advanceClock(locator.page(), 200);
     await locator.first().waitFor({ state: 'visible' });
     box = await locator.first().boundingBox();
   }
@@ -43,67 +51,70 @@ export const longPress = async (locator: Locator) => {
 const performPress = async (page: Page, box: { x: number; y: number; width: number; height: number }) => {
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
-  try {
-    // Advance clock if it's installed
-    await page.clock.fastForward(1500); // Increased from 1200 for safety
-  } catch {
-    // Fallback for real time if clock is not installed
-    await new Promise(r => setTimeout(r, 1500));
-  }
+  await advanceClock(page, 1500);
   await page.mouse.up();
 };
 
 export const selectDropdownItem = async (page: Page, triggerTestId: string, itemText: string) => {
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
-  await trigger.waitFor({ state: 'visible' });
 
-  // Define the item locator with a visibility filter to avoid old popovers
-  const itemLocator = page.locator('[role="menu"], [role="listbox"], .heroui-popover')
-    .locator('button, li, [role*="menuitem"], [role="option"], .heroui-listbox-item')
-    .getByText(itemText, { exact: false })
-    .filter({ visible: true });
+  // Wait for trigger to be visible, potentially advancing clock if it's in a modal animation
+  for (let i = 0; i < 10; i++) {
+    if (await trigger.isVisible()) break;
+    await advanceClock(page, 100);
+  }
+  await trigger.waitFor({ state: 'visible', timeout: 5000 });
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       // Click the trigger to open the dropdown
       await trigger.click({ force: true });
 
-      // Advance clock to trigger animations if clock is installed
-      try {
-        await page.clock.fastForward(500);
-      } catch {
-        // Ignore if clock not installed
+      // Wait for the popover/listbox to appear
+      const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
+      const popover = page.locator(popoverSelector).filter({ visible: true });
+
+      let popoverVisible = false;
+      for (let i = 0; i < 10; i++) {
+        await advanceClock(page, 100);
+        if (await popover.count() > 0 && await popover.first().isVisible()) {
+          popoverVisible = true;
+          break;
+        }
       }
 
-      // Wait for the item to be visible and ready for interaction
-      await itemLocator.first().waitFor({ state: 'visible', timeout: 3000 });
+      if (!popoverVisible) {
+        await trigger.click({ force: true });
+        await advanceClock(page, 500);
+      }
+
+      await popover.first().waitFor({ state: 'visible', timeout: 3000 });
+
+      // Find the item within the visible popover
+      const item = popover.first().locator('button, li, [role="option"], [role="menuitem"], .heroui-listbox-item')
+        .filter({ hasText: itemText })
+        .filter({ visible: true })
+        .first();
+
+      await item.waitFor({ state: 'visible', timeout: 3000 });
 
       // Click the item
-      await itemLocator.first().click({ force: true });
+      await item.click({ force: true });
 
-      // Advance clock again for close animation
-      try {
-        await page.clock.fastForward(500);
-      } catch {
-        // Ignore
-      }
+      // Advance clock for close animation
+      await advanceClock(page, 500);
 
-      // Wait for the dropdown to close (item becomes hidden)
-      await itemLocator.first().waitFor({ state: 'hidden', timeout: 3000 });
+      // Wait for the dropdown to close
+      await popover.first().waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
 
-      // Brief wait for any state transitions to settle
-      await page.waitForTimeout(200);
+      await advanceClock(page, 200);
       return; // Success
     } catch (e) {
       if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);
 
-      // Try to reset by clicking elsewhere and waiting
+      // Try to reset by clicking elsewhere
       await page.mouse.click(0, 0);
-      try {
-        await page.clock.fastForward(500);
-      } catch {
-        await page.waitForTimeout(500);
-      }
+      await advanceClock(page, 500);
     }
   }
 };
