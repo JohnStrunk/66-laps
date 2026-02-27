@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, StateCreator } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import posthog from 'posthog-js';
 import {
@@ -50,21 +50,46 @@ export interface RaceRecord {
 
 export type ViewState = 'main-menu' | 'race' | 'history' | 'race-details';
 
-export interface BellLapState {
-  view: ViewState;
-  history: RaceRecord[];
+export const getLaneStatus = (lane: LaneState | undefined, event: EventType, now: number) => {
+  const config = EVENT_CONFIGS[event];
+  if (!lane) return { isFinished: false, isLocked: false, progress: 0, symbol: "" };
+
+  const lastTouch = lane.history[lane.history.length - 1] || 0;
+  const lockoutMs = config.lockout * 1000;
+  const elapsed = now - lastTouch;
+  const isFinished = lane.count >= config.laps;
+  const isLocked = !lane.isEmpty && elapsed < lockoutMs && !isFinished;
+  const progress = isLocked ? (elapsed / lockoutMs) * 100 : 0;
+
+  const isRedSquare = lane.count === config.laps - 2;
+  const isBellLap = lane.count === config.laps - 4;
+
+  let symbol = "";
+  if (isFinished) symbol = "🏁";
+  else if (isRedSquare) symbol = "🟥";
+  else if (isBellLap) symbol = "🔔";
+
+  return { isFinished, isLocked, progress, symbol };
+};
+
+const createDefaultLanes = (count: number): LaneState[] =>
+  Array.from({ length: count }, (_, i) => ({
+    laneNumber: i + 1,
+    count: 0,
+    isEmpty: false,
+    history: [],
+    events: [],
+  }));
+
+export interface RaceSlice {
   event: EventType;
   laneCount: number;
   eventNumber: string;
   heatNumber: string;
   isFlipped: boolean;
   lanes: LaneState[];
-  isSetupDialogOpen: boolean;
-  selectedRaceId: string | null;
   now: number;
 
-  // Actions
-  setView: (view: ViewState) => void;
   setEvent: (event: EventType) => void;
   setLaneCount: (count: number) => void;
   setEventNumber: (num: string) => void;
@@ -77,232 +102,245 @@ export interface BellLapState {
   registerTouch: (laneNumber: number, ignoreLockout?: boolean) => void;
   resetRace: () => void;
   startRace: (event: EventType, laneCount: number, eventNumber: string, heatNumber: string) => void;
-  setSetupDialogOpen: (open: boolean) => void;
-  exitRace: (options?: { skipViewChange?: boolean }) => void;
-  clearHistory: () => void;
-  setSelectedRaceId: (id: string | null) => void;
   tick: () => void;
 }
 
-const createDefaultLanes = (count: number): LaneState[] =>
-  Array.from({ length: count }, (_, i) => ({
-    laneNumber: i + 1,
-    count: 0,
-    isEmpty: false,
-    history: [],
-    events: [],
-  }));
+export interface HistorySlice {
+  history: RaceRecord[];
+  selectedRaceId: string | null;
+
+  exitRace: (options?: { skipViewChange?: boolean }) => void;
+  clearHistory: () => void;
+  setSelectedRaceId: (id: string | null) => void;
+}
+
+export interface UISlice {
+  view: ViewState;
+  isSetupDialogOpen: boolean;
+
+  setView: (view: ViewState) => void;
+  setSetupDialogOpen: (open: boolean) => void;
+}
+
+export type BellLapState = RaceSlice & HistorySlice & UISlice;
+
+const createRaceSlice: StateCreator<BellLapState, [], [], RaceSlice> = (set) => ({
+  event: '500 SC',
+  laneCount: 8,
+  eventNumber: '',
+  heatNumber: '',
+  isFlipped: false,
+  lanes: createDefaultLanes(8),
+  now: Date.now(),
+
+  setEvent: (event) => set({ event }),
+
+  setLaneCount: (laneCount) => set((state) => {
+    if (state.laneCount === laneCount) return state;
+
+    let newLanes = [...state.lanes];
+    if (laneCount > state.lanes.length) {
+      const additional = Array.from({ length: laneCount - state.lanes.length }, (_, i) => ({
+        laneNumber: state.lanes.length + i + 1,
+        count: 0,
+        isEmpty: false,
+        history: [],
+        events: [],
+      }));
+      newLanes = [...state.lanes, ...additional];
+    }
+    return {
+      laneCount,
+      lanes: newLanes,
+    };
+  }),
+
+  setEventNumber: (eventNumber) => set({ eventNumber }),
+  setHeatNumber: (heatNumber) => set({ heatNumber }),
+
+  toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
+
+  setIsFlipped: (isFlipped) => set({ isFlipped }),
+
+  updateLaneCount: (laneNumber, delta) => set((state) => {
+    const config = EVENT_CONFIGS[state.event];
+    const lockoutMs = config.lockout * 1000;
+    const now = state.now;
+    const agedTimestamp = now - lockoutMs - 1;
+
+    return {
+      lanes: state.lanes.map((lane) => {
+        if (lane.laneNumber !== laneNumber) return lane;
+        const newCount = Math.max(0, Math.min(config.laps, lane.count + delta));
+        if (newCount === lane.count) return lane;
+
+        ph_event_bell_lap_lane_override(posthog, laneNumber, delta, lane.count);
+
+        const event: LapEvent = {
+          timestamp: now,
+          type: delta > 0 ? 'manual_increment' : 'manual_decrement',
+          prevCount: lane.count,
+          newCount: newCount,
+        };
+
+        return {
+          ...lane,
+          count: newCount,
+          history: delta > 0
+            ? [...lane.history, agedTimestamp]
+            : lane.history.slice(0, -1).map((h, i, arr) =>
+                i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
+              ),
+          events: [...lane.events, event],
+        };
+      }),
+    };
+  }),
+
+  setLaneCountValue: (laneNumber, count) => set((state) => ({
+    lanes: state.lanes.map((lane) =>
+      lane.laneNumber === laneNumber
+        ? { ...lane, count: Math.max(0, count) }
+        : lane
+    ),
+  })),
+
+  toggleLaneEmpty: (laneNumber) => set((state) => {
+      const lane = state.lanes.find(l => l.laneNumber === laneNumber);
+      if (lane) {
+        ph_event_bell_lap_lane_toggle_empty(posthog, laneNumber, !lane.isEmpty);
+      }
+      return {
+        lanes: state.lanes.map((lane) =>
+          lane.laneNumber === laneNumber
+            ? { ...lane, isEmpty: !lane.isEmpty }
+            : lane
+        ),
+      };
+  }),
+
+  registerTouch: (laneNumber, ignoreLockout = false) => set((state) => {
+    const config = EVENT_CONFIGS[state.event];
+    const now = state.now;
+
+    return {
+      lanes: state.lanes.map((lane) => {
+        if (lane.laneNumber !== laneNumber || lane.isEmpty) return lane;
+
+        const lastTouch = lane.history[lane.history.length - 1] || 0;
+        if (!ignoreLockout && now - lastTouch < config.lockout * 1000) return lane;
+
+        if (lane.count >= config.laps) return lane;
+
+        ph_event_bell_lap_lane_touch(posthog, laneNumber, lane.count, state.event);
+
+        const newCount = Math.min(config.laps, lane.count + 2);
+        const event: LapEvent = {
+          timestamp: now,
+          type: 'touch',
+          prevCount: lane.count,
+          newCount: newCount,
+        };
+
+        return {
+          ...lane,
+          count: newCount,
+          history: [...lane.history, now],
+          events: [...lane.events, event],
+        };
+      }),
+    };
+  }),
+
+  resetRace: () => set((state) => ({
+    lanes: createDefaultLanes(state.laneCount),
+    isSetupDialogOpen: false,
+    view: 'main-menu',
+  })),
+
+  startRace: (event, laneCount, eventNumber, heatNumber) => {
+    ph_event_bell_lap_race_start(posthog, event, laneCount, eventNumber, heatNumber);
+    set(() => ({
+        event,
+        laneCount,
+        eventNumber,
+        heatNumber,
+        lanes: createDefaultLanes(laneCount),
+        isSetupDialogOpen: false,
+        view: 'race',
+        now: Date.now(),
+    }));
+  },
+
+  tick: () => set({ now: Date.now() }),
+});
+
+const createHistorySlice: StateCreator<BellLapState, [], [], HistorySlice> = (set) => ({
+  history: [],
+  selectedRaceId: null,
+
+  exitRace: (options) => set((state) => {
+    if (state.view !== 'race') {
+        return { view: options?.skipViewChange ? state.view : 'main-menu' };
+    }
+
+    const hasData = state.lanes.some(l => l.count > 0);
+
+    let newHistory = state.history;
+    if (hasData) {
+        let startTime = state.now;
+        let foundEvent = false;
+        state.lanes.forEach(lane => {
+            if (lane.events.length > 0) {
+                const firstEvent = lane.events[0].timestamp;
+                if (firstEvent < startTime) {
+                    startTime = firstEvent;
+                    foundEvent = true;
+                }
+            }
+        });
+
+        const record: RaceRecord = {
+            id: crypto.randomUUID(),
+            startTime: foundEvent ? startTime : state.now,
+            event: state.event,
+            laneCount: state.laneCount,
+            eventNumber: state.eventNumber,
+            heatNumber: state.heatNumber,
+            lanes: state.lanes,
+        };
+
+        newHistory = [record, ...state.history].slice(0, 50);
+    }
+
+    return {
+        view: options?.skipViewChange ? state.view : 'main-menu',
+        history: newHistory,
+        lanes: createDefaultLanes(state.laneCount),
+        eventNumber: '',
+        heatNumber: '',
+    };
+  }),
+
+  clearHistory: () => set({ history: [] }),
+
+  setSelectedRaceId: (selectedRaceId) => set({ selectedRaceId }),
+});
+
+const createUISlice: StateCreator<BellLapState, [], [], UISlice> = (set) => ({
+  view: 'main-menu',
+  isSetupDialogOpen: false,
+
+  setView: (view) => set({ view }),
+  setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
+});
 
 export const useBellLapStore = create<BellLapState>()(
   persist(
-    (set) => ({
-      view: 'main-menu',
-      history: [],
-      event: '500 SC',
-      laneCount: 8,
-      eventNumber: '',
-      heatNumber: '',
-      isFlipped: false,
-      lanes: createDefaultLanes(8),
-      isSetupDialogOpen: false,
-      selectedRaceId: null,
-      now: Date.now(),
-
-      setView: (view) => set({ view }),
-
-      setEvent: (event) => set({ event }),
-
-      setLaneCount: (laneCount) => set((state) => {
-        if (state.laneCount === laneCount) return state;
-
-        let newLanes = [...state.lanes];
-        if (laneCount > state.lanes.length) {
-          // Add more lanes
-          const additional = Array.from({ length: laneCount - state.lanes.length }, (_, i) => ({
-            laneNumber: state.lanes.length + i + 1,
-            count: 0,
-            isEmpty: false,
-            history: [],
-            events: [],
-          }));
-          newLanes = [...state.lanes, ...additional];
-        }
-        return {
-          laneCount,
-          lanes: newLanes,
-        };
-      }),
-
-      setEventNumber: (eventNumber) => set({ eventNumber }),
-      setHeatNumber: (heatNumber) => set({ heatNumber }),
-
-      toggleFlip: () => set((state) => ({ isFlipped: !state.isFlipped })),
-
-      setIsFlipped: (isFlipped) => set({ isFlipped }),
-
-      updateLaneCount: (laneNumber, delta) => set((state) => {
-        const config = EVENT_CONFIGS[state.event];
-        const lockoutMs = config.lockout * 1000;
-        const now = state.now;
-        const agedTimestamp = now - lockoutMs - 1;
-
-        return {
-          lanes: state.lanes.map((lane) => {
-            if (lane.laneNumber !== laneNumber) return lane;
-            const newCount = Math.max(0, Math.min(config.laps, lane.count + delta));
-            if (newCount === lane.count) return lane;
-
-            ph_event_bell_lap_lane_override(posthog, laneNumber, delta, lane.count);
-
-            const event: LapEvent = {
-              timestamp: now,
-              type: delta > 0 ? 'manual_increment' : 'manual_decrement',
-              prevCount: lane.count,
-              newCount: newCount,
-            };
-
-            return {
-              ...lane,
-              count: newCount,
-              history: delta > 0
-                ? [...lane.history, agedTimestamp]
-                : lane.history.slice(0, -1).map((h, i, arr) =>
-                    i === arr.length - 1 ? Math.min(h, agedTimestamp) : h
-                  ),
-              events: [...lane.events, event],
-            };
-          }),
-        };
-      }),
-
-      setLaneCountValue: (laneNumber, count) => set((state) => ({
-        lanes: state.lanes.map((lane) =>
-          lane.laneNumber === laneNumber
-            ? { ...lane, count: Math.max(0, count) }
-            : lane
-        ),
-      })),
-
-      toggleLaneEmpty: (laneNumber) => set((state) => {
-          const lane = state.lanes.find(l => l.laneNumber === laneNumber);
-          if (lane) {
-            ph_event_bell_lap_lane_toggle_empty(posthog, laneNumber, !lane.isEmpty);
-          }
-          return {
-            lanes: state.lanes.map((lane) =>
-              lane.laneNumber === laneNumber
-                ? { ...lane, isEmpty: !lane.isEmpty }
-                : lane
-            ),
-          };
-      }),
-
-      registerTouch: (laneNumber, ignoreLockout = false) => set((state) => {
-        const config = EVENT_CONFIGS[state.event];
-        const now = state.now;
-
-        return {
-          lanes: state.lanes.map((lane) => {
-            if (lane.laneNumber !== laneNumber || lane.isEmpty) return lane;
-
-            const lastTouch = lane.history[lane.history.length - 1] || 0;
-            if (!ignoreLockout && now - lastTouch < config.lockout * 1000) return lane;
-
-            if (lane.count >= config.laps) return lane;
-
-            ph_event_bell_lap_lane_touch(posthog, laneNumber, lane.count, state.event);
-
-            const newCount = Math.min(config.laps, lane.count + 2);
-            const event: LapEvent = {
-              timestamp: now,
-              type: 'touch',
-              prevCount: lane.count,
-              newCount: newCount,
-            };
-
-            return {
-              ...lane,
-              count: newCount,
-              history: [...lane.history, now],
-              events: [...lane.events, event],
-            };
-          }),
-        };
-      }),
-
-      resetRace: () => set((state) => ({
-        lanes: createDefaultLanes(state.laneCount),
-        isSetupDialogOpen: false,
-        view: 'main-menu',
-      })),
-
-      startRace: (event, laneCount, eventNumber, heatNumber) => {
-        ph_event_bell_lap_race_start(posthog, event, laneCount, eventNumber, heatNumber);
-        set(() => ({
-            event,
-            laneCount,
-            eventNumber,
-            heatNumber,
-            lanes: createDefaultLanes(laneCount),
-            isSetupDialogOpen: false,
-            view: 'race',
-            now: Date.now(), // Reset clock to now on race start
-        }));
-      },
-
-      setSetupDialogOpen: (isSetupDialogOpen) => set({ isSetupDialogOpen }),
-
-      exitRace: (options) => set((state) => {
-        if (state.view !== 'race') {
-            return { view: options?.skipViewChange ? state.view : 'main-menu' };
-        }
-
-        // Check if race has any data worth saving (any lane with count > 0)
-        const hasData = state.lanes.some(l => l.count > 0);
-
-        let newHistory = state.history;
-        if (hasData) {
-            // Find the earliest timestamp from all lanes events to use as start time
-            let startTime = state.now;
-            let foundEvent = false;
-            state.lanes.forEach(lane => {
-                if (lane.events.length > 0) {
-                    const firstEvent = lane.events[0].timestamp;
-                    if (firstEvent < startTime) {
-                        startTime = firstEvent;
-                        foundEvent = true;
-                    }
-                }
-            });
-
-            const record: RaceRecord = {
-                id: crypto.randomUUID(),
-                startTime: foundEvent ? startTime : state.now,
-                event: state.event,
-                laneCount: state.laneCount,
-                eventNumber: state.eventNumber,
-                heatNumber: state.heatNumber,
-                lanes: state.lanes,
-            };
-
-            newHistory = [record, ...state.history].slice(0, 50); // Keep only recent 50
-        }
-
-        return {
-            view: options?.skipViewChange ? state.view : 'main-menu',
-            history: newHistory,
-            // Clear current race state so next start is clean
-            lanes: createDefaultLanes(state.laneCount),
-            eventNumber: '',
-            heatNumber: '',
-        };
-      }),
-
-      clearHistory: () => set({ history: [] }),
-
-      setSelectedRaceId: (selectedRaceId) => set({ selectedRaceId }),
-
-      tick: () => set({ now: Date.now() }),
+    (...a) => ({
+      ...createRaceSlice(...a),
+      ...createHistorySlice(...a),
+      ...createUISlice(...a),
     }),
     {
       name: 'bell-lap-storage',

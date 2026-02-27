@@ -9,11 +9,3 @@ Given('the event number is {string} and the heat number is {string}', async func
     store.getState().setHeatNumber(h);
   }, { e: eventNum, h: heatNum });
 });
-
-Given('the event number and heat number are not set', async function (this: CustomWorld) {
-  await this.page!.evaluate(() => {
-    const store = (window as unknown as TestWindow).__bellLapStore;
-    store.getState().setEventNumber('');
-    store.getState().setHeatNumber('');
-  });
-});
