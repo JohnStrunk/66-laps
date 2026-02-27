@@ -16,7 +16,8 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx"],
   // Settings for deploying to GitHub Pages
-  output: "export",  // Static HTML export
+  output: "export", // Static HTML export
+  allowedDevOrigins: ["localhost", "127.0.0.1"],
 };
 
 export default withSentryConfig(withPWA(nextConfig), {
