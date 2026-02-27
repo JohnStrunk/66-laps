@@ -59,7 +59,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
 
   // Define the item locator with a visibility filter to avoid old popovers
   const itemLocator = page.locator('[role="menu"], [role="listbox"], .heroui-popover')
-    .locator('button, li, [role="menuitem"], [role="option"], .heroui-listbox-item')
+    .locator('button, li, [role*="menuitem"], [role="option"], .heroui-listbox-item')
     .getByText(itemText, { exact: false })
     .filter({ visible: true });
 
@@ -68,11 +68,25 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       // Click the trigger to open the dropdown
       await trigger.click({ force: true });
 
+      // Advance clock to trigger animations if clock is installed
+      try {
+        await page.clock.fastForward(500);
+      } catch {
+        // Ignore if clock not installed
+      }
+
       // Wait for the item to be visible and ready for interaction
       await itemLocator.first().waitFor({ state: 'visible', timeout: 3000 });
 
       // Click the item
       await itemLocator.first().click({ force: true });
+
+      // Advance clock again for close animation
+      try {
+        await page.clock.fastForward(500);
+      } catch {
+        // Ignore
+      }
 
       // Wait for the dropdown to close (item becomes hidden)
       await itemLocator.first().waitFor({ state: 'hidden', timeout: 3000 });
@@ -85,7 +99,11 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
 
       // Try to reset by clicking elsewhere and waiting
       await page.mouse.click(0, 0);
-      await page.waitForTimeout(500);
+      try {
+        await page.clock.fastForward(500);
+      } catch {
+        await page.waitForTimeout(500);
+      }
     }
   }
 };
