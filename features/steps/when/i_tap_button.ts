@@ -12,8 +12,8 @@ When('I tap the {string} button', async function (this: CustomWorld, buttonName:
     }
   } else if (buttonName === "History") {
     await this.page!.click('[data-testid="history-button"]', { force: true });
-    // Wait for view transition
-    await this.page!.waitForTimeout(500);
+    // Wait for view transition by waiting for a key element in the history view
+    await this.page!.waitForSelector('[data-testid="history-view"]', { state: 'visible', timeout: 5000 }).catch(() => {});
   } else if (buttonName === "Exit") {
     // Handle both history exit and race exit if they have different test IDs,
     // but they should probably share a common way to identify or use the test ID passed in the step?

@@ -11,9 +11,4 @@ Given('the app is loaded', async function (this: CustomWorld) {
 
   await this.page!.goto(url);
   await this.page!.waitForSelector('[data-mounted="true"]', { timeout: 15000 });
-
-  if (isFirstLaunchScenario) {
-     // Give some time for the useEffect in PWALandingPage to trigger and open the dialog
-     await this.page!.waitForTimeout(2000);
-  }
 });

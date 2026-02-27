@@ -18,6 +18,7 @@ When('I tap the {string} setup button', async function (this: CustomWorld, butto
 
   await btn.evaluate(el => (el as HTMLElement).click());
 
-  // Wait for potential modal close animation
-  await this.page!.waitForTimeout(1000);
+  // Wait for potential modal close animation to finish by waiting for the modal to be hidden
+  // The setup modal has a data-testid or role="dialog"
+  await this.page!.locator('[role="dialog"], [data-testid="setup-modal-content"]').waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
 });
