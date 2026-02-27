@@ -195,6 +195,19 @@ This document provides essential information for AI agents working on the
   you can use `window.__bellLapStore` to perform rigorous assertions on the
   underlying Zustand store state when the UI state is complex or hard to verify
   directly.
+- **E2E Testing with Mock Clock:**
+  - This project uses `this.page.clock.install()` in Playwright tests to
+    efficiently test time-based logic (like lockout).
+  - **CRITICAL:** When the mock clock is installed, time is frozen.
+    Animations (HeroUI Modals, Dropdowns, and initial hydration) will NOT
+    progress unless the clock is explicitly advanced.
+  - ALWAYS use the `advanceClock(page, ms)` helper from
+    `features/support/utils.ts` after actions that trigger UI transitions
+    (e.g., clicking a dropdown, opening a modal, or navigating to a new
+    view).
+  - Standard Playwright actions like `click()` or
+    `waitFor({ state: 'visible' })` may hang if they wait for an element
+    that is stuck in an animation state.
 - **Step Organization:** Step definitions must be organized into subdirectories
   by keyword:
   - `features/steps/given/`
