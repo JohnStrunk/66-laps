@@ -101,10 +101,13 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       // Click the item
       await item.click({ force: true });
 
-      // Advance clock for close animation
-      await advanceClock(page, 500);
+      // Advance clock in ticks until the popover is hidden
+      for (let i = 0; i < 20; i++) {
+        if (!(await popover.first().isVisible())) break;
+        await advanceClock(page, 200);
+      }
 
-      // Wait for the dropdown to close
+      // Final wait for it to be fully hidden
       await popover.first().waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
 
       await advanceClock(page, 200);

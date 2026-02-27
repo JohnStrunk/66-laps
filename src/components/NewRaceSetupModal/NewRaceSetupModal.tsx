@@ -15,10 +15,20 @@ import { useBellLapStore, EventType } from "@/modules/bellLapStore";
 import { useState } from "react";
 
 export default function NewRaceSetupModal() {
-  const {
-    isSetupDialogOpen,
-    setSetupDialogOpen,
-  } = useBellLapStore();
+  const isSetupDialogOpen = useBellLapStore(state => state.isSetupDialogOpen);
+  const setSetupDialogOpen = useBellLapStore(state => state.setSetupDialogOpen);
+
+  // Use a key that only changes when the modal OPENS to ensure fresh state,
+  // but stays stable while it is CLOSING to avoid interrupting animations.
+  const [contentKey, setContentKey] = useState(0);
+  const [prevOpen, setPrevOpen] = useState(isSetupDialogOpen);
+
+  if (isSetupDialogOpen && !prevOpen) {
+    setPrevOpen(true);
+    setContentKey(prev => prev + 1);
+  } else if (!isSetupDialogOpen && prevOpen) {
+    setPrevOpen(false);
+  }
 
   return (
     <Modal
@@ -28,7 +38,7 @@ export default function NewRaceSetupModal() {
     >
       <ModalContent>
         {(onClose) => (
-          <NewRaceSetupModalContent key={isSetupDialogOpen ? 'open' : 'closed'} onClose={onClose} />
+          <NewRaceSetupModalContent key={contentKey} onClose={onClose} />
         )}
       </ModalContent>
     </Modal>
@@ -36,13 +46,11 @@ export default function NewRaceSetupModal() {
 }
 
 function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
-  const {
-    event,
-    laneCount,
-    eventNumber,
-    heatNumber,
-    startRace
-  } = useBellLapStore();
+  const event = useBellLapStore(state => state.event);
+  const laneCount = useBellLapStore(state => state.laneCount);
+  const eventNumber = useBellLapStore(state => state.eventNumber);
+  const heatNumber = useBellLapStore(state => state.heatNumber);
+  const startRace = useBellLapStore(state => state.startRace);
 
   // Local state for the dialog - initialized from store when component mounts
   const [localEvent, setLocalEvent] = useState<EventType>(event);
@@ -52,7 +60,8 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
 
   const handleStartRace = () => {
     startRace(localEvent, localLaneCount, localEventNumber, localHeatNumber);
-    onClose();
+    // Note: onClose() is NOT called here because startRace already sets isSetupDialogOpen to false
+    // which triggers the Modal to close via its isOpen prop.
   };
 
   return (
