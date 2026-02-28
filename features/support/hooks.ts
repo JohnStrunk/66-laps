@@ -37,6 +37,19 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
   });
   await this.page.clock.install();
 
+  // Mock navigator.vibrate
+  await this.page.addInitScript(() => {
+    interface MockNavigator extends Navigator {
+      vibrateCalls: (number | number[])[];
+    }
+    const nav = window.navigator as MockNavigator;
+    nav.vibrateCalls = [];
+    nav.vibrate = (pattern: number | number[] | Iterable<number>) => {
+      nav.vibrateCalls.push(pattern as (number | number[]));
+      return true;
+    };
+  });
+
   // Start coverage collection
   await this.page.coverage.startJSCoverage();
 });
