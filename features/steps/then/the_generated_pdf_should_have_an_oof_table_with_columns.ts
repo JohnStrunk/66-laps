@@ -6,6 +6,7 @@ interface MockPDFDoc {
   __lastTableOptions?: {
     body?: string[][];
     head?: { content: string; colSpan?: number }[][];
+    styles?: { font?: string };
   };
   internal: {
     getFont: () => { fontName: string };
@@ -29,11 +30,16 @@ Then('the generated PDF should use {string} font', async function (this: CustomW
     // Wait for PDF to be generated and stored in window.__lastPDFDoc
     await this.page!.waitForFunction(() => !!(window as unknown as { __lastPDFDoc: MockPDFDoc }).__lastPDFDoc, { timeout: 10000 });
 
-    const actualFont = await this.page!.evaluate(() => {
+    const fontInfo = await this.page!.evaluate(() => {
         const doc = (window as unknown as { __lastPDFDoc: MockPDFDoc }).__lastPDFDoc;
         if (!doc) return null;
-        return doc.internal.getFont().fontName;
+        return {
+            docFont: doc.internal.getFont().fontName,
+            tableFont: doc.__lastTableOptions?.styles?.font
+        };
     });
 
-    assert.strictEqual(actualFont, expectedFont, `PDF should use ${expectedFont} font, but found ${actualFont}`);
+    assert.ok(fontInfo, "PDF font info not found");
+    assert.strictEqual(fontInfo.docFont, expectedFont, `PDF document should use ${expectedFont} font, but found ${fontInfo.docFont}`);
+    assert.strictEqual(fontInfo.tableFont, expectedFont, `OOF table should use ${expectedFont} font, but found ${fontInfo.tableFont}`);
 });
