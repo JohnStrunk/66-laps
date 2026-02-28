@@ -110,6 +110,7 @@ export interface HistorySlice {
   selectedRaceId: string | null;
 
   exitRace: (options?: { skipViewChange?: boolean }) => void;
+  deleteRace: (id: string) => void;
   clearHistory: () => void;
   setSelectedRaceId: (id: string | null) => void;
 }
@@ -323,6 +324,10 @@ const createHistorySlice: StateCreator<BellLapState, [], [], HistorySlice> = (se
   }),
 
   clearHistory: () => set({ history: [] }),
+
+  deleteRace: (id) => set((state) => ({
+    history: state.history.filter(r => r.id !== id)
+  })),
 
   setSelectedRaceId: (selectedRaceId) => set({ selectedRaceId }),
 });
