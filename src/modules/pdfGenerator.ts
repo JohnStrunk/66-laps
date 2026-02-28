@@ -132,6 +132,11 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         laps.push(i);
     }
 
+    const oofHeaders = [
+        { content: 'LAP', styles: { halign: 'center' as const } },
+        { content: 'ORDER OF FINISH', colSpan: race.laneCount, styles: { halign: 'center' as const } }
+    ];
+
     const lapOOFData = laps.map(lapNum => {
         const laneTimes: { laneNumber: number, timestamp: number }[] = [];
         race.lanes.forEach(lane => {
@@ -147,25 +152,33 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
             }
         });
         laneTimes.sort((a, b) => a.timestamp - b.timestamp);
-        return {
-            lap: lapNum.toString(),
-            oof: laneTimes.map(lt => lt.laneNumber).join(' | ')
-        };
+
+        const row = [lapNum.toString()];
+        for (let i = 0; i < race.laneCount; i++) {
+            row.push(laneTimes[i] ? laneTimes[i].laneNumber.toString() : '');
+        }
+        return row;
     });
 
-        autoTable(doc, {
-            startY: headerBottom,
-            margin: { left: leftColX, right: pageWidth - (leftColX + columnWidth) },
-            head: [['LAP', 'ORDER OF FINISH']],
-            body: lapOOFData.map(d => [d.lap, d.oof]),
-            theme: 'striped',
-            headStyles: { fillColor: [44, 62, 80], textColor: 255, fontSize: 10, halign: 'center' },
-            styles: { fontSize: 9, cellPadding: 2 },
-            columnStyles: {
-                0: { fontStyle: 'bold', cellWidth: 30, halign: 'center' },
-                1: { fontSize: 11, fontStyle: 'bold', halign: 'center' }
-            }
-        });
+    const oofTableOptions = {
+        startY: headerBottom,
+        margin: { left: leftColX, right: pageWidth - (leftColX + columnWidth) },
+        head: [oofHeaders],
+        body: lapOOFData,
+        theme: 'striped' as const,
+        headStyles: { fillColor: [44, 62, 80] as [number, number, number], textColor: 255, fontSize: 10, halign: 'center' as const },
+        styles: { fontSize: 9, cellPadding: 2, halign: 'center' as const },
+        columnStyles: {
+            0: { fontStyle: 'bold' as const, cellWidth: 30 }
+        }
+    };
+
+    if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
+        // @ts-expect-error - attaching for tests
+        doc.__lastTableOptions = oofTableOptions;
+    }
+
+    autoTable(doc, oofTableOptions);
 
         // --- Right Column: Laps by Time (Timeline) ---
         const timelineStartY = headerBottom;
