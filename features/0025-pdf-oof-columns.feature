@@ -15,3 +15,4 @@ Feature: PDF OOF Table Columns
     When I navigate to the "History" screen
     And I click the "download" button for the first race record
     Then the generated PDF should have an OOF table with 9 columns
+    And the generated PDF should use "Atkinson" font
