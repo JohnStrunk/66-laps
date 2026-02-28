@@ -6,7 +6,8 @@ interface MockPDFDoc {
   __lastTableOptions?: {
     body?: string[][];
     head?: { content: string; colSpan?: number }[][];
-    styles?: { font?: string };
+    styles?: { font?: string; fontStyle?: string };
+    columnStyles?: { [key: number]: { fontStyle?: string } };
   };
   internal: {
     getFont: () => { fontName: string };
@@ -35,11 +36,15 @@ Then('the generated PDF should use {string} font', async function (this: CustomW
         if (!doc) return null;
         return {
             docFont: doc.internal.getFont().fontName,
-            tableFont: doc.__lastTableOptions?.styles?.font
+            tableFont: doc.__lastTableOptions?.styles?.font,
+            tableStyle: doc.__lastTableOptions?.styles?.fontStyle,
+            col0Style: doc.__lastTableOptions?.columnStyles?.[0]?.fontStyle
         };
     });
 
     assert.ok(fontInfo, "PDF font info not found");
     assert.strictEqual(fontInfo.docFont, expectedFont, `PDF document should use ${expectedFont} font, but found ${fontInfo.docFont}`);
     assert.strictEqual(fontInfo.tableFont, expectedFont, `OOF table should use ${expectedFont} font, but found ${fontInfo.tableFont}`);
+    assert.strictEqual(fontInfo.tableStyle, 'bold', "OOF table body should be bold (for lane numbers)");
+    assert.strictEqual(fontInfo.col0Style, 'normal', "OOF table LAP column should be normal");
 });
