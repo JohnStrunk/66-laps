@@ -1,6 +1,8 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { RaceRecord, EVENT_CONFIGS } from './bellLapStore';
+import { ATKINSON_REGULAR } from './fonts/AtkinsonRegular';
+import { ATKINSON_BOLD } from './fonts/AtkinsonBold';
 
 // Type extension for jspdf-autotable
 type jsPDFWithAutoTable = jsPDF & {
@@ -90,6 +92,13 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         format: 'letter'
     }) as jsPDFWithAutoTable;
 
+    // Add Atkinson Hyperlegible fonts
+    doc.addFileToVFS('Atkinson-Regular.ttf', ATKINSON_REGULAR);
+    doc.addFont('Atkinson-Regular.ttf', 'Atkinson', 'normal');
+    doc.addFileToVFS('Atkinson-Bold.ttf', ATKINSON_BOLD);
+    doc.addFont('Atkinson-Bold.ttf', 'Atkinson', 'bold');
+    doc.setFont('Atkinson', 'normal');
+
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 36; // 0.5 inch
@@ -103,7 +112,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
     }
 
     doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('Atkinson', 'bold');
     doc.setTextColor(0);
 
     let raceInfo = race.event;
@@ -112,7 +121,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
     doc.text(raceInfo, headerTextX, margin + 15);
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('Atkinson', 'normal');
     doc.setTextColor(100);
     const dateStr = new Date(race.startTime).toLocaleDateString();
     const timeStr = new Date(race.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -132,6 +141,11 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         laps.push(i);
     }
 
+    const oofHeaders = [
+        { content: 'LAP', styles: { halign: 'center' as const } },
+        { content: 'ORDER OF FINISH', colSpan: race.laneCount, styles: { halign: 'center' as const } }
+    ];
+
     const lapOOFData = laps.map(lapNum => {
         const laneTimes: { laneNumber: number, timestamp: number }[] = [];
         race.lanes.forEach(lane => {
@@ -147,25 +161,33 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
             }
         });
         laneTimes.sort((a, b) => a.timestamp - b.timestamp);
-        return {
-            lap: lapNum.toString(),
-            oof: laneTimes.map(lt => lt.laneNumber).join(' | ')
-        };
+
+        const row = [lapNum.toString()];
+        for (let i = 0; i < race.laneCount; i++) {
+            row.push(laneTimes[i] ? laneTimes[i].laneNumber.toString() : '');
+        }
+        return row;
     });
 
-        autoTable(doc, {
-            startY: headerBottom,
-            margin: { left: leftColX, right: pageWidth - (leftColX + columnWidth) },
-            head: [['LAP', 'ORDER OF FINISH']],
-            body: lapOOFData.map(d => [d.lap, d.oof]),
-            theme: 'striped',
-            headStyles: { fillColor: [44, 62, 80], textColor: 255, fontSize: 10, halign: 'center' },
-            styles: { fontSize: 9, cellPadding: 2 },
-            columnStyles: {
-                0: { fontStyle: 'bold', cellWidth: 30, halign: 'center' },
-                1: { fontSize: 11, fontStyle: 'bold', halign: 'center' }
-            }
-        });
+    const oofTableOptions = {
+        startY: headerBottom,
+        margin: { left: leftColX, right: pageWidth - (leftColX + columnWidth) },
+        head: [oofHeaders],
+        body: lapOOFData,
+        theme: 'striped' as const,
+        headStyles: { font: 'Atkinson', fillColor: [44, 62, 80] as [number, number, number], textColor: 255, fontSize: 10, halign: 'center' as const },
+        styles: { font: 'Atkinson', textColor: 0, fontSize: 9, cellPadding: 2, halign: 'center' as const },
+        columnStyles: {
+            0: { fontStyle: 'bold' as const, cellWidth: 30 }
+        }
+    };
+
+    if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
+        // @ts-expect-error - attaching for tests
+        doc.__lastTableOptions = oofTableOptions;
+    }
+
+    autoTable(doc, oofTableOptions);
 
         // --- Right Column: Laps by Time (Timeline) ---
         const timelineStartY = headerBottom;
@@ -197,7 +219,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
             doc.setFillColor(44, 62, 80);
             doc.rect(rightColX, timelineStartY, columnWidth, headHeight, 'F');
             doc.setFontSize(10);
-            doc.setFont('helvetica', 'bold');
+            doc.setFont('Atkinson', 'bold');
             doc.setTextColor(255);
             doc.text('TIME', rightColX + timeColWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
             doc.text('LAP COUNT', gridX + gridWidth / 2, timelineStartY + headHeight / 2, { align: 'center', baseline: 'middle' });
@@ -207,7 +229,8 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
 
             // Draw Lane Headers
             doc.setFontSize(8);
-            doc.setTextColor(100);
+            doc.setFont('Atkinson', 'bold');
+            doc.setTextColor(0);
             for (let i = 1; i <= race.laneCount; i++) {
                 const lx = gridX + (i - 0.5) * laneWidth;
                 doc.text(i.toString(), lx, timelineStartY + headHeight + 10, { align: 'center' });
@@ -228,7 +251,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
                     doc.setLineWidth(0.5);
                     doc.line(rightColX, y, rightColX + columnWidth, y);
                     doc.setFontSize(7);
-                    doc.setFont('helvetica', 'bold');
+                    doc.setFont('Atkinson', 'bold');
                     doc.setTextColor(80);
                     doc.text(label, rightColX, y, { baseline: 'middle' });
                 } else {
@@ -236,7 +259,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
                     doc.setLineWidth(0.3);
                     doc.line(gridX, y, gridX + gridWidth, y);
                     doc.setFontSize(6);
-                    doc.setFont('helvetica', 'normal');
+                    doc.setFont('Atkinson', 'normal');
                     doc.setTextColor(150);
                     doc.text(label, rightColX, y, { baseline: 'middle' });
                 }
@@ -252,7 +275,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
 
             // Draw Events
             doc.setFontSize(8);
-            doc.setFont('helvetica', 'bold');
+            doc.setFont('Atkinson', 'normal');
             doc.setTextColor(0);
             race.lanes.forEach(lane => {
                 lane.events
@@ -274,7 +297,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
 
     // --- Footer ---
     doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont('Atkinson', 'normal');
     doc.setTextColor(100);
     doc.text('Count laps from your mobile device — https://66-laps.com', pageWidth / 2, pageHeight - margin, { align: 'center' });
 
