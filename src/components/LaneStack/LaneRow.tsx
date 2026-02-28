@@ -28,9 +28,17 @@ export default function LaneRow({
   const config = EVENT_CONFIGS[event];
 
   const handleTouchStart = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
     longPressTimer.current = setTimeout(() => {
       toggleLaneEmpty(laneNumber);
       longPressTimer.current = null;
+
+      // Strong haptic feedback on lane toggle (disable/enable)
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]);
+      }
     }, 1000);
   };
 
@@ -38,8 +46,10 @@ export default function LaneRow({
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
-      if (!lane.isEmpty) {
-        const prevCount = lane.count;
+
+      const currentLane = useBellLapStore.getState().lanes.find(l => l.laneNumber === laneNumber);
+      if (currentLane && !currentLane.isEmpty) {
+        const prevCount = currentLane.count;
         registerTouch(laneNumber);
 
         // Haptic feedback on successful increment
