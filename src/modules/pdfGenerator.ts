@@ -176,9 +176,9 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         body: lapOOFData,
         theme: 'striped' as const,
         headStyles: { font: 'Atkinson', fillColor: [44, 62, 80] as [number, number, number], textColor: 255, fontSize: 10, halign: 'center' as const },
-        styles: { font: 'Atkinson', fontStyle: 'bold' as const, fontSize: 9, cellPadding: 2, halign: 'center' as const },
+        styles: { font: 'Atkinson', fontSize: 9, cellPadding: 2, halign: 'center' as const },
         columnStyles: {
-            0: { fontStyle: 'normal' as const, cellWidth: 30 }
+            0: { fontStyle: 'bold' as const, cellWidth: 30 }
         }
     };
 

@@ -45,6 +45,6 @@ Then('the generated PDF should use {string} font', async function (this: CustomW
     assert.ok(fontInfo, "PDF font info not found");
     assert.strictEqual(fontInfo.docFont, expectedFont, `PDF document should use ${expectedFont} font, but found ${fontInfo.docFont}`);
     assert.strictEqual(fontInfo.tableFont, expectedFont, `OOF table should use ${expectedFont} font, but found ${fontInfo.tableFont}`);
-    assert.strictEqual(fontInfo.tableStyle, 'bold', "OOF table body should be bold (for lane numbers)");
-    assert.strictEqual(fontInfo.col0Style, 'normal', "OOF table LAP column should be normal");
+    assert.strictEqual(fontInfo.tableStyle || 'normal', 'normal', "OOF table body should be normal (lane numbers)");
+    assert.strictEqual(fontInfo.col0Style, 'bold', "OOF table LAP column should be bold");
 });
