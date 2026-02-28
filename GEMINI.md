@@ -201,13 +201,17 @@ This document provides essential information for AI agents working on the
   - **CRITICAL:** When the mock clock is installed, time is frozen.
     Animations (HeroUI Modals, Dropdowns, and initial hydration) will NOT
     progress unless the clock is explicitly advanced.
-  - ALWAYS use the `advanceClock(page, ms)` helper from
-    `features/support/utils.ts` after actions that trigger UI transitions
-    (e.g., clicking a dropdown, opening a modal, or navigating to a new
-    view).
+  - **Synchronization Helpers:** ALWAYS use the following helpers from
+    `features/support/utils.ts` for reliable UI testing:
+    - `advanceClock(page, ms)`: Manually advances the mock clock.
+    - `waitForVisible(locator)`: Robustly waits for an element while
+      continuously advancing the clock in 100ms increments (necessary for
+      opening animations).
+    - `waitForHidden(locator)`: Robustly waits for an element to disappear
+      while advancing the clock (necessary for closing animations).
   - Standard Playwright actions like `click()` or
-    `waitFor({ state: 'visible' })` may hang if they wait for an element
-    that is stuck in an animation state.
+    `waitFor({ state: 'visible' })` may hang or be flaky if they wait for an
+    element that is stuck in an animation state.
 - **Step Organization:** Step definitions must be organized into subdirectories
   by keyword:
   - `features/steps/given/`
