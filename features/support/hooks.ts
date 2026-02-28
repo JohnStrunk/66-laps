@@ -37,6 +37,15 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
   });
   await this.page.clock.install();
 
+  // Mock navigator.vibrate
+  await this.page.addInitScript(() => {
+    (window.navigator as any).vibrateCalls = [];
+    (window.navigator as any).vibrate = (pattern: any) => {
+      (window.navigator as any).vibrateCalls.push(pattern);
+      return true;
+    };
+  });
+
   // Start coverage collection
   await this.page.coverage.startJSCoverage();
 });

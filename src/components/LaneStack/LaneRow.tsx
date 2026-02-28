@@ -39,7 +39,16 @@ export default function LaneRow({
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
       if (!lane.isEmpty) {
+        const prevCount = lane.count;
         registerTouch(laneNumber);
+
+        // Haptic feedback on successful increment
+        const updatedLane = useBellLapStore.getState().lanes.find(l => l.laneNumber === laneNumber);
+        if (updatedLane && updatedLane.count > prevCount) {
+          if (typeof navigator !== "undefined" && navigator.vibrate) {
+            navigator.vibrate(50);
+          }
+        }
       }
     }
   };
