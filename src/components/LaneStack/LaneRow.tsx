@@ -27,7 +27,10 @@ export default function LaneRow({
 
   const config = EVENT_CONFIGS[event];
 
-  const handleTouchStart = () => {
+  const handlePointerDown = (e: React.PointerEvent) => {
+    // Only handle primary pointer (left mouse button, single touch)
+    if (!e.isPrimary) return;
+
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
     }
@@ -42,7 +45,9 @@ export default function LaneRow({
     }, 1000);
   };
 
-  const handleTouchEnd = () => {
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!e.isPrimary) return;
+
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
@@ -63,6 +68,13 @@ export default function LaneRow({
     }
   };
 
+  const handlePointerCancel = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
   return (
     <Card
       className={`flex-1 min-h-0 transition-opacity shadow-sm ${
@@ -73,11 +85,11 @@ export default function LaneRow({
     >
       <CardBody
         className="p-0 flex flex-row w-full h-full overflow-hidden"
-        onMouseDown={lane.isEmpty ? handleTouchStart : undefined}
-        onMouseUp={lane.isEmpty ? handleTouchEnd : undefined}
-        onMouseLeave={lane.isEmpty ? () => { if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; } } : undefined}
-        onTouchStart={lane.isEmpty ? handleTouchStart : undefined}
-        onTouchEnd={lane.isEmpty ? handleTouchEnd : undefined}
+        onPointerDown={lane.isEmpty ? handlePointerDown : undefined}
+        onPointerUp={lane.isEmpty ? handlePointerUp : undefined}
+        onPointerLeave={lane.isEmpty ? handlePointerCancel : undefined}
+        onPointerCancel={lane.isEmpty ? handlePointerCancel : undefined}
+        style={lane.isEmpty ? { touchAction: 'none' } : undefined}
       >
         {lane.isEmpty ? (
           <div
@@ -145,16 +157,11 @@ export default function LaneRow({
                   : 'bg-success cursor-pointer active:opacity-80'
               }`}
               data-testid="lane-zone-b"
-              onMouseDown={handleTouchStart}
-              onMouseUp={handleTouchEnd}
-              onMouseLeave={() => {
-                if (longPressTimer.current) {
-                  clearTimeout(longPressTimer.current);
-                  longPressTimer.current = null;
-                }
-              }}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
+              onPointerDown={handlePointerDown}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerCancel}
+              onPointerCancel={handlePointerCancel}
+              style={{ touchAction: 'none' }}
               role="button"
               tabIndex={0}
               aria-label={`${symbol} Lane ${laneNumber} touch pad. Current count: ${lane.count}`}
