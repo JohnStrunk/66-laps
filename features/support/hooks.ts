@@ -39,9 +39,13 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
 
   // Mock navigator.vibrate
   await this.page.addInitScript(() => {
-    (window.navigator as any).vibrateCalls = [];
-    (window.navigator as any).vibrate = (pattern: any) => {
-      (window.navigator as any).vibrateCalls.push(pattern);
+    interface MockNavigator extends Navigator {
+      vibrateCalls: (number | number[])[];
+    }
+    const nav = window.navigator as MockNavigator;
+    nav.vibrateCalls = [];
+    nav.vibrate = (pattern: number | number[] | Iterable<number>) => {
+      nav.vibrateCalls.push(pattern as (number | number[]));
       return true;
     };
   });
