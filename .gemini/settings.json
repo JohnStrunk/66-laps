@@ -1,4 +1,10 @@
 {
+  "context": {
+    "fileName": [
+      "AGENTS.md",
+      "GEMINI.md"
+    ]
+  },
   "general": {
     "previewFeatures": true
   },

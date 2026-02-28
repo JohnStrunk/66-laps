@@ -60,6 +60,7 @@ repos:
         args: ["--fix", "--config", ".github/markdownlint-config.yaml"]
         exclude: |
           (?x)^(
+                .agents/skills/.* |
                 .github/pull_request_template.md |
                 .gemini/skills/.*
             )$
