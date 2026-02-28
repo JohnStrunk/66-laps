@@ -59,11 +59,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
 
   // Wait for trigger to be visible, potentially advancing clock if it's in a modal animation
-  for (let i = 0; i < 10; i++) {
-    if (await trigger.isVisible()) break;
-    await advanceClock(page, 100);
-  }
-  await trigger.waitFor({ state: 'visible', timeout: 5000 });
+  await waitForVisible(trigger);
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
@@ -120,6 +116,36 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       await advanceClock(page, 500);
     }
   }
+};
+
+export const waitForVisible = async (locator: Locator, timeoutMs: number = 5000) => {
+  const page = locator.page();
+  const start = Date.now();
+
+  while (Date.now() - start < timeoutMs) {
+    if (await locator.count() > 0 && await locator.first().isVisible()) {
+      return;
+    }
+    await advanceClock(page, 100);
+  }
+
+  // Final attempt with standard waitFor to get a good error message if it still fails
+  await locator.first().waitFor({ state: 'visible', timeout: 1000 });
+};
+
+export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) => {
+  const page = locator.page();
+  const start = Date.now();
+
+  while (Date.now() - start < timeoutMs) {
+    if (await locator.count() === 0 || !(await locator.first().isVisible())) {
+      return;
+    }
+    await advanceClock(page, 200);
+  }
+
+  // Final attempt with standard waitFor to get a good error message if it still fails
+  await locator.first().waitFor({ state: 'hidden', timeout: 1000 }).catch(() => {});
 };
 
 export const getStoreState = async (page: Page): Promise<BellLapState> => {

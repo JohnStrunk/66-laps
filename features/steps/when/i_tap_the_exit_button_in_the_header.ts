@@ -1,5 +1,6 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
+import { advanceClock } from '../../support/utils';
 
 When('I tap the "Exit" button in the header', async function (this: CustomWorld) {
   // Try both history exit and race exit buttons
@@ -13,4 +14,6 @@ When('I tap the "Exit" button in the header', async function (this: CustomWorld)
   } else {
     throw new Error('No exit button found in header');
   }
+
+  await advanceClock(this.page!, 500);
 });
