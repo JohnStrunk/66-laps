@@ -104,7 +104,8 @@ This document provides essential information for AI agents working on the
     lap symbols, or race completion) should reside in the Zustand store or
     specialized selectors, not within UI components.
   - **Representational Components:** Components like `LaneRow` should focus on
-    rendering state and delegating actions to the store.
+    rendering state and delegating actions to the store. Avoid local state
+    synchronization; derive values during rendering.
 - **Simulation Model (`SwimmerModel`):**
   - Encapsulates the logic for calculating a swimmer's position based on lap
     times and elapsed time.
@@ -126,6 +127,9 @@ This document provides essential information for AI agents working on the
   state with props or global store state. Perform such updates in event
   handlers (e.g., `onPress`) or derive values during rendering using `useMemo`.
   Strict linting (`react-hooks/set-state-in-effect`) is enforced.
+- **Zustand Persistence:** When adding new state to the store, consider if it
+  needs to be persisted. Use the `partialize` function in the `persist`
+  middleware to selectively persist state.
 - **Cucumber Step Parameters:** All parameters defined in Cucumber expressions
   (e.g., `{string}`) MUST be used in the step implementation. Use them for
   assertions or logging to ensure tests are rigorous and satisfy linting rules.
