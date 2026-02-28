@@ -6,7 +6,7 @@ interface MockPDFDoc {
   __lastTableOptions?: {
     body?: string[][];
     head?: { content: string; colSpan?: number }[][];
-    styles?: { font?: string; fontStyle?: string };
+    styles?: { font?: string; fontStyle?: string; textColor?: number | number[] };
     columnStyles?: { [key: number]: { fontStyle?: string } };
   };
   internal: {
@@ -38,6 +38,7 @@ Then('the generated PDF should use {string} font', async function (this: CustomW
             docFont: doc.internal.getFont().fontName,
             tableFont: doc.__lastTableOptions?.styles?.font,
             tableStyle: doc.__lastTableOptions?.styles?.fontStyle,
+            tableColor: doc.__lastTableOptions?.styles?.textColor,
             col0Style: doc.__lastTableOptions?.columnStyles?.[0]?.fontStyle
         };
     });
@@ -47,4 +48,5 @@ Then('the generated PDF should use {string} font', async function (this: CustomW
     assert.strictEqual(fontInfo.tableFont, expectedFont, `OOF table should use ${expectedFont} font, but found ${fontInfo.tableFont}`);
     assert.strictEqual(fontInfo.tableStyle || 'normal', 'normal', "OOF table body should be normal (lane numbers)");
     assert.strictEqual(fontInfo.col0Style, 'bold', "OOF table LAP column should be bold");
+    assert.strictEqual(fontInfo.tableColor, 0, `OOF table body text color should be black (0), but found ${fontInfo.tableColor}`);
 });
