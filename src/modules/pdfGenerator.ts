@@ -230,7 +230,7 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
             // Draw Lane Headers
             doc.setFontSize(8);
             doc.setFont('Atkinson', 'bold');
-            doc.setTextColor(100);
+            doc.setTextColor(0);
             for (let i = 1; i <= race.laneCount; i++) {
                 const lx = gridX + (i - 0.5) * laneWidth;
                 doc.text(i.toString(), lx, timelineStartY + headHeight + 10, { align: 'center' });
