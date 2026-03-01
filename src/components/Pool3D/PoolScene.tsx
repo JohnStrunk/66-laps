@@ -1,7 +1,7 @@
 'use client'
 
 import { useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Pool3DProps } from "./Pool3D";
 import { StartingEnd } from "../Settings/Settings";
@@ -9,8 +9,51 @@ import Swimmer3D from "./Swimmer3D";
 
 const LANE_WIDTH_METERS = 2.5;
 
+function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number }) {
+    const meshRef = useRef<THREE.InstancedMesh>(null);
+    const floatSpacing = 0.2; // 20cm between floats
+    const floatsPerRope = Math.floor(poolLength / floatSpacing);
+    const totalFloats = floatsPerRope * (lanes - 1);
+
+    const { geometry, material } = useMemo(() => {
+        const geo = new THREE.SphereGeometry(0.05, 8, 8);
+        const mat = new THREE.MeshStandardMaterial({ roughness: 0.5 });
+        return { geometry: geo, material: mat };
+    }, []);
+
+    useEffect(() => {
+        if (!meshRef.current) return;
+
+        const dummy = new THREE.Object3D();
+        let idx = 0;
+        for (let rope = 1; rope < lanes; rope++) {
+            const z = rope * LANE_WIDTH_METERS;
+            for (let f = 0; f < floatsPerRope; f++) {
+                const x = f * floatSpacing;
+                dummy.position.set(x, 0.05, z);
+                dummy.updateMatrix();
+                meshRef.current.setMatrixAt(idx, dummy.matrix);
+
+                // Alternate colors (Red/White)
+                const color = (f % 4 < 2) ? new THREE.Color("#ff0000") : new THREE.Color("#ffffff");
+                meshRef.current.setColorAt(idx, color);
+
+                idx++;
+            }
+        }
+        meshRef.current.instanceMatrix.needsUpdate = true;
+        if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
+    }, [totalFloats, floatsPerRope, lanes, floatSpacing]);
+
+    if (lanes <= 1) return null;
+
+    return (
+        <instancedMesh ref={meshRef} args={[geometry, material, totalFloats]} castShadow receiveShadow />
+    );
+}
+
 export default function PoolScene(props: Pool3DProps) {
-    const { camera } = useThree();
+    const { camera, gl } = useThree();
     const lanes = props.swimmers.length;
     const poolLengthMeters = props.poolLength === "SC" ? 22.86 : 50; // 25yd is approx 22.86m
     const poolWidthMeters = lanes * LANE_WIDTH_METERS;
@@ -18,13 +61,12 @@ export default function PoolScene(props: Pool3DProps) {
 
     // Expose for testing
     useEffect(() => {
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && gl.domElement) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (window as any).__TEST_CAMERA__ = camera;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (window as any).__TEST_SCENE__ = camera.parent;
+            gl.domElement.setAttribute('data-test-ready', 'true');
         }
-    }, [camera]);
+    }, [camera, gl.domElement]);
 
     // Camera Perspective Setup
     // Position: 3.0m from the start end wall, 1.67m high, centered horizontally
@@ -57,7 +99,7 @@ export default function PoolScene(props: Pool3DProps) {
         const lookAtZ = poolWidthMeters / 2; // Look at the middle of the start wall
 
         camera.position.set(observerX, 1.67, observerZ);
-        camera.lookAt(lookAtX, 1.67, lookAtZ);
+        camera.lookAt(lookAtX, 0, lookAtZ);
 
         // Convert Horizontal FOV to Vertical FOV (Three.js uses vertical FOV)
         if (camera instanceof THREE.PerspectiveCamera) {
@@ -65,8 +107,9 @@ export default function PoolScene(props: Pool3DProps) {
             const cam = camera as any;
             // formula: vFOV = 2 * Math.atan( Math.tan( hFOV/2 ) * (height/width) )
             const aspect = window.innerWidth / window.innerHeight;
-            const hFOV = 90 * (Math.PI / 180);
+            const hFOV = Math.PI / 2; // 90 degrees in radians
             const vFOV = 2 * Math.atan(Math.tan(hFOV / 2) / aspect);
+            // eslint-disable-next-line react-hooks/immutability
             cam.fov = vFOV * (180 / Math.PI);
             cam.updateProjectionMatrix();
         }
@@ -102,6 +145,9 @@ export default function PoolScene(props: Pool3DProps) {
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
                 <meshStandardMaterial color="#88ccff" />
             </mesh>
+
+            {/* Lane Ropes */}
+            <LaneRopes poolLength={poolLengthMeters} lanes={lanes} />
 
             {/* Swimmers */}
             {props.swimmers.map((swimmer, i) => (

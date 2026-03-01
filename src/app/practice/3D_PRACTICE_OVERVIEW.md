@@ -65,7 +65,9 @@ The 3D environment will be built using a `<Canvas>` component from
   meters** from the start end wall.
 - **Height**: Fixed at **1.67m (5.5 ft)** above the pool deck to simulate
   average eye level.
-- **View Direction**: The observer is looking **toward the start end wall**.
+- **View Direction**: The observer is looking **down toward the start end wall
+  at deck level (y=0)**, centered horizontally across the lanes. This tilts the
+  perspective downward to move the pool view higher in the window.
 - **Field of View (FOV)**: **90° Horizontal FOV**. This ensures a 10-lane pool
   width (25m) is fully visible from 3m away.
 - **Realism Note**: Because the observer is looking at the start wall from only
