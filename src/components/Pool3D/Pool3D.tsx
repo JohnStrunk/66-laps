@@ -14,11 +14,13 @@ export type Pool3DProps = {
     className?: string;
 };
 
+import * as THREE from "three";
+
 export default function Pool3D(props: Pool3DProps) {
     return (
         <div className={props.className} data-testid="3d-pool-container">
             <Canvas
-                shadows
+                shadows={{ type: THREE.PCFShadowMap }}
                 camera={{ fov: 90, near: 0.1, far: 1000 }}
             >
                 <PoolScene {...props} />

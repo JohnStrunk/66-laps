@@ -171,7 +171,6 @@ export default function Pool(props: PoolProps) {
     return (
         <div ref={divRef} className={props.className}>
             <Application
-                autoDensity={true}
                 antialias={true}
                 resolution={window.devicePixelRatio || 1}
                 backgroundColor={semanticColors.light.background[500]}
