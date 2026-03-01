@@ -218,7 +218,9 @@ const WaterShader = {
 
                 vec2 swimmerPos = uSwimmerPositions[i];
                 vec2 swimmerVel = uSwimmerVelocities[i];
-                if (length(swimmerVel) < 0.1) continue;
+
+                float speed = length(swimmerVel);
+                if (speed < 0.1) continue;
 
                 vec2 dirForward = normalize(swimmerVel);
                 vec2 dirRight = vec2(-dirForward.y, dirForward.x);
