@@ -2,7 +2,7 @@
 
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import * as THREE from "three";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, SphereGeometry } from "three";
 import { Pool3DProps } from "./Pool3D";
 import { StartingEnd } from "../Settings/Settings";
 import Swimmer3D from "./Swimmer3D";
@@ -10,21 +10,21 @@ import Swimmer3D from "./Swimmer3D";
 const LANE_WIDTH_METERS = 2.5;
 
 function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number }) {
-    const meshRef = useRef<THREE.InstancedMesh>(null);
+    const meshRef = useRef<InstancedMesh>(null);
     const floatSpacing = 0.2; // 20cm between floats
     const floatsPerRope = Math.floor(poolLength / floatSpacing);
     const totalFloats = floatsPerRope * (lanes - 1);
 
     const { geometry, material } = useMemo(() => {
-        const geo = new THREE.SphereGeometry(0.05, 8, 8);
-        const mat = new THREE.MeshStandardMaterial({ roughness: 0.5 });
+        const geo = new SphereGeometry(0.05, 8, 8);
+        const mat = new MeshStandardMaterial({ roughness: 0.5 });
         return { geometry: geo, material: mat };
     }, []);
 
     useEffect(() => {
         if (!meshRef.current) return;
 
-        const dummy = new THREE.Object3D();
+        const dummy = new Object3D();
         let idx = 0;
         for (let rope = 1; rope < lanes; rope++) {
             const z = rope * LANE_WIDTH_METERS;
@@ -35,7 +35,7 @@ function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number })
                 meshRef.current.setMatrixAt(idx, dummy.matrix);
 
                 // Alternate colors (Red/White)
-                const color = (f % 4 < 2) ? new THREE.Color("#ff0000") : new THREE.Color("#ffffff");
+                const color = (f % 4 < 2) ? new Color("#ff0000") : new Color("#ffffff");
                 meshRef.current.setColorAt(idx, color);
 
                 idx++;
@@ -87,9 +87,8 @@ export default function PoolScene(props: Pool3DProps) {
         camera.lookAt(lookAtX, 0, lookAtZ);
 
         // Convert Horizontal FOV to Vertical FOV (Three.js uses vertical FOV)
-        if (camera instanceof THREE.PerspectiveCamera) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const cam = camera as any;
+        if (camera instanceof PerspectiveCamera) {
+            const cam = camera as PerspectiveCamera;
             // formula: vFOV = 2 * Math.atan( Math.tan( hFOV/2 ) * (height/width) )
             const aspect = window.innerWidth / window.innerHeight;
             const hFOV = Math.PI / 2; // 90 degrees in radians
@@ -122,14 +121,14 @@ export default function PoolScene(props: Pool3DProps) {
                     transparent
                     roughness={0.1}
                     ior={1.33}
-                    side={THREE.DoubleSide}
+                    side={DoubleSide}
                 />
             </mesh>
 
             {/* Pool Floor */}
             <mesh position={[poolLengthMeters / 2, -poolDepth, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                <meshStandardMaterial color="#88ccff" side={THREE.DoubleSide} />
+                <meshStandardMaterial color="#88ccff" side={DoubleSide} />
             </mesh>
 
             {/* Lane Ropes */}
