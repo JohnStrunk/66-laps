@@ -15,23 +15,25 @@ type Swimmer3DProps = {
     waterY: number;
 };
 
-const getLaneColor = (index: number) => {
-    const colors = [
-        "#ff4d4d", // Red
-        "#4d79ff", // Blue
-        "#4dff4d", // Green
-        "#ffff4d", // Yellow
-        "#ff4dff", // Magenta
-        "#4dffff", // Cyan
-        "#ff994d", // Orange
-        "#994dff", // Purple
-    ];
-    return colors[index % colors.length] || "#ffffff";
+const SWIMMER_COLORS = [
+    "#ff4d4d", // Red
+    "#4d79ff", // Blue
+    "#4dff4d", // Green
+    "#ffff4d", // Yellow
+    "#ff4dff", // Magenta
+    "#4dffff", // Cyan
+    "#ff994d", // Orange
+    "#994dff", // Purple
+];
+
+const getRandomSwimmerColor = () => {
+    return SWIMMER_COLORS[Math.floor(Math.random() * SWIMMER_COLORS.length)];
 };
 
 export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight, waterY }: Swimmer3DProps) {
     const groupRef = useRef<Group>(null);
-    const color = useMemo(() => getLaneColor(laneIndex), [laneIndex]);
+    // Stable random color for this swimmer instance
+    const color = useMemo(() => getRandomSwimmerColor(), []);
 
     useFrame(() => {
         if (!groupRef.current) return;
