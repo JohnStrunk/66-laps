@@ -145,14 +145,15 @@ export default function PoolScene(props: Pool3DProps) {
         floor.wrapS = floor.wrapT = RepeatWrapping;
         floor.repeat.set(poolLengthMeters / 2, poolWidthMeters / 2);
 
-        // Walls - Tiles (assume 1m per tile)
+        // Walls - Tiles (0.75m per tile)
         const wallLong = tileTexture.clone();
         wallLong.wrapS = wallLong.wrapT = RepeatWrapping;
-        wallLong.repeat.set(poolLengthMeters, 3.5);
+        const totalDepth = DECK_Y - FLOOR_Y;
+        wallLong.repeat.set(poolLengthMeters / 0.75, totalDepth / 0.75);
 
         const wallWide = tileTexture.clone();
         wallWide.wrapS = wallWide.wrapT = RepeatWrapping;
-        wallWide.repeat.set(poolWidthMeters, 3.5);
+        wallWide.repeat.set(poolWidthMeters / 0.75, totalDepth / 0.75);
 
         return {
             southNorthTexture: sn,
