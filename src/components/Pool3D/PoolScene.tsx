@@ -96,7 +96,7 @@ function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: 
             </mesh>
             <Text
                 position={[0, 0, 0.011]}
-                fontSize={0.2}
+                fontSize={0.28}
                 color="black"
                 font={font}
                 anchorX="center"
@@ -107,7 +107,7 @@ function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: 
             <Text
                 position={[0, 0, -0.011]}
                 rotation={[0, Math.PI, 0]}
-                fontSize={0.2}
+                fontSize={0.28}
                 color="black"
                 font={font}
                 anchorX="center"
