@@ -229,8 +229,8 @@ const WaterShader = {
                 float localX = dot(toPixel, -dirForward);
                 float localY = dot(toPixel, dirRight);
 
-                if (localX > -0.5 && localX < 6.0 && abs(localY) < (localX + 0.5) * 0.8) {
-                    float mask = smoothstep(0.8, 0.4, abs(localY) / (localX + 0.5)) * smoothstep(6.0, 4.0, localX);
+                if (localX > -0.5 && localX < 12.0 && abs(localY) < (localX + 0.5) * 0.8) {
+                    float mask = smoothstep(0.8, 0.4, abs(localY) / (localX + 0.5)) * smoothstep(12.0, 8.0, localX);
                     float swimmerWake = 0.0;
                     for (int j = 0; j < 4; j++) {
                         float theta = (float(j) / 3.0 - 0.5) * 1.2;
@@ -306,7 +306,7 @@ export default function PoolScene(props: Pool3DProps) {
                 positionsRef.current[i].x += velocitiesRef.current[i].x * speed * delta;
                 positionsRef.current[i].y += velocitiesRef.current[i].y * speed * delta;
 
-                weightsRef.current[i] = Math.max(0, weightsRef.current[i] - delta * 0.5); // Fade over 2s
+                weightsRef.current[i] = Math.max(0, weightsRef.current[i] - delta * 0.25); // Fade over 4s (twice as long)
             }
         }
 
