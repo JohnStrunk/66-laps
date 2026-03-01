@@ -119,40 +119,68 @@ function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: 
     );
 }
 
-function LaneMarkings({ poolLength, lanes, zCenter, y }: { poolLength: number, lanes: number, zCenter: number, y: number }) {
+function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCenter: number, yFloor: number }) {
     const stripeWidth = 0.25;
     const tCrossbarWidth = 1.0;
     const tCrossbarLength = 0.25;
     const distanceFromWall = 2.0;
 
-    // Crossbar centers
+    // Floor centers
     const xStartT = distanceFromWall + tCrossbarLength / 2;
     const xEndT = poolLength - distanceFromWall - tCrossbarLength / 2;
-
-    // Main stripe length and center
     const stripeStart = distanceFromWall + tCrossbarLength;
     const stripeEnd = poolLength - distanceFromWall - tCrossbarLength;
     const mainStripeLength = stripeEnd - stripeStart;
     const xMainStripe = (stripeStart + stripeEnd) / 2;
 
+    // Wall Markings (+ shapes)
+    const wallPlusThickness = 0.25;
+    const wallPlusHorizontalWidth = LANE_WIDTH_METERS * 0.75;
+    const wallPlusVerticalTop = -0.04; // 4cm below deck (y=0)
+    const wallPlusVerticalHeight = (Math.abs(wallPlusVerticalTop - WATER_Y)) * 2; // Center at water line
+
     return (
-        <group position={[0, y + 0.01, 0]}>
-            {/* Start T Crossbar */}
-            <mesh position={[xStartT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
-            {/* Turn T Crossbar */}
-            <mesh position={[xEndT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
-            {/* Main Connecting Stripe */}
-            <mesh position={[xMainStripe, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[mainStripeLength, stripeWidth]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
-        </group>
+        <>
+            {/* Floor Markings */}
+            <group position={[0, yFloor + 0.01, 0]}>
+                <mesh position={[xStartT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+                <mesh position={[xEndT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+                <mesh position={[xMainStripe, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[mainStripeLength, stripeWidth]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+            </group>
+
+            {/* West Wall Marking (+) */}
+            <group position={[0.01, WATER_Y, zCenter]} rotation={[0, Math.PI / 2, 0]}>
+                <mesh>
+                    <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+                <mesh>
+                    <planeGeometry args={[wallPlusHorizontalWidth, wallPlusThickness]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+            </group>
+
+            {/* East Wall Marking (+) */}
+            <group position={[poolLength - 0.01, WATER_Y, zCenter]} rotation={[0, -Math.PI / 2, 0]}>
+                <mesh>
+                    <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+                <mesh>
+                    <planeGeometry args={[wallPlusHorizontalWidth, wallPlusThickness]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+            </group>
+        </>
     );
 }
 
@@ -293,9 +321,8 @@ export default function PoolScene(props: Pool3DProps) {
                 <LaneMarkings
                     key={`marking-${i}`}
                     poolLength={poolLengthMeters}
-                    lanes={lanes}
                     zCenter={(i + 0.5) * LANE_WIDTH_METERS}
-                    y={FLOOR_Y}
+                    yFloor={FLOOR_Y}
                 />
             ))}
 
