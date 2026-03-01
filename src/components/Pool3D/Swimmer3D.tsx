@@ -88,7 +88,9 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         groupRef.current.position.set(xPos, waterY, zPos);
 
         if (onPositionUpdate) {
-            onPositionUpdate(laneIndex, xPos, zPos, vx, vz);
+            // The head tip is 0.75m from the group center in the direction of travel
+            const forwardX = movingRight ? 0.75 : -0.75;
+            onPositionUpdate(laneIndex, xPos + forwardX, zPos, vx, vz);
         }
 
         groupRef.current.rotation.y = movingRight ? Math.PI / 2 : -Math.PI / 2;
