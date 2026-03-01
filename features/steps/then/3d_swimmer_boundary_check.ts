@@ -2,6 +2,7 @@ import { Then } from '@cucumber/cucumber';
 import { strict as assert } from 'assert';
 import { CustomWorld } from '../../support/world';
 import { advanceClock } from '../../support/utils';
+import { TestWindow } from '../../../src/modules/testTypes';
 
 Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and turn ends', { timeout: 60000 }, async function (this: CustomWorld) {
     const page = this.page!;
@@ -16,12 +17,10 @@ Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and
         }
 
         const data = await page.evaluate(() => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const swimmer = (window as any).__TEST_SWIMMER_0__;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const model = (window as any).__TEST_SWIMMER_0_MODEL__;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const poolLength = (window as any).__TEST_POOL_LENGTH__;
+            const testWin = window as unknown as TestWindow;
+            const swimmer = testWin.__TEST_SWIMMER_0__;
+            const model = testWin.__TEST_SWIMMER_0_MODEL__;
+            const poolLength = testWin.__TEST_POOL_LENGTH__;
 
             if (!swimmer || !model || !poolLength) return null;
             const { location } = model.where();

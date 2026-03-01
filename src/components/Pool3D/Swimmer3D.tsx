@@ -4,6 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { Group } from "three";
 import { ISwimmer } from "@/modules/SwimmerModel";
+import { TestWindow } from "@/modules/testTypes";
 
 type Swimmer3DProps = {
     swimmer: ISwimmer;
@@ -36,12 +37,10 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
 
         // Expose for testing
         if (laneIndex === 0) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (window as any).__TEST_SWIMMER_0__ = groupRef.current;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (window as any).__TEST_SWIMMER_0_MODEL__ = swimmer;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (window as any).__TEST_POOL_LENGTH__ = poolLength;
+            const testWin = window as unknown as TestWindow;
+            testWin.__TEST_SWIMMER_0__ = groupRef.current;
+            testWin.__TEST_SWIMMER_0_MODEL__ = swimmer;
+            testWin.__TEST_POOL_LENGTH__ = poolLength;
         }
 
         // Location is 0.0 to 1.0 representing the distance completed along the CURRENT lap.
