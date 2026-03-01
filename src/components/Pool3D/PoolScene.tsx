@@ -217,24 +217,23 @@ const WaterShader = {
                 vec2 toPixel = vWorldPosition.xz - swimmerPos;
                 float d = length(toPixel);
 
+                if (d > 5.0) continue; // Performance optimization
+
                 // Directional weight: dot product of travel direction and pixel direction
-                // If moving right (1,0), pixels behind have negative X difference.
-                // Normalize toPixel for the dot product
                 float dirWeight = dot(normalize(swimmerVel), normalize(toPixel));
 
                 // Wake effect: stronger behind (dirWeight < 0), weaker ahead (dirWeight > 0)
-                // Map -1..1 to a more biased range (e.g., 0.1..1.0)
-                float wakeBias = smoothstep(0.8, -0.8, dirWeight) * 0.9 + 0.1;
+                float wakeBias = smoothstep(0.5, -0.5, dirWeight) * 0.8 + 0.2;
 
-                // Expanding ripples logic
-                float rippleEffect = sin(d * 15.0 - uTime * 8.0) * exp(-d * 1.5);
-                ripple += rippleEffect * 0.15 * wakeBias;
+                // Stronger, slower-decaying ripples
+                float rippleEffect = sin(d * 12.0 - uTime * 10.0) * exp(-d * 0.8);
+                ripple += rippleEffect * 0.4 * wakeBias;
             }
 
-            vec3 finalColor = uColor + ripple;
-            gl_FragColor = vec4(finalColor, 0.6);
-        }
-    `
+            // Add highlights and shadows based on ripple
+            vec3 finalColor = uColor + (ripple * 0.5);
+            gl_FragColor = vec4(finalColor, 0.7);
+        }    `
 };
 
 export default function PoolScene(props: Pool3DProps) {
