@@ -81,7 +81,8 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
             movingRight = !headingToTurn;
         }
 
-        const vx = movingRight ? 1.0 : -1.0;
+        const isDone = swimmer.isDone();
+        const vx = isDone ? 0.0 : (movingRight ? 1.0 : -1.0);
         const vz = 0.0;
 
         groupRef.current.position.set(xPos, waterY, zPos);
