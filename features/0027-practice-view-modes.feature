@@ -7,11 +7,53 @@ Feature: Practice View Modes
     Given I navigate to the Practice tool
 
   @e2e @practice @2d
-  Scenario: 2D view is rendered correctly by default
-    When I configure a practice race with 6 lanes and click "Start"
+  Scenario Outline: 2D view renders the correct number of lanes
+    When I set the "Number of Lanes" setting to "<lanes>"
+    And I click "Start"
     Then I should see the 2D PixiJS canvas
-    And I should see exactly 6 swimmers represented as emojis on the 2D canvas
-    And the swimmers should move horizontally along their lanes
+    And I should see exactly <lanes> swimmers represented as emojis on the 2D canvas
+
+    Examples:
+      | lanes |
+      | 6     |
+      | 8     |
+      | 10    |
+
+  @e2e @practice @2d
+  Scenario Outline: 2D view lane numbering direction
+    When I set the "Lane Numbering" setting to "<direction>"
+    And I click "Start"
+    Then the lane numbers should be ordered from <order>
+
+    Examples:
+      | direction      | order           |
+      | Bottom to top  | bottom to top   |
+      | Top to bottom  | top to bottom   |
+
+  @e2e @practice @2d
+  Scenario Outline: 2D view with different race lengths
+    When I set the "Race Length" setting to "<length>"
+    And I click "Start"
+    Then the swimmers should begin moving horizontally along their lanes
+
+    Examples:
+      | length  |
+      | 500 SC  |
+      | 1650 SC |
+      | 1500 LC |
+
+  @e2e @practice @2d
+  Scenario Outline: 2D view with different difficulty and spread settings
+    When I set the "Difficulty" setting to "<difficulty>"
+    And I set the "Spread" setting to "<spread>"
+    And I click "Start"
+    Then the swimmers should begin moving horizontally along their lanes
+
+    Examples:
+      | difficulty   | spread  |
+      | Peaceful     | Minimal |
+      | Normal       | Normal  |
+      | Hardcore 🖤  | Max     |
 
   @e2e @practice @3d
   Scenario: Practice Settings UI contains new orientation controls
@@ -83,7 +125,8 @@ Feature: Practice View Modes
 
   @e2e @practice @3d
   Scenario: 3D Model Representation Validation
-    When I configure a practice race with 8 lanes and click "Start"
+    When I set the "Number of Lanes" setting to "8"
+    And I click "Start"
     And I toggle the view selector to "3D"
     Then I should see exactly 8 swimmers in the 3D environment
     And the swimmers should be shaped like low-poly directional pills or cones
@@ -91,8 +134,8 @@ Feature: Practice View Modes
 
   @e2e @practice @3d
   Scenario: 3D View Flip Animation Trigger
-    Given I set a practice race length to 50
-    When I click "Start"
+    When I set the "Race Length" setting to "500 SC"
+    And I click "Start"
     And I toggle the view selector to "3D"
     And I wait for a swimmer to reach the turn wall
     Then the swimmer model should perform a quick 180-degree flip animation
