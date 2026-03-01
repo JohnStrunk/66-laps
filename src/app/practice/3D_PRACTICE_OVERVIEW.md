@@ -33,12 +33,17 @@ settings to simulate all real-world variations.
 ### New Configuration: Viewer Orientation
 
 To account for all real-world variations, a new setting will be added to the
-`Settings` component:
+`Settings` component on the settings screen:
 
-- **Viewer Orientation**: Determines if the "Start/Finish" end of the pool is to
+- **Starting End**: Determines if the "Start/Finish" end of the pool is to
   the **Left** or **Right** of the observer.
-- **Impact on 2D**: This will mirror the PixiJS canvas horizontally (or flip
-  the coordinate mapping) so that the "Start" end matches the 3D perspective.
+- **Persistence**: The `Starting End` (and `Simulation Mode`) settings do not
+  need to be persisted, as the swimulation is not part of the core PWA state.
+- **Impact on 2D**: This will move the lane numbers to the other end of the pool
+  and change the x-coordinate rendering so that the "Start" end matches the 3D
+  perspective. Note that the existing 2D view corresponds to the "Left" starting
+  end (even for single-length races, since those actually start at the turn
+  end).
 - **Impact on 3D**: This shifts the camera position and rotation to the
   opposite side of the pool.
 
@@ -74,6 +79,8 @@ The 3D environment will be built using a `<Canvas>` component from
 
 ### The Pool Geometry
 
+- **Dimensions**: Standard lane width is **2.5 meters**, and pool depth is
+  **3.0 meters**.
 - **Pool Shell**: A hollowed-out box geometry with a "tiled" texture for the
   walls and floor.
 - **Deck**: A large plane surrounding the pool using the existing
@@ -122,8 +129,9 @@ The 3D environment will be built using a `<Canvas>` component from
 
 - **Water Shaders & Mobile GPUs:** Complex refraction/reflection shaders may
   lag on older mobile devices.
-  - **Solution:** Use a fallback to a simple translucent plane (low quality) if
-    performance drops below 30fps.
+  - **Solution:** For now, implement the high-quality shader. Ensure the
+    architectural design leaves room to easily add a lower-quality fallback
+    (e.g., simple translucent plane) in the future.
 - **React 19 Compatibility:**
   - **Solution:** Must use **React Three Fiber v9** and **Drei v10** to support
     React 19's new reconciler and internal changes.
@@ -131,7 +139,8 @@ The 3D environment will be built using a `<Canvas>` component from
 ## 7. User Experience Integration
 
 - **View Selector**: A toggle (e.g., a "2D/3D" switch) will be added to the
-  simulation UI.
+  simulation UI. It will float unobtrusively in the corner, treated similarly
+  to the existing "Back to Settings" button.
 - **Dynamic Resizing**: The R3F Canvas and Camera will listen for window resize
   events to recalculate the aspect ratio and maintain the fixed viewpoint
   perspective.
@@ -150,7 +159,7 @@ To implement this, the following packages would be required:
 ## 9. Development Roadmap
 
 1. **Scaffolding**: Integrate R3F Canvas into the `Practice` page.
-2. **Settings Update**: Add "Simulation Mode" (2D/3D) and "Viewer Orientation"
+2. **Settings Update**: Add "Simulation Mode" (2D/3D) and "Starting End"
    (Left/Right) to the `Settings` model.
 3. **Basic Pool**: Create the static 3D pool box and lane lines.
 4. **Animated Swimmers**: Implement the "ice cream cone" models mapped to
