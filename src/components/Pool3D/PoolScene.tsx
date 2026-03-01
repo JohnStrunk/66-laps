@@ -2,7 +2,7 @@
 
 import { useThree, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useCallback } from "react";
-import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector4 } from "three";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector2 } from "three";
 import { Text, useTexture } from "@react-three/drei";
 import { Pool3DProps } from "./Pool3D";
 import { NumberingDirection, StartingEnd } from "../Settings/Settings";
@@ -22,9 +22,9 @@ const WATER_Y = -0.5;
 const POOL_DEPTH = 3.0;
 const FLOOR_Y = WATER_Y - POOL_DEPTH;
 
+// We use 2 slots per swimmer (current + ghost)
 const MAX_SWIMMERS = 10;
-const EMITTERS_PER_SWIMMER = 10;
-const TOTAL_EMITTERS = MAX_SWIMMERS * EMITTERS_PER_SWIMMER;
+const MAX_SOURCES = MAX_SWIMMERS * 2;
 
 function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number, y: number }) {
     const meshRef = useRef<InstancedMesh>(null);
@@ -185,10 +185,9 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
 const WaterShader = {
     uniforms: {
         uTime: { value: 0 },
-        // x,y: pos, z,w: vel
-        uEmitters: { value: Array(TOTAL_EMITTERS).fill(new Vector4(-100, -100, 0, 0)) },
-        uEmitterLife: { value: Array(TOTAL_EMITTERS).fill(0) },
-        uEmitterSpawnTimes: { value: Array(TOTAL_EMITTERS).fill(0) },
+        uPositions: { value: Array(MAX_SOURCES).fill(new Vector2(-100, -100)) },
+        uVelocities: { value: Array(MAX_SOURCES).fill(new Vector2(0, 0)) },
+        uWeights: { value: Array(MAX_SOURCES).fill(0) },
         uColor: { value: new Color("#0099ff") }
     },
     vertexShader: `
@@ -203,9 +202,9 @@ const WaterShader = {
     `,
     fragmentShader: `
         uniform float uTime;
-        uniform vec4 uEmitters[${TOTAL_EMITTERS}];
-        uniform float uEmitterLife[${TOTAL_EMITTERS}];
-        uniform float uEmitterSpawnTimes[${TOTAL_EMITTERS}];
+        uniform vec2 uPositions[${MAX_SOURCES}];
+        uniform vec2 uVelocities[${MAX_SOURCES}];
+        uniform float uWeights[${MAX_SOURCES}];
         uniform vec3 uColor;
         varying vec2 vUv;
         varying vec3 vWorldPosition;
@@ -216,13 +215,12 @@ const WaterShader = {
             float u = 1.5;
             float k0 = g / (u * u);
 
-            for(int i = 0; i < ${TOTAL_EMITTERS}; i++) {
-                float life = uEmitterLife[i];
-                if (life <= 0.0) continue;
+            for(int i = 0; i < ${MAX_SOURCES}; i++) {
+                float weight = uWeights[i];
+                if (weight <= 0.0) continue;
 
-                vec2 pos = uEmitters[i].xy;
-                vec2 vel = uEmitters[i].zw;
-                float spawnTime = uEmitterSpawnTimes[i];
+                vec2 pos = uPositions[i];
+                vec2 vel = uVelocities[i];
 
                 vec2 dirForward = normalize(vel);
                 vec2 dirRight = vec2(-dirForward.y, dirForward.x);
@@ -242,11 +240,9 @@ const WaterShader = {
                         float phase = k * (localX * cosT + localY * sinT);
                         float omega = sqrt(g * k);
 
-                        // Use local time for each emitter to prevent jitter
-                        float localTime = uTime - spawnTime;
-                        swimmerWake += cos(phase - localTime * omega * 1.2) / (sqrt(localX + 1.0) * cosT);
+                        swimmerWake += cos(phase - uTime * omega * 1.2) / (sqrt(abs(localX) + 1.0) * cosT);
                     }
-                    totalWake += (swimmerWake / 4.0) * mask * life;
+                    totalWake += (swimmerWake / 4.0) * mask * weight;
                 }
             }
 
@@ -269,55 +265,47 @@ export default function PoolScene(props: Pool3DProps) {
 
     const waterMaterialRef = useRef<ShaderMaterial>(null);
 
-    // Emitters state
-    const emittersRef = useRef<Vector4[]>(Array(TOTAL_EMITTERS).fill(0).map(() => new Vector4(-100, -100, 0, 0)));
-    const emitterLifeRef = useRef<number[]>(Array(TOTAL_EMITTERS).fill(0));
-    const emitterSpawnTimesRef = useRef<number[]>(Array(TOTAL_EMITTERS).fill(0));
-    const lastEmitTimeRef = useRef<number[]>(Array(MAX_SWIMMERS).fill(0));
-    const currentEmitterIdxRef = useRef<number[]>(Array(MAX_SWIMMERS).fill(0));
+    // State for current and ghost sources
+    const positionsRef = useRef<Vector2[]>(Array(MAX_SOURCES).fill(0).map(() => new Vector2(-100, -100)));
+    const velocitiesRef = useRef<Vector2[]>(Array(MAX_SOURCES).fill(0).map(() => new Vector2(0, 0)));
+    const weightsRef = useRef<number[]>(Array(MAX_SOURCES).fill(0));
+
+    // Tracking previous velocities to detect turns
+    const lastVelRef = useRef<Vector2[]>(Array(MAX_SWIMMERS).fill(0).map(() => new Vector2(0, 0)));
 
     const handleSwimmerPositionUpdate = useCallback((index: number, x: number, z: number, vx: number, vz: number) => {
         if (index >= MAX_SWIMMERS) return;
 
-        const now = performance.now();
-        const interval = 100; // ms between dropping new trail points
+        const currentIdx = index;
+        const ghostIdx = index + MAX_SWIMMERS;
 
-        const baseIdx = index * EMITTERS_PER_SWIMMER;
-        const currentLocalIdx = currentEmitterIdxRef.current[index];
-        const globalIdx = baseIdx + currentLocalIdx;
-
-        // Update current emitter
-        emittersRef.current[globalIdx].set(x, z, vx, vz);
-        emitterLifeRef.current[globalIdx] = vx === 0 && vz === 0 ? 0 : 1.0;
-        // Don't update spawn time for the ACTIVE emitter, keep it fresh
-        if (waterMaterialRef.current) {
-            emitterSpawnTimesRef.current[globalIdx] = waterMaterialRef.current.uniforms.uTime.value;
+        // Detect direction change (turn)
+        const currentVel = new Vector2(vx, vz);
+        if (lastVelRef.current[index].length() > 0 && currentVel.dot(lastVelRef.current[index]) < -0.5) {
+            // Transfer current state to ghost
+            positionsRef.current[ghostIdx].copy(positionsRef.current[currentIdx]);
+            velocitiesRef.current[ghostIdx].copy(velocitiesRef.current[currentIdx]);
+            weightsRef.current[ghostIdx] = 1.0;
         }
+        lastVelRef.current[index].copy(currentVel);
 
-        // Shift to next emitter if time passed
-        if (now - lastEmitTimeRef.current[index] > interval && (vx !== 0 || vz !== 0)) {
-            lastEmitTimeRef.current[index] = now;
-            currentEmitterIdxRef.current[index] = (currentLocalIdx + 1) % EMITTERS_PER_SWIMMER;
-            const nextGlobalIdx = baseIdx + currentEmitterIdxRef.current[index];
-            emitterLifeRef.current[nextGlobalIdx] = 0;
-        }
+        // Update current source
+        positionsRef.current[currentIdx].set(x, z);
+        velocitiesRef.current[currentIdx].set(vx, vz);
+        weightsRef.current[currentIdx] = (vx === 0 && vz === 0) ? 0 : 1.0;
     }, []);
 
     useFrame((state, delta) => {
-        for (let i = 0; i < TOTAL_EMITTERS; i++) {
-            const swimmerIdx = Math.floor(i / EMITTERS_PER_SWIMMER);
-            const localIdx = i % EMITTERS_PER_SWIMMER;
-
-            if (localIdx !== currentEmitterIdxRef.current[swimmerIdx]) {
-                emitterLifeRef.current[i] = Math.max(0, emitterLifeRef.current[i] - delta * 0.5);
-            }
+        // Decay ghost weights
+        for (let i = MAX_SWIMMERS; i < MAX_SOURCES; i++) {
+            weightsRef.current[i] = Math.max(0, weightsRef.current[i] - delta * 0.5); // Fade over 2s
         }
 
         if (waterMaterialRef.current) {
             waterMaterialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-            waterMaterialRef.current.uniforms.uEmitters.value = emittersRef.current;
-            waterMaterialRef.current.uniforms.uEmitterLife.value = emitterLifeRef.current;
-            waterMaterialRef.current.uniforms.uEmitterSpawnTimes.value = emitterSpawnTimesRef.current;
+            waterMaterialRef.current.uniforms.uPositions.value = positionsRef.current;
+            waterMaterialRef.current.uniforms.uVelocities.value = velocitiesRef.current;
+            waterMaterialRef.current.uniforms.uWeights.value = weightsRef.current;
         }
     });
 
