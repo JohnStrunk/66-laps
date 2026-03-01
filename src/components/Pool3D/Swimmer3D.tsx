@@ -2,7 +2,7 @@
 
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
-import * as THREE from "three";
+import { Group } from "three";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { TestWindow } from "@/modules/testTypes";
 
@@ -14,14 +14,22 @@ type Swimmer3DProps = {
     isRight: boolean;
 };
 
-// Generates a consistent random color based on lane index
-function getLaneColor(index: number) {
-    const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff", "#ff8800", "#8800ff", "#0088ff", "#ff0088"];
-    return colors[index % colors.length];
-}
+const getLaneColor = (index: number) => {
+    const colors = [
+        "#ff4d4d", // Red
+        "#4d79ff", // Blue
+        "#4dff4d", // Green
+        "#ffff4d", // Yellow
+        "#ff4dff", // Magenta
+        "#4dffff", // Cyan
+        "#ff994d", // Orange
+        "#994dff", // Purple
+    ];
+    return colors[index % colors.length] || "#ffffff";
+};
 
 export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight }: Swimmer3DProps) {
-    const groupRef = useRef<THREE.Group>(null);
+    const groupRef = useRef<Group>(null);
     const color = useMemo(() => getLaneColor(laneIndex), [laneIndex]);
 
     useFrame(() => {
@@ -61,15 +69,17 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
 
         groupRef.current.position.set(xPos, 0, zPos);
 
-        // Rotation (Flip animation when dir changes)
-        // In Three.js (right-handed), rotating +90 deg (PI/2) around Y points local +Z to world +X.
-        // If moving right (+X), we want local +Z (the head) to point at +X.
-        // If moving left (-X), we want local +Z (the head) to point at -X.
-        const movingRight = (!isRight && headingToTurn) || (isRight && !headingToTurn);
-        const targetRotationY = movingRight ? Math.PI / 2 : -Math.PI / 2;
+        // Rotation: Point in direction of travel
+        // Normal (isRight=false): ToTurn is +X, ToStart is -X
+        // Flipped (isRight=true): ToTurn is -X, ToStart is +X
+        let movingRight = false;
+        if (!isRight) {
+            movingRight = headingToTurn;
+        } else {
+            movingRight = !headingToTurn;
+        }
 
-        // Simple instant rotation for now, we will add flip interpolation later
-        groupRef.current.rotation.y = targetRotationY;
+        groupRef.current.rotation.y = movingRight ? Math.PI / 2 : -Math.PI / 2;
     });
 
     return (
