@@ -6,15 +6,6 @@ import { Pool3DProps } from "./Pool3D";
 import PoolScene from "./PoolScene";
 import { PCFShadowMap } from "three";
 
-function LoadingFallback() {
-    return (
-        <mesh>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="red" />
-        </mesh>
-    );
-}
-
 export default function Pool3D(props: Pool3DProps) {
     return (
         <div className={props.className} data-testid="pool-3d-container">
@@ -25,7 +16,7 @@ export default function Pool3D(props: Pool3DProps) {
             >
                 <color attach="background" args={["#111111"]} />
                 <ambientLight intensity={0.5} />
-                <Suspense fallback={<LoadingFallback />}>
+                <Suspense fallback={null}>
                     <PoolScene {...props} />
                 </Suspense>
             </Canvas>
