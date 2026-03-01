@@ -3,10 +3,12 @@
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry } from "three";
+import { Text } from "@react-three/drei";
 import { Pool3DProps } from "./Pool3D";
-import { StartingEnd } from "../Settings/Settings";
+import { NumberingDirection, StartingEnd } from "../Settings/Settings";
 import Swimmer3D from "./Swimmer3D";
 import { TestWindow } from "@/modules/testTypes";
+import { ATKINSON_BOLD } from "@/modules/fonts/AtkinsonBold";
 
 const LANE_WIDTH_METERS = 2.5;
 const DISK_DIAMETER = 0.12;
@@ -14,167 +16,225 @@ const DISK_THICKNESS = 0.03;
 const DISK_SPACING = 0.05;
 const DISK_PITCH = DISK_THICKNESS + DISK_SPACING;
 
-function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number }) {
+const DECK_Y = 0;
+const WATER_Y = -0.5;
+const POOL_DEPTH = 3.0;
+const FLOOR_Y = WATER_Y - POOL_DEPTH;
+
+function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number, y: number }) {
     const meshRef = useRef<InstancedMesh>(null);
     const floatsPerRope = Math.floor(poolLength / DISK_PITCH);
     const totalFloats = floatsPerRope * (lanes - 1);
 
     const { geometry, material, cordGeometry, cordMaterial } = useMemo(() => {
-        // Disk geometry: Cylinder rotated to align its axis with the X axis (the cord)
-        const geo = new CylinderGeometry(DISK_DIAMETER / 2, DISK_DIAMETER / 2, DISK_THICKNESS, 16);
+        const geo = new CylinderGeometry(DISK_DIAMETER / 2, DISK_DIAMETER / 2, DISK_THICKNESS, 8);
         geo.rotateZ(Math.PI / 2);
-        const mat = new MeshStandardMaterial({ roughness: 0.3 });
-
-        // Cord geometry: Thin silver cylinder along the X axis
-        const cGeo = new CylinderGeometry(0.002, 0.002, poolLength, 8);
+        const mat = new MeshStandardMaterial({ roughness: 0.5 });
+        const cGeo = new CylinderGeometry(0.005, 0.002, poolLength, 4);
         cGeo.rotateZ(Math.PI / 2);
-        const cMat = new MeshStandardMaterial({ color: "#c0c0c0", metalness: 0.8, roughness: 0.2 });
-
+        const cMat = new MeshStandardMaterial({ color: "#aaaaaa", roughness: 0.5 });
         return { geometry: geo, material: mat, cordGeometry: cGeo, cordMaterial: cMat };
     }, [poolLength]);
 
     useEffect(() => {
-        if (!meshRef.current) return;
-
-        // Center the disks along the length of the pool
+        if (!meshRef.current || totalFloats <= 0) return;
         const totalFloatLength = (floatsPerRope - 1) * DISK_PITCH + DISK_THICKNESS;
         const offset = (poolLength - totalFloatLength) / 2;
-
         const dummy = new Object3D();
         let idx = 0;
         for (let rope = 1; rope < lanes; rope++) {
             const z = rope * LANE_WIDTH_METERS;
             for (let f = 0; f < floatsPerRope; f++) {
                 const x = f * DISK_PITCH + offset + DISK_THICKNESS / 2;
-                dummy.position.set(x, 0, z);
+                dummy.position.set(x, y, z);
                 dummy.updateMatrix();
                 meshRef.current.setMatrixAt(idx, dummy.matrix);
 
-                // Coloring logic
-                let color = new Color("#00008b"); // Dark Blue
+                let color = new Color("#0000bb");
                 if (x <= 5 || x >= poolLength - 5) {
-                    color = new Color("#ff0000"); // Red
-                } else {
-                    const distTo15Start = Math.abs(x - 15);
-                    const distTo15End = Math.abs(x - (poolLength - 15));
-                    // Mark disks nearest to 15m from each end
-                    if (distTo15Start < DISK_PITCH / 2 || distTo15End < DISK_PITCH / 2) {
-                        color = new Color("#ffff00"); // Yellow
-                    }
+                    color = new Color("#bb0000");
+                } else if (Math.abs(x - 15) < DISK_PITCH / 2 || Math.abs(x - (poolLength - 15)) < DISK_PITCH / 2) {
+                    // Using DISK_PITCH / 2 ensures only the single closest disk is colored yellow
+                    color = new Color("#bbbb00");
                 }
                 meshRef.current.setColorAt(idx, color);
-
                 idx++;
             }
         }
         meshRef.current.instanceMatrix.needsUpdate = true;
         if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
-    }, [totalFloats, floatsPerRope, lanes, poolLength]);
+    }, [totalFloats, floatsPerRope, lanes, poolLength, y]);
 
-    if (lanes <= 1) return null;
+    if (lanes <= 1 || totalFloats <= 0) return null;
 
     return (
         <>
-            {/* Lane Cords */}
             {Array.from({ length: lanes - 1 }).map((_, i) => (
                 <mesh
                     key={i}
                     geometry={cordGeometry}
                     material={cordMaterial}
-                    position={[poolLength / 2, 0, (i + 1) * LANE_WIDTH_METERS]}
-                    castShadow
-                    receiveShadow
+                    position={[poolLength / 2, y, (i + 1) * LANE_WIDTH_METERS]}
                 />
             ))}
-            {/* Lane Disks */}
             <instancedMesh
                 ref={meshRef}
                 args={[geometry, material, totalFloats]}
-                castShadow
-                receiveShadow
                 frustumCulled={false}
             />
         </>
     );
 }
 
-export default function PoolScene(props: Pool3DProps) {
-    const { camera, gl } = useThree();
-    const lanes = props.swimmers.length;
-    const poolLengthMeters = props.poolLength === "SC" ? 22.86 : 50; // 25yd is approx 22.86m
-    const poolWidthMeters = lanes * LANE_WIDTH_METERS;
-    const poolDepth = 3.0;
+function LaneMarker({ laneIndex, x, z, y, font, displayIndex }: { laneIndex: number, x: number, z: number, y: number, font: string, displayIndex: number }) {
+    return (
+        <group position={[x, y + 0.165, z]}>
+            <mesh castShadow receiveShadow>
+                <boxGeometry args={[0.33, 0.33, 0.02]} />
+                <meshStandardMaterial color="#ffffff" />
+            </mesh>
+            <Text
+                position={[0, 0, 0.011]}
+                fontSize={0.2}
+                color="black"
+                font={font}
+                anchorX="center"
+                anchorY="middle"
+            >
+                {displayIndex.toString()}
+            </Text>
+            <Text
+                position={[0, 0, -0.011]}
+                rotation={[0, Math.PI, 0]}
+                fontSize={0.2}
+                color="black"
+                font={font}
+                anchorX="center"
+                anchorY="middle"
+            >
+                {displayIndex.toString()}
+            </Text>
+        </group>
+    );
+}
 
-    // Expose for testing
+export default function PoolScene(props: Pool3DProps) {
+    const { camera, gl, scene, size } = useThree();
+    const lanes = props.swimmers.length;
+    const poolLengthMeters = props.poolLength === "SC" ? 22.86 : 50;
+    const poolWidthMeters = lanes * LANE_WIDTH_METERS;
+
+    const fontDataUri = useMemo(() => `data:font/ttf;base64,${ATKINSON_BOLD}`, []);
+
     useEffect(() => {
         if (typeof window !== "undefined" && gl.domElement) {
             const testWin = window as unknown as TestWindow;
             testWin.__TEST_CAMERA__ = camera;
+            testWin.__TEST_SCENE__ = scene;
             gl.domElement.setAttribute('data-test-ready', 'true');
         }
-    }, [camera, gl.domElement]);
+    }, [camera, gl.domElement, scene]);
 
-    // Camera Perspective Setup
-    // Position: 3.0m from the start end wall, 1.67m high, centered horizontally
     useEffect(() => {
         const isRight = props.startingEnd === StartingEnd.RIGHT;
         const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
-        const observerZ = poolWidthMeters + 2.0; // Stand 2m back from the edge of lane N
+        const observerZ = poolWidthMeters + 2.0;
         const lookAtX = isRight ? poolLengthMeters : 0;
-        const lookAtZ = poolWidthMeters / 2; // Look at the middle of the start wall
+        const lookAtZ = poolWidthMeters / 2;
 
-        camera.position.set(observerX, 1.67, observerZ);
-        camera.lookAt(lookAtX, 0, lookAtZ);
+        camera.position.set(observerX, DECK_Y + 1.67, observerZ);
+        camera.lookAt(lookAtX, WATER_Y, lookAtZ);
 
-        // Convert Horizontal FOV to Vertical FOV (Three.js uses vertical FOV)
         if (camera instanceof PerspectiveCamera) {
             const cam = camera as PerspectiveCamera;
-            // formula: vFOV = 2 * Math.atan( Math.tan( hFOV/2 ) * (height/width) )
-            const aspect = window.innerWidth / window.innerHeight;
-            const hFOV = Math.PI / 2; // 90 degrees in radians
+            const aspect = (size.width / size.height) || 1.0;
+            const hFOV = Math.PI / 2;
             const vFOV = 2 * Math.atan(Math.tan(hFOV / 2) / aspect);
-            // eslint-disable-next-line react-hooks/immutability -- Three.js cameras require manual property updates followed by updateProjectionMatrix()
+            // eslint-disable-next-line react-hooks/immutability
             cam.fov = vFOV * (180 / Math.PI);
             cam.updateProjectionMatrix();
         }
-    }, [camera, props.startingEnd, poolWidthMeters, poolLengthMeters]);
+    }, [camera, props.startingEnd, poolWidthMeters, poolLengthMeters, size]);
 
-    // Simple Pool Geometry
     return (
         <>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[poolLengthMeters / 2, 20, poolWidthMeters / 2]} intensity={1} castShadow />
+            <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow />
 
-            {/* Deck */}
-            <mesh position={[poolLengthMeters / 2, -0.01, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <planeGeometry args={[poolLengthMeters + 20, poolWidthMeters + 20]} />
-                <meshStandardMaterial color="#cccccc" roughness={0.8} />
+            {/* Deck Areas */}
+            <mesh position={[poolLengthMeters / 2, DECK_Y, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                <planeGeometry args={[poolLengthMeters + 20, 10]} />
+                <meshStandardMaterial color="#888888" />
+            </mesh>
+            <mesh position={[poolLengthMeters / 2, DECK_Y, poolWidthMeters + 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                <planeGeometry args={[poolLengthMeters + 20, 10]} />
+                <meshStandardMaterial color="#888888" />
+            </mesh>
+            <mesh position={[-5, DECK_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                <planeGeometry args={[10, poolWidthMeters]} />
+                <meshStandardMaterial color="#888888" />
+            </mesh>
+            <mesh position={[poolLengthMeters + 5, DECK_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                <planeGeometry args={[10, poolWidthMeters]} />
+                <meshStandardMaterial color="#888888" />
+            </mesh>
+
+            {/* Pool Walls */}
+            <mesh position={[0, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters / 2]} rotation={[0, Math.PI / 2, 0]}>
+                <planeGeometry args={[poolWidthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial color="#add8e6" side={DoubleSide} />
+            </mesh>
+            <mesh position={[poolLengthMeters, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters / 2]} rotation={[0, -Math.PI / 2, 0]}>
+                <planeGeometry args={[poolWidthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial color="#add8e6" side={DoubleSide} />
+            </mesh>
+            <mesh position={[poolLengthMeters / 2, (DECK_Y + FLOOR_Y) / 2, 0]}>
+                <planeGeometry args={[poolLengthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial color="#add8e6" side={DoubleSide} />
+            </mesh>
+            <mesh position={[poolLengthMeters / 2, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters]} rotation={[0, Math.PI, 0]}>
+                <planeGeometry args={[poolLengthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial color="#add8e6" side={DoubleSide} />
             </mesh>
 
             {/* Water Surface */}
-            <mesh position={[poolLengthMeters / 2, 0, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <mesh position={[poolLengthMeters / 2, WATER_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                <meshPhysicalMaterial
-                    color="#44aaff"
-                    transmission={0.9}
-                    opacity={1}
+                <meshStandardMaterial
+                    color="#0099ff"
+                    opacity={0.6}
                     transparent
-                    roughness={0.1}
-                    ior={1.33}
                     side={DoubleSide}
                 />
             </mesh>
 
             {/* Pool Floor */}
-            <mesh position={[poolLengthMeters / 2, -poolDepth, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <mesh position={[poolLengthMeters / 2, FLOOR_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                <meshStandardMaterial color="#88ccff" side={DoubleSide} />
+                <meshStandardMaterial color="#add8e6" />
             </mesh>
 
-            {/* Lane Ropes */}
-            <LaneRopes poolLength={poolLengthMeters} lanes={lanes} />
+            <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
 
-            {/* Swimmers */}
+            {Array.from({ length: lanes }).map((_, i) => {
+                const isRight = props.startingEnd === StartingEnd.RIGHT;
+                const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
+                const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
+                // If AWAY (Bottom to top), lane 1 is nearest viewer (highest index i)
+                // If TOWARDS (Top to bottom), lane 1 is farthest from viewer (lowest index i)
+                const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                return (
+                    <LaneMarker
+                        key={i}
+                        laneIndex={i}
+                        x={markerX}
+                        z={markerZ}
+                        y={DECK_Y}
+                        font={fontDataUri}
+                        displayIndex={displayIndex}
+                    />
+                );
+            })}
+
             {props.swimmers.map((swimmer, i) => (
                 <Swimmer3D
                     key={i}
@@ -183,6 +243,7 @@ export default function PoolScene(props: Pool3DProps) {
                     laneWidth={LANE_WIDTH_METERS}
                     poolLength={poolLengthMeters}
                     isRight={props.startingEnd === StartingEnd.RIGHT}
+                    waterY={WATER_Y}
                 />
             ))}
         </>

@@ -12,6 +12,7 @@ type Swimmer3DProps = {
     laneWidth: number;
     poolLength: number;
     isRight: boolean;
+    waterY: number;
 };
 
 const getLaneColor = (index: number) => {
@@ -28,7 +29,7 @@ const getLaneColor = (index: number) => {
     return colors[index % colors.length] || "#ffffff";
 };
 
-export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight }: Swimmer3DProps) {
+export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight, waterY }: Swimmer3DProps) {
     const groupRef = useRef<Group>(null);
     const color = useMemo(() => getLaneColor(laneIndex), [laneIndex]);
 
@@ -67,7 +68,7 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         // Z pos across lanes
         const zPos = (laneIndex + 0.5) * laneWidth;
 
-        groupRef.current.position.set(xPos, 0, zPos);
+        groupRef.current.position.set(xPos, waterY, zPos);
 
         // Rotation: Point in direction of travel
         // Normal (isRight=false): ToTurn is +X, ToStart is -X
