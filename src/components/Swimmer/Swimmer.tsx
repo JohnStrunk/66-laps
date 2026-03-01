@@ -3,6 +3,7 @@ import { ISwimmer } from "@/modules/SwimmerModel";
 import { extend, useTick } from "@pixi/react";
 import { Container, Graphics, GraphicsContext, PointData, Sprite, Text, TextStyle } from "pixi.js";
 import { useRef, useState } from "react";
+import { getAnchor, getPosition } from "./swimmerUtils";
 
 extend({ Container, Graphics, GraphicsContext, Sprite, Text });
 const emojis = [
@@ -24,15 +25,6 @@ export type SwimmerProps = {
     swimmer: ISwimmer;
 };
 
-function getPosition(startEnd: PointData, turnEnd: PointData, location: number): PointData {
-    // Calculate the current position based on the location fraction
-    const currentPosition = {
-        x: startEnd.x + (turnEnd.x - startEnd.x) * location,
-        y: startEnd.y + (turnEnd.y - startEnd.y) * location
-    };
-    return currentPosition;
-};
-
 export default function Swimmer(props: SwimmerProps) {
     // When first created, pick a random emoji from the list
     const [useChar] = useState<string>(() => emojis[Math.floor(Math.random() * emojis.length)]);
@@ -42,8 +34,9 @@ export default function Swimmer(props: SwimmerProps) {
         if (!textRef.current) return;
         const swimmer = props.swimmer.where();
         const position = getPosition(props.startEnd, props.turnEnd, swimmer.location);
+        const anchor = getAnchor(props.startEnd, props.turnEnd, swimmer.location);
         textRef.current.position.set(position.x, position.y);
-        textRef.current.anchor.set(swimmer.location, 0.5);
+        textRef.current.anchor.set(anchor.x, anchor.y);
     });
 
     return (

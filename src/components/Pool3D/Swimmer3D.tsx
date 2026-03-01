@@ -30,6 +30,10 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         if (laneIndex === 0) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (window as any).__TEST_SWIMMER_0__ = groupRef.current;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).__TEST_SWIMMER_0_MODEL__ = swimmer;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).__TEST_POOL_LENGTH__ = poolLength;
         }
 
         // Location is 0.0 to 1.0 representing the distance completed along the CURRENT lap.
@@ -38,13 +42,19 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         // In SwimmerModel, Direction.TOTURN is 1, Direction.TOSTART is 0
         const headingToTurn = dir === 1;
 
+        // Swimmer dimensions: Sphere (r=0.3) + Cylinder (l=1.2) = 1.5m total
+        const swimmerLength = 1.5;
+        const halfLength = swimmerLength / 2;
+        const travelRange = poolLength - swimmerLength;
+
         let xPos = 0;
         if (!isRight) {
             // Start is at X=0, Turn is at X=poolLength
-            xPos = loc * poolLength;
+            // Using anchor-like logic to keep the swimmer between 0 and poolLength.
+            xPos = halfLength + loc * travelRange;
         } else {
             // Start is at X=poolLength, Turn is at X=0
-            xPos = poolLength - (loc * poolLength);
+            xPos = (poolLength - halfLength) - loc * travelRange;
         }
 
         // Z pos across lanes
@@ -66,11 +76,12 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
     return (
         <group ref={groupRef}>
             {/* Ice cream cone shape: sphere head + cone body */}
-            <mesh position={[0, 0, 0]} castShadow>
+            {/* Centered so total length is 1.5m, from -0.75 to +0.75 in local Z */}
+            <mesh position={[0, 0, 0.45]} castShadow>
                 <sphereGeometry args={[0.3, 16, 16]} />
                 <meshStandardMaterial color={color} />
             </mesh>
-            <mesh position={[0, 0, -0.6]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <mesh position={[0, 0, -0.15]} rotation={[Math.PI / 2, 0, 0]} castShadow>
                 <cylinderGeometry args={[0.3, 0.1, 1.2, 16]} />
                 <meshStandardMaterial color={color} />
             </mesh>
