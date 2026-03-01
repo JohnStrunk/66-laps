@@ -2,8 +2,8 @@
 
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry } from "three";
-import { Text } from "@react-three/drei";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping } from "three";
+import { Text, useTexture } from "@react-three/drei";
 import { Pool3DProps } from "./Pool3D";
 import { NumberingDirection, StartingEnd } from "../Settings/Settings";
 import Swimmer3D from "./Swimmer3D";
@@ -126,6 +126,20 @@ export default function PoolScene(props: Pool3DProps) {
 
     const fontDataUri = useMemo(() => `data:font/ttf;base64,${ATKINSON_BOLD}`, []);
 
+    const concreteTexture = useTexture("/images/concrete2_seamless_diffuse_1k.png");
+
+    const { southNorthTexture, westEastTexture } = useMemo(() => {
+        const sn = concreteTexture.clone();
+        sn.wrapS = sn.wrapT = RepeatWrapping;
+        sn.repeat.set((poolLengthMeters + 20) / 2, 10 / 2); // 2m per tile
+
+        const we = concreteTexture.clone();
+        we.wrapS = we.wrapT = RepeatWrapping;
+        we.repeat.set(10 / 2, poolWidthMeters / 2); // 2m per tile
+
+        return { southNorthTexture: sn, westEastTexture: we };
+    }, [concreteTexture, poolLengthMeters, poolWidthMeters]);
+
     useEffect(() => {
         if (typeof window !== "undefined" && gl.domElement) {
             const testWin = window as unknown as TestWindow;
@@ -163,19 +177,19 @@ export default function PoolScene(props: Pool3DProps) {
             {/* Deck Areas */}
             <mesh position={[poolLengthMeters / 2, DECK_Y, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters + 20, 10]} />
-                <meshStandardMaterial color="#888888" />
+                <meshStandardMaterial map={southNorthTexture} />
             </mesh>
             <mesh position={[poolLengthMeters / 2, DECK_Y, poolWidthMeters + 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters + 20, 10]} />
-                <meshStandardMaterial color="#888888" />
+                <meshStandardMaterial map={southNorthTexture} />
             </mesh>
             <mesh position={[-5, DECK_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[10, poolWidthMeters]} />
-                <meshStandardMaterial color="#888888" />
+                <meshStandardMaterial map={westEastTexture} />
             </mesh>
             <mesh position={[poolLengthMeters + 5, DECK_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[10, poolWidthMeters]} />
-                <meshStandardMaterial color="#888888" />
+                <meshStandardMaterial map={westEastTexture} />
             </mesh>
 
             {/* Pool Walls */}
