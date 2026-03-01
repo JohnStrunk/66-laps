@@ -257,7 +257,7 @@ export default function PoolScene(props: Pool3DProps) {
         const isRight = props.startingEnd === StartingEnd.RIGHT;
         const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
         const observerZ = poolWidthMeters + 2.0;
-        const lookAtX = isRight ? poolLengthMeters - 5.0 : 5.0; // Look 5m down the pool
+        const lookAtX = isRight ? poolLengthMeters : 0;
         const lookAtZ = poolWidthMeters / 2;
 
         camera.position.set(observerX, DECK_Y + 1.67, observerZ);
