@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { Pool3DProps } from "./Pool3D";
 import { StartingEnd } from "../Settings/Settings";
 import Swimmer3D from "./Swimmer3D";
+import { TestWindow } from "@/modules/testTypes";
 
 const LANE_WIDTH_METERS = 2.5;
 
@@ -68,8 +69,8 @@ export default function PoolScene(props: Pool3DProps) {
     // Expose for testing
     useEffect(() => {
         if (typeof window !== "undefined" && gl.domElement) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (window as any).__TEST_CAMERA__ = camera;
+            const testWin = window as unknown as TestWindow;
+            testWin.__TEST_CAMERA__ = camera;
             gl.domElement.setAttribute('data-test-ready', 'true');
         }
     }, [camera, gl.domElement]);
@@ -88,13 +89,12 @@ export default function PoolScene(props: Pool3DProps) {
 
         // Convert Horizontal FOV to Vertical FOV (Three.js uses vertical FOV)
         if (camera instanceof THREE.PerspectiveCamera) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const cam = camera as any;
+            const cam = camera as THREE.PerspectiveCamera;
             // formula: vFOV = 2 * Math.atan( Math.tan( hFOV/2 ) * (height/width) )
             const aspect = window.innerWidth / window.innerHeight;
             const hFOV = Math.PI / 2; // 90 degrees in radians
             const vFOV = 2 * Math.atan(Math.tan(hFOV / 2) / aspect);
-            // eslint-disable-next-line react-hooks/immutability
+            // eslint-disable-next-line react-hooks/immutability -- Three.js cameras require manual property updates followed by updateProjectionMatrix()
             cam.fov = vFOV * (180 / Math.PI);
             cam.updateProjectionMatrix();
         }

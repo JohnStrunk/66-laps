@@ -127,6 +127,10 @@ This document provides essential information for AI agents working on the
   state with props or global store state. Perform such updates in event
   handlers (e.g., `onPress`) or derive values during rendering using `useMemo`.
   Strict linting (`react-hooks/set-state-in-effect`) is enforced.
+- **ESLint Warnings:** Never use `eslint-disable` or similar comments to bypass
+  linting rules without a clear, documented explanation and explicit approval
+  from the user. Prioritize fixing the underlying issue over suppressing the
+  warning.
 - **Zustand Persistence:** When adding new state to the store, consider if it
   needs to be persisted. Use the `partialize` function in the `persist`
   middleware to selectively persist state.
