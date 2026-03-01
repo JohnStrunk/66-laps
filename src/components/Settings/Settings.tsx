@@ -7,6 +7,11 @@ export enum NumberingDirection {
     TOWARDS = "TOWARDS",
 }
 
+export enum StartingEnd {
+    LEFT = "LEFT",
+    RIGHT = "RIGHT",
+}
+
 // Valid values for selects
 const LANE_OPTIONS = ["6", "8", "10"];
 const RACE_LENGTH_OPTIONS = [
@@ -19,6 +24,10 @@ const RACE_LENGTH_OPTIONS = [
 const NUMBERING_OPTIONS = [
     { value: NumberingDirection.AWAY, label: "Bottom to top" },
     { value: NumberingDirection.TOWARDS, label: "Top to bottom" },
+];
+const STARTING_END_OPTIONS = [
+    { value: StartingEnd.LEFT, label: "Left" },
+    { value: StartingEnd.RIGHT, label: "Right" },
 ];
 const DIFFICULTY_OPTIONS = [
     { value: "0.5", label: "Peaceful" },
@@ -47,6 +56,8 @@ export type SettingsValue = {
     spread: number;
     /** The direction for lane numbering */
     numberingDirection: NumberingDirection;
+    /** The side of the screen the start/finish wall is on */
+    startingEnd: StartingEnd;
 };
 
 export type SettingsProps = {
@@ -59,6 +70,7 @@ export default function Settings(props: SettingsProps) {
     const [lanes, setLanes] = useState<number>(8);
     const [difficulty, setDifficulty] = useState<number>(1.0);
     const [numberingDirection, setNumberingDirection] = useState<NumberingDirection>(NumberingDirection.AWAY);
+    const [startingEnd, setStartingEnd] = useState<StartingEnd>(StartingEnd.LEFT);
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
     const [spread, setSpread] = useState<number>(0.05);
@@ -74,6 +86,7 @@ export default function Settings(props: SettingsProps) {
             difficulty,
             spread,
             numberingDirection,
+            startingEnd,
         });
     }
 
@@ -83,94 +96,134 @@ export default function Settings(props: SettingsProps) {
             <Form onSubmit={handleSubmit} className="flex flex-col items-center">
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
                     <Select
+                        data-testid="settings-Number of Lanes"
                         label="Number of Lanes"
-                        defaultSelectedKeys={[lanes.toString()]}
+                        selectedKeys={new Set([lanes.toString()])}
                         validate={(value) => {
-                            if (value === "" || value === null) {
+                            if (value === "" || value === null || value === undefined) {
                                 return "Please select a number of lanes";
                             }
-                            const stringValue = Array.isArray(value) ? value[0] : value;
-                            if (!LANE_OPTIONS.includes(stringValue)) {
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!LANE_OPTIONS.includes(String(stringValue))) {
                                 return "Please select a valid number of lanes";
                             }
                             return true;
                         }}
-                        onChange={(e) => {
-                            setLanes(parseInt(e.target.value));
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setLanes(parseInt(selected.toString()));
                         }}>
                         {LANE_OPTIONS.map(opt => (
                             <SelectItem key={opt}>{opt}</SelectItem>
                         ))}
                     </Select>
                     <Select
+                        data-testid="settings-Race Length"
                         label="Race Length"
-                        defaultSelectedKeys={[raceLength]}
+                        selectedKeys={new Set([raceLength])}
                         validate={(value) => {
-                            if (value === "" || value === null) {
+                            if (value === "" || value === null || value === undefined) {
                                 return "Please select a race length";
                             }
-                            const stringValue = Array.isArray(value) ? value[0] : value;
-                            if (!RACE_LENGTH_OPTIONS.some(opt => opt.value === stringValue)) {
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!RACE_LENGTH_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid race length";
                             }
                             return true;
                         }}
-                        onChange={(e) => setRaceLength(e.target.value)}>
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setRaceLength(selected.toString());
+                        }}>
                         {RACE_LENGTH_OPTIONS.map(opt => (
                             <SelectItem key={opt.value}>{opt.label}</SelectItem>
                         ))}
                     </Select>
                     <Select
+                        data-testid="settings-Lane Numbering"
                         label="Lane Numbering"
-                        defaultSelectedKeys={[numberingDirection]}
+                        selectedKeys={new Set([numberingDirection])}
                         validate={(value) => {
-                            if (value === "" || value === null) {
+                            if (value === "" || value === null || value === undefined) {
                                 return "Please select a lane numbering direction";
                             }
-                            const stringValue = Array.isArray(value) ? value[0] : value;
-                            if (!NUMBERING_OPTIONS.some(opt => opt.value === stringValue)) {
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!NUMBERING_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid lane numbering direction";
                             }
                             return true;
                         }}
-                        onChange={(e) => setNumberingDirection(e.target.value as NumberingDirection)}>
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setNumberingDirection(selected.toString() as NumberingDirection);
+                        }}>
                         {NUMBERING_OPTIONS.map(opt => (
                             <SelectItem key={opt.value}>{opt.label}</SelectItem>
                         ))}
                     </Select>
                     <Select
+                        data-testid="settings-Difficulty"
                         label="Difficulty"
-                        defaultSelectedKeys={[difficulty.toString()]}
+                        selectedKeys={new Set([difficulty.toString()])}
                         validate={(value) => {
-                            if (value === "" || value === null) {
+                            if (value === "" || value === null || value === undefined) {
                                 return "Please select a difficulty";
                             }
-                            const stringValue = Array.isArray(value) ? value[0] : value;
-                            if (!DIFFICULTY_OPTIONS.some(opt => opt.value === stringValue)) {
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!DIFFICULTY_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid difficulty";
                             }
                             return true;
                         }}
-                        onChange={(e) => setDifficulty(parseFloat(e.target.value))}>
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setDifficulty(parseFloat(selected.toString()));
+                        }}>
                         {DIFFICULTY_OPTIONS.map(opt => (
                             <SelectItem key={opt.value}>{opt.label}</SelectItem>
                         ))}
                     </Select>
                     <Select
+                        data-testid="settings-Spread"
                         label="Spread"
-                        defaultSelectedKeys={[spread.toString()]}
+                        selectedKeys={new Set([spread.toString()])}
                         validate={(value) => {
-                            if (value === "" || value === null) {
+                            if (value === "" || value === null || value === undefined) {
                                 return "Please select a spread";
                             }
-                            const stringValue = Array.isArray(value) ? value[0] : value;
-                            if (!SPREAD_OPTIONS.some(opt => opt.value === stringValue)) {
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!SPREAD_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid spread";
                             }
                             return true;
                         }}
-                        onChange={(e) => setSpread(parseFloat(e.target.value))}>
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setSpread(parseFloat(selected.toString()));
+                        }}>
                         {SPREAD_OPTIONS.map(opt => (
+                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                    </Select>
+                    <Select
+                        data-testid="settings-Starting End"
+                        label="Starting End"
+                        selectedKeys={new Set([startingEnd])}
+                        validate={(value) => {
+                            if (value === "" || value === null || value === undefined) {
+                                return "Please select a starting end";
+                            }
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!STARTING_END_OPTIONS.some(opt => opt.value === String(stringValue))) {
+                                return "Please select a valid starting end";
+                            }
+                            return true;
+                        }}
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setStartingEnd(selected.toString() as StartingEnd);
+                        }}>
+                        {STARTING_END_OPTIONS.map(opt => (
                             <SelectItem key={opt.value}>{opt.label}</SelectItem>
                         ))}
                     </Select>

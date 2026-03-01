@@ -3,10 +3,10 @@
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import Pool, { PoolLength } from "@/components/Pool/Pool";
-import Settings, { NumberingDirection, SettingsValue } from "@/components/Settings/Settings";
+import Settings, { NumberingDirection, SettingsValue, StartingEnd } from "@/components/Settings/Settings";
 import { ph_event_swimulation } from "@/modules/phEvents";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
-import { Button } from "@heroui/react";
+import { Button, ButtonGroup } from "@heroui/react";
 import { usePostHog } from "posthog-js/react";
 
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +15,8 @@ enum Mode {
     SETTINGS = "SETTINGS",
     SWIM = "SWIM",
 }
+
+type ViewMode = "2D" | "3D";
 
 function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): ISwimmer {
     const secondsPerLap = poolLength === PoolLength.SC ? 16 : 34; // Average lap time in seconds
@@ -47,6 +49,7 @@ function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): I
 
 export default function Page() {
     const [mode, setMode] = useState<Mode>(Mode.SETTINGS);
+    const [viewMode, setViewMode] = useState<ViewMode>("2D");
     const [swimmers, setSwimmers] = useState<ISwimmer[]>([]);
     const [settings, setSettings] = useState<SettingsValue>({
         // dummy values
@@ -56,6 +59,7 @@ export default function Page() {
         difficulty: 1.0,
         spread: 0.05,
         numberingDirection: NumberingDirection.AWAY,
+        startingEnd: StartingEnd.LEFT,
     });
     const wakeLock = useRef<WakeLockSentinel | null>(null);
     const startTime = useRef<number>(0);
@@ -150,13 +154,25 @@ export default function Page() {
                     <Settings onClick={handleSettingsClick} />
                 </div>
                 {mode === Mode.SWIM && (
-                    <div className="relative w-screen h-screen p-4">
-                        <Pool
-                            className="w-full h-full"
-                            poolLength={settings.poolLength}
-                            swimmers={swimmers}
-                            numbering={settings.numberingDirection} />
-                        <div className="absolute top-6 right-6">
+                    <div className="relative w-screen h-screen p-4" data-swimmer-count={swimmers.length} data-numbering={settings.numberingDirection} data-starting-end={settings.startingEnd}>
+                        {viewMode === "2D" ? (
+                            <Pool
+                                className="w-full h-full"
+                                poolLength={settings.poolLength}
+                                swimmers={swimmers}
+                                numbering={settings.numberingDirection}
+                                startingEnd={settings.startingEnd} />
+                        ) : (
+                            <div className="w-full h-full bg-blue-900 flex items-center justify-center">
+                                {/* Placeholder for 3D Pool Canvas */}
+                                <span className="text-white">3D R3F Canvas Placeholder</span>
+                            </div>
+                        )}
+                        <div className="absolute top-6 right-6 flex gap-4">
+                            <ButtonGroup color="secondary">
+                                <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
+                                <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>
+                            </ButtonGroup>
                             <Button
                                 color="primary"
                                 onPress={() => setMode(Mode.SETTINGS)}
