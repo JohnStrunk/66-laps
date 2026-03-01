@@ -23,7 +23,7 @@ const POOL_DEPTH = 3.0;
 const FLOOR_Y = WATER_Y - POOL_DEPTH;
 
 const MAX_SWIMMERS = 10;
-const EMITTERS_PER_SWIMMER = 5;
+const EMITTERS_PER_SWIMMER = 10;
 const TOTAL_EMITTERS = MAX_SWIMMERS * EMITTERS_PER_SWIMMER;
 
 function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number, y: number }) {
@@ -188,6 +188,7 @@ const WaterShader = {
         // x,y: pos, z,w: vel
         uEmitters: { value: Array(TOTAL_EMITTERS).fill(new Vector4(-100, -100, 0, 0)) },
         uEmitterLife: { value: Array(TOTAL_EMITTERS).fill(0) },
+        uEmitterSpawnTimes: { value: Array(TOTAL_EMITTERS).fill(0) },
         uColor: { value: new Color("#0099ff") }
     },
     vertexShader: `
@@ -204,6 +205,7 @@ const WaterShader = {
         uniform float uTime;
         uniform vec4 uEmitters[${TOTAL_EMITTERS}];
         uniform float uEmitterLife[${TOTAL_EMITTERS}];
+        uniform float uEmitterSpawnTimes[${TOTAL_EMITTERS}];
         uniform vec3 uColor;
         varying vec2 vUv;
         varying vec3 vWorldPosition;
@@ -220,6 +222,7 @@ const WaterShader = {
 
                 vec2 pos = uEmitters[i].xy;
                 vec2 vel = uEmitters[i].zw;
+                float spawnTime = uEmitterSpawnTimes[i];
 
                 vec2 dirForward = normalize(vel);
                 vec2 dirRight = vec2(-dirForward.y, dirForward.x);
@@ -228,8 +231,8 @@ const WaterShader = {
                 float localX = dot(toPixel, -dirForward);
                 float localY = dot(toPixel, dirRight);
 
-                if (localX > 0.0 && localX < 6.0 && abs(localY) < localX * 0.8) {
-                    float mask = smoothstep(0.8, 0.4, abs(localY) / localX) * smoothstep(6.0, 4.0, localX);
+                if (localX > -0.5 && localX < 6.0 && abs(localY) < (localX + 0.5) * 0.8) {
+                    float mask = smoothstep(0.8, 0.4, abs(localY) / (localX + 0.5)) * smoothstep(6.0, 4.0, localX);
                     float swimmerWake = 0.0;
                     for (int j = 0; j < 4; j++) {
                         float theta = (float(j) / 3.0 - 0.5) * 1.2;
@@ -238,7 +241,10 @@ const WaterShader = {
                         float k = k0 / (cosT * cosT);
                         float phase = k * (localX * cosT + localY * sinT);
                         float omega = sqrt(g * k);
-                        swimmerWake += cos(phase - uTime * omega * 1.2) / (sqrt(localX + 0.5) * cosT);
+
+                        // Use local time for each emitter to prevent jitter
+                        float localTime = uTime - spawnTime;
+                        swimmerWake += cos(phase - localTime * omega * 1.2) / (sqrt(localX + 1.0) * cosT);
                     }
                     totalWake += (swimmerWake / 4.0) * mask * life;
                 }
@@ -266,6 +272,7 @@ export default function PoolScene(props: Pool3DProps) {
     // Emitters state
     const emittersRef = useRef<Vector4[]>(Array(TOTAL_EMITTERS).fill(0).map(() => new Vector4(-100, -100, 0, 0)));
     const emitterLifeRef = useRef<number[]>(Array(TOTAL_EMITTERS).fill(0));
+    const emitterSpawnTimesRef = useRef<number[]>(Array(TOTAL_EMITTERS).fill(0));
     const lastEmitTimeRef = useRef<number[]>(Array(MAX_SWIMMERS).fill(0));
     const currentEmitterIdxRef = useRef<number[]>(Array(MAX_SWIMMERS).fill(0));
 
@@ -273,7 +280,7 @@ export default function PoolScene(props: Pool3DProps) {
         if (index >= MAX_SWIMMERS) return;
 
         const now = performance.now();
-        const interval = 200; // ms between dropping new trail points
+        const interval = 100; // ms between dropping new trail points
 
         const baseIdx = index * EMITTERS_PER_SWIMMER;
         const currentLocalIdx = currentEmitterIdxRef.current[index];
@@ -282,6 +289,10 @@ export default function PoolScene(props: Pool3DProps) {
         // Update current emitter
         emittersRef.current[globalIdx].set(x, z, vx, vz);
         emitterLifeRef.current[globalIdx] = vx === 0 && vz === 0 ? 0 : 1.0;
+        // Don't update spawn time for the ACTIVE emitter, keep it fresh
+        if (waterMaterialRef.current) {
+            emitterSpawnTimesRef.current[globalIdx] = waterMaterialRef.current.uniforms.uTime.value;
+        }
 
         // Shift to next emitter if time passed
         if (now - lastEmitTimeRef.current[index] > interval && (vx !== 0 || vz !== 0)) {
@@ -306,6 +317,7 @@ export default function PoolScene(props: Pool3DProps) {
             waterMaterialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
             waterMaterialRef.current.uniforms.uEmitters.value = emittersRef.current;
             waterMaterialRef.current.uniforms.uEmitterLife.value = emitterLifeRef.current;
+            waterMaterialRef.current.uniforms.uEmitterSpawnTimes.value = emitterSpawnTimesRef.current;
         }
     });
 
