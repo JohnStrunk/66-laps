@@ -82,7 +82,7 @@ export default function Settings(props: SettingsProps) {
     const [difficulty, setDifficulty] = useState<number>(1.0);
     const [numberingDirection, setNumberingDirection] = useState<NumberingDirection>(NumberingDirection.AWAY);
     const [startingEnd, setStartingEnd] = useState<StartingEnd>(StartingEnd.LEFT);
-    const [simulationMode, setSimulationMode] = useState<SimulationMode>(SimulationMode.TWO_D);
+    const [simulationMode, setSimulationMode] = useState<SimulationMode>(SimulationMode.THREE_D);
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
     const [spread, setSpread] = useState<number>(0.05);
