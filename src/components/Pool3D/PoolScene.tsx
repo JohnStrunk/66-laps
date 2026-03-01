@@ -48,7 +48,13 @@ function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number })
     if (lanes <= 1) return null;
 
     return (
-        <instancedMesh ref={meshRef} args={[geometry, material, totalFloats]} castShadow receiveShadow />
+        <instancedMesh
+            ref={meshRef}
+            args={[geometry, material, totalFloats]}
+            castShadow
+            receiveShadow
+            frustumCulled={false} // Prevent culling when the origin is out of view
+        />
     );
 }
 
@@ -72,27 +78,6 @@ export default function PoolScene(props: Pool3DProps) {
     // Position: 3.0m from the start end wall, 1.67m high, centered horizontally
     useEffect(() => {
         const isRight = props.startingEnd === StartingEnd.RIGHT;
-        // If start is Left, observer stands at Z = -3.0m, looking +Z.
-        // Wait, if start is left, from the observer's POV, the pool goes from Left to Right.
-        // Standard X,Y,Z: +X is right, +Y is up, +Z is out of screen (towards viewer).
-        // Let's make X the pool length (swimming left-to-right or right-to-left).
-        // Let's make Z the depth across lanes (from nearest to furthest).
-
-        // The instructions say: "Camera looks toward the start end wall."
-        // "Position: The observer is standing on the pool deck, exactly 3.0 meters from the start end wall."
-        // "Left Orientation: Camera looks toward the left (End is on the left)."
-
-        // If end is on the Left, and we look Left, we are at X = 3.0, looking at X = 0.
-        // Wait, if X=0 is the start wall, and the pool extends to X = +poolLength (Right).
-        // We stand at X = -3.0 (left of the start wall)? No, we stand on the side deck.
-        // The Side Deck means we are parallel to the pool length.
-        // If the pool goes left-to-right (Start is Left), the start wall is on our left.
-        // We look toward the start end wall -> We look Left.
-        // So we stand at X_observer = poolLength/2, Z_observer = poolWidth + 3.0m?
-        // Wait, "standing on the pool deck, exactly 3.0 meters from the start end wall."
-        // This implies X = 3.0 meters from the wall, on the side deck.
-        // Let's define the pool: X=0 to X=poolLength. Z=0 to Z=poolWidth.
-
         const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
         const observerZ = poolWidthMeters + 2.0; // Stand 2m back from the edge of lane N
         const lookAtX = isRight ? poolLengthMeters : 0;
@@ -119,7 +104,7 @@ export default function PoolScene(props: Pool3DProps) {
     return (
         <>
             <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 20, 10]} intensity={1} castShadow />
+            <directionalLight position={[poolLengthMeters / 2, 20, poolWidthMeters / 2]} intensity={1} castShadow />
 
             {/* Deck */}
             <mesh position={[poolLengthMeters / 2, -0.01, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -137,13 +122,14 @@ export default function PoolScene(props: Pool3DProps) {
                     transparent
                     roughness={0.1}
                     ior={1.33}
+                    side={THREE.DoubleSide}
                 />
             </mesh>
 
             {/* Pool Floor */}
             <mesh position={[poolLengthMeters / 2, -poolDepth, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                <meshStandardMaterial color="#88ccff" />
+                <meshStandardMaterial color="#88ccff" side={THREE.DoubleSide} />
             </mesh>
 
             {/* Lane Ropes */}

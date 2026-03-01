@@ -16,12 +16,14 @@ Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and
         }
 
         const data = await page.evaluate(() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const swimmer = (window as any).__TEST_SWIMMER_0__;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const model = (window as any).__TEST_SWIMMER_0_MODEL__;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const poolLength = (window as any).__TEST_POOL_LENGTH__;
 
             if (!swimmer || !model || !poolLength) return null;
-
             const { location } = model.where();
             const xPos = swimmer.position.x;
 
