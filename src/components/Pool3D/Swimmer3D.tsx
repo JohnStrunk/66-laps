@@ -13,6 +13,7 @@ type Swimmer3DProps = {
     poolLength: number;
     isRight: boolean;
     waterY: number;
+    onPositionUpdate?: (index: number, x: number, z: number) => void;
 };
 
 const SWIMMER_COLORS = [
@@ -30,7 +31,7 @@ const getRandomSwimmerColor = () => {
     return SWIMMER_COLORS[Math.floor(Math.random() * SWIMMER_COLORS.length)];
 };
 
-export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight, waterY }: Swimmer3DProps) {
+export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight, waterY, onPositionUpdate }: Swimmer3DProps) {
     const groupRef = useRef<Group>(null);
     // Stable random color for this swimmer instance
     const color = useMemo(() => getRandomSwimmerColor(), []);
@@ -71,6 +72,10 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         const zPos = (laneIndex + 0.5) * laneWidth;
 
         groupRef.current.position.set(xPos, waterY, zPos);
+
+        if (onPositionUpdate) {
+            onPositionUpdate(laneIndex, xPos, zPos);
+        }
 
         // Rotation: Point in direction of travel
         // Normal (isRight=false): ToTurn is +X, ToStart is -X
