@@ -103,7 +103,7 @@ export default function Settings(props: SettingsProps) {
                             if (value === "" || value === null || value === undefined) {
                                 return "Please select a number of lanes";
                             }
-                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!LANE_OPTIONS.includes(String(stringValue))) {
                                 return "Please select a valid number of lanes";
                             }
@@ -125,7 +125,7 @@ export default function Settings(props: SettingsProps) {
                             if (value === "" || value === null || value === undefined) {
                                 return "Please select a race length";
                             }
-                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!RACE_LENGTH_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid race length";
                             }
@@ -147,7 +147,7 @@ export default function Settings(props: SettingsProps) {
                             if (value === "" || value === null || value === undefined) {
                                 return "Please select a lane numbering direction";
                             }
-                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!NUMBERING_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid lane numbering direction";
                             }
@@ -169,7 +169,7 @@ export default function Settings(props: SettingsProps) {
                             if (value === "" || value === null || value === undefined) {
                                 return "Please select a difficulty";
                             }
-                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!DIFFICULTY_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid difficulty";
                             }
@@ -191,7 +191,7 @@ export default function Settings(props: SettingsProps) {
                             if (value === "" || value === null || value === undefined) {
                                 return "Please select a spread";
                             }
-                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!SPREAD_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid spread";
                             }
@@ -213,7 +213,7 @@ export default function Settings(props: SettingsProps) {
                             if (value === "" || value === null || value === undefined) {
                                 return "Please select a starting end";
                             }
-                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as any)[0] : Array.isArray(value) ? value[0] : value;
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!STARTING_END_OPTIONS.some(opt => opt.value === String(stringValue))) {
                                 return "Please select a valid starting end";
                             }

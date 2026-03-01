@@ -22,7 +22,11 @@
     "@ducanh2912/next-pwa": "10.2.9",
     "@heroui/react": "2.8.9",
     "@pixi/react": "8.0.5",
+    "@react-three/drei": "10.7.7",
+    "@react-three/fiber": "9.5.0",
     "@sentry/nextjs": "10.39.0",
+    "@three.ez/main": "0.5.12",
+    "@types/three": "0.183.1",
     "jspdf": "4.2.0",
     "jspdf-autotable": "5.0.7",
     "lucide-react": "0.575.0",
@@ -33,6 +37,7 @@
     "posthog-js": "1.352.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "three": "0.183.2",
     "zustand": "5.0.11"
   },
   "devDependencies": {
