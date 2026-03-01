@@ -12,6 +12,11 @@ export enum StartingEnd {
     RIGHT = "RIGHT",
 }
 
+export enum SimulationMode {
+    TWO_D = "2D",
+    THREE_D = "3D",
+}
+
 // Valid values for selects
 const LANE_OPTIONS = ["6", "8", "10"];
 const RACE_LENGTH_OPTIONS = [
@@ -28,6 +33,10 @@ const NUMBERING_OPTIONS = [
 const STARTING_END_OPTIONS = [
     { value: StartingEnd.LEFT, label: "Left" },
     { value: StartingEnd.RIGHT, label: "Right" },
+];
+const MODE_OPTIONS = [
+    { value: SimulationMode.TWO_D, label: "2D Overhead" },
+    { value: SimulationMode.THREE_D, label: "3D Perspective" },
 ];
 const DIFFICULTY_OPTIONS = [
     { value: "0.5", label: "Peaceful" },
@@ -58,6 +67,8 @@ export type SettingsValue = {
     numberingDirection: NumberingDirection;
     /** The side of the screen the start/finish wall is on */
     startingEnd: StartingEnd;
+    /** The simulation rendering mode */
+    simulationMode: SimulationMode;
 };
 
 export type SettingsProps = {
@@ -71,6 +82,7 @@ export default function Settings(props: SettingsProps) {
     const [difficulty, setDifficulty] = useState<number>(1.0);
     const [numberingDirection, setNumberingDirection] = useState<NumberingDirection>(NumberingDirection.AWAY);
     const [startingEnd, setStartingEnd] = useState<StartingEnd>(StartingEnd.LEFT);
+    const [simulationMode, setSimulationMode] = useState<SimulationMode>(SimulationMode.TWO_D);
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
     const [spread, setSpread] = useState<number>(0.05);
@@ -87,6 +99,7 @@ export default function Settings(props: SettingsProps) {
             spread,
             numberingDirection,
             startingEnd,
+            simulationMode,
         });
     }
 
@@ -224,6 +237,28 @@ export default function Settings(props: SettingsProps) {
                             if (selected) setStartingEnd(selected.toString() as StartingEnd);
                         }}>
                         {STARTING_END_OPTIONS.map(opt => (
+                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                    </Select>
+                    <Select
+                        data-testid="settings-Simulation Mode"
+                        label="Simulation Mode"
+                        selectedKeys={new Set([simulationMode])}
+                        validate={(value) => {
+                            if (value === "" || value === null || value === undefined) {
+                                return "Please select a simulation mode";
+                            }
+                            const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
+                            if (!MODE_OPTIONS.some(opt => opt.value === String(stringValue))) {
+                                return "Please select a valid simulation mode";
+                            }
+                            return true;
+                        }}
+                        onSelectionChange={(keys) => {
+                            const selected = Array.from(keys)[0];
+                            if (selected) setSimulationMode(selected.toString() as SimulationMode);
+                        }}>
+                        {MODE_OPTIONS.map(opt => (
                             <SelectItem key={opt.value}>{opt.label}</SelectItem>
                         ))}
                     </Select>

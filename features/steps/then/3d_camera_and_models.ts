@@ -4,9 +4,10 @@ import { strict as assert } from 'assert';
 import { advanceClock, waitForVisible } from '../../support/utils';
 
 Then('the 3D camera should be positioned on the deck, looking toward the left', async function (this: CustomWorld) {
-    // Wait for canvas to be fully rendered
-    const container = this.page!.locator('[data-testid="3d-pool-container"]');
-    await waitForVisible(container);
+    // Wait for canvas to be fully rendered and ready
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
+
     // Advance clock to let React effects run
     for (let i = 0; i < 5; i++) {
         await advanceClock(this.page!, 100);
@@ -22,6 +23,9 @@ Then('the 3D camera should be positioned on the deck, looking toward the left', 
 });
 
 Then('the camera should be exactly {float} meters from the start end wall', async function (this: CustomWorld, float: number) {
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
+
     const camPos = await this.page!.evaluate(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cam = (window as any).__TEST_CAMERA__;
@@ -31,6 +35,9 @@ Then('the camera should be exactly {float} meters from the start end wall', asyn
 });
 
 Then('the camera height should be fixed at {float} meters', async function (this: CustomWorld, float: number) {
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
+
     const camPos = await this.page!.evaluate(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cam = (window as any).__TEST_CAMERA__;
@@ -40,20 +47,20 @@ Then('the camera height should be fixed at {float} meters', async function (this
 });
 
 Then('the horizontal field of view should be {int} degrees', async function (this: CustomWorld, int: number) {
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
+
     const fov = await this.page!.evaluate(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cam = (window as any).__TEST_CAMERA__;
-        // In three.js, camera.fov is vertical FOV.
-        // The horizontal FOV depends on aspect ratio.
-        // Our hook sets vertical FOV to correspond to a 90 degree horizontal FOV.
         return cam?.fov;
     });
     assert.ok(fov !== undefined && fov > 0 && int > 0, 'Camera FOV should be set');
 });
 
 Then('the 3D camera should be positioned on the deck, looking toward the right', async function (this: CustomWorld) {
-    const container = this.page!.locator('[data-testid="3d-pool-container"]');
-    await waitForVisible(container);
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
     for (let i = 0; i < 5; i++) {
         await advanceClock(this.page!, 100);
     }
@@ -65,6 +72,19 @@ Then('the 3D camera should be positioned on the deck, looking toward the right',
     });
     // If right orientation, camera is at poolLength - 3.0
     assert.ok(camPos.x !== undefined && camPos.x > 3.0, `Camera X was ${camPos.x}, expected > 3.0 for right orientation`);
+});
+
+Then('the camera should be tilted downward toward the base of the pool wall', async function (this: CustomWorld) {
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
+
+    const rotationX = await this.page!.evaluate(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const cam = (window as any).__TEST_CAMERA__;
+        return cam?.rotation.x;
+    });
+    // Looking down means a negative rotation around X axis in Three.js default orientation
+    assert.ok(rotationX < 0, `Camera rotation.x was ${rotationX}, expected < 0`);
 });
 
 Then('I should see exactly {int} swimmers in the 3D environment', async function (this: CustomWorld, int: number) {

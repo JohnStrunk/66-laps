@@ -56,9 +56,11 @@ Feature: Practice View Modes
       | Hardcore 🖤  | Max     |
 
   @browser @practice @3d
-  Scenario: Practice Settings UI contains new orientation controls
+  Scenario: Practice Settings UI contains mode selection
     Then I should see a setting for "Starting End" with options "Left" and "Right"
+    And I should see a setting for "Simulation Mode" with options "2D Overhead" and "3D Perspective"
     And the default "Starting End" should be "Left"
+    And the default "Simulation Mode" should be "2D Overhead"
 
   @browser @practice @3d
   Scenario: View Selector is available on the simulation screen
@@ -68,11 +70,18 @@ Feature: Practice View Modes
     And I should see the "Back to Settings" button in the corner
 
   @browser @practice @3d
-  Scenario: Toggling to 3D view displays the React Three Fiber Canvas
+  Scenario: Toggling to 3D view displays the React Three Fiber Canvas with Lane Ropes
     When I configure a practice race and click "Start"
     And I toggle the view selector to "3D"
     Then the 2D PixiJS canvas should be replaced by a 3D R3F Canvas
-    And I should see a 3D environment with water and pool walls
+    And I should see a 3D environment with water and lane ropes
+
+  @browser @practice @3d
+  Scenario: Starting in 3D mode directly from Settings
+    Given I set the "Simulation Mode" setting to "3D Perspective"
+    When I click "Start"
+    Then the 3D R3F Canvas should be visible immediately
+    And the view selector should default to "3D"
 
   @browser @practice @3d
   Scenario: 2D View rendering logic when Starting End is Left (Default)
@@ -99,6 +108,7 @@ Feature: Practice View Modes
     And the camera should be exactly 3.0 meters from the start end wall
     And the camera height should be fixed at 1.67 meters
     And the horizontal field of view should be 90 degrees
+    And the camera should be tilted downward toward the base of the pool wall
 
   @browser @practice @3d
   Scenario: 3D Camera perspective logic when Starting End is Right
@@ -109,15 +119,17 @@ Feature: Practice View Modes
     And the camera should be exactly 3.0 meters from the start end wall
     And the camera height should be fixed at 1.67 meters
     And the horizontal field of view should be 90 degrees
+    And the camera should be tilted downward toward the base of the pool wall
 
   @browser @practice @3d
   Scenario: Simulation mode and Starting End settings are not persisted globally
     Given I set the "Starting End" setting to "Right"
+    And I set the "Simulation Mode" setting to "3D Perspective"
     And I configure a practice race and click "Start"
-    And I toggle the view selector to "3D"
     When I reload the application
     And I navigate to the Practice tool
     Then the "Starting End" setting should be reset to "Left"
+    And the "Simulation Mode" setting should be reset to "2D Overhead"
     When I configure a practice race and click "Start"
     Then the view selector should default to "2D"
 
@@ -131,9 +143,16 @@ Feature: Practice View Modes
     And the swimmers should have distinct solid colors assigned from the predefined palette
 
   @browser @practice @3d
-  Scenario: 3D View Flip Animation Trigger
-    When I set the "Race Length" setting to "500 SC"
+  Scenario: 3D swimmers swim back and forth over multiple laps
+    Given I set the "Race Length" setting to "500 SC"
     And I click "Start"
     And I toggle the view selector to "3D"
-    And I wait for a swimmer to reach the turn wall
-    Then the swimmer model should perform a quick 180-degree flip animation
+    When I wait for 30 seconds to elapse
+    Then the swimmers should be at various positions in the pool
+    And the swimmers should have completed at least one turn and be heading back
+
+  @browser @practice @3d
+  Scenario: 3D swimmers are oriented correctly with head in front
+    When I configure a practice race and click "Start"
+    And I toggle the view selector to "3D"
+    Then the swimmers should have their rounded heads pointing in the direction of travel

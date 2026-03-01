@@ -26,27 +26,25 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
     useFrame(() => {
         if (!groupRef.current) return;
 
+        // Expose for testing
+        if (laneIndex === 0) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).__TEST_SWIMMER_0__ = groupRef.current;
+        }
+
         // Location is 0.0 to 1.0 representing the distance completed along the CURRENT lap.
         const { location: loc, direction: dir } = swimmer.where();
-
-        // For Left Start:
-        // Start Wall is at X=0. Turn Wall is at X=poolLength.
-        // dir = Direction.TOTURN (1) -> swimmer moves from 0 to poolLength.
-        // dir = Direction.TOSTART (0) -> swimmer moves from poolLength to 0.
-
-        // For Right Start:
-        // Start Wall is at X=poolLength. Turn Wall is at X=0.
-        // dir = Direction.TOTURN (1) -> swimmer moves from poolLength to 0.
-        // dir = Direction.TOSTART (0) -> swimmer moves from 0 to poolLength.
 
         // In SwimmerModel, Direction.TOTURN is 1, Direction.TOSTART is 0
         const headingToTurn = dir === 1;
 
         let xPos = 0;
         if (!isRight) {
-            xPos = headingToTurn ? loc * poolLength : (1 - loc) * poolLength;
+            // Start is at X=0, Turn is at X=poolLength
+            xPos = loc * poolLength;
         } else {
-            xPos = headingToTurn ? poolLength - (loc * poolLength) : loc * poolLength;
+            // Start is at X=poolLength, Turn is at X=0
+            xPos = poolLength - (loc * poolLength);
         }
 
         // Z pos across lanes
@@ -55,10 +53,11 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         groupRef.current.position.set(xPos, 0, zPos);
 
         // Rotation (Flip animation when dir changes)
-        // If moving +X, look at +X (rotation Y = -Math.PI/2)
-        // If moving -X, look at -X (rotation Y = Math.PI/2)
+        // In Three.js (right-handed), rotating +90 deg (PI/2) around Y points local +Z to world +X.
+        // If moving right (+X), we want local +Z (the head) to point at +X.
+        // If moving left (-X), we want local +Z (the head) to point at -X.
         const movingRight = (!isRight && headingToTurn) || (isRight && !headingToTurn);
-        const targetRotationY = movingRight ? -Math.PI / 2 : Math.PI / 2;
+        const targetRotationY = movingRight ? Math.PI / 2 : -Math.PI / 2;
 
         // Simple instant rotation for now, we will add flip interpolation later
         groupRef.current.rotation.y = targetRotationY;
