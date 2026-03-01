@@ -208,32 +208,60 @@ const WaterShader = {
         varying vec3 vWorldPosition;
 
         void main() {
-            float ripple = 0.0;
+            float totalWake = 0.0;
+            float g = 9.81;
+            float u = 1.5; // Assumed average swimming speed for wave calculation
+            float k0 = g / (u * u);
+
             for(int i = 0; i < ${MAX_SWIMMERS}; i++) {
                 if (i >= uNumSwimmers) break;
 
                 vec2 swimmerPos = uSwimmerPositions[i];
                 vec2 swimmerVel = uSwimmerVelocities[i];
+                if (length(swimmerVel) < 0.1) continue;
+
+                vec2 dirForward = normalize(swimmerVel);
+                vec2 dirRight = vec2(-dirForward.y, dirForward.x);
+
                 vec2 toPixel = vWorldPosition.xz - swimmerPos;
-                float d = length(toPixel);
 
-                if (d > 5.0) continue; // Performance optimization
+                // Transform to local coordinates:
+                // localX is distance BEHIND the swimmer
+                // localY is lateral distance
+                float localX = dot(toPixel, -dirForward);
+                float localY = dot(toPixel, dirRight);
 
-                // Directional weight: dot product of travel direction and pixel direction
-                float dirWeight = dot(normalize(swimmerVel), normalize(toPixel));
+                // Kelvin wake is contained within ~19.5 degrees (tan approx 0.35)
+                // We expand it slightly for visual softness
+                if (localX > 0.0 && localX < 6.0 && abs(localY) < localX * 0.8) {
+                    float mask = smoothstep(0.8, 0.4, abs(localY) / localX) * smoothstep(6.0, 4.0, localX);
 
-                // Wake effect: stronger behind (dirWeight < 0), weaker ahead (dirWeight > 0)
-                float wakeBias = smoothstep(0.5, -0.5, dirWeight) * 0.8 + 0.2;
+                    float swimmerWake = 0.0;
+                    // Sum wave components at different angles
+                    for (int j = 0; j < 6; j++) {
+                        float theta = (float(j) / 5.0 - 0.5) * 1.2; // Sample angles
+                        float cosT = cos(theta);
+                        float sinT = sin(theta);
 
-                // Stronger, slower-decaying ripples
-                float rippleEffect = sin(d * 12.0 - uTime * 10.0) * exp(-d * 0.8);
-                ripple += rippleEffect * 0.4 * wakeBias;
+                        // Phase based on deep water dispersion relation
+                        float k = k0 / (cosT * cosT);
+                        float phase = k * (localX * cosT + localY * sinT);
+                        float omega = sqrt(g * k);
+
+                        swimmerWake += cos(phase - uTime * omega * 1.2) / (sqrt(localX + 0.5) * cosT);
+                    }
+                    totalWake += (swimmerWake / 6.0) * mask;
+                }
             }
 
-            // Add highlights and shadows based on ripple
-            vec3 finalColor = uColor + (ripple * 0.5);
+            // Add highlights and shadows based on wake height
+            vec3 finalColor = uColor + (totalWake * 0.4);
+            // Add a slight top-down sparkle
+            finalColor += max(0.0, totalWake) * 0.2;
+
             gl_FragColor = vec4(finalColor, 0.7);
-        }    `
+        }
+    `
 };
 
 export default function PoolScene(props: Pool3DProps) {
