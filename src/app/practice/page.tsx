@@ -3,6 +3,7 @@
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import Pool, { PoolLength } from "@/components/Pool/Pool";
+import Pool3D from "@/components/Pool3D/Pool3D";
 import Settings, { NumberingDirection, SettingsValue, StartingEnd } from "@/components/Settings/Settings";
 import { ph_event_swimulation } from "@/modules/phEvents";
 import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
@@ -163,12 +164,13 @@ export default function Page() {
                                 numbering={settings.numberingDirection}
                                 startingEnd={settings.startingEnd} />
                         ) : (
-                            <div className="w-full h-full bg-blue-900 flex items-center justify-center">
-                                {/* Placeholder for 3D Pool Canvas */}
-                                <span className="text-white">3D R3F Canvas Placeholder</span>
-                            </div>
-                        )}
-                        <div className="absolute top-6 right-6 flex gap-4">
+                            <Pool3D
+                                className="w-full h-full"
+                                poolLength={settings.poolLength}
+                                swimmers={swimmers}
+                                numbering={settings.numberingDirection}
+                                startingEnd={settings.startingEnd} />
+                        )}                        <div className="absolute top-6 right-6 flex gap-4">
                             <ButtonGroup color="secondary">
                                 <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
                                 <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>
