@@ -2,41 +2,66 @@
 
 import { useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, SphereGeometry } from "three";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry } from "three";
 import { Pool3DProps } from "./Pool3D";
 import { StartingEnd } from "../Settings/Settings";
 import Swimmer3D from "./Swimmer3D";
 import { TestWindow } from "@/modules/testTypes";
 
 const LANE_WIDTH_METERS = 2.5;
+const DISK_DIAMETER = 0.12;
+const DISK_THICKNESS = 0.03;
+const DISK_SPACING = 0.05;
+const DISK_PITCH = DISK_THICKNESS + DISK_SPACING;
 
 function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number }) {
     const meshRef = useRef<InstancedMesh>(null);
-    const floatSpacing = 0.2; // 20cm between floats
-    const floatsPerRope = Math.floor(poolLength / floatSpacing);
+    const floatsPerRope = Math.floor(poolLength / DISK_PITCH);
     const totalFloats = floatsPerRope * (lanes - 1);
 
-    const { geometry, material } = useMemo(() => {
-        const geo = new SphereGeometry(0.05, 8, 8);
-        const mat = new MeshStandardMaterial({ roughness: 0.5 });
-        return { geometry: geo, material: mat };
-    }, []);
+    const { geometry, material, cordGeometry, cordMaterial } = useMemo(() => {
+        // Disk geometry: Cylinder rotated to align its axis with the X axis (the cord)
+        const geo = new CylinderGeometry(DISK_DIAMETER / 2, DISK_DIAMETER / 2, DISK_THICKNESS, 16);
+        geo.rotateZ(Math.PI / 2);
+        const mat = new MeshStandardMaterial({ roughness: 0.3 });
+
+        // Cord geometry: Thin silver cylinder along the X axis
+        const cGeo = new CylinderGeometry(0.002, 0.002, poolLength, 8);
+        cGeo.rotateZ(Math.PI / 2);
+        const cMat = new MeshStandardMaterial({ color: "#c0c0c0", metalness: 0.8, roughness: 0.2 });
+
+        return { geometry: geo, material: mat, cordGeometry: cGeo, cordMaterial: cMat };
+    }, [poolLength]);
 
     useEffect(() => {
         if (!meshRef.current) return;
+
+        // Center the disks along the length of the pool
+        const totalFloatLength = (floatsPerRope - 1) * DISK_PITCH + DISK_THICKNESS;
+        const offset = (poolLength - totalFloatLength) / 2;
 
         const dummy = new Object3D();
         let idx = 0;
         for (let rope = 1; rope < lanes; rope++) {
             const z = rope * LANE_WIDTH_METERS;
             for (let f = 0; f < floatsPerRope; f++) {
-                const x = f * floatSpacing;
-                dummy.position.set(x, 0.05, z);
+                const x = f * DISK_PITCH + offset + DISK_THICKNESS / 2;
+                dummy.position.set(x, 0, z);
                 dummy.updateMatrix();
                 meshRef.current.setMatrixAt(idx, dummy.matrix);
 
-                // Alternate colors (Red/White)
-                const color = (f % 4 < 2) ? new Color("#ff0000") : new Color("#ffffff");
+                // Coloring logic
+                let color = new Color("#00008b"); // Dark Blue
+                if (x <= 5 || x >= poolLength - 5) {
+                    color = new Color("#ff0000"); // Red
+                } else {
+                    const distTo15Start = Math.abs(x - 15);
+                    const distTo15End = Math.abs(x - (poolLength - 15));
+                    // Mark disks nearest to 15m from each end
+                    if (distTo15Start < DISK_PITCH / 2 || distTo15End < DISK_PITCH / 2) {
+                        color = new Color("#ffff00"); // Yellow
+                    }
+                }
                 meshRef.current.setColorAt(idx, color);
 
                 idx++;
@@ -44,18 +69,32 @@ function LaneRopes({ poolLength, lanes }: { poolLength: number, lanes: number })
         }
         meshRef.current.instanceMatrix.needsUpdate = true;
         if (meshRef.current.instanceColor) meshRef.current.instanceColor.needsUpdate = true;
-    }, [totalFloats, floatsPerRope, lanes, floatSpacing]);
+    }, [totalFloats, floatsPerRope, lanes, poolLength]);
 
     if (lanes <= 1) return null;
 
     return (
-        <instancedMesh
-            ref={meshRef}
-            args={[geometry, material, totalFloats]}
-            castShadow
-            receiveShadow
-            frustumCulled={false} // Prevent culling when the origin is out of view
-        />
+        <>
+            {/* Lane Cords */}
+            {Array.from({ length: lanes - 1 }).map((_, i) => (
+                <mesh
+                    key={i}
+                    geometry={cordGeometry}
+                    material={cordMaterial}
+                    position={[poolLength / 2, 0, (i + 1) * LANE_WIDTH_METERS]}
+                    castShadow
+                    receiveShadow
+                />
+            ))}
+            {/* Lane Disks */}
+            <instancedMesh
+                ref={meshRef}
+                args={[geometry, material, totalFloats]}
+                castShadow
+                receiveShadow
+                frustumCulled={false}
+            />
+        </>
     );
 }
 
