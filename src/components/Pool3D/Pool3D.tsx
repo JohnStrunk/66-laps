@@ -1,29 +1,33 @@
 'use client'
 
 import { Canvas } from "@react-three/fiber";
-import { NumberingDirection, StartingEnd } from "../Settings/Settings";
-import { ISwimmer } from "@/modules/SwimmerModel";
-import { PoolLength } from "../Pool/Pool";
+import { Suspense } from "react";
+import { Pool3DProps } from "./Pool3D";
 import PoolScene from "./PoolScene";
-
-export type Pool3DProps = {
-    poolLength: PoolLength;
-    numbering: NumberingDirection;
-    startingEnd?: StartingEnd;
-    swimmers: ISwimmer[];
-    className?: string;
-};
-
 import { PCFShadowMap } from "three";
+
+function LoadingFallback() {
+    return (
+        <mesh>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="red" />
+        </mesh>
+    );
+}
 
 export default function Pool3D(props: Pool3DProps) {
     return (
-        <div className={props.className} data-testid="3d-pool-container">
+        <div className={props.className} data-testid="pool-3d-container">
             <Canvas
                 shadows={{ type: PCFShadowMap }}
                 camera={{ fov: 90, near: 0.1, far: 1000 }}
+                gl={{ antialias: true }}
             >
-                <PoolScene {...props} />
+                <color attach="background" args={["#111111"]} />
+                <ambientLight intensity={0.5} />
+                <Suspense fallback={<LoadingFallback />}>
+                    <PoolScene {...props} />
+                </Suspense>
             </Canvas>
         </div>
     );
