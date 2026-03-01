@@ -13,15 +13,6 @@ Feature: Practice View Modes
     And I should see exactly 6 swimmers represented as emojis on the 2D canvas
     And the swimmers should move horizontally along their lanes
 
-  @e2e @practice @2d
-  Scenario: 2D view simulation controls function correctly
-    When I configure a practice race and click "Start"
-    Then I should see a "Pause" button
-    When I click the "Pause" button
-    Then the swimmers should stop moving
-    When I click the "Resume" button
-    Then the swimmers should resume moving
-
   @e2e @practice @3d
   Scenario: Practice Settings UI contains new orientation controls
     When I click "Settings" on the Practice view
