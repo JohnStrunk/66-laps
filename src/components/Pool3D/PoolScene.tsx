@@ -2,7 +2,7 @@
 
 import { useThree, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useCallback } from "react";
-import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector2 } from "three";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector4 } from "three";
 import { Text, useTexture } from "@react-three/drei";
 import { Pool3DProps } from "./Pool3D";
 import { NumberingDirection, StartingEnd } from "../Settings/Settings";
@@ -23,6 +23,8 @@ const POOL_DEPTH = 3.0;
 const FLOOR_Y = WATER_Y - POOL_DEPTH;
 
 const MAX_SWIMMERS = 10;
+const EMITTERS_PER_SWIMMER = 5;
+const TOTAL_EMITTERS = MAX_SWIMMERS * EMITTERS_PER_SWIMMER;
 
 function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number, y: number }) {
     const meshRef = useRef<InstancedMesh>(null);
@@ -183,9 +185,9 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
 const WaterShader = {
     uniforms: {
         uTime: { value: 0 },
-        uSwimmerPositions: { value: Array(MAX_SWIMMERS).fill(new Vector2(-100, -100)) },
-        uSwimmerVelocities: { value: Array(MAX_SWIMMERS).fill(new Vector2(0, 0)) },
-        uNumSwimmers: { value: 0 },
+        // x,y: pos, z,w: vel
+        uEmitters: { value: Array(TOTAL_EMITTERS).fill(new Vector4(-100, -100, 0, 0)) },
+        uEmitterLife: { value: Array(TOTAL_EMITTERS).fill(0) },
         uColor: { value: new Color("#0099ff") }
     },
     vertexShader: `
@@ -200,9 +202,8 @@ const WaterShader = {
     `,
     fragmentShader: `
         uniform float uTime;
-        uniform vec2 uSwimmerPositions[${MAX_SWIMMERS}];
-        uniform vec2 uSwimmerVelocities[${MAX_SWIMMERS}];
-        uniform int uNumSwimmers;
+        uniform vec4 uEmitters[${TOTAL_EMITTERS}];
+        uniform float uEmitterLife[${TOTAL_EMITTERS}];
         uniform vec3 uColor;
         varying vec2 vUv;
         varying vec3 vWorldPosition;
@@ -210,57 +211,41 @@ const WaterShader = {
         void main() {
             float totalWake = 0.0;
             float g = 9.81;
-            float u = 1.5; // Assumed average swimming speed for wave calculation
+            float u = 1.5;
             float k0 = g / (u * u);
 
-            for(int i = 0; i < ${MAX_SWIMMERS}; i++) {
-                if (i >= uNumSwimmers) break;
+            for(int i = 0; i < ${TOTAL_EMITTERS}; i++) {
+                float life = uEmitterLife[i];
+                if (life <= 0.0) continue;
 
-                vec2 swimmerPos = uSwimmerPositions[i];
-                vec2 swimmerVel = uSwimmerVelocities[i];
+                vec2 pos = uEmitters[i].xy;
+                vec2 vel = uEmitters[i].zw;
 
-                float speed = length(swimmerVel);
-                if (speed < 0.1) continue;
-
-                vec2 dirForward = normalize(swimmerVel);
+                vec2 dirForward = normalize(vel);
                 vec2 dirRight = vec2(-dirForward.y, dirForward.x);
+                vec2 toPixel = vWorldPosition.xz - pos;
 
-                vec2 toPixel = vWorldPosition.xz - swimmerPos;
-
-                // Transform to local coordinates:
-                // localX is distance BEHIND the swimmer
-                // localY is lateral distance
                 float localX = dot(toPixel, -dirForward);
                 float localY = dot(toPixel, dirRight);
 
-                // Kelvin wake is contained within ~19.5 degrees (tan approx 0.35)
-                // We expand it slightly for visual softness
                 if (localX > 0.0 && localX < 6.0 && abs(localY) < localX * 0.8) {
                     float mask = smoothstep(0.8, 0.4, abs(localY) / localX) * smoothstep(6.0, 4.0, localX);
-
                     float swimmerWake = 0.0;
-                    // Sum wave components at different angles
-                    for (int j = 0; j < 6; j++) {
-                        float theta = (float(j) / 5.0 - 0.5) * 1.2; // Sample angles
+                    for (int j = 0; j < 4; j++) {
+                        float theta = (float(j) / 3.0 - 0.5) * 1.2;
                         float cosT = cos(theta);
                         float sinT = sin(theta);
-
-                        // Phase based on deep water dispersion relation
                         float k = k0 / (cosT * cosT);
                         float phase = k * (localX * cosT + localY * sinT);
                         float omega = sqrt(g * k);
-
                         swimmerWake += cos(phase - uTime * omega * 1.2) / (sqrt(localX + 0.5) * cosT);
                     }
-                    totalWake += (swimmerWake / 6.0) * mask;
+                    totalWake += (swimmerWake / 4.0) * mask * life;
                 }
             }
 
-            // Add highlights and shadows based on wake height
             vec3 finalColor = uColor + (totalWake * 0.4);
-            // Add a slight top-down sparkle
             finalColor += max(0.0, totalWake) * 0.2;
-
             gl_FragColor = vec4(finalColor, 0.7);
         }
     `
@@ -276,23 +261,51 @@ export default function PoolScene(props: Pool3DProps) {
     const concreteTexture = useTexture("/images/concrete2_seamless_diffuse_1k.png");
     const tileTexture = useTexture("/images/photoreal_tile_03-512x512_0.png");
 
-    const swimmerPositions = useRef<Vector2[]>(Array(MAX_SWIMMERS).fill(0).map(() => new Vector2(-100, -100)));
-    const swimmerVelocities = useRef<Vector2[]>(Array(MAX_SWIMMERS).fill(0).map(() => new Vector2(0, 0)));
     const waterMaterialRef = useRef<ShaderMaterial>(null);
 
+    // Emitters state
+    const emittersRef = useRef<Vector4[]>(Array(TOTAL_EMITTERS).fill(0).map(() => new Vector4(-100, -100, 0, 0)));
+    const emitterLifeRef = useRef<number[]>(Array(TOTAL_EMITTERS).fill(0));
+    const lastEmitTimeRef = useRef<number[]>(Array(MAX_SWIMMERS).fill(0));
+    const currentEmitterIdxRef = useRef<number[]>(Array(MAX_SWIMMERS).fill(0));
+
     const handleSwimmerPositionUpdate = useCallback((index: number, x: number, z: number, vx: number, vz: number) => {
-        if (index < MAX_SWIMMERS) {
-            swimmerPositions.current[index].set(x, z);
-            swimmerVelocities.current[index].set(vx, vz);
+        if (index >= MAX_SWIMMERS) return;
+
+        const now = performance.now();
+        const interval = 200; // ms between dropping new trail points
+
+        const baseIdx = index * EMITTERS_PER_SWIMMER;
+        const currentLocalIdx = currentEmitterIdxRef.current[index];
+        const globalIdx = baseIdx + currentLocalIdx;
+
+        // Update current emitter
+        emittersRef.current[globalIdx].set(x, z, vx, vz);
+        emitterLifeRef.current[globalIdx] = vx === 0 && vz === 0 ? 0 : 1.0;
+
+        // Shift to next emitter if time passed
+        if (now - lastEmitTimeRef.current[index] > interval && (vx !== 0 || vz !== 0)) {
+            lastEmitTimeRef.current[index] = now;
+            currentEmitterIdxRef.current[index] = (currentLocalIdx + 1) % EMITTERS_PER_SWIMMER;
+            const nextGlobalIdx = baseIdx + currentEmitterIdxRef.current[index];
+            emitterLifeRef.current[nextGlobalIdx] = 0;
         }
     }, []);
 
-    useFrame((state) => {
+    useFrame((state, delta) => {
+        for (let i = 0; i < TOTAL_EMITTERS; i++) {
+            const swimmerIdx = Math.floor(i / EMITTERS_PER_SWIMMER);
+            const localIdx = i % EMITTERS_PER_SWIMMER;
+
+            if (localIdx !== currentEmitterIdxRef.current[swimmerIdx]) {
+                emitterLifeRef.current[i] = Math.max(0, emitterLifeRef.current[i] - delta * 0.5);
+            }
+        }
+
         if (waterMaterialRef.current) {
             waterMaterialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-            waterMaterialRef.current.uniforms.uSwimmerPositions.value = swimmerPositions.current;
-            waterMaterialRef.current.uniforms.uSwimmerVelocities.value = swimmerVelocities.current;
-            waterMaterialRef.current.uniforms.uNumSwimmers.value = lanes;
+            waterMaterialRef.current.uniforms.uEmitters.value = emittersRef.current;
+            waterMaterialRef.current.uniforms.uEmitterLife.value = emitterLifeRef.current;
         }
     });
 
@@ -376,7 +389,6 @@ export default function PoolScene(props: Pool3DProps) {
         <>
             <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow />
 
-            {/* Deck Areas */}
             <mesh position={[poolLengthMeters / 2, DECK_Y, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters + 20, 10]} />
                 <meshStandardMaterial map={textures.southNorthTexture} />
@@ -394,7 +406,6 @@ export default function PoolScene(props: Pool3DProps) {
                 <meshStandardMaterial map={textures.westEastTexture} />
             </mesh>
 
-            {/* Pool Walls */}
             <mesh position={[0, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters / 2]} rotation={[0, Math.PI / 2, 0]}>
                 <planeGeometry args={[poolWidthMeters, DECK_Y - FLOOR_Y]} />
                 <meshStandardMaterial map={textures.wallWideTexture} side={DoubleSide} />
@@ -412,7 +423,6 @@ export default function PoolScene(props: Pool3DProps) {
                 <meshStandardMaterial map={textures.wallLongTexture} side={DoubleSide} />
             </mesh>
 
-            {/* Water Surface with Ripples */}
             <mesh position={[poolLengthMeters / 2, WATER_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters, 128, 64]} />
                 <shaderMaterial
@@ -423,14 +433,12 @@ export default function PoolScene(props: Pool3DProps) {
                 />
             </mesh>
 
-            {/* Pool Floor */}
             <mesh position={[poolLengthMeters / 2, FLOOR_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
                 <meshStandardMaterial map={textures.floorTexture} />
             </mesh>
 
-            {/* Lane Markings */}
-            {Array.from({ length: lanes }).map((_, i) => (
+            {Array.from({ length: lanes }).map((_, i: number) => (
                 <LaneMarkings
                     key={`marking-${i}`}
                     poolLength={poolLengthMeters}
@@ -441,7 +449,7 @@ export default function PoolScene(props: Pool3DProps) {
 
             <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
 
-            {Array.from({ length: lanes }).map((_, i) => {
+            {Array.from({ length: lanes }).map((_, i: number) => {
                 const isRight = props.startingEnd === StartingEnd.RIGHT;
                 const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
                 const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
