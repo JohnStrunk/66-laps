@@ -184,6 +184,7 @@ const WaterShader = {
     uniforms: {
         uTime: { value: 0 },
         uSwimmerPositions: { value: Array(MAX_SWIMMERS).fill(new Vector2(-100, -100)) },
+        uSwimmerVelocities: { value: Array(MAX_SWIMMERS).fill(new Vector2(0, 0)) },
         uNumSwimmers: { value: 0 },
         uColor: { value: new Color("#0099ff") }
     },
@@ -200,6 +201,7 @@ const WaterShader = {
     fragmentShader: `
         uniform float uTime;
         uniform vec2 uSwimmerPositions[${MAX_SWIMMERS}];
+        uniform vec2 uSwimmerVelocities[${MAX_SWIMMERS}];
         uniform int uNumSwimmers;
         uniform vec3 uColor;
         varying vec2 vUv;
@@ -209,11 +211,24 @@ const WaterShader = {
             float ripple = 0.0;
             for(int i = 0; i < ${MAX_SWIMMERS}; i++) {
                 if (i >= uNumSwimmers) break;
-                float d = distance(vWorldPosition.xz, uSwimmerPositions[i]);
+
+                vec2 swimmerPos = uSwimmerPositions[i];
+                vec2 swimmerVel = uSwimmerVelocities[i];
+                vec2 toPixel = vWorldPosition.xz - swimmerPos;
+                float d = length(toPixel);
+
+                // Directional weight: dot product of travel direction and pixel direction
+                // If moving right (1,0), pixels behind have negative X difference.
+                // Normalize toPixel for the dot product
+                float dirWeight = dot(normalize(swimmerVel), normalize(toPixel));
+
+                // Wake effect: stronger behind (dirWeight < 0), weaker ahead (dirWeight > 0)
+                // Map -1..1 to a more biased range (e.g., 0.1..1.0)
+                float wakeBias = smoothstep(0.8, -0.8, dirWeight) * 0.9 + 0.1;
 
                 // Expanding ripples logic
                 float rippleEffect = sin(d * 15.0 - uTime * 8.0) * exp(-d * 1.5);
-                ripple += rippleEffect * 0.15;
+                ripple += rippleEffect * 0.15 * wakeBias;
             }
 
             vec3 finalColor = uColor + ripple;
@@ -233,11 +248,13 @@ export default function PoolScene(props: Pool3DProps) {
     const tileTexture = useTexture("/images/photoreal_tile_03-512x512_0.png");
 
     const swimmerPositions = useRef<Vector2[]>(Array(MAX_SWIMMERS).fill(0).map(() => new Vector2(-100, -100)));
+    const swimmerVelocities = useRef<Vector2[]>(Array(MAX_SWIMMERS).fill(0).map(() => new Vector2(0, 0)));
     const waterMaterialRef = useRef<ShaderMaterial>(null);
 
-    const handleSwimmerPositionUpdate = useCallback((index: number, x: number, z: number) => {
+    const handleSwimmerPositionUpdate = useCallback((index: number, x: number, z: number, vx: number, vz: number) => {
         if (index < MAX_SWIMMERS) {
             swimmerPositions.current[index].set(x, z);
+            swimmerVelocities.current[index].set(vx, vz);
         }
     }, []);
 
@@ -245,6 +262,7 @@ export default function PoolScene(props: Pool3DProps) {
         if (waterMaterialRef.current) {
             waterMaterialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
             waterMaterialRef.current.uniforms.uSwimmerPositions.value = swimmerPositions.current;
+            waterMaterialRef.current.uniforms.uSwimmerVelocities.value = swimmerVelocities.current;
             waterMaterialRef.current.uniforms.uNumSwimmers.value = lanes;
         }
     });

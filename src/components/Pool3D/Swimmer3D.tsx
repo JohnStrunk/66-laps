@@ -13,7 +13,7 @@ type Swimmer3DProps = {
     poolLength: number;
     isRight: boolean;
     waterY: number;
-    onPositionUpdate?: (index: number, x: number, z: number) => void;
+    onPositionUpdate?: (index: number, x: number, z: number, vx: number, vz: number) => void;
 };
 
 const SWIMMER_COLORS = [
@@ -71,12 +71,6 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         // Z pos across lanes
         const zPos = (laneIndex + 0.5) * laneWidth;
 
-        groupRef.current.position.set(xPos, waterY, zPos);
-
-        if (onPositionUpdate) {
-            onPositionUpdate(laneIndex, xPos, zPos);
-        }
-
         // Rotation: Point in direction of travel
         // Normal (isRight=false): ToTurn is +X, ToStart is -X
         // Flipped (isRight=true): ToTurn is -X, ToStart is +X
@@ -85,6 +79,15 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
             movingRight = headingToTurn;
         } else {
             movingRight = !headingToTurn;
+        }
+
+        const vx = movingRight ? 1.0 : -1.0;
+        const vz = 0.0;
+
+        groupRef.current.position.set(xPos, waterY, zPos);
+
+        if (onPositionUpdate) {
+            onPositionUpdate(laneIndex, xPos, zPos, vx, vz);
         }
 
         groupRef.current.rotation.y = movingRight ? Math.PI / 2 : -Math.PI / 2;
