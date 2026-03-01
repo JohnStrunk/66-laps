@@ -1,8 +1,8 @@
 'use client'
 
-import { useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
-import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping } from "three";
+import { useThree, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useCallback } from "react";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector2 } from "three";
 import { Text, useTexture } from "@react-three/drei";
 import { Pool3DProps } from "./Pool3D";
 import { NumberingDirection, StartingEnd } from "../Settings/Settings";
@@ -21,6 +21,8 @@ const DECK_Y = 0;
 const WATER_Y = -0.5;
 const POOL_DEPTH = 3.0;
 const FLOOR_Y = WATER_Y - POOL_DEPTH;
+
+const MAX_SWIMMERS = 10;
 
 function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number, y: number }) {
     const meshRef = useRef<InstancedMesh>(null);
@@ -55,7 +57,6 @@ function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number
                 if (x <= 5 || x >= poolLength - 5) {
                     color = new Color("#bb0000");
                 } else if (Math.abs(x - 15) < DISK_PITCH / 2 || Math.abs(x - (poolLength - 15)) < DISK_PITCH / 2) {
-                    // Using DISK_PITCH / 2 ensures only the single closest disk is colored yellow
                     color = new Color("#bbbb00");
                 }
                 meshRef.current.setColorAt(idx, color);
@@ -125,7 +126,6 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
     const tCrossbarLength = 0.25;
     const distanceFromWall = 2.0;
 
-    // Floor centers
     const xStartT = distanceFromWall + tCrossbarLength / 2;
     const xEndT = poolLength - distanceFromWall - tCrossbarLength / 2;
     const stripeStart = distanceFromWall + tCrossbarLength;
@@ -133,15 +133,13 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
     const mainStripeLength = stripeEnd - stripeStart;
     const xMainStripe = (stripeStart + stripeEnd) / 2;
 
-    // Wall Markings (+ shapes)
     const wallPlusThickness = 0.25;
     const wallPlusHorizontalWidth = LANE_WIDTH_METERS * 0.75;
-    const wallPlusVerticalTop = -0.04; // 4cm below deck (y=0)
-    const wallPlusVerticalHeight = (Math.abs(wallPlusVerticalTop - WATER_Y)) * 2; // Center at water line
+    const wallPlusVerticalTop = -0.04;
+    const wallPlusVerticalHeight = (Math.abs(wallPlusVerticalTop - WATER_Y)) * 2;
 
     return (
         <>
-            {/* Floor Markings */}
             <group position={[0, yFloor + 0.01, 0]}>
                 <mesh position={[xStartT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
                     <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
@@ -157,7 +155,6 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
                 </mesh>
             </group>
 
-            {/* West Wall Marking (+) */}
             <group position={[0.01, WATER_Y, zCenter]} rotation={[0, Math.PI / 2, 0]}>
                 <mesh>
                     <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
@@ -169,7 +166,6 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
                 </mesh>
             </group>
 
-            {/* East Wall Marking (+) */}
             <group position={[poolLength - 0.01, WATER_Y, zCenter]} rotation={[0, -Math.PI / 2, 0]}>
                 <mesh>
                     <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
@@ -184,6 +180,48 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
     );
 }
 
+const WaterShader = {
+    uniforms: {
+        uTime: { value: 0 },
+        uSwimmerPositions: { value: Array(MAX_SWIMMERS).fill(new Vector2(-100, -100)) },
+        uNumSwimmers: { value: 0 },
+        uColor: { value: new Color("#0099ff") }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vWorldPosition;
+        void main() {
+            vUv = uv;
+            vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = worldPosition.xyz;
+            gl_Position = projectionMatrix * viewMatrix * worldPosition;
+        }
+    `,
+    fragmentShader: `
+        uniform float uTime;
+        uniform vec2 uSwimmerPositions[${MAX_SWIMMERS}];
+        uniform int uNumSwimmers;
+        uniform vec3 uColor;
+        varying vec2 vUv;
+        varying vec3 vWorldPosition;
+
+        void main() {
+            float ripple = 0.0;
+            for(int i = 0; i < ${MAX_SWIMMERS}; i++) {
+                if (i >= uNumSwimmers) break;
+                float d = distance(vWorldPosition.xz, uSwimmerPositions[i]);
+
+                // Expanding ripples logic
+                float rippleEffect = sin(d * 15.0 - uTime * 8.0) * exp(-d * 1.5);
+                ripple += rippleEffect * 0.15;
+            }
+
+            vec3 finalColor = uColor + ripple;
+            gl_FragColor = vec4(finalColor, 0.6);
+        }
+    `
+};
+
 export default function PoolScene(props: Pool3DProps) {
     const { camera, gl, scene, size } = useThree();
     const lanes = props.swimmers.length;
@@ -194,23 +232,36 @@ export default function PoolScene(props: Pool3DProps) {
     const concreteTexture = useTexture("/images/concrete2_seamless_diffuse_1k.png");
     const tileTexture = useTexture("/images/photoreal_tile_03-512x512_0.png");
 
+    const swimmerPositions = useRef<Vector2[]>(Array(MAX_SWIMMERS).fill(0).map(() => new Vector2(-100, -100)));
+    const waterMaterialRef = useRef<ShaderMaterial>(null);
+
+    const handleSwimmerPositionUpdate = useCallback((index: number, x: number, z: number) => {
+        if (index < MAX_SWIMMERS) {
+            swimmerPositions.current[index].set(x, z);
+        }
+    }, []);
+
+    useFrame((state) => {
+        if (waterMaterialRef.current) {
+            waterMaterialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+            waterMaterialRef.current.uniforms.uSwimmerPositions.value = swimmerPositions.current;
+            waterMaterialRef.current.uniforms.uNumSwimmers.value = lanes;
+        }
+    });
+
     const textures = useMemo(() => {
-        // Deck - Long sides
         const sn = concreteTexture.clone();
         sn.wrapS = sn.wrapT = RepeatWrapping;
         sn.repeat.set((poolLengthMeters + 20) / 2, 10 / 2);
 
-        // Deck - Wide sides
         const we = concreteTexture.clone();
         we.wrapS = we.wrapT = RepeatWrapping;
         we.repeat.set(10 / 2, poolWidthMeters / 2);
 
-        // Floor - Concrete
         const floor = concreteTexture.clone();
         floor.wrapS = floor.wrapT = RepeatWrapping;
         floor.repeat.set(poolLengthMeters / 2, poolWidthMeters / 2);
 
-        // Walls - Tiles (0.75m per tile)
         const wallLong = tileTexture.clone();
         wallLong.wrapS = wallLong.wrapT = RepeatWrapping;
         const totalDepth = DECK_Y - FLOOR_Y;
@@ -257,11 +308,11 @@ export default function PoolScene(props: Pool3DProps) {
         const isRight = props.startingEnd === StartingEnd.RIGHT;
         const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
         const observerZ = poolWidthMeters + 2.0;
-        const lookAtX = isRight ? poolLengthMeters - 3.0 : 3.0; // 3.0m in from the end wall
+        const lookAtX = isRight ? poolLengthMeters - 3.0 : 3.0;
         const lookAtZ = poolWidthMeters / 2;
 
         camera.position.set(observerX, DECK_Y + 1.67, observerZ);
-        camera.lookAt(lookAtX, -2.0, lookAtZ); // 1.5m below water line (-0.5 - 1.5)
+        camera.lookAt(lookAtX, -2.0, lookAtZ);
 
         if (camera instanceof PerspectiveCamera) {
             const cam = camera as PerspectiveCamera;
@@ -314,12 +365,12 @@ export default function PoolScene(props: Pool3DProps) {
                 <meshStandardMaterial map={textures.wallLongTexture} side={DoubleSide} />
             </mesh>
 
-            {/* Water Surface */}
+            {/* Water Surface with Ripples */}
             <mesh position={[poolLengthMeters / 2, WATER_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                <meshStandardMaterial
-                    color="#0099ff"
-                    opacity={0.6}
+                <planeGeometry args={[poolLengthMeters, poolWidthMeters, 128, 64]} />
+                <shaderMaterial
+                    ref={waterMaterialRef}
+                    args={[WaterShader]}
                     transparent
                     side={DoubleSide}
                 />
@@ -347,8 +398,6 @@ export default function PoolScene(props: Pool3DProps) {
                 const isRight = props.startingEnd === StartingEnd.RIGHT;
                 const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
                 const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
-                // If AWAY (Bottom to top), lane 1 is nearest viewer (highest index i)
-                // If TOWARDS (Top to bottom), lane 1 is farthest from viewer (lowest index i)
                 const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
                 return (
                     <LaneMarker
@@ -371,6 +420,7 @@ export default function PoolScene(props: Pool3DProps) {
                     poolLength={poolLengthMeters}
                     isRight={props.startingEnd === StartingEnd.RIGHT}
                     waterY={WATER_Y}
+                    onPositionUpdate={handleSwimmerPositionUpdate}
                 />
             ))}
         </>
