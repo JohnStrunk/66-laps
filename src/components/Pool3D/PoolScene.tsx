@@ -296,13 +296,22 @@ export default function PoolScene(props: Pool3DProps) {
     }, []);
 
     useFrame((state, delta) => {
-        // Decay ghost weights
+        const now = state.clock.elapsedTime;
+        const speed = 1.5; // Matches 'u' in shader
+
+        // Decay ghost weights and project their positions forward
         for (let i = MAX_SWIMMERS; i < MAX_SOURCES; i++) {
-            weightsRef.current[i] = Math.max(0, weightsRef.current[i] - delta * 0.5); // Fade over 2s
+            if (weightsRef.current[i] > 0) {
+                // Keep the ghost moving at its last velocity so ripples don't change phase speed
+                positionsRef.current[i].x += velocitiesRef.current[i].x * speed * delta;
+                positionsRef.current[i].y += velocitiesRef.current[i].y * speed * delta;
+
+                weightsRef.current[i] = Math.max(0, weightsRef.current[i] - delta * 0.5); // Fade over 2s
+            }
         }
 
         if (waterMaterialRef.current) {
-            waterMaterialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+            waterMaterialRef.current.uniforms.uTime.value = now;
             waterMaterialRef.current.uniforms.uPositions.value = positionsRef.current;
             waterMaterialRef.current.uniforms.uVelocities.value = velocitiesRef.current;
             waterMaterialRef.current.uniforms.uWeights.value = weightsRef.current;
