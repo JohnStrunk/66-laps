@@ -1,10 +1,26 @@
-Feature: 3D Swimulation - Side-Pool Practice View
+Feature: Practice View Modes
   As a lap counter using the Practice tool
-  I want a 3D perspective of the pool
-  So that I can train in an environment that simulates the real-world view from the pool deck
+  I want to choose between a 2D overhead view and a 3D side-pool perspective
+  So that I can train in an environment that best simulates real-world counting conditions
 
   Background:
     Given I navigate to the Practice tool
+
+  @e2e @practice @2d
+  Scenario: 2D view is rendered correctly by default
+    When I configure a practice race with 6 lanes and click "Start"
+    Then I should see the 2D PixiJS canvas
+    And I should see exactly 6 swimmers represented as emojis on the 2D canvas
+    And the swimmers should move horizontally along their lanes
+
+  @e2e @practice @2d
+  Scenario: 2D view simulation controls function correctly
+    When I configure a practice race and click "Start"
+    Then I should see a "Pause" button
+    When I click the "Pause" button
+    Then the swimmers should stop moving
+    When I click the "Resume" button
+    Then the swimmers should resume moving
 
   @e2e @practice @3d
   Scenario: Practice Settings UI contains new orientation controls
