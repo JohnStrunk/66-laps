@@ -1,10 +1,19 @@
 'use client'
-
+import { ISwimmer } from "@/modules/SwimmerModel";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import { Pool3DProps } from "./Pool3D";
-import PoolScene from "./PoolScene";
 import { PCFShadowMap } from "three";
+import { PoolLength } from "../Pool/Pool";
+import { NumberingDirection, StartingEnd } from "../Settings/Settings";
+import PoolScene from "./PoolScene";
+
+export type Pool3DProps = {
+    poolLength: PoolLength;
+    numbering: NumberingDirection;
+    startingEnd?: StartingEnd;
+    swimmers: ISwimmer[];
+    className?: string;
+};
 
 export default function Pool3D(props: Pool3DProps) {
     return (
