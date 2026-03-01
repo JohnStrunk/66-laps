@@ -5,7 +5,7 @@ import { semanticColors } from "@heroui/theme";
 import { Application, extend, useApplication, useTick } from "@pixi/react";
 import { Assets, Container, Graphics, Rectangle, TextStyle, Texture } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { NumberingDirection } from "../Settings/Settings";
+import { NumberingDirection, StartingEnd } from "../Settings/Settings";
 
 extend({ Container, Graphics });
 
@@ -20,6 +20,7 @@ export enum PoolLength {
 export type PoolProps = {
     poolLength: PoolLength;
     numbering: NumberingDirection;
+    startingEnd?: StartingEnd;
     swimmers: ISwimmer[];
     className?: string;
 };
@@ -109,11 +110,12 @@ function PoolContents(props: PoolProps) {
                     .stroke({ color: 0xCC0000, width: 0.15 * scaleFactor });
             }
         }
-        // Draw lane numbers
+        // Draw lane numbers mark (line)
         for (let i = 0; i < lanes; i++) {
             const y = (i + 0.5) * laneWidthPixels + poolEdgePixels + offsetY;
-            g.moveTo(offsetX + poolEdgePixels / 2, y)
-                .lineTo(offsetX + poolEdgePixels / 2, y)
+            const x = props.startingEnd === StartingEnd.RIGHT ? (offsetX + poolLengthPixels + poolEdgePixels * 1.5) : (offsetX + poolEdgePixels / 2);
+            g.moveTo(x, y)
+                .lineTo(x, y)
                 .stroke({ color: 0xFFFFFF, width: 0.1 * scaleFactor });
         }
     };
@@ -135,28 +137,31 @@ function PoolContents(props: PoolProps) {
                         stroke: { color: "white", width: 0.1 * scaleFactor },
                     })}
                     position={{
-                        x: poolEdgePixels / 2 + offsetX,
+                        x: props.startingEnd === StartingEnd.RIGHT ? (poolLengthPixels + poolEdgePixels * 1.5 + offsetX) : (poolEdgePixels / 2 + offsetX),
                         y: (i + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
                     }}
                     anchor={{ x: 0.5, y: 0.5 }}
                 />
             ))}
 
-            {props.swimmers.map((swimmer, index) => (
-                <Swimmer
-                    key={index}
-                    laneWidth={laneWidthPixels}
-                    startEnd={{
-                        x: poolEdgePixels + offsetX,
-                        y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
-                    }}
-                    turnEnd={{
-                        x: poolLengthPixels + poolEdgePixels + offsetX,
-                        y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
-                    }}
-                    swimmer={swimmer}
-                />
-            ))}
+            {props.swimmers.map((swimmer, index) => {
+                const isRight = props.startingEnd === StartingEnd.RIGHT;
+                return (
+                    <Swimmer
+                        key={index}
+                        laneWidth={laneWidthPixels}
+                        startEnd={{
+                            x: isRight ? poolLengthPixels + poolEdgePixels + offsetX : poolEdgePixels + offsetX,
+                            y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
+                        }}
+                        turnEnd={{
+                            x: isRight ? poolEdgePixels + offsetX : poolLengthPixels + poolEdgePixels + offsetX,
+                            y: (index + 0.5) * laneWidthPixels + poolEdgePixels + offsetY,
+                        }}
+                        swimmer={swimmer}
+                    />
+                );
+            })}
         </>
     )
 }
