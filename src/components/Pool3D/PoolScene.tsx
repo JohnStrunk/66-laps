@@ -119,6 +119,43 @@ function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: 
     );
 }
 
+function LaneMarkings({ poolLength, lanes, zCenter, y }: { poolLength: number, lanes: number, zCenter: number, y: number }) {
+    const stripeWidth = 0.25;
+    const tCrossbarWidth = 1.0;
+    const tCrossbarLength = 0.25;
+    const distanceFromWall = 2.0;
+
+    // Crossbar centers
+    const xStartT = distanceFromWall + tCrossbarLength / 2;
+    const xEndT = poolLength - distanceFromWall - tCrossbarLength / 2;
+
+    // Main stripe length and center
+    const stripeStart = distanceFromWall + tCrossbarLength;
+    const stripeEnd = poolLength - distanceFromWall - tCrossbarLength;
+    const mainStripeLength = stripeEnd - stripeStart;
+    const xMainStripe = (stripeStart + stripeEnd) / 2;
+
+    return (
+        <group position={[0, y + 0.01, 0]}>
+            {/* Start T Crossbar */}
+            <mesh position={[xStartT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
+                <meshStandardMaterial color="#111111" />
+            </mesh>
+            {/* Turn T Crossbar */}
+            <mesh position={[xEndT, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[tCrossbarLength, tCrossbarWidth]} />
+                <meshStandardMaterial color="#111111" />
+            </mesh>
+            {/* Main Connecting Stripe */}
+            <mesh position={[xMainStripe, 0, zCenter]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[mainStripeLength, stripeWidth]} />
+                <meshStandardMaterial color="#111111" />
+            </mesh>
+        </group>
+    );
+}
+
 export default function PoolScene(props: Pool3DProps) {
     const { camera, gl, scene, size } = useThree();
     const lanes = props.swimmers.length;
@@ -250,6 +287,17 @@ export default function PoolScene(props: Pool3DProps) {
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
                 <meshStandardMaterial map={textures.floorTexture} />
             </mesh>
+
+            {/* Lane Markings */}
+            {Array.from({ length: lanes }).map((_, i) => (
+                <LaneMarkings
+                    key={`marking-${i}`}
+                    poolLength={poolLengthMeters}
+                    lanes={lanes}
+                    zCenter={(i + 0.5) * LANE_WIDTH_METERS}
+                    y={FLOOR_Y}
+                />
+            ))}
 
             <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
 
