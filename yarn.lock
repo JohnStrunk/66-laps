@@ -29,7 +29,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:4.2.1"
     "@tailwindcss/typography": "npm:0.5.19"
     "@testing-library/dom": "npm:10.4.1"
-    "@types/node": "npm:24.10.13"
+    "@types/node": "npm:24.11.0"
     "@types/react": "npm:19.2.14"
     "@types/react-dom": "npm:19.2.3"
     "@vitest/browser": "npm:4.0.18"
@@ -41,14 +41,14 @@ __metadata:
     eslint-plugin-storybook: "npm:10.2.13"
     jspdf: "npm:4.2.0"
     jspdf-autotable: "npm:5.0.7"
-    lucide-react: "npm:0.575.0"
+    lucide-react: "npm:0.576.0"
     monocart-coverage-reports: "npm:2.12.9"
     motion: "npm:12.34.3"
     next: "npm:16.1.6"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.16.0"
     playwright: "npm:1.58.2"
-    posthog-js: "npm:1.352.1"
+    posthog-js: "npm:1.356.2"
     react: "npm:19.2.4"
     react-dom: "npm:19.2.4"
     start-server-and-test: "npm:2.1.5"
@@ -58,7 +58,7 @@ __metadata:
     typescript: "npm:5.9.3"
     vite: "npm:7.3.1"
     vitest: "npm:4.0.18"
-    webpack: "npm:5.105.2"
+    webpack: "npm:5.105.3"
     zustand: "npm:5.0.11"
   languageName: unknown
   linkType: soft
@@ -4505,10 +4505,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/types@npm:1.352.1":
-  version: 1.352.1
-  resolution: "@posthog/types@npm:1.352.1"
-  checksum: 10c0/4c2ffe4239b398bc2a33ee41519dbe10f307db2296597464b697c4f23b29a084a311f646220fe64e4497c411e0b6747d95fe5ce2ad2d4c295ab722c5f32ea26f
+"@posthog/types@npm:1.356.2":
+  version: 1.356.2
+  resolution: "@posthog/types@npm:1.356.2"
+  checksum: 10c0/467eea797046f322137c8d3d618ee12c2ab6d57805ce0cd77e035ab8c5c22f42c1cc16490f35056171d2c77b38921cd7181dbf50f7a63d4a14ec79c267c668c1
   languageName: node
   linkType: hard
 
@@ -7487,12 +7487,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.10.13":
-  version: 24.10.13
-  resolution: "@types/node@npm:24.10.13"
+"@types/node@npm:24.11.0":
+  version: 24.11.0
+  resolution: "@types/node@npm:24.11.0"
   dependencies:
     undici-types: "npm:~7.16.0"
-  checksum: 10c0/4ff0b9b060b5477c0fec5b11a176f294be588104ab546295db65b17a92ba0a6077b52ad92dd3c0d2154198c7f9d0021e6c1d42b00c9ac7ebfd85632afbcc48a4
+  checksum: 10c0/4fb7390259e3b158d25dbecf52de8ce70fa18a4ed0949c9444bb6384517c361fa19781e6821ca8c18dc5f6af43eab72e9e159e07000e6b1286d082e8585d8c41
   languageName: node
   linkType: hard
 
@@ -8300,6 +8300,15 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 10c0/dec73ff59b7d6628a01eebaece7f2bdb8bb62b9b5926dcad0f8931f2b8b79c2be21f6c68ac095592adb5adb15831a3635d9343e6a91d028bbe85d564875ec3ec
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.16.0":
+  version: 8.16.0
+  resolution: "acorn@npm:8.16.0"
+  bin:
+    acorn: bin/acorn
+  checksum: 10c0/c9c52697227661b68d0debaf972222d4f622aa06b185824164e153438afa7b08273432ca43ea792cadb24dada1d46f6f6bb1ef8de9956979288cc1b96bf9914e
   languageName: node
   linkType: hard
 
@@ -12041,12 +12050,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:0.575.0":
-  version: 0.575.0
-  resolution: "lucide-react@npm:0.575.0"
+"lucide-react@npm:0.576.0":
+  version: 0.576.0
+  resolution: "lucide-react@npm:0.576.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/4f42e81c88f60c8f904b178c0b28e8ac9a99da8ef24eba5f26ed97b63124304a847baea2f71125629a272df58dbb61cd799ff6a7e4878e5a4c28d8a699b84730
+  checksum: 10c0/316301dd4331d99ec6923d5e7e7ec48d57309738fa29b2e993fd4f4f9db73a22e820b9bf586831b2bb48ddbd0a7c56f6a6f130b2a5b718df5301395290b99e90
   languageName: node
   linkType: hard
 
@@ -13121,9 +13130,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.352.1":
-  version: 1.352.1
-  resolution: "posthog-js@npm:1.352.1"
+"posthog-js@npm:1.356.2":
+  version: 1.356.2
+  resolution: "posthog-js@npm:1.356.2"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.0"
     "@opentelemetry/api-logs": "npm:^0.208.0"
@@ -13131,14 +13140,14 @@ __metadata:
     "@opentelemetry/resources": "npm:^2.2.0"
     "@opentelemetry/sdk-logs": "npm:^0.208.0"
     "@posthog/core": "npm:1.23.1"
-    "@posthog/types": "npm:1.352.1"
+    "@posthog/types": "npm:1.356.2"
     core-js: "npm:^3.38.1"
     dompurify: "npm:^3.3.1"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.28.2"
     query-selector-shadow-dom: "npm:^1.0.1"
     web-vitals: "npm:^5.1.0"
-  checksum: 10c0/f849251f4460d5155e7ab7c8c672aca756c2bd0e16058c4dbc5989ed84cc34299b80009b7ae5ce297342d45dc48be4e774e34f042bd99efb3043429d80dfa63b
+  checksum: 10c0/be9c8c229ac8eaefc4a52e4b89d9a107d06ce3e69f6cbe31a2914da1765be1c25992ecfc3e6133233542bac8980eda6ebcece73f4a71116a841731e1f4338fc5
   languageName: node
   linkType: hard
 
@@ -15598,10 +15607,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-sources@npm:^3.2.3, webpack-sources@npm:^3.3.3":
+"webpack-sources@npm:^3.2.3":
   version: 3.3.3
   resolution: "webpack-sources@npm:3.3.3"
   checksum: 10c0/ab732f6933b513ba4d505130418995ddef6df988421fccf3289e53583c6a39e205c4a0739cee98950964552d3006604912679c736031337fb4a9d78d8576ed40
+  languageName: node
+  linkType: hard
+
+"webpack-sources@npm:^3.3.4":
+  version: 3.3.4
+  resolution: "webpack-sources@npm:3.3.4"
+  checksum: 10c0/94a42508531338eb41939cf1d48a4a8a6db97f3a47e5453cff2133a68d3169ca779d4bcbe9dfed072ce16611959eba1e16f085bc2dc56714e1a1c1783fd661a3
   languageName: node
   linkType: hard
 
@@ -15619,9 +15635,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:5.105.2":
-  version: 5.105.2
-  resolution: "webpack@npm:5.105.2"
+"webpack@npm:5.105.3":
+  version: 5.105.3
+  resolution: "webpack@npm:5.105.3"
   dependencies:
     "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.8"
@@ -15629,7 +15645,7 @@ __metadata:
     "@webassemblyjs/ast": "npm:^1.14.1"
     "@webassemblyjs/wasm-edit": "npm:^1.14.1"
     "@webassemblyjs/wasm-parser": "npm:^1.14.1"
-    acorn: "npm:^8.15.0"
+    acorn: "npm:^8.16.0"
     acorn-import-phases: "npm:^1.0.3"
     browserslist: "npm:^4.28.1"
     chrome-trace-event: "npm:^1.0.2"
@@ -15647,13 +15663,13 @@ __metadata:
     tapable: "npm:^2.3.0"
     terser-webpack-plugin: "npm:^5.3.16"
     watchpack: "npm:^2.5.1"
-    webpack-sources: "npm:^3.3.3"
+    webpack-sources: "npm:^3.3.4"
   peerDependenciesMeta:
     webpack-cli:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/565df8072c00d72e0a22e136971862b7eac7beb8b8d39a2ae4ab00838941ea58acc5b49dd7ea268e3d839810756cb86ba5c272b3a25904f6db7807cfa8ed0b29
+  checksum: 10c0/a9a9a3a369d14f24348bd932feb07eef74a9fe194ad16704dc4f125b6055fe51a5ef1c6fdb3aa398c6f180f59aa14cb1b360695d8ea862a5ed130103ebd255e0
   languageName: node
   linkType: hard
 
