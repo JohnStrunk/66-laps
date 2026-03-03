@@ -147,6 +147,8 @@ export default function Page() {
         setMode(Mode.SWIM);
     }
 
+    const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
+
     return (
         <>
             <div className="w-full flex flex-col min-h-screen">
@@ -157,7 +159,11 @@ export default function Page() {
                     <Settings onClick={handleSettingsClick} />
                 </div>
                 {mode === Mode.SWIM && (
-                    <div className="relative w-screen h-screen p-4" data-swimmer-count={swimmers.length} data-numbering={settings.numberingDirection} data-starting-end={settings.startingEnd}>
+                    <div className="relative w-screen h-screen p-4"
+                         data-swimmer-count={swimmers.length}
+                         data-numbering={settings.numberingDirection}
+                         data-starting-end={settings.startingEnd}
+                         data-test-ready={isTestMode ? "true" : undefined}>
                         {viewMode === "2D" ? (
                             <Pool
                                 className="w-full h-full"

@@ -24,6 +24,7 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
         '--use-gl=egl',
         '--ignore-gpu-blocklist',
         '--no-sandbox',
+        '--disable-web-security',
       ],
     });
   }
@@ -34,20 +35,101 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
   this.scenarioName = scenario.pickle.name;
 
   this.context = await this.browser.newContext({
-    viewport: { width: 1280, height: 800 } // Large enough to not trigger fullscreen
+    viewport: { width: 1280, height: 800 }
   });
 
-  // Mock navigator.vibrate on the context level
+  // Aggressive WebGL and other mocks
   await this.context.addInitScript(() => {
-    interface MockNavigator extends Navigator {
-      vibrateCalls: (number | number[])[];
-    }
-    const nav = window.navigator as MockNavigator;
-    nav.vibrateCalls = [];
-    nav.vibrate = (pattern: number | number[] | Iterable<number>) => {
-      nav.vibrateCalls.push(pattern as (number | number[]));
-      return true;
+    // WebGL constants
+    const glConstants: Record<string, number> = {
+      VERTEX_SHADER: 35633,
+      FRAGMENT_SHADER: 35632,
+      HIGH_FLOAT: 36338,
+      MEDIUM_FLOAT: 36337,
+      LOW_FLOAT: 36336,
+      MAX_TEXTURE_IMAGE_UNITS: 35661,
+      MAX_VERTEX_TEXTURE_IMAGE_UNITS: 35660,
+      MAX_TEXTURE_SIZE: 3379,
+      MAX_CUBE_MAP_TEXTURE_SIZE: 34076,
+      MAX_VERTEX_ATTRIBS: 34921,
+      MAX_VERTEX_UNIFORM_VECTORS: 36347,
+      MAX_VARYING_VECTORS: 36348,
+      MAX_FRAGMENT_UNIFORM_VECTORS: 36349,
+      MAX_SAMPLES: 36183,
+      SAMPLES: 32937,
+      MAX_COMBINED_TEXTURE_IMAGE_UNITS: 35661,
+      VERSION: 7938,
+      VENDOR: 7936,
+      RENDERER: 7937,
+      SHADING_LANGUAGE_VERSION: 35724,
+      UNMASKED_VENDOR_WEBGL: 0x9245,
+      UNMASKED_RENDERER_WEBGL: 0x9246,
     };
+
+    const mockContext = {
+      canvas: document.createElement('canvas'),
+      getParameter: (param: number) => {
+        if (param === 0x1f00 || param === 0x9245) return 'WebGL Mock';
+        if (param === 0x1f01 || param === 0x9246) return 'Mock Renderer';
+        if (param === 0x8df8) return 1024;
+        return glConstants[param] || 0;
+      },
+      getExtension: () => null,
+      getShaderPrecisionFormat: () => ({ precision: 1, rangeMin: 1, rangeMax: 1 }),
+      createProgram: () => ({}),
+      createShader: () => ({}),
+      shaderSource: () => {},
+      compileShader: () => {},
+      getShaderParameter: () => true,
+      getProgramParameter: () => true,
+      getAttribLocation: () => 0,
+      getUniformLocation: () => ({}),
+      linkProgram: () => {},
+      useProgram: () => {},
+      enableVertexAttribArray: () => {},
+      vertexAttribPointer: () => {},
+      drawArrays: () => {},
+      viewport: () => {},
+      clear: () => {},
+      clearColor: () => {},
+      createBuffer: () => ({}),
+      bindBuffer: () => {},
+      bufferData: () => {},
+      createTexture: () => ({}),
+      bindTexture: () => {},
+      texImage2D: () => {},
+      texParameteri: () => {},
+      activeTexture: () => {},
+      getError: () => 0,
+      flush: () => {},
+      finish: () => {},
+      getSupportedExtensions: () => [],
+      getContextAttributes: () => ({ antialias: true, alpha: true }),
+      ...glConstants
+    };
+
+    (window as any).WebGLRenderingContext = class {};
+    (window as any).WebGL2RenderingContext = class {};
+
+    const originalGetContext = HTMLCanvasElement.prototype.getContext;
+    (HTMLCanvasElement.prototype as any).getContext = function(type: string, ...args: any[]) {
+      if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+        (mockContext as any).canvas = this;
+        return mockContext;
+      }
+      return originalGetContext.apply(this, [type, ...args] as any);
+    };
+
+    // Mock navigator.vibrate
+    (window as any).__VIBRATE_CALLS__ = [];
+    Object.defineProperty(window.navigator, 'vibrate', {
+      value: (pattern: any) => {
+        (window as any).__VIBRATE_CALLS__.push(pattern);
+        return true;
+      },
+      configurable: true,
+      writable: true
+    });
   });
 
   this.page = await this.context.newPage();

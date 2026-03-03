@@ -4,15 +4,15 @@ import { strict as assert } from 'assert';
 import { advanceClock, waitForVisible, waitForCondition } from '../../support/utils';
 
 Then('the swimmers should be at various positions in the pool', async function (this: CustomWorld) {
-    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
-    await waitForVisible(canvas);
+    const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
+    await waitForVisible(readyDiv);
 
     await waitForCondition(this.page!, async () => {
-        return await canvas.evaluate((el) => el.hasAttribute('data-test-data'));
+        return await readyDiv.evaluate((el) => el.hasAttribute('data-test-data'));
     }, 10000);
 
     // Check swimmer 0 position
-    const pos = await canvas.evaluate((el) => {
+    const pos = await readyDiv.evaluate((el) => {
         const data = JSON.parse(el.getAttribute('data-test-data')!);
         return data.swimmer0?.position.x;
     });
@@ -20,14 +20,14 @@ Then('the swimmers should be at various positions in the pool', async function (
 });
 
 Then('the swimmers should have completed at least one turn and be heading back', async function (this: CustomWorld) {
-    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
-    await waitForVisible(canvas);
+    const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
+    await waitForVisible(readyDiv);
 
     await waitForCondition(this.page!, async () => {
-        return await canvas.evaluate((el) => el.hasAttribute('data-test-data'));
+        return await readyDiv.evaluate((el) => el.hasAttribute('data-test-data'));
     }, 10000);
 
-    const pos = await canvas.evaluate((el) => {
+    const pos = await readyDiv.evaluate((el) => {
         const data = JSON.parse(el.getAttribute('data-test-data')!);
         return data.swimmer0?.position.x;
     });
@@ -36,17 +36,17 @@ Then('the swimmers should have completed at least one turn and be heading back',
 });
 
 Then('the swimmers should have their rounded heads pointing in the direction of travel', async function (this: CustomWorld) {
-    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
-    await waitForVisible(canvas);
+    const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
+    await waitForVisible(readyDiv);
 
     // Advance clock slightly to ensure movement
     await advanceClock(this.page!, 100);
 
     await waitForCondition(this.page!, async () => {
-        return await canvas.evaluate((el) => el.hasAttribute('data-test-data'));
+        return await readyDiv.evaluate((el) => el.hasAttribute('data-test-data'));
     }, 10000);
 
-    const data = await canvas.evaluate((el) => {
+    const data = await readyDiv.evaluate((el) => {
         const testData = JSON.parse(el.getAttribute('data-test-data')!);
         // In our logic, if moving +X (right), rotation.y should be PI/2 (approx 1.57).
         // If moving -X (left), rotation.y should be -PI/2 (approx -1.57).

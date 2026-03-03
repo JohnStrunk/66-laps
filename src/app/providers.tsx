@@ -94,13 +94,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const router = useRouter();
 
     useEffect(() => {
-        // WebGL Mock for headless environments
+        // Mocks for headless environments
         if (typeof window !== 'undefined' && window.location.search.includes('testMode=true')) {
+            // WebGL Mock
             const originalGetContext = HTMLCanvasElement.prototype.getContext;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...args: any[]) {
+            (HTMLCanvasElement.prototype as any).getContext = function (this: HTMLCanvasElement, type: string, ...args: any[]) {
                 if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
-                    console.log(`[MOCK] Intercepted getContext(${type}) in Providers`);
                     const mock = {
                         canvas: this,
                         getShaderPrecisionFormat: () => ({ precision: 1, rangeMin: 1, rangeMax: 1 }),
@@ -116,38 +116,38 @@ export function Providers({ children }: { children: React.ReactNode }) {
                         },
                         createProgram: () => ({}),
                         createShader: () => ({}),
-                        shaderSource: () => {},
-                        compileShader: () => {},
+                        shaderSource: () => { },
+                        compileShader: () => { },
                         getShaderParameter: () => true,
                         getProgramParameter: () => true,
-                        linkProgram: () => {},
-                        useProgram: () => {},
+                        linkProgram: () => { },
+                        useProgram: () => { },
                         createBuffer: () => ({}),
-                        bindBuffer: () => {},
-                        bufferData: () => {},
+                        bindBuffer: () => { },
+                        bufferData: () => { },
                         getAttribLocation: () => 0,
-                        enableVertexAttribArray: () => {},
-                        vertexAttribPointer: () => {},
-                        drawArrays: () => {},
-                        viewport: () => {},
-                        clear: () => {},
-                        clearColor: () => {},
+                        enableVertexAttribArray: () => { },
+                        vertexAttribPointer: () => { },
+                        drawArrays: () => { },
+                        viewport: () => { },
+                        clear: () => { },
+                        clearColor: () => { },
                         createTexture: () => ({}),
-                        bindTexture: () => {},
-                        texImage2D: () => {},
-                        texParameteri: () => {},
-                        activeTexture: () => {},
+                        bindTexture: () => { },
+                        texImage2D: () => { },
+                        texParameteri: () => { },
+                        activeTexture: () => { },
                         getError: () => 0,
-                        flush: () => {},
-                        finish: () => {},
+                        flush: () => { },
+                        finish: () => { },
                         getSupportedExtensions: () => [],
-                        scissor: () => {},
-                        stencilFunc: () => {},
-                        stencilMask: () => {},
-                        stencilOp: () => {},
-                        colorMask: () => {},
-                        pixelStorei: () => {},
-                        readPixels: () => {},
+                        scissor: () => { },
+                        stencilFunc: () => { },
+                        stencilMask: () => { },
+                        stencilOp: () => { },
+                        colorMask: () => { },
+                        pixelStorei: () => { },
+                        readPixels: () => { },
                         // WebGL Constants
                         VERTEX_SHADER: 35633,
                         FRAGMENT_SHADER: 35632,
@@ -171,6 +171,23 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 }
                 return originalGetContext.apply(this, [type, ...args] as any);
             };
+
+            // Vibrate Mock
+            if (!(window as any).__VIBRATE_CALLS__) {
+                (window as any).__VIBRATE_CALLS__ = [];
+            }
+            try {
+                Object.defineProperty(window.navigator, 'vibrate', {
+                    value: (pattern: any) => {
+                        (window as any).__VIBRATE_CALLS__.push(pattern);
+                        return true;
+                    },
+                    configurable: true,
+                    writable: true
+                });
+            } catch (e) {
+                console.error('Failed to mock navigator.vibrate:', e);
+            }
         }
     }, []);
 

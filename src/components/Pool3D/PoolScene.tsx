@@ -348,30 +348,15 @@ export default function PoolScene(props: Pool3DProps) {
             wallWideTexture: wallWide
         };
     }, [concreteTexture, tileTexture, poolLengthMeters, poolWidthMeters]);
-    // Expose for testing
+
     useEffect(() => {
         if (typeof window !== "undefined" && gl.domElement) {
             const testWin = window as unknown as TestWindow;
             testWin.__TEST_CAMERA__ = camera;
             testWin.__TEST_SCENE__ = scene;
-
-            // Periodically update a serialized version for robust testing
-            const interval = setInterval(() => {
-                const data = {
-                    camera: {
-                        position: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
-                        rotation: { x: camera.rotation.x, y: camera.rotation.y, z: camera.rotation.z },
-                        fov: (camera as PerspectiveCamera).fov
-                    }
-                };
-                (window as any).__TEST_DATA__ = JSON.stringify(data);
-            }, 100);
-
             gl.domElement.setAttribute('data-test-ready', 'true');
-            return () => clearInterval(interval);
         }
     }, [camera, gl.domElement, scene]);
-
 
     useEffect(() => {
         const isRight = props.startingEnd === StartingEnd.RIGHT;

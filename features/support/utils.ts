@@ -150,10 +150,8 @@ export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) 
 
 export const waitForCondition = async (page: Page, condition: () => Promise<boolean>, timeoutMs: number = 5000) => {
   const start = Date.now();
-  console.log(`[DEBUG] Starting waitForCondition (timeout: ${timeoutMs}ms)`);
   while (Date.now() - start < timeoutMs) {
     if (await condition()) {
-      console.log(`[DEBUG] Condition met after ${Date.now() - start}ms`);
       return;
     }
     await advanceClock(page, 500);
@@ -161,7 +159,6 @@ export const waitForCondition = async (page: Page, condition: () => Promise<bool
   }
   // Final attempt
   if (!(await condition())) {
-    console.log(`[DEBUG] Condition timed out after ${timeoutMs}ms`);
     throw new Error(`Condition timed out after ${timeoutMs}ms`);
   }
 };
