@@ -18,7 +18,14 @@ BeforeAll(async function () {
 
 Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
   if (!globalBrowser) {
-    globalBrowser = await chromium.launch({ headless: true });
+    globalBrowser = await chromium.launch({
+      headless: true,
+      args: [
+        '--use-gl=egl',
+        '--ignore-gpu-blocklist',
+        '--no-sandbox',
+      ],
+    });
   }
 
   // We still provide the browser to the world for convenience,
@@ -29,16 +36,9 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
   this.context = await this.browser.newContext({
     viewport: { width: 1280, height: 800 } // Large enough to not trigger fullscreen
   });
-  this.page = await this.context.newPage();
-  this.page.on('console', msg => {
-    if (msg.type() === 'error' || msg.type() === 'warning' || msg.type() === 'log') {
-        console.log(`[BROWSER ${msg.type().toUpperCase()}] ${msg.text()}`);
-    }
-  });
-  await this.page.clock.install();
 
-  // Mock navigator.vibrate
-  await this.page.addInitScript(() => {
+  // Mock navigator.vibrate on the context level
+  await this.context.addInitScript(() => {
     interface MockNavigator extends Navigator {
       vibrateCalls: (number | number[])[];
     }
@@ -49,6 +49,14 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
       return true;
     };
   });
+
+  this.page = await this.context.newPage();
+  this.page.on('console', msg => {
+    if (msg.type() === 'error' || msg.type() === 'warning' || msg.type() === 'log') {
+        console.log(`[BROWSER ${msg.type().toUpperCase()}] ${msg.text()}`);
+    }
+  });
+  await this.page.clock.install();
 
   // Start coverage collection
   await this.page.coverage.startJSCoverage();

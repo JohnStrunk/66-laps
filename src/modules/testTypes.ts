@@ -2,6 +2,7 @@ import { Camera, Group, Scene } from 'three';
 import { ISwimmer } from './SwimmerModel';
 
 export interface TestWindow extends Window {
+    __TEST_DATA__?: string;
     __TEST_SWIMMER_0__?: Group;
     __TEST_SWIMMER_0_MODEL__?: ISwimmer;
     __TEST_POOL_LENGTH__?: number;

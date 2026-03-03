@@ -130,7 +130,7 @@ export const waitForVisible = async (locator: Locator, timeoutMs: number = 5000)
   }
 
   // Final attempt with standard waitFor to get a good error message if it still fails
-  await locator.first().waitFor({ state: 'visible', timeout: 1000 });
+  await locator.first().waitFor({ state: 'visible', timeout: 10000 });
 };
 
 export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) => {
@@ -146,6 +146,24 @@ export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) 
 
   // Final attempt with standard waitFor to get a good error message if it still fails
   await locator.first().waitFor({ state: 'hidden', timeout: 1000 }).catch(() => {});
+};
+
+export const waitForCondition = async (page: Page, condition: () => Promise<boolean>, timeoutMs: number = 5000) => {
+  const start = Date.now();
+  console.log(`[DEBUG] Starting waitForCondition (timeout: ${timeoutMs}ms)`);
+  while (Date.now() - start < timeoutMs) {
+    if (await condition()) {
+      console.log(`[DEBUG] Condition met after ${Date.now() - start}ms`);
+      return;
+    }
+    await advanceClock(page, 500);
+    await page.waitForTimeout(20);
+  }
+  // Final attempt
+  if (!(await condition())) {
+    console.log(`[DEBUG] Condition timed out after ${timeoutMs}ms`);
+    throw new Error(`Condition timed out after ${timeoutMs}ms`);
+  }
 };
 
 export const getStoreState = async (page: Page): Promise<BellLapState> => {

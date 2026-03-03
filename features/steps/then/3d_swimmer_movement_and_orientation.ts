@@ -1,29 +1,35 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { strict as assert } from 'assert';
-import { advanceClock, waitForVisible } from '../../support/utils';
-import { TestWindow } from '../../../src/modules/testTypes';
+import { advanceClock, waitForVisible, waitForCondition } from '../../support/utils';
 
 Then('the swimmers should be at various positions in the pool', async function (this: CustomWorld) {
     const canvas = this.page!.locator('canvas[data-test-ready="true"]');
     await waitForVisible(canvas);
 
+    await waitForCondition(this.page!, async () => {
+        return await canvas.evaluate((el) => el.hasAttribute('data-test-data'));
+    }, 10000);
+
     // Check swimmer 0 position
-    const pos = await this.page!.evaluate(() => {
-        const testWin = window as unknown as TestWindow;
-        const sw = testWin.__TEST_SWIMMER_0__;
-        return sw?.position.x;
+    const pos = await canvas.evaluate((el) => {
+        const data = JSON.parse(el.getAttribute('data-test-data')!);
+        return data.swimmer0?.position.x;
     });
     assert.ok(pos !== undefined && pos >= 0, `Swimmer 0 position X was ${pos}`);
 });
 
 Then('the swimmers should have completed at least one turn and be heading back', async function (this: CustomWorld) {
-    // This is verified by the logic that they continue moving and don't reset to 0.
-    // After 30 seconds (avg lap 16s), they should be on lap 2.
-    const pos = await this.page!.evaluate(() => {
-        const testWin = window as unknown as TestWindow;
-        const sw = testWin.__TEST_SWIMMER_0__;
-        return sw?.position.x;
+    const canvas = this.page!.locator('canvas[data-test-ready="true"]');
+    await waitForVisible(canvas);
+
+    await waitForCondition(this.page!, async () => {
+        return await canvas.evaluate((el) => el.hasAttribute('data-test-data'));
+    }, 10000);
+
+    const pos = await canvas.evaluate((el) => {
+        const data = JSON.parse(el.getAttribute('data-test-data')!);
+        return data.swimmer0?.position.x;
     });
     // In 500 SC, pool length is ~23m. At 30s, they should be well into lap 2.
     assert.ok(pos !== undefined, 'Swimmer 0 position should be defined');
@@ -36,14 +42,17 @@ Then('the swimmers should have their rounded heads pointing in the direction of 
     // Advance clock slightly to ensure movement
     await advanceClock(this.page!, 100);
 
-    const data = await this.page!.evaluate(() => {
-        const testWin = window as unknown as TestWindow;
-        const sw = testWin.__TEST_SWIMMER_0__;
+    await waitForCondition(this.page!, async () => {
+        return await canvas.evaluate((el) => el.hasAttribute('data-test-data'));
+    }, 10000);
+
+    const data = await canvas.evaluate((el) => {
+        const testData = JSON.parse(el.getAttribute('data-test-data')!);
         // In our logic, if moving +X (right), rotation.y should be PI/2 (approx 1.57).
         // If moving -X (left), rotation.y should be -PI/2 (approx -1.57).
         return {
-            rotationY: sw?.rotation.y,
-            positionX: sw?.position.x
+            rotationY: testData.swimmer0?.rotation.y,
+            positionX: testData.swimmer0?.position.x
         };
     });
 
