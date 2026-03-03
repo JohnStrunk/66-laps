@@ -108,23 +108,23 @@ Before({ tags: '@browser' }, async function (this: CustomWorld, scenario: ITestC
       ...glConstants
     };
 
-    (window as any).WebGLRenderingContext = class {};
-    (window as any).WebGL2RenderingContext = class {};
+    (window as unknown as { WebGLRenderingContext: unknown }).WebGLRenderingContext = class {};
+    (window as unknown as { WebGL2RenderingContext: unknown }).WebGL2RenderingContext = class {};
 
     const originalGetContext = HTMLCanvasElement.prototype.getContext;
-    (HTMLCanvasElement.prototype as any).getContext = function(type: string, ...args: any[]) {
+    (HTMLCanvasElement.prototype as unknown as { getContext: unknown }).getContext = function(this: HTMLCanvasElement, type: string, ...args: unknown[]) {
       if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
-        (mockContext as any).canvas = this;
+        (mockContext as unknown as { canvas: HTMLCanvasElement }).canvas = this;
         return mockContext;
       }
-      return originalGetContext.apply(this, [type, ...args] as any);
+      return (originalGetContext as (...args: unknown[]) => unknown).apply(this, [type, ...args]);
     };
 
     // Mock navigator.vibrate
-    (window as any).__VIBRATE_CALLS__ = [];
+    (window as unknown as { __VIBRATE_CALLS__: unknown[] }).__VIBRATE_CALLS__ = [];
     Object.defineProperty(window.navigator, 'vibrate', {
-      value: (pattern: any) => {
-        (window as any).__VIBRATE_CALLS__.push(pattern);
+      value: (pattern: number | number[]) => {
+        (window as unknown as { __VIBRATE_CALLS__: unknown[] }).__VIBRATE_CALLS__.push(pattern);
         return true;
       },
       configurable: true,

@@ -102,7 +102,19 @@ export default function Pool3D(props: Pool3DProps) {
                 const poolLengthMeters = props.poolLength === "SC" ? 22.86 : 50;
                 const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
 
-                const data: any = {
+                interface TestData {
+                    camera: {
+                        position: { x: number; y: number; z: number };
+                        rotation: { x: number; y: number; z: number };
+                        fov: number;
+                    };
+                    swimmer0?: {
+                        position: { x: number; y: number; z: number };
+                        rotation: { y: number };
+                    };
+                }
+
+                const data: TestData = {
                     camera: {
                         position: { x: observerX, y: 1.67, z: poolLengthMeters * 0.5 },
                         rotation: { x: -0.5, y: 0, z: 0 },
@@ -128,7 +140,7 @@ export default function Pool3D(props: Pool3DProps) {
                     testWin.__TEST_POOL_LENGTH__ = poolLengthMeters;
                 }
                 testWin.__TEST_DATA__ = JSON.stringify(data);
-                testWin.__TEST_CAMERA__ = data.camera as any;
+                testWin.__TEST_CAMERA__ = data.camera;
 
                 // Set ready attribute on the parent div and canvas
                 const readyDiv = document.querySelector('[data-test-ready="true"]');

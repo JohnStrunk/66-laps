@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { strict as assert } from 'assert';
-import { advanceClock, waitForVisible, waitForCondition } from '../../support/utils';
+import { waitForVisible, waitForCondition } from '../../support/utils';
 import { Page } from 'playwright';
 
 async function waitFor3DReady(page: Page) {
@@ -13,17 +13,17 @@ async function waitFor3DReady(page: Page) {
     }, 10000);
 }
 
-Then('the 3D water surface should be at a Y-coordinate of {float}', async function (this: CustomWorld, expectedY: number) {
+Then('the 3D water surface should be at a Y-coordinate of {float}', async function (this: CustomWorld) {
     await waitFor3DReady(this.page!);
     assert.ok(true);
 });
 
-Then('the 3D pool deck should be at a Y-coordinate of {float}', async function (this: CustomWorld, expectedY: number) {
+Then('the 3D pool deck should be at a Y-coordinate of {float}', async function (this: CustomWorld) {
     await waitFor3DReady(this.page!);
     assert.ok(true);
 });
 
-Then('the 3D lane ropes should be at a Y-coordinate of {float}', async function (this: CustomWorld, expectedY: number) {
+Then('the 3D lane ropes should be at a Y-coordinate of {float}', async function (this: CustomWorld) {
     await waitFor3DReady(this.page!);
     assert.ok(true);
 });
@@ -40,7 +40,7 @@ Then('I should see 3D lane markers for each lane', async function (this: CustomW
     assert.ok(true);
 });
 
-Then('each 3D lane marker should be a white panel {float}m square', async function (this: CustomWorld, size: number) {
+Then('each 3D lane marker should be a white panel {float}m square', async function (this: CustomWorld) {
     await waitFor3DReady(this.page!);
     assert.ok(true);
 });

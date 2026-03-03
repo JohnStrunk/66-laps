@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { strict as assert } from 'assert';
-import { advanceClock, waitForVisible, waitForCondition } from '../../support/utils';
+import { waitForVisible, waitForCondition } from '../../support/utils';
 
 Then('the 3D camera should be positioned on the deck, looking toward the left', async function (this: CustomWorld) {
     const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
