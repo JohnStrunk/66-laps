@@ -110,12 +110,18 @@ This document provides essential information for AI agents working on the
   - Encapsulates the logic for calculating a swimmer's position based on lap
     times and elapsed time.
   - Used primarily in the `/practice` feature.
-- **Graphics (PixiJS):**
-  - Integrated via `@pixi/react`.
+- **Graphics (PixiJS \u0026 Three.js):**
+  - Integrated via `@pixi/react` and `@react-three/fiber`.
   - **Performance Optimization:** Avoid using React state (e.g., `useState`)
-    inside `useTick` for high-frequency updates (like position). Use `useRef`
-    to manipulate Pixi objects directly to bypass React's render cycle for
-    smoother performance.
+    inside `useTick` or `useFrame` for high-frequency updates (like position).
+    Use `useRef` to manipulate graphics objects directly to bypass React's
+    render cycle for smoother performance.
+  - **Headless Compatibility:** CLI environments typically lack WebGL support.
+    When implementing 3D features, include a "Shadow Mock" pattern:
+    - Detect `testMode=true` in the URL.
+    - Bypass the real `Canvas` or heavy rendering.
+    - Render a mock UI that populates `data-test-data` attributes with
+      JSON-serialized state (position, rotation, etc.) for E2E verification.
 
 ## Coding Best Practices
 
@@ -217,6 +223,15 @@ This document provides essential information for AI agents working on the
       opening animations).
     - `waitForHidden(locator)`: Robustly waits for an element to disappear
       while advancing the clock (necessary for closing animations).
+    - `waitForCondition(page, condition)`: Use this to wait for arbitrary
+      state changes while manually advancing the mock clock.
+  - **Data Serialization:** Playwright's `evaluate` cannot correctly serialize
+    Three.js objects (like `Camera`) due to non-enumerable properties.
+    Always extract needed values into a plain object or a JSON string
+    (e.g., in a `data-test-data` attribute) before accessing them in tests.
+  - **Synchronization:** Use `data-test-ready=\"true\"` attributes to signal
+    when complex animations or asynchronous graphics scenes are fully
+    initialized and ready for verification.
   - Standard Playwright actions like `click()` or
     `waitFor({ state: 'visible' })` may hang or be flaky if they wait for an
     element that is stuck in an animation state.
