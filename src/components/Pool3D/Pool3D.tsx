@@ -108,6 +108,12 @@ export default function Pool3D(props: Pool3DProps) {
                         rotation: { x: number; y: number; z: number };
                         fov: number;
                     };
+                    pipCamera: {
+                        position: { x: number; y: number; z: number };
+                        rotation: { x: number; y: number; z: number };
+                        fov: number;
+                    };
+                    pipPosition: string;
                     swimmer0?: {
                         position: { x: number; y: number; z: number };
                         rotation: { y: number };
@@ -116,10 +122,16 @@ export default function Pool3D(props: Pool3DProps) {
 
                 const data: TestData = {
                     camera: {
-                        position: { x: observerX, y: 1.67, z: poolLengthMeters * 0.5 },
+                        position: { x: observerX, y: 1.67, z: poolLengthMeters * 0.5 + 2.0 },
                         rotation: { x: -0.5, y: 0, z: 0 },
                         fov: 90
-                    }
+                    },
+                    pipCamera: {
+                        position: { x: observerX, y: 1.67, z: poolLengthMeters * 0.5 + 2.0 },
+                        rotation: { x: -0.2, y: isRight ? Math.PI / 4 : -Math.PI / 4, z: 0 },
+                        fov: 60
+                    },
+                    pipPosition: isRight ? 'top-left' : 'top-right'
                 };
 
                 const currentSwimmers = swimmersRef.current;
