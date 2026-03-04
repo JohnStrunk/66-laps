@@ -178,7 +178,7 @@ export default function Page() {
                                 swimmers={swimmers}
                                 numbering={settings.numberingDirection}
                                 startingEnd={settings.startingEnd} />
-                        )}                        <div className="absolute top-6 right-6 flex gap-4">
+                        )}                        <div data-testid="practice-controls" className={`absolute top-6 ${settings.startingEnd === StartingEnd.LEFT ? 'left-6' : 'right-6'} flex gap-4`}>
                             <ButtonGroup color="secondary" data-testid="view-selector">
                                 <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
                                 <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>
