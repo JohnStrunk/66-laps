@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('Zone A should occupy approximately {int}% of the width', async function (this: CustomWorld, percentage: number) {
   const row = await this.page!.locator('[data-testid="lane-row"]').first();
@@ -12,5 +12,5 @@ Then('Zone A should occupy approximately {int}% of the width', async function (t
   if (!rowBox || !zoneABox) throw new Error('Could not get bounding box');
 
   const ratio = (zoneABox.width / rowBox.width) * 100;
-  assert.ok(Math.abs(ratio - percentage) < 1.5, `Zone A width ${ratio}% is not approximately ${percentage}%`);
+  expect(Math.abs(ratio - percentage) < 1.5, `Zone A width ${ratio}% is not approximately ${percentage}%`).toBeTruthy();
 });

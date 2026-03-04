@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { waitForVisible } from '../../support/utils';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 const testIdMap: Record<string, string> = {
   'Event Selection': 'event-selection-dropdown',
@@ -12,5 +12,5 @@ Then(/^I should see a(?:n)? "([^"]*)" dropdown$/, async function (this: CustomWo
   const testId = testIdMap[label];
   const el = this.page!.getByTestId(testId);
   await waitForVisible(el);
-  assert.ok(await el.isVisible());
+  await expect(el).toBeVisible();
 });

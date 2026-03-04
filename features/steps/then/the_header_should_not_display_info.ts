@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 Then('the header should not display {string}', async function (this: CustomWorld, text: string) {
   const header = this.page!.getByTestId('bell-lap-header');
@@ -15,5 +15,5 @@ Then('the header should not display {string}', async function (this: CustomWorld
     }
   }
 
-  assert.ok(!match, `Expected header NOT to display "${text}", but it did. Header text: "${headerText}"`);
+  expect(!match, `Expected header NOT to display "${text}", but it did. Header text: "${headerText}"`).toBeTruthy();
 });

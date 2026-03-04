@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the UI should adapt to landscape orientation', async function (this: CustomWorld) {
   if (!this.page) throw new Error('No page found');
@@ -23,6 +23,6 @@ Then('the UI should adapt to landscape orientation', async function (this: Custo
 
   // In landscape, we expect the UI to take up most or all of the viewport width
   // (allowing for some padding/margins if applicable, but definitely not constrained to 448px)
-  assert.ok(width > 450, `UI width ${width} should be wider than portrait constraint in landscape mode.`);
-  assert.ok(Math.abs(width - viewport.width) < 50, `UI width ${width} should be close to viewport width ${viewport.width}`);
+  expect(width > 450, `UI width ${width} should be wider than portrait constraint in landscape mode.`).toBeTruthy();
+  expect(Math.abs(width - viewport.width) < 50, `UI width ${width} should be close to viewport width ${viewport.width}`).toBeTruthy();
 });

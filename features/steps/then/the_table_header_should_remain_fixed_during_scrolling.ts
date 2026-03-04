@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 Then('the table header should remain fixed during scrolling', async function (this: CustomWorld) {
   const tableWrapper = this.page!.locator('.lap-oof-table-wrapper');
@@ -18,8 +18,7 @@ Then('the table header should remain fixed during scrolling', async function (th
   const newHeaderRect = await header.boundingBox();
   if (!newHeaderRect) throw new Error('Could not get header bounding box after scroll');
 
-  assert.ok(Math.abs(newHeaderRect.y - initialHeaderRect.y) < 2,
-    `Header moved vertically: expected same as ${initialHeaderRect.y}, got ${newHeaderRect.y}`);
+  expect(Math.abs(newHeaderRect.y - initialHeaderRect.y) < 2, `Header moved vertically: expected same as ${initialHeaderRect.y}, got ${newHeaderRect.y}`).toBeTruthy();
 
   const firstRow = this.page!.locator('tbody tr').first();
   await tableWrapper.evaluate((el) => {
@@ -34,6 +33,6 @@ Then('the table header should remain fixed during scrolling', async function (th
   const rowNewRect = await firstRow.boundingBox();
 
   if (rowInitialRect && rowNewRect) {
-     assert.notStrictEqual(rowInitialRect.y, rowNewRect.y, 'Row did not move during scroll');
+     expect(rowInitialRect.y, 'Row did not move during scroll').not.toBe(rowNewRect.y);
   }
 });

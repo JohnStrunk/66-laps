@@ -1,6 +1,6 @@
 import { Then } from "@cucumber/cucumber";
-import assert from "node:assert";
 import { CustomWorld } from "../../support/world";
+import { expect } from '@playwright/test';
 
 Then('the system share dialog should be opened with the PDF file', async function (this: CustomWorld) {
   // Wait for the share dialog data to be populated (async PDF generation)
@@ -16,6 +16,6 @@ Then('the system share dialog should be opened with the PDF file', async functio
     };
   });
 
-  assert.ok(fileInfo, "No data shared");
-  assert.strictEqual(fileInfo.type, 'application/pdf', "Shared file should be a PDF");
+  expect(fileInfo, "No data shared").toBeTruthy();
+  expect(fileInfo!.type, "Shared file should be a PDF").toBe('application/pdf');
 });

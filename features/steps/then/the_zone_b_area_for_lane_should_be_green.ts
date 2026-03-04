@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then(`the Zone B area for Lane {int} should be green`, async function (this: CustomWorld, laneNumber: number) {
   const selector = `[data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`;
@@ -11,7 +11,7 @@ Then(`the Zone B area for Lane {int} should be green`, async function (this: Cus
   }, selector, { timeout: 5000 }).catch(() => {});
 
   const zoneB = await this.page!.$(selector);
-  assert.ok(zoneB, `Zone B for lane ${laneNumber} not found`);
-  const classes = await zoneB.getAttribute('class');
-  assert.ok(classes?.includes('bg-success'), `Zone B for lane ${laneNumber} is not green. Classes: ${classes}`);
+  expect(zoneB, `Zone B for lane ${laneNumber} not found`).toBeTruthy();
+  const classes = await zoneB!.getAttribute('class');
+  expect(classes?.includes('bg-success'), `Zone B for lane ${laneNumber} is not green. Classes: ${classes}`).toBeTruthy();
 });

@@ -1,6 +1,6 @@
 import { Then } from "@cucumber/cucumber";
-import assert from "node:assert";
 import { CustomWorld } from "../../support/world";
+import { expect } from '@playwright/test';
 
 Then('the PDF timeline should use {int} second markers', async function (this: CustomWorld, expectedSeconds: number) {
   await this.page!.waitForFunction(() => !!(window as unknown as { __lastPDFDoc: unknown }).__lastPDFDoc, { timeout: 10000 });
@@ -9,6 +9,6 @@ Then('the PDF timeline should use {int} second markers', async function (this: C
     return doc.__test_scale;
   });
 
-  assert.ok(scale, "No scale info found on PDF doc");
-  assert.strictEqual(scale.secondsPerMarker, expectedSeconds, `Expected scale to use ${expectedSeconds}s markers, but found ${scale.secondsPerMarker}s`);
+  expect(scale, "No scale info found on PDF doc").toBeTruthy();
+  expect(scale.secondsPerMarker, `Expected scale to use ${expectedSeconds}s markers, but found ${scale.secondsPerMarker}s`).toBe(expectedSeconds);
 });

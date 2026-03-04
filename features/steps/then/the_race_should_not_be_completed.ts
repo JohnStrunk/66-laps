@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
-import { strict as assert } from 'assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the race should not be completed', function (this: CustomWorld) {
-  assert.equal(this.swimmer!.isDone(this.currentTime!), false);
+  expect(this.swimmer!.isDone(this.currentTime!)).toBe(false);
 });

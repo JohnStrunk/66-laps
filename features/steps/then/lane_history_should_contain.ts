@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, LapEvent } from '../../support/store-type';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 Then('lane {int} history should contain a {string} event from {int} to {int}', async function (this: CustomWorld, laneNumber: number, type: string, prev: number, next: number) {
   const events = await this.page!.evaluate((laneNum) => {
@@ -13,5 +13,5 @@ Then('lane {int} history should contain a {string} event from {int} to {int}', a
   const found = events.some((e: LapEvent) =>
     e.type === type && e.prevCount === prev && e.newCount === next
   );
-  assert.strictEqual(found, true, `Expected event ${type} from ${prev} to ${next} in lane ${laneNumber} history`);
+  expect(found, `Expected event ${type} from ${prev} to ${next} in lane ${laneNumber} history`).toBe(true);
 });

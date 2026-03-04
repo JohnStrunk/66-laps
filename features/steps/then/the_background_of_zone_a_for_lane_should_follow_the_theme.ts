@@ -1,12 +1,12 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then(`the background of Zone A for Lane {int} should follow the theme`, async function (this: CustomWorld, laneNumber: number) {
   const laneRow = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"]`);
   const zoneA = laneRow.locator('[data-testid="lane-zone-a"]');
 
-  await zoneA.waitFor({ state: 'visible' });
+  await expect(zoneA).toBeVisible();
 
   // Get computed background color of the Card and Zone A
   const colors = await this.page!.evaluate((args) => {
@@ -20,8 +20,8 @@ Then(`the background of Zone A for Lane {int} should follow the theme`, async fu
     };
   }, { laneNumber });
 
-  assert.ok(colors, 'Could not retrieve background colors');
-  const isTransparent = colors.zoneBg === 'rgba(0, 0, 0, 0)' || colors.zoneBg === 'transparent';
-  const matchesCard = colors.zoneBg === colors.cardBg;
-  assert.ok(isTransparent || matchesCard, `Zone A background (${colors.zoneBg}) should be transparent or match Card background (${colors.cardBg})`);
+  expect(colors, 'Could not retrieve background colors').toBeTruthy();
+  const isTransparent = colors!.zoneBg === 'rgba(0, 0, 0, 0)' || colors!.zoneBg === 'transparent';
+  const matchesCard = colors!.zoneBg === colors!.cardBg;
+  expect(isTransparent || matchesCard, `Zone A background (${colors!.zoneBg}) should be transparent or match Card background (${colors!.cardBg})`).toBeTruthy();
 });

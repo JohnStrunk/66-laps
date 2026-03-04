@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then(`the Zone B area for Lane {int} should display {string}`, async function (this: CustomWorld, laneNumber: number, expectedText: string) {
   const selector = `[data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`;
@@ -25,5 +25,5 @@ Then(`the Zone B area for Lane {int} should display {string}`, async function (t
     ? text?.includes(expectedText)
     : text?.toUpperCase().includes(expectedText.toUpperCase());
 
-  assert.ok(match, `Text "${expectedText}" not found in Zone B for lane ${laneNumber}. Found: "${text}"`);
+  expect(match, `Text "${expectedText}" not found in Zone B for lane ${laneNumber}. Found: "${text}"`).toBeTruthy();
 });

@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 Then('for lap {int}, the order of finish should be {string}', async function (this: CustomWorld, lapNum: number, expectedOrder: string) {
   // Find the row with the lap number
@@ -15,5 +15,5 @@ Then('for lap {int}, the order of finish should be {string}', async function (th
   const cleanedActual = actualText?.replace(/\s+/g, '').split('|').join(',').replace(/,$/, '') || '';
   const cleanedExpected = expectedOrder.replace(/\s+/g, '');
 
-  assert.strictEqual(cleanedActual, cleanedExpected);
+  expect(cleanedActual).toBe(cleanedExpected);
 });

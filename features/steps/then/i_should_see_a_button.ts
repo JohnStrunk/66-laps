@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { waitForVisible } from '../../support/utils';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 const testIdMap: Record<string, string> = {
   'Start Race': 'start-race-button',
@@ -13,5 +13,5 @@ Then(/^I should see a(?:n)? "([^"]*)" button$/, async function (this: CustomWorl
   const testId = testIdMap[label];
   const el = testId ? this.page!.getByTestId(testId) : this.page!.locator(`button:has-text("${label}")`);
   await waitForVisible(el);
-  assert.ok(await el.isVisible());
+  await expect(el).toBeVisible();
 });

@@ -51,8 +51,6 @@ This document provides essential information for AI agents working on the
 - **Testing:**
   - `yarn test`: Runs the full suite against the dev server with 2 parallel
     workers. Good for general regression checks during development.
-  - `yarn test:unit`: Runs only non-browser logic tests (Extremely fast, <1s).
-    Use this frequently during domain logic or model development.
   - `yarn test:static`: Builds the project and runs tests against the static
     export. This is the **most stable and fastest** way to run the full suite.
     Use this for final verification before committing or in CI.
@@ -92,7 +90,10 @@ This document provides essential information for AI agents working on the
 - **State Management (Zustand):**
   - The `bellLapStore` is the source of truth for race state.
   - **Store Slicing:** To maintain scalability, the store is divided into
-    logical slices (e.g., `race`, `history`, `ui`).
+    logical slices (e.g., `race`, `history`, `ui`). As the codebase grows, it is
+    recommended to physically separate these slices into individual files within
+    `src/modules/` to prevent `bellLapStore.ts` from becoming too large and to
+    improve maintainability.
   - It uses the `persist` middleware to save race data (lanes, counts, history)
     to `localStorage`.
   - UI-only state (like dialog visibility) is excluded from persistence.
@@ -201,6 +202,15 @@ This document provides essential information for AI agents working on the
   should use Cucumber's `return 'pending';` rather than a "noop" return. Once a
   feature is implemented, tests must accurately and rigorously verify the logic.
   "Fake" passing tests are strictly unacceptable.
+- **Explicit Assertions:** All validation steps (`Then`) MUST use explicit
+  assertions (e.g., Node's `assert` or `@playwright/test` `expect`) to
+  validate expected outcomes. Avoid relying solely on implicit actions
+  (like `locator.waitFor()`) as assertions. Ensure the step name strictly
+  reflects the functionality being tested.
+- **Coverage Validation:** Test coverage must be continuously reviewed to
+  ensure all critical paths and edge cases (especially in domain logic and
+  store slices) are adequately tested. Actively use available coverage scripts
+  and add missing test scenarios to fill coverage gaps.
 - **Time-Based Logic:** For tests involving lockout or other time-based
   behaviors, use `this.page.clock.install()` in the `Before` hook and
   `this.page.clock.fastForward()` in step definitions to ensure fast and
@@ -249,6 +259,8 @@ This document provides essential information for AI agents working on the
   referenced in any active `.feature` file. Use the following command to find
   unused steps:
   `./.github/find-unused-steps.sh`
+  Identify unused steps and remove them immediately, or write new test scenarios
+  to utilize them if they cover missing edge cases.
 - **Browser Test Stability:** Minimize flakiness by using `waitForFunction` or
   `waitForSelector` instead of immediate assertions for asynchronous state or
   layout changes. Avoid CSS transitions on elements whose dimensions are

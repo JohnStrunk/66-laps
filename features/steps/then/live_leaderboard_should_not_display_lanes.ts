@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
 import { advanceClock } from '../../support/utils';
+import { expect } from '@playwright/test';
 
 Then('the Live Leaderboard should not display lanes {int}, {int}, and {int}', async function (this: CustomWorld, l1: number, l2: number, l3: number) {
   for (const lane of [l1, l2, l3]) {
@@ -13,7 +13,7 @@ Then('the Live Leaderboard should not display lanes {int}, {int}, and {int}', as
       await advanceClock(this.page!, 200);
     }
 
-    await el.waitFor({ state: 'hidden', timeout: 5000 });
-    assert.ok(!(await el.isVisible()));
+    await expect(el).toBeHidden();
+    expect(!(await el.isVisible())).toBeTruthy();
   }
 });

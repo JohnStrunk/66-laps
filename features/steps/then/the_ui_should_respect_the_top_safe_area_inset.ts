@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the UI should respect the top safe area inset', async function (this: CustomWorld) {
   if (!this.page) throw new Error('No page found');
@@ -17,5 +17,5 @@ Then('the UI should respect the top safe area inset', async function (this: Cust
   const insetVal = parseInt(inset.replace('px', ''), 10);
   const expectedPadding = `${insetVal + 8}px`;
 
-  assert.strictEqual(paddingTop, expectedPadding, `Header padding-top (${paddingTop}) does not match expected padding (${expectedPadding}) derived from safe area inset (${inset})`);
+  expect(paddingTop, `Header padding-top (${paddingTop}) does not match expected padding (${expectedPadding}) derived from safe area inset (${inset})`).toBe(expectedPadding);
 });

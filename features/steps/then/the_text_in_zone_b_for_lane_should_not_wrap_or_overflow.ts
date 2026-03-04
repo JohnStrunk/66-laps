@@ -1,12 +1,12 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the text in Zone B for Lane {int} should not wrap or overflow', async function (this: CustomWorld, laneNumber: number) {
   const zoneB = this.page!.locator(`[data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`);
   const textSpan = zoneB.locator('span');
 
-  await textSpan.waitFor({ state: 'visible' });
+  await expect(textSpan).toBeVisible();
 
   const check = await textSpan.evaluate((el) => {
     const parent = el.parentElement;
@@ -35,6 +35,6 @@ Then('the text in Zone B for Lane {int} should not wrap or overflow', async func
   });
 
   const text = await textSpan.textContent();
-  assert.strictEqual(check.wraps, false, `Text "${text}" in Zone B for Lane ${laneNumber} wrapped to multiple lines (height: ${check.height}px, line-height: ${check.lineHeight}px)`);
-  assert.strictEqual(check.overflow, false, `Text "${text}" in Zone B for Lane ${laneNumber} overflows its container (width: ${check.scrollWidth}px vs parent: ${check.clientWidth}px)`);
+  expect(check.wraps, `Text "${text}" in Zone B for Lane ${laneNumber} wrapped to multiple lines (height: ${check.height}px, line-height: ${check.lineHeight}px)`).toBe(false);
+  expect(check.overflow, `Text "${text}" in Zone B for Lane ${laneNumber} overflows its container (width: ${check.scrollWidth}px vs parent: ${check.clientWidth}px)`).toBe(false);
 });

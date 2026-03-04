@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the lane stack should be ordered {int} to {int}', async function (this: CustomWorld, start: number, end: number) {
   const rows = this.page!.locator('[data-testid="lane-row"]');
@@ -13,5 +13,5 @@ Then('the lane stack should be ordered {int} to {int}', async function (this: Cu
     { s: String(start), e: String(end) }
   );
   const firstAttr = await rows.first().getAttribute('data-lane-number');
-  assert.strictEqual(firstAttr, String(start));
+  expect(firstAttr).toBe(String(start));
 });

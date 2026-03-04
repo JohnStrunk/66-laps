@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord } from '../../support/store-type';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 Then('the oldest race should have been removed', async function (this: CustomWorld) {
   const history = await this.page!.evaluate(() => {
@@ -9,5 +9,5 @@ Then('the oldest race should have been removed', async function (this: CustomWor
   });
   // The oldest was `history-49`
   const oldestStillPresent = history.some((r: RaceRecord) => r.id === 'history-49');
-  assert.strictEqual(oldestStillPresent, false);
+  expect(oldestStillPresent).toBe(false);
 });

@@ -1,15 +1,15 @@
+import { expect } from '@playwright/test';
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import assert from 'node:assert';
 
 Then('each record should show the start time, distance, lane count, event, and heat', async function (this: CustomWorld) {
   const cards = await this.page!.locator('[data-testid="history-record"]').all();
   for (const card of cards) {
     const text = await card.textContent() || '';
-    assert.match(text, /SC|LC/, `Record should show distance, got "${text}"`);
-    assert.match(text, /Lanes/, `Record should show lane count, got "${text}"`);
-    assert.match(text, /E \d+/, `Record should show event number, got "${text}"`);
-    assert.match(text, /H \d+/, `Record should show heat number, got "${text}"`);
-    assert.match(text, /\d+:\d+/, `Record should show time, got "${text}"`);
+    expect(text, `Record should show distance, got "${text}"`).toMatch(/SC|LC/);
+    expect(text, `Record should show lane count, got "${text}"`).toMatch(/Lanes/);
+    expect(text, `Record should show event number, got "${text}"`).toMatch(/E \d+/);
+    expect(text, `Record should show heat number, got "${text}"`).toMatch(/H \d+/);
+    expect(text, `Record should show time, got "${text}"`).toMatch(/\d+:\d+/);
   }
 });
