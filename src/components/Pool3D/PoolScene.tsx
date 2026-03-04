@@ -157,24 +157,27 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
                 </mesh>
             </group>
 
-            {/* Vertical cross on the walls */}
-            <mesh position={[0.01, wallPlusVerticalTop - wallPlusVerticalHeight / 2, zCenter]} rotation={[0, Math.PI / 2, 0]}>
-                <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
-            <mesh position={[0.01, wallPlusVerticalTop, zCenter]} rotation={[0, Math.PI / 2, 0]}>
-                <planeGeometry args={[wallPlusHorizontalWidth, wallPlusThickness]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
+            <group position={[0.01, WATER_Y, zCenter]} rotation={[0, Math.PI / 2, 0]}>
+                <mesh>
+                    <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+                <mesh>
+                    <planeGeometry args={[wallPlusHorizontalWidth, wallPlusThickness]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+            </group>
 
-            <mesh position={[poolLength - 0.01, wallPlusVerticalTop - wallPlusVerticalHeight / 2, zCenter]} rotation={[0, -Math.PI / 2, 0]}>
-                <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
-            <mesh position={[poolLength - 0.01, wallPlusVerticalTop, zCenter]} rotation={[0, -Math.PI / 2, 0]}>
-                <planeGeometry args={[wallPlusHorizontalWidth, wallPlusThickness]} />
-                <meshStandardMaterial color="#111111" />
-            </mesh>
+            <group position={[poolLength - 0.01, WATER_Y, zCenter]} rotation={[0, -Math.PI / 2, 0]}>
+                <mesh>
+                    <planeGeometry args={[wallPlusThickness, wallPlusVerticalHeight]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+                <mesh>
+                    <planeGeometry args={[wallPlusHorizontalWidth, wallPlusThickness]} />
+                    <meshStandardMaterial color="#111111" />
+                </mesh>
+            </group>
         </>
     );
 }
@@ -185,7 +188,7 @@ const waterShader = {
         uPositions: { value: Array(MAX_SOURCES).fill(0).map(() => new Vector2(-100, -100)) },
         uVelocities: { value: Array(MAX_SOURCES).fill(0).map(() => new Vector2(0, 0)) },
         uWeights: { value: Array(MAX_SOURCES).fill(0) },
-        uTexture: { value: null }
+        uColor: { value: new Color("#0099ff") }
     },
     vertexShader: `
         varying vec2 vUv;
@@ -202,35 +205,48 @@ const waterShader = {
         uniform vec2 uPositions[${MAX_SOURCES}];
         uniform vec2 uVelocities[${MAX_SOURCES}];
         uniform float uWeights[${MAX_SOURCES}];
-        uniform sampler2D uTexture;
+        uniform vec3 uColor;
         varying vec2 vUv;
         varying vec3 vWorldPosition;
 
         void main() {
-            vec3 waterColor = vec3(0.0, 0.2, 0.4);
-            vec3 finalColor = waterColor;
-
             float totalWake = 0.0;
-            float u = 1.5; // wave speed
+            float g = 9.81;
+            float u = 1.5;
+            float k0 = g / (u * u);
 
             for(int i = 0; i < ${MAX_SOURCES}; i++) {
-                if (uWeights[i] <= 0.0) continue;
+                float weight = uWeights[i];
+                if (weight <= 0.0) continue;
 
                 vec2 pos = uPositions[i];
                 vec2 vel = uVelocities[i];
 
-                vec2 distVec = vWorldPosition.xz - pos;
-                float dist = length(distVec);
+                vec2 dirForward = normalize(vel);
+                vec2 dirRight = vec2(-dirForward.y, dirForward.x);
+                vec2 toPixel = vWorldPosition.xz - pos;
 
-                float angle = atan(vel.y, vel.x);
-                vec2 dir = normalize(vel);
-                float dotProd = dot(normalize(distVec), dir);
+                float localX = dot(toPixel, -dirForward);
+                float localY = dot(toPixel, dirRight);
 
-                // Kelvin wake like pattern
-                float wake = exp(-dist * 0.5) * cos(10.0 * (dist - u * uTime)) * max(0.0, dotProd);
-                totalWake += wake * uWeights[i];
+                if (localX > 0.1 && localX < 24.0 && abs(localY) < (localX - 0.1 + 0.05) * 0.8) {
+                    float mask = smoothstep(0.8, 0.4, abs(localY) / (localX - 0.1 + 0.05)) * smoothstep(24.0, 16.0, localX);
+                    float swimmerWake = 0.0;
+                    for (int j = 0; j < 4; j++) {
+                        float theta = (float(j) / 3.0 - 0.5) * 1.2;
+                        float cosT = cos(theta);
+                        float sinT = sin(theta);
+                        float k = k0 / (cosT * cosT);
+                        float phase = k * (localX * cosT + localY * sinT);
+                        float omega = sqrt(g * k);
+
+                        swimmerWake += cos(phase - uTime * omega * 1.2) / (sqrt(abs(localX) + 1.0) * cosT);
+                    }
+                    totalWake += (swimmerWake / 4.0) * mask * weight;
+                }
             }
 
+            vec3 finalColor = uColor + (totalWake * 0.4);
             finalColor += max(0.0, totalWake) * 0.2;
             gl_FragColor = vec4(finalColor, 0.7);
         }
@@ -347,36 +363,64 @@ export default function PoolScene(props: Pool3DProps) {
         const padding = 20;
         const borderWidth = 2;
 
-        renderer.setScissorTest(true);
+        // Calculate border box position
+        const borderX = isRight ? padding : canvasSize.width - w - padding - borderWidth * 2;
+        const borderY = canvasSize.height - h - padding - borderWidth * 2;
 
-        // Border
-        renderer.setViewport(padding - borderWidth, padding - borderWidth, w + borderWidth * 2, h + borderWidth * 2);
-        renderer.setScissor(padding - borderWidth, padding - borderWidth, w + borderWidth * 2, h + borderWidth * 2);
-        renderer.setClearColor(0xffffff, 1);
+        renderer.autoClear = false;
         renderer.clear();
 
-        // PIP
-        renderer.setViewport(padding, padding, w, h);
-        renderer.setScissor(padding, padding, w, h);
+        // 1. Render main view
+        renderer.setViewport(0, 0, canvasSize.width, canvasSize.height);
+        renderer.setScissor(0, 0, canvasSize.width, canvasSize.height);
+        renderer.setScissorTest(false);
+        renderer.render(activeScene, mainCamera);
+
+        // 2. Render PIP border (white)
+        renderer.setViewport(borderX, borderY, w + borderWidth * 2, h + borderWidth * 2);
+        renderer.setScissor(borderX, borderY, w + borderWidth * 2, h + borderWidth * 2);
+        renderer.setScissorTest(true);
+        renderer.setClearColor("#ffffff");
+        renderer.clear(true, true, true);
+
+        // 3. Render PIP view
+        const pipX = borderX + borderWidth;
+        const pipY = borderY + borderWidth;
+        renderer.setViewport(pipX, pipY, w, h);
+        renderer.setScissor(pipX, pipY, w, h);
+        renderer.clearDepth();
         renderer.render(activeScene, pipCamera);
 
         renderer.setScissorTest(false);
-    });
+        // Reset clear color for next frame
+        renderer.setClearColor("#111111");
+    }, 1);
 
     const textures = useMemo(() => {
-        const floor = tileTexture.clone();
+        const sn = concreteTexture.clone();
+        sn.wrapS = sn.wrapT = RepeatWrapping;
+        sn.repeat.set((poolLengthMeters + 20) / 2, 10 / 2);
+
+        const we = concreteTexture.clone();
+        we.wrapS = we.wrapT = RepeatWrapping;
+        we.repeat.set(10 / 2, poolWidthMeters / 2);
+
+        const floor = concreteTexture.clone();
         floor.wrapS = floor.wrapT = RepeatWrapping;
         floor.repeat.set(poolLengthMeters / 2, poolWidthMeters / 2);
 
-        const wallLong = concreteTexture.clone();
+        const wallLong = tileTexture.clone();
         wallLong.wrapS = wallLong.wrapT = RepeatWrapping;
-        wallLong.repeat.set(poolLengthMeters / 2, 1);
+        const totalDepth = DECK_Y - FLOOR_Y;
+        wallLong.repeat.set(poolLengthMeters / 0.75, totalDepth / 0.75);
 
-        const wallWide = concreteTexture.clone();
+        const wallWide = tileTexture.clone();
         wallWide.wrapS = wallWide.wrapT = RepeatWrapping;
-        wallWide.repeat.set(poolWidthMeters / 2, 1);
+        wallWide.repeat.set(poolWidthMeters / 0.75, totalDepth / 0.75);
 
         return {
+            southNorthTexture: sn,
+            westEastTexture: we,
             floorTexture: floor,
             wallLongTexture: wallLong,
             wallWideTexture: wallWide
@@ -418,53 +462,57 @@ export default function PoolScene(props: Pool3DProps) {
             <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow />
 
             <mesh position={[poolLengthMeters / 2, DECK_Y, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <planeGeometry args={[poolLengthMeters + 10, 10]} />
-                <meshStandardMaterial map={textures.wallLongTexture} />
+                <planeGeometry args={[poolLengthMeters + 20, 10]} />
+                <meshStandardMaterial map={textures.southNorthTexture} />
             </mesh>
-
             <mesh position={[poolLengthMeters / 2, DECK_Y, poolWidthMeters + 5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <planeGeometry args={[poolLengthMeters + 10, 10]} />
-                <meshStandardMaterial map={textures.wallLongTexture} />
+                <planeGeometry args={[poolLengthMeters + 20, 10]} />
+                <meshStandardMaterial map={textures.southNorthTexture} />
             </mesh>
-
             <mesh position={[-5, DECK_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <planeGeometry args={[10, poolWidthMeters + 10]} />
-                <meshStandardMaterial map={textures.wallWideTexture} />
+                <planeGeometry args={[10, poolWidthMeters]} />
+                <meshStandardMaterial map={textures.westEastTexture} />
             </mesh>
-
             <mesh position={[poolLengthMeters + 5, DECK_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                <planeGeometry args={[10, poolWidthMeters + 10]} />
-                <meshStandardMaterial map={textures.wallWideTexture} />
+                <planeGeometry args={[10, poolWidthMeters]} />
+                <meshStandardMaterial map={textures.westEastTexture} />
             </mesh>
 
-            <group position={[0, WATER_Y, 0]}>
-                <mesh position={[poolLengthMeters / 2, 0, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
-                    <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                    <shaderMaterial ref={waterMaterialRef} args={[waterShader]} transparent={true} side={DoubleSide} />
-                </mesh>
-            </group>
+            <mesh position={[0, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters / 2]} rotation={[0, Math.PI / 2, 0]}>
+                <planeGeometry args={[poolWidthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial map={textures.wallWideTexture} side={DoubleSide} />
+            </mesh>
+            <mesh position={[poolLengthMeters, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters / 2]} rotation={[0, -Math.PI / 2, 0]}>
+                <planeGeometry args={[poolWidthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial map={textures.wallWideTexture} side={DoubleSide} />
+            </mesh>
+            <mesh position={[poolLengthMeters / 2, (DECK_Y + FLOOR_Y) / 2, 0]}>
+                <planeGeometry args={[poolLengthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial map={textures.wallLongTexture} side={DoubleSide} />
+            </mesh>
+            <mesh position={[poolLengthMeters / 2, (DECK_Y + FLOOR_Y) / 2, poolWidthMeters]} rotation={[0, Math.PI, 0]}>
+                <planeGeometry args={[poolLengthMeters, DECK_Y - FLOOR_Y]} />
+                <meshStandardMaterial map={textures.wallLongTexture} side={DoubleSide} />
+            </mesh>
 
-            <group position={[0, FLOOR_Y, 0]}>
-                <mesh position={[poolLengthMeters / 2, 0, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-                    <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
-                    <meshStandardMaterial map={textures.floorTexture} />
-                </mesh>
-            </group>
-
-            {Array.from({ length: lanes }).map((_, i) => (
-                <LaneMarker
-                    key={i}
-                    x={props.startingEnd === StartingEnd.RIGHT ? poolLengthMeters + 0.1 : -0.1}
-                    z={(i + 0.5) * LANE_WIDTH_METERS}
-                    y={DECK_Y}
-                    font={fontDataUri}
-                    displayIndex={props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1}
+            <mesh position={[poolLengthMeters / 2, WATER_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[poolLengthMeters, poolWidthMeters, 128, 64]} />
+                <shaderMaterial
+                    ref={waterMaterialRef}
+                    args={[waterShader]}
+                    transparent
+                    side={DoubleSide}
                 />
-            ))}
+            </mesh>
 
-            {Array.from({ length: lanes }).map((_, i) => (
+            <mesh position={[poolLengthMeters / 2, FLOOR_Y, poolWidthMeters / 2]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[poolLengthMeters, poolWidthMeters]} />
+                <meshStandardMaterial map={textures.floorTexture} />
+            </mesh>
+
+            {Array.from({ length: lanes }).map((_, i: number) => (
                 <LaneMarkings
-                    key={i}
+                    key={`marking-${i}`}
                     poolLength={poolLengthMeters}
                     zCenter={(i + 0.5) * LANE_WIDTH_METERS}
                     yFloor={FLOOR_Y}
@@ -472,6 +520,23 @@ export default function PoolScene(props: Pool3DProps) {
             ))}
 
             <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
+
+            {Array.from({ length: lanes }).map((_, i: number) => {
+                const isRight = props.startingEnd === StartingEnd.RIGHT;
+                const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
+                const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
+                const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                return (
+                    <LaneMarker
+                        key={i}
+                        x={markerX}
+                        z={markerZ}
+                        y={DECK_Y}
+                        font={fontDataUri}
+                        displayIndex={displayIndex}
+                    />
+                );
+            })}
 
             {props.swimmers.map((swimmer: ISwimmer, i: number) => (
                 <Swimmer3D
