@@ -229,8 +229,8 @@ const WaterShader = {
                 float localX = dot(toPixel, -dirForward);
                 float localY = dot(toPixel, dirRight);
 
-                if (localX > -0.5 && localX < 24.0 && abs(localY) < (localX + 0.5) * 0.8) {
-                    float mask = smoothstep(0.8, 0.4, abs(localY) / (localX + 0.5)) * smoothstep(24.0, 16.0, localX);
+                if (localX > 0.1 && localX < 24.0 && abs(localY) < (localX - 0.1 + 0.05) * 0.8) {
+                    float mask = smoothstep(0.8, 0.4, abs(localY) / (localX - 0.1 + 0.05)) * smoothstep(24.0, 16.0, localX);
                     float swimmerWake = 0.0;
                     for (int j = 0; j < 4; j++) {
                         float theta = (float(j) / 3.0 - 0.5) * 1.2;
