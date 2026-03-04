@@ -33,8 +33,8 @@ Then('the PIP camera should be looking towards the turn end', async function (th
     const mainRotY = data.camera.rotation.y;
     const pipRotY = data.pipCamera.rotation.y;
 
-    // We expect them to be looking in roughly perpendicular directions
-    // (main camera looks across lanes in Z, PIP looks down pool in X)
+    // We expect them to be looking in diagonal directions
+    // (main camera looks across lanes in Z, PIP looks diagonally)
     const diff = Math.abs(pipRotY - mainRotY);
-    expect(diff % (2 * Math.PI)).toBeCloseTo(Math.PI / 2, 1);
+    expect(diff % (2 * Math.PI)).toBeCloseTo(Math.PI / 4, 1);
 });

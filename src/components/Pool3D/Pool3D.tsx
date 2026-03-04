@@ -128,7 +128,7 @@ export default function Pool3D(props: Pool3DProps) {
                     },
                     pipCamera: {
                         position: { x: observerX, y: 1.67, z: poolLengthMeters * 0.5 + 2.0 },
-                        rotation: { x: -0.2, y: isRight ? Math.PI / 2 : -Math.PI / 2, z: 0 },
+                        rotation: { x: -0.2, y: isRight ? Math.PI / 4 : -Math.PI / 4, z: 0 },
                         fov: 60
                     },
                     pipPosition: isRight ? 'top-left' : 'top-right'

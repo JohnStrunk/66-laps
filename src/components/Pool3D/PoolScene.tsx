@@ -335,8 +335,8 @@ export default function PoolScene(props: Pool3DProps) {
         // Update PIP camera
         pipCamera.position.copy(mainCamera.position);
         const pipLookAtX = isRight ? 0 : poolLengthMeters;
-        const pipLookAtZ = poolWidthMeters / 2;
-        pipCamera.lookAt(pipLookAtX, -2.0, pipLookAtZ);
+        const pipLookAtZ = 0; // Opposite side of the pool
+        pipCamera.lookAt(pipLookAtX, WATER_Y, pipLookAtZ);
         if (mainCamera instanceof PerspectiveCamera) {
             // eslint-disable-next-line react-hooks/immutability
             pipCamera.aspect = mainCamera.aspect;
