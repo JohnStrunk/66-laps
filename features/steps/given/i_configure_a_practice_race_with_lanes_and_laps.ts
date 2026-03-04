@@ -11,8 +11,8 @@ Given('I configure a practice race with {int} lanes and {int} laps', async funct
     // Set Number of Lanes
     await selectDropdownItem(page, 'settings-Number of Lanes', lanes.toString());
 
-    // Set Race Length (2 laps is 50SC)
-    const raceLengthLabel = laps === 2 ? '50 SC (2 Laps)' : `${laps * 25} SC`;
+    // Set Race Length (Use 500 SC for tests to ensure standard options are used)
+    const raceLengthLabel = '500 SC';
     await selectDropdownItem(page, 'settings-Race Length', raceLengthLabel);
 
     // Set Spread to Minimal to make it easier to predict
@@ -28,8 +28,8 @@ Given('I configure a 3D practice race with {int} lanes and {int} laps', async fu
     // Set Number of Lanes
     await selectDropdownItem(page, 'settings-Number of Lanes', lanes.toString());
 
-    // Set Race Length (2 laps is 50SC)
-    const raceLengthLabel = laps === 2 ? '50 SC (2 Laps)' : `${laps * 25} SC`;
+    // Set Race Length (Use 500 SC for tests to ensure standard options are used)
+    const raceLengthLabel = '500 SC';
     await selectDropdownItem(page, 'settings-Race Length', raceLengthLabel);
 
     // Set Spread to Minimal
