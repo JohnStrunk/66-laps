@@ -8,6 +8,7 @@ Feature: Practice View Modes
 
   @browser @practice @2d
   Scenario Outline: 2D view renders the correct number of lanes
+    Given I set the "Simulation Mode" setting to "2D Overhead"
     When I set the "Number of Lanes" setting to "<lanes>"
     And I click "Start"
     Then I should see the 2D PixiJS canvas
@@ -21,6 +22,7 @@ Feature: Practice View Modes
 
   @browser @practice @2d
   Scenario Outline: 2D view lane numbering direction
+    Given I set the "Simulation Mode" setting to "2D Overhead"
     When I set the "Lane Numbering" setting to "<direction>"
     And I click "Start"
     Then the lane numbers should be ordered from <order>
@@ -32,6 +34,7 @@ Feature: Practice View Modes
 
   @browser @practice @2d
   Scenario Outline: 2D view with different race lengths
+    Given I set the "Simulation Mode" setting to "2D Overhead"
     When I set the "Race Length" setting to "<length>"
     And I click "Start"
     Then the swimmers should begin moving horizontally along their lanes
@@ -44,6 +47,7 @@ Feature: Practice View Modes
 
   @browser @practice @2d
   Scenario Outline: 2D view with different difficulty and spread settings
+    Given I set the "Simulation Mode" setting to "2D Overhead"
     When I set the "Difficulty" setting to "<difficulty>"
     And I set the "Spread" setting to "<spread>"
     And I click "Start"
@@ -60,13 +64,13 @@ Feature: Practice View Modes
     Then I should see a setting for "Starting End" with options "Left" and "Right"
     And I should see a setting for "Simulation Mode" with options "2D Overhead" and "3D Perspective"
     And the default "Starting End" should be "Left"
-    And the default "Simulation Mode" should be "2D Overhead"
+    And the default "Simulation Mode" should be "3D Perspective"
 
   @browser @practice @3d
   Scenario: View Selector is available on the simulation screen
     When I configure a practice race and click "Start"
     Then I should see a "2D/3D" view selector toggle floating in the corner
-    And the view selector should default to "2D"
+    And the view selector should default to "3D"
     And I should see the "Back to Settings" button in the corner
 
   @browser @practice @3d
@@ -124,14 +128,14 @@ Feature: Practice View Modes
   @browser @practice @3d
   Scenario: Simulation mode and Starting End settings are not persisted globally
     Given I set the "Starting End" setting to "Right"
-    And I set the "Simulation Mode" setting to "3D Perspective"
+    And I set the "Simulation Mode" setting to "2D Overhead"
     And I configure a practice race and click "Start"
     When I reload the application
     And I navigate to the Practice tool
     Then the "Starting End" setting should be reset to "Left"
-    And the "Simulation Mode" setting should be reset to "2D Overhead"
+    And the "Simulation Mode" setting should be reset to "3D Perspective"
     When I configure a practice race and click "Start"
-    Then the view selector should default to "2D"
+    Then the view selector should default to "3D"
 
   @browser @practice @3d
   Scenario: 3D Model Representation Validation
