@@ -13,9 +13,8 @@ Feature: Header Controls
       Given Bell Lap is configured for a "1000 SC" event
       And the event number is "15" and the heat number is "2"
       Then the header should display "1000 SC"
-      And the header should display "Event 15"
-      And the header should display "Heat 2"
-
+      And the header should display "E 15"
+      And the header should display "H 2"
     Scenario: Header displays only race distance if no event/heat numbers are set
       Given Bell Lap is configured for a "500 SC" event
       And the event number and heat number are not set

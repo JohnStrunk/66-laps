@@ -56,95 +56,58 @@ const performPress = async (page: Page, box: { x: number; y: number; width: numb
 };
 
 export const selectDropdownItem = async (page: Page, triggerTestId: string, itemText: string) => {
-  const triggerContainer = page.locator(`[data-testid="${triggerTestId}"]`);
-  await waitForVisible(triggerContainer);
+  const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
+  await waitForVisible(trigger);
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       // 1. Click the trigger
-      // Many UI libraries use a button inside the container, or the container itself is clickable.
-      // We try to find something clickable.
-      const clickable = triggerContainer.locator('button, [role="combobox"], [role="button"], .heroui-select-trigger').first();
+      await trigger.click({ force: true });
 
-      if (await clickable.count() > 0) {
-        await clickable.click({ force: true });
-      } else {
-        await triggerContainer.click({ force: true });
-      }
+      // Allow for animations and micro-tasks
+      await advanceClock(page, 500);
+      await page.waitForTimeout(100);
 
-      // Give it time to open
-      for (let i = 0; i < 5; i++) {
-        await advanceClock(page, 100);
-        await page.waitForTimeout(10);
-      }
-
-      // 2. Identify the popover
+      // 2. Locate the item across all visible popovers
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
-      const popovers = page.locator(popoverSelector).filter({ visible: true });
+      const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
-      // Wait for at least one to be visible
-      let popoverVisible = false;
-      for (let i = 0; i < 20; i++) {
-        if (await popovers.count() > 0) {
-          popoverVisible = true;
-          break;
-        }
-        await advanceClock(page, 100);
-        await page.waitForTimeout(10);
-      }
+      const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
 
-      if (!popoverVisible) continue;
+      // Wait for the specific item to appear using Playwright's built-in robust waiting
+      const targetItem = itemLocator.filter({ hasText: itemText, visible: true }).first();
 
-      // HeroUI popovers might be shared or unique. We look for the one containing our text
-      // across ALL visible popovers.
-      let targetItem: Locator | null = null;
-      const popoverCount = await popovers.count();
-
-      for (let p = 0; p < popoverCount; p++) {
-        const activePopover = popovers.nth(p);
-        const itemLocator = activePopover.locator('button, li, [role="option"], [role="menuitem"], .heroui-listbox-item');
-        const itemCount = await itemLocator.count();
-
-        for (let i = 0; i < itemCount; i++) {
-          const it = itemLocator.nth(i);
+      try {
+        await targetItem.waitFor({ state: 'visible', timeout: 3000 });
+      } catch {
+        // If not found by hasText, it might be due to complex DOM. Try a more exhaustive search.
+        const allItems = await itemLocator.all();
+        let found = false;
+        for (const it of allItems) {
           const text = await it.textContent();
-          const cleanedText = text?.trim() || "";
-          if (cleanedText === itemText || cleanedText.includes(itemText)) {
-            targetItem = it;
+          const innerText = await it.innerText();
+          if (text?.includes(itemText) || innerText?.includes(itemText)) {
+            await it.click({ force: true });
+            found = true;
             break;
           }
         }
-        if (targetItem) break;
+        if (!found) throw new Error(`Item "${itemText}" not found`);
       }
 
-      if (!targetItem) {
-        // Fallback: search by text globally if popover containment failed
-        const globalItem = page.locator(popoverSelector).locator('button, li, [role="option"], [role="menuitem"], .heroui-listbox-item').filter({ hasText: itemText, visible: true }).first();
-        if (await globalItem.count() > 0) {
-          targetItem = globalItem;
-        }
+      if (await targetItem.isVisible()) {
+        await targetItem.click({ force: true });
       }
 
-      if (!targetItem) throw new Error(`Item "${itemText}" not found in any visible dropdown`);
-
-      // 4. Click the item
-      await targetItem.scrollIntoViewIfNeeded().catch(() => {});
-      await targetItem.click({ force: true });
-
-      // 5. Wait for popovers to hide
-      for (let i = 0; i < 15; i++) {
-        if (await popovers.count() === 0) break;
-        await advanceClock(page, 200);
-        await page.waitForTimeout(20);
-      }
-
-      await advanceClock(page, 300);
+      // 5. Wait for popover to hide
+      await advanceClock(page, 500);
+      await page.waitForTimeout(100);
       return; // Success
     } catch (e) {
       if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);
-      await page.mouse.click(0, 0); // Click away to close any stuck popover
+      await page.mouse.click(0, 0); // Click away
       await advanceClock(page, 500);
-      await page.waitForTimeout(50);
+      await page.waitForTimeout(100);
     }
   }
 };

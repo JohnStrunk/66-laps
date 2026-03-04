@@ -14,18 +14,26 @@ When('I tap the {string} setup button', async function (this: CustomWorld, butto
     selector = `button:has-text("${buttonText}")`;
   }
 
-  const btn = this.page!.locator(selector);
+  const page = this.page!;
+  const btn = page.locator(selector);
   await btn.waitFor({ state: 'visible', timeout: 5000 });
 
   // Ensure the button is fully interactive
   for (let i = 0; i < 5; i++) {
     if (await btn.isEnabled()) break;
-    await advanceClock(this.page!, 200);
+    await advanceClock(page, 200);
+    await page.waitForTimeout(20);
   }
 
-  await btn.click();
+  // HeroUI onPress can be flaky with mock clocks.
+  // Using dispatchEvent('click') is often more reliable for triggering these handlers.
+  await btn.dispatchEvent('click');
+
+  // Allow for state transition
+  await advanceClock(page, 500);
+  await page.waitForTimeout(100);
 
   // Wait for the modal close animation to finish.
-  const dialog = this.page!.locator('[role="dialog"], [data-testid="new-race-setup-dialog"]');
+  const dialog = page.locator('[role="dialog"], [data-testid="new-race-setup-dialog"]');
   await waitForHidden(dialog);
 });

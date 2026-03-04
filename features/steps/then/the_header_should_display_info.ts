@@ -1,21 +1,26 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
+import { advanceClock } from '../../support/utils';
 
-Then('the header should display {string}', async function (this: CustomWorld, text: string) {
-  await this.page!.waitForFunction((args) => {
-    const { text, testId } = args;
-    const header = document.querySelector(`[data-testid="${testId}"]`);
-    if (!header) return false;
-    const headerText = header.textContent || '';
+Then('the header should display {string}', async function (this: CustomWorld, expectedText: string) {
+  const page = this.page!;
+  // Target specifically the PWA header
+  const header = page.locator('[data-testid="bell-lap-header"]');
 
-    let match = headerText.includes(text);
-    if (!match) {
-      if (text.startsWith('Event ')) {
-        match = headerText.includes('E ' + text.substring(6));
-      } else if (text.startsWith('Heat ')) {
-        match = headerText.includes('H ' + text.substring(5));
-      }
+  // Header might take a moment to update due to state changes
+  let found = false;
+  for (let i = 0; i < 20; i++) {
+    const text = await header.innerText();
+    if (text.includes(expectedText)) {
+      found = true;
+      break;
     }
-    return match;
-  }, { text, testId: 'bell-lap-header' }, { timeout: 5000 });
+    await advanceClock(page, 100);
+    await page.waitForTimeout(10);
+  }
+
+  if (!found) {
+    const actualText = await header.innerText();
+    throw new Error(`Expected header to display "${expectedText}", but it displayed "${actualText}"`);
+  }
 });
