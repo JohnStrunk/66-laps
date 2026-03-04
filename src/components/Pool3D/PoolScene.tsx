@@ -265,6 +265,12 @@ export default function PoolScene(props: Pool3DProps) {
 
     const waterMaterialRef = useRef<ShaderMaterial>(null);
 
+    // PIP Camera
+    const pipCamera = useMemo(() => {
+        const cam = new PerspectiveCamera(60, 1, 0.1, 1000);
+        return cam;
+    }, []);
+
     // State for current and ghost sources
     const positionsRef = useRef<Vector2[]>(Array(MAX_SOURCES).fill(0).map(() => new Vector2(-100, -100)));
     const velocitiesRef = useRef<Vector2[]>(Array(MAX_SOURCES).fill(0).map(() => new Vector2(0, 0)));
@@ -321,7 +327,46 @@ export default function PoolScene(props: Pool3DProps) {
             waterMaterialRef.current.uniforms.uVelocities.value = velocitiesRef.current;
             waterMaterialRef.current.uniforms.uWeights.value = weightsRef.current;
         }
-    });
+
+        // Manual render loop for PIP
+        const { gl: renderer, scene: activeScene, camera: mainCamera, size: canvasSize } = state;
+        const isRight = props.startingEnd === StartingEnd.RIGHT;
+
+        // Update PIP camera
+        pipCamera.position.copy(mainCamera.position);
+        const pipLookAtX = isRight ? 0 : poolLengthMeters;
+        const pipLookAtZ = poolWidthMeters / 2;
+        pipCamera.lookAt(pipLookAtX, -2.0, pipLookAtZ);
+        if (mainCamera instanceof PerspectiveCamera) {
+            // eslint-disable-next-line react-hooks/immutability
+            pipCamera.aspect = mainCamera.aspect;
+        }
+        pipCamera.updateProjectionMatrix();
+
+        // Viewport settings for PIP (1/4 size)
+        const w = canvasSize.width / 4;
+        const h = canvasSize.height / 4;
+        const xPos = isRight ? 0 : canvasSize.width - w;
+        const yPos = canvasSize.height - h;
+
+        renderer.autoClear = false;
+        renderer.clear();
+
+        // 1. Render main view
+        renderer.setViewport(0, 0, canvasSize.width, canvasSize.height);
+        renderer.setScissor(0, 0, canvasSize.width, canvasSize.height);
+        renderer.setScissorTest(false);
+        renderer.render(activeScene, mainCamera);
+
+        // 2. Render PIP view
+        renderer.setViewport(xPos, yPos, w, h);
+        renderer.setScissor(xPos, yPos, w, h);
+        renderer.setScissorTest(true);
+        renderer.clearDepth();
+        renderer.render(activeScene, pipCamera);
+
+        renderer.setScissorTest(false);
+    }, 1);
 
     const textures = useMemo(() => {
         const sn = concreteTexture.clone();
