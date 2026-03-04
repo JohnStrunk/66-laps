@@ -50,7 +50,7 @@ function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): I
 
 export default function Page() {
     const [mode, setMode] = useState<Mode>(Mode.SETTINGS);
-    const [viewMode, setViewMode] = useState<ViewMode>("2D");
+    const [viewMode, setViewMode] = useState<ViewMode>("3D");
     const [swimmers, setSwimmers] = useState<ISwimmer[]>([]);
     const [settings, setSettings] = useState<SettingsValue>({
         // dummy values
@@ -61,7 +61,7 @@ export default function Page() {
         spread: 0.05,
         numberingDirection: NumberingDirection.AWAY,
         startingEnd: StartingEnd.LEFT,
-        simulationMode: SimulationMode.TWO_D,
+        simulationMode: SimulationMode.THREE_D,
     });
     const wakeLock = useRef<WakeLockSentinel | null>(null);
     const startTime = useRef<number>(0);
