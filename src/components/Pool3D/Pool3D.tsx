@@ -1,7 +1,7 @@
 'use client'
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { PCFShadowMap } from "three";
 import { PoolLength } from "../Pool/Pool";
 import { NumberingDirection, StartingEnd } from "../Settings/Settings";
@@ -13,6 +13,8 @@ export type Pool3DProps = {
     numbering: NumberingDirection;
     startingEnd?: StartingEnd;
     swimmers: ISwimmer[];
+    orderOfFinish: number[];
+    onOrderOfFinishChange: (oof: number[]) => void;
     className?: string;
 };
 
@@ -89,13 +91,9 @@ export function getMockWebGLContext(canvas: HTMLCanvasElement) {
 export default function Pool3D(props: Pool3DProps) {
     const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
     const swimmersRef = useRef(props.swimmers);
-    const [orderOfFinish, setOrderOfFinish] = useState<number[]>([]);
-    const oofRef = useRef<number[]>([]);
 
     useEffect(() => {
         swimmersRef.current = props.swimmers;
-        setOrderOfFinish([]);
-        oofRef.current = [];
     }, [props.swimmers]);
 
     // Update test data on every render in test mode
@@ -115,12 +113,10 @@ export default function Pool3D(props: Pool3DProps) {
                     })
                     .filter(s => s.done);
 
-                if (finished.length > oofRef.current.length) {
-                    const newlyFinished = finished.filter(f => !oofRef.current.includes(f.lane));
+                if (finished.length > props.orderOfFinish.length) {
+                    const newlyFinished = finished.filter(f => !props.orderOfFinish.includes(f.lane));
                     if (newlyFinished.length > 0) {
-                        const next = [...oofRef.current, ...newlyFinished.map(f => f.lane)];
-                        oofRef.current = next;
-                        setOrderOfFinish(next);
+                        props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished.map(f => f.lane)]);
                     }
                 }
 
@@ -180,7 +176,7 @@ export default function Pool3D(props: Pool3DProps) {
                 const readyDiv = document.querySelector('[data-test-ready="true"]');
                 if (readyDiv) {
                     readyDiv.setAttribute('data-test-data', testWin.__TEST_DATA__);
-                    readyDiv.setAttribute('data-oof-value', oofRef.current.join(" "));
+                    readyDiv.setAttribute('data-oof-value', props.orderOfFinish.join(" "));
                 }
                 const canvas = document.querySelector('canvas[data-test-ready="true"]');
                 if (canvas) {
@@ -192,15 +188,15 @@ export default function Pool3D(props: Pool3DProps) {
             const interval = setInterval(update, 100);
             return () => clearInterval(interval);
         }
-    }, [isTestMode, props.poolLength, props.startingEnd, props.numbering, props.swimmers.length]);
+    }, [isTestMode, props.poolLength, props.startingEnd, props.numbering, props.swimmers.length, props.orderOfFinish, props.onOrderOfFinishChange]);
 
     if (isTestMode) {
         return (
             <div className={props.className} data-testid="3d-pool-container" data-test-ready="true">
                 <div style={{ color: 'white', padding: '20px' }}>3D View Mocked for Testing</div>
-                {orderOfFinish.length > 0 && (
-                    <div data-testid="order-of-finish" data-oof-value={orderOfFinish.join(" ")}>
-                        {orderOfFinish.join(" ")}
+                {props.orderOfFinish.length > 0 && (
+                    <div data-testid="order-of-finish" data-oof-value={props.orderOfFinish.join(" ")}>
+                        {props.orderOfFinish.join(" ")}
                     </div>
                 )}
                 {/* Render a technically visible but hidden canvas to satisfy tests */}

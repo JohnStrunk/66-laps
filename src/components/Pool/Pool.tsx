@@ -22,11 +22,13 @@ export type PoolProps = {
     numbering: NumberingDirection;
     startingEnd?: StartingEnd;
     swimmers: ISwimmer[];
+    orderOfFinish: number[];
+    onOrderOfFinishChange: (oof: number[]) => void;
     className?: string;
 };
 
 
-function PoolContents(props: PoolProps & { orderOfFinish: number[], onOrderOfFinishChange: (oof: number[]) => void }) {
+function PoolContents(props: PoolProps) {
     const app = useApplication();
     const lanes = props.swimmers.length;
     const poolLengthMeters = (props.poolLength === PoolLength.SC ? 25 : 50);
@@ -203,12 +205,6 @@ function PoolContents(props: PoolProps & { orderOfFinish: number[], onOrderOfFin
 
 export default function Pool(props: PoolProps) {
     const divRef = useRef<HTMLDivElement>(null);
-    const [orderOfFinish, setOrderOfFinish] = useState<number[]>([]);
-
-    useEffect(() => {
-        // Reset orderOfFinish when swimmers change (new race)
-        setOrderOfFinish([]);
-    }, [props.swimmers]);
 
     return (
         <div ref={divRef} className={`${props.className} relative`}>
@@ -219,15 +215,15 @@ export default function Pool(props: PoolProps) {
                 backgroundAlpha={0}
                 resizeTo={divRef}
             >
-                <PoolContents {...props} orderOfFinish={orderOfFinish} onOrderOfFinishChange={setOrderOfFinish} />
+                <PoolContents {...props} />
             </Application>
             {/* Hidden DOM element for testing */}
             <div
                 data-testid="order-of-finish"
-                data-oof-value={orderOfFinish.join(" ")}
+                data-oof-value={props.orderOfFinish.join(" ")}
                 style={{ display: 'none' }}
             >
-                {orderOfFinish.join(" ")}
+                {props.orderOfFinish.join(" ")}
             </div>
         </div>
     );

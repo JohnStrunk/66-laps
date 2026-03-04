@@ -10,7 +10,7 @@ import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button, ButtonGroup } from "@heroui/react";
 import { usePostHog } from "posthog-js/react";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 enum Mode {
     SETTINGS = "SETTINGS",
@@ -50,6 +50,7 @@ function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): I
 
 export default function Page() {
     const [mode, setMode] = useState<Mode>(Mode.SETTINGS);
+    const [orderOfFinish, setOrderOfFinish] = useState<number[]>([]);
     const [viewMode, setViewMode] = useState<ViewMode>("3D");
     const [swimmers, setSwimmers] = useState<ISwimmer[]>([]);
     const [settings, setSettings] = useState<SettingsValue>({
@@ -145,7 +146,12 @@ export default function Page() {
         setSettings(settings);
         setViewMode(settings.simulationMode);
         setMode(Mode.SWIM);
+        setOrderOfFinish([]);
     }
+
+    const handleOrderOfFinishChange = useCallback((newOof: number[]) => {
+        setOrderOfFinish(newOof);
+    }, []);
 
     const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
 
@@ -176,15 +182,20 @@ export default function Page() {
                                 poolLength={settings.poolLength}
                                 swimmers={swimmers}
                                 numbering={settings.numberingDirection}
-                                startingEnd={settings.startingEnd} />
+                                startingEnd={settings.startingEnd}
+                                orderOfFinish={orderOfFinish}
+                                onOrderOfFinishChange={handleOrderOfFinishChange} />
                         ) : (
                             <Pool3D
                                 className="w-full h-full"
                                 poolLength={settings.poolLength}
                                 swimmers={swimmers}
                                 numbering={settings.numberingDirection}
-                                startingEnd={settings.startingEnd} />
-                        )}                        <div data-testid="practice-controls" className={`absolute top-6 ${settings.startingEnd === StartingEnd.LEFT ? 'left-6' : 'right-6'} flex gap-4`}>
+                                startingEnd={settings.startingEnd}
+                                orderOfFinish={orderOfFinish}
+                                onOrderOfFinishChange={handleOrderOfFinishChange} />
+                        )}
+                        <div data-testid="practice-controls" className={`absolute top-6 ${settings.startingEnd === StartingEnd.LEFT ? 'left-6' : 'right-6'} flex gap-4`}>
                             <ButtonGroup color="secondary" data-testid="view-selector">
                                 <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
                                 <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>

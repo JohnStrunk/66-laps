@@ -31,3 +31,17 @@ Feature: Order of Finish
     Then "3 2" should be displayed in the order of finish on the 3D pool deck
     When lane 1 finishes last
     Then "3 2 1" should be displayed in the order of finish on the 3D pool deck
+
+  @browser @practice
+  Scenario: Order of finish persists when switching between 2D and 3D
+    Given I configure a practice race with 3 lanes and 2 laps
+    And I click "Start"
+    When the race is in progress
+    And lane 2 finishes first
+    And lane 1 finishes second
+    And lane 3 finishes last
+    Then "2 1 3" should be displayed in the order of finish on the 2D pool deck
+    When I click "3D"
+    Then "2 1 3" should be displayed in the order of finish on the 3D pool deck
+    When I click "2D"
+    Then "2 1 3" should be displayed in the order of finish on the 2D pool deck
