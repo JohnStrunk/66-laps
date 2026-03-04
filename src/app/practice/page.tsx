@@ -157,7 +157,7 @@ export default function Page() {
 
     useEffect(() => {
         if (isTestMode && typeof window !== 'undefined') {
-            (window as any).__TEST_SWIMMERS__ = swimmers;
+            (window as unknown as { __TEST_SWIMMERS__: ISwimmer[] }).__TEST_SWIMMERS__ = swimmers;
         }
     }, [swimmers, isTestMode]);
 

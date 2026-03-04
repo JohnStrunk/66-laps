@@ -96,27 +96,29 @@ export default function Pool3D(props: Pool3DProps) {
         swimmersRef.current = props.swimmers;
     }, [props.swimmers]);
 
+    const { poolLength, startingEnd, numbering, swimmers, orderOfFinish, onOrderOfFinishChange } = props;
+
     // Update test data on every render in test mode
     useEffect(() => {
         if (isTestMode && typeof window !== 'undefined') {
             const update = () => {
                 const testWin = window as unknown as TestWindow;
-                const isRight = props.startingEnd === StartingEnd.RIGHT;
-                const poolLengthMeters = props.poolLength === "SC" ? 22.86 : 50;
+                const isRight = startingEnd === StartingEnd.RIGHT;
+                const poolLengthMeters = poolLength === "SC" ? 22.86 : 50;
                 const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
 
                 // Update Order of Finish
                 const finished = swimmersRef.current
                     .map((s, i) => {
-                        const lane = props.numbering === NumberingDirection.AWAY ? props.swimmers.length - i : i + 1;
+                        const lane = numbering === NumberingDirection.AWAY ? swimmers.length - i : i + 1;
                         return { lane, done: s.isDone() };
                     })
                     .filter(s => s.done);
 
-                if (finished.length > props.orderOfFinish.length) {
-                    const newlyFinished = finished.filter(f => !props.orderOfFinish.includes(f.lane));
+                if (finished.length > orderOfFinish.length) {
+                    const newlyFinished = finished.filter(f => !orderOfFinish.includes(f.lane));
                     if (newlyFinished.length > 0) {
-                        props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+                        onOrderOfFinishChange([...orderOfFinish, ...newlyFinished.map(f => f.lane)]);
                     }
                 }
 
@@ -176,7 +178,7 @@ export default function Pool3D(props: Pool3DProps) {
                 const readyDiv = document.querySelector('[data-test-ready="true"]');
                 if (readyDiv) {
                     readyDiv.setAttribute('data-test-data', testWin.__TEST_DATA__);
-                    readyDiv.setAttribute('data-oof-value', props.orderOfFinish.join(" "));
+                    readyDiv.setAttribute('data-oof-value', orderOfFinish.join(" "));
                 }
                 const canvas = document.querySelector('canvas[data-test-ready="true"]');
                 if (canvas) {
@@ -188,15 +190,15 @@ export default function Pool3D(props: Pool3DProps) {
             const interval = setInterval(update, 100);
             return () => clearInterval(interval);
         }
-    }, [isTestMode, props.poolLength, props.startingEnd, props.numbering, props.swimmers.length, props.orderOfFinish, props.onOrderOfFinishChange]);
+    }, [isTestMode, poolLength, startingEnd, numbering, swimmers.length, orderOfFinish, onOrderOfFinishChange]);
 
     if (isTestMode) {
         return (
             <div className={props.className} data-testid="3d-pool-container" data-test-ready="true">
                 <div style={{ color: 'white', padding: '20px' }}>3D View Mocked for Testing</div>
-                {props.orderOfFinish.length > 0 && (
-                    <div data-testid="order-of-finish" data-oof-value={props.orderOfFinish.join(" ")}>
-                        {props.orderOfFinish.join(" ")}
+                {orderOfFinish.length > 0 && (
+                    <div data-testid="order-of-finish" data-oof-value={orderOfFinish.join(" ")}>
+                        {orderOfFinish.join(" ")}
                     </div>
                 )}
                 {/* Render a technically visible but hidden canvas to satisfy tests */}

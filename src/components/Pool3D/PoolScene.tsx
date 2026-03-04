@@ -179,8 +179,6 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
     );
 }
 
-const WATER_TEXTURE_SIZE = 512;
-
 const waterShader = {
     uniforms: {
         uTime: { value: 0 },

@@ -62,7 +62,7 @@ function PoolContents(props: PoolProps) {
         }
     }, [app, canvasRect]);
 
-    useTick((_delta) => {
+    useTick(() => {
         const finished = props.swimmers
             .map((s, i) => {
                 const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;

@@ -2,7 +2,8 @@ import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { waitForCondition } from '../../support/utils';
 
-When('lane {int} finishes {word}', async function (this: CustomWorld, lane: number, order: string) {
+When('lane {int} finishes {word}', async function (this: CustomWorld, lane: number, _order: string) {
+    if (!_order) throw new Error('order is required');
     const page = this.page!;
 
     // Find the index of this lane
