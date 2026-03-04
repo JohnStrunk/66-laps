@@ -346,8 +346,12 @@ export default function PoolScene(props: Pool3DProps) {
         // Viewport settings for PIP (1/4 size)
         const w = canvasSize.width / 4;
         const h = canvasSize.height / 4;
-        const xPos = isRight ? 0 : canvasSize.width - w;
-        const yPos = canvasSize.height - h;
+        const padding = 20;
+        const borderWidth = 2;
+
+        // Calculate border box position
+        const borderX = isRight ? padding : canvasSize.width - w - padding - borderWidth * 2;
+        const borderY = canvasSize.height - h - padding - borderWidth * 2;
 
         renderer.autoClear = false;
         renderer.clear();
@@ -358,14 +362,24 @@ export default function PoolScene(props: Pool3DProps) {
         renderer.setScissorTest(false);
         renderer.render(activeScene, mainCamera);
 
-        // 2. Render PIP view
-        renderer.setViewport(xPos, yPos, w, h);
-        renderer.setScissor(xPos, yPos, w, h);
+        // 2. Render PIP border (white)
+        renderer.setViewport(borderX, borderY, w + borderWidth * 2, h + borderWidth * 2);
+        renderer.setScissor(borderX, borderY, w + borderWidth * 2, h + borderWidth * 2);
         renderer.setScissorTest(true);
+        renderer.setClearColor("#ffffff");
+        renderer.clear(true, true, true);
+
+        // 3. Render PIP view
+        const pipX = borderX + borderWidth;
+        const pipY = borderY + borderWidth;
+        renderer.setViewport(pipX, pipY, w, h);
+        renderer.setScissor(pipX, pipY, w, h);
         renderer.clearDepth();
         renderer.render(activeScene, pipCamera);
 
         renderer.setScissorTest(false);
+        // Reset clear color for next frame
+        renderer.setClearColor("#111111");
     }, 1);
 
     const textures = useMemo(() => {
