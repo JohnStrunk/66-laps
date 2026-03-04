@@ -11,7 +11,7 @@ When('the race is in progress', async function (this: CustomWorld) {
 
     const numbering = await container.first().getAttribute('data-numbering');
     const totalLanesAttr = await container.first().getAttribute('data-swimmer-count');
-    const totalLanes = parseInt(totalLanesAttr || '3');
+    const totalLanes = parseInt(totalLanesAttr || '8');
 
     await page.evaluate(`(function(args) {
         var totalLanes = args.totalLanes;
@@ -21,22 +21,21 @@ When('the race is in progress', async function (this: CustomWorld) {
 
         var getIdx = function(lane) { return numbering === 'AWAY' ? totalLanes - lane : lane - 1; };
 
-        var lane1Idx = getIdx(1);
-        var lane2Idx = getIdx(2);
-        var lane3Idx = getIdx(3);
-
         var is3D = !!window.__TEST_SCENE__ || !!document.querySelector('[data-testid="3d-pool-container"]');
+
+        // Reset all swimmers to a default slow time
+        swimmers.forEach(function(s) { s._lapTimes = [100, 100]; });
 
         if (is3D) {
             // 3D Scenario: 3 finishes first, then 2, then 1
-            swimmers[lane3Idx]._lapTimes = [5, 5];
-            swimmers[lane2Idx]._lapTimes = [10, 10];
-            swimmers[lane1Idx]._lapTimes = [15, 15];
+            swimmers[getIdx(3)]._lapTimes = [5, 5];
+            swimmers[getIdx(2)]._lapTimes = [10, 10];
+            swimmers[getIdx(1)]._lapTimes = [15, 15];
         } else {
             // 2D Scenario: 2 finishes first, then 1, then 3
-            swimmers[lane2Idx]._lapTimes = [5, 5];
-            swimmers[lane1Idx]._lapTimes = [10, 10];
-            swimmers[lane3Idx]._lapTimes = [15, 15];
+            swimmers[getIdx(2)]._lapTimes = [5, 5];
+            swimmers[getIdx(1)]._lapTimes = [10, 10];
+            swimmers[getIdx(3)]._lapTimes = [15, 15];
         }
 
         var now = Date.now();

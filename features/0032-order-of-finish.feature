@@ -8,7 +8,7 @@ Feature: Order of Finish
 
   @browser @practice @2d
   Scenario: Order of finish appears progressively in 2D mode
-    Given I configure a practice race with 3 lanes and 2 laps
+    Given I configure a practice race with 6 lanes and 2 laps
     And I click "Start"
     When the race is in progress
     Then no order of finish should be displayed
@@ -21,7 +21,7 @@ Feature: Order of Finish
 
   @browser @practice @3d
   Scenario: Order of finish appears progressively in 3D mode
-    Given I configure a 3D practice race with 3 lanes and 2 laps
+    Given I configure a 3D practice race with 6 lanes and 2 laps
     And I click "Start"
     When the race is in progress
     Then no order of finish should be displayed
@@ -34,7 +34,7 @@ Feature: Order of Finish
 
   @browser @practice
   Scenario: Order of finish persists when switching between 2D and 3D
-    Given I configure a practice race with 3 lanes and 2 laps
+    Given I configure a practice race with 6 lanes and 2 laps
     And I click "Start"
     When the race is in progress
     And lane 2 finishes first

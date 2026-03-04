@@ -18,7 +18,7 @@ export enum SimulationMode {
 }
 
 // Valid values for selects
-const LANE_OPTIONS = ["3", "6", "8", "10"];
+const LANE_OPTIONS = ["6", "8", "10"];
 const RACE_LENGTH_OPTIONS = [
     { value: "50SC", label: "50 SC (2 Laps)" },
     { value: "500SC", label: "500 SC" },
