@@ -279,12 +279,17 @@ export default function PoolScene(props: Pool3DProps) {
         const currentIdx = index;
         const ghostIdx = index + MAX_SWIMMERS;
 
-        // Detect direction change (turn)
+        // Detect direction change (turn) OR stop (end of race)
         const currentVel = new Vector2(vx, vz);
-        if (lastVelRef.current[index].length() > 0 && currentVel.dot(lastVelRef.current[index]) < -0.5) {
-            // Transfer current state to ghost
+        const lastVel = lastVelRef.current[index];
+
+        const isTurn = lastVel.length() > 0 && currentVel.length() > 0 && currentVel.dot(lastVel) < -0.5;
+        const isStop = lastVel.length() > 0 && currentVel.length() === 0;
+
+        if (isTurn || isStop) {
+            // Transfer current state to ghost so it can decay naturally
             positionsRef.current[ghostIdx].copy(positionsRef.current[currentIdx]);
-            velocitiesRef.current[ghostIdx].copy(velocitiesRef.current[currentIdx]);
+            velocitiesRef.current[ghostIdx].copy(lastVel); // Use previous velocity for the ghost
             weightsRef.current[ghostIdx] = 1.0;
         }
         lastVelRef.current[index].copy(currentVel);
