@@ -26,7 +26,7 @@ export type PoolProps = {
 };
 
 
-function PoolContents(props: PoolProps) {
+function PoolContents(props: PoolProps & { orderOfFinish: number[], onOrderOfFinishChange: (oof: number[]) => void }) {
     const app = useApplication();
     const lanes = props.swimmers.length;
     const poolLengthMeters = (props.poolLength === PoolLength.SC ? 25 : 50);
@@ -59,7 +59,23 @@ function PoolContents(props: PoolProps) {
             setCanvasRect(canvasCopy);
         }
     }, [app, canvasRect]);
-    useTick(updateCanvasSize);
+
+    useTick((_delta) => {
+        const finished = props.swimmers
+            .map((s, i) => {
+                const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                return { lane, done: s.isDone() };
+            })
+            .filter(s => s.done);
+
+        if (finished.length > props.orderOfFinish.length) {
+            const newlyFinished = finished.filter(f => !props.orderOfFinish.includes(f.lane));
+            if (newlyFinished.length > 0) {
+                props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+            }
+        }
+        updateCanvasSize();
+    });
 
     const [waterImg, setWaterImg] = useState<Texture>(Texture.EMPTY);
     useEffect(() => {
@@ -124,6 +140,25 @@ function PoolContents(props: PoolProps) {
         <>
             <pixiGraphics draw={drawPool} />
 
+            {props.orderOfFinish.length > 0 && (
+                <pixiText
+                    text={props.orderOfFinish.join(" ")}
+                    style={new TextStyle({
+                        fontSize: laneWidthPixels * 0.8,
+                        fill: "white",
+                        fontFamily: "Atkinson Hyperlegible",
+                        fontWeight: "bold",
+                        align: "center",
+                        stroke: { color: "black", width: 0.2 * scaleFactor },
+                    })}
+                    position={{
+                        x: offsetX + poolEdgePixels + poolLengthPixels / 2,
+                        y: offsetY + poolWidthPixels + poolEdgePixels * 1.5,
+                    }}
+                    anchor={{ x: 0.5, y: 0.5 }}
+                />
+            )}
+
             {Array.from({ length: lanes }).map((_, i) => (
                 <pixiText key={i}
                     text={props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1}
@@ -168,8 +203,15 @@ function PoolContents(props: PoolProps) {
 
 export default function Pool(props: PoolProps) {
     const divRef = useRef<HTMLDivElement>(null);
+    const [orderOfFinish, setOrderOfFinish] = useState<number[]>([]);
+
+    useEffect(() => {
+        // Reset orderOfFinish when swimmers change (new race)
+        setOrderOfFinish([]);
+    }, [props.swimmers]);
+
     return (
-        <div ref={divRef} className={props.className}>
+        <div ref={divRef} className={`${props.className} relative`}>
             <Application
                 antialias={true}
                 resolution={window.devicePixelRatio || 1}
@@ -177,8 +219,16 @@ export default function Pool(props: PoolProps) {
                 backgroundAlpha={0}
                 resizeTo={divRef}
             >
-                <PoolContents {...props} />
+                <PoolContents {...props} orderOfFinish={orderOfFinish} onOrderOfFinishChange={setOrderOfFinish} />
             </Application>
+            {/* Hidden DOM element for testing */}
+            <div
+                data-testid="order-of-finish"
+                data-oof-value={orderOfFinish.join(" ")}
+                style={{ display: 'none' }}
+            >
+                {orderOfFinish.join(" ")}
+            </div>
         </div>
     );
 }

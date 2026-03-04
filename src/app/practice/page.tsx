@@ -149,6 +149,12 @@ export default function Page() {
 
     const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
 
+    useEffect(() => {
+        if (isTestMode && typeof window !== 'undefined') {
+            (window as any).__TEST_SWIMMERS__ = swimmers;
+        }
+    }, [swimmers, isTestMode]);
+
     return (
         <>
             <div className="w-full flex flex-col min-h-screen">
