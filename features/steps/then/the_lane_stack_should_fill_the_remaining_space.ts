@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the lane stack should fill the remaining space', async function (this: CustomWorld) {
   if (!this.page) throw new Error('No page found');
@@ -22,6 +22,6 @@ Then('the lane stack should fill the remaining space', async function (this: Cus
   // The lane stack "fills" the remaining space if there's no large gap.
   // We expect bodyHeight to be close to windowHeight (no scrolling)
   // and laneStack to be the largest part of it.
-  assert.ok(metrics.laneStackHeight > 0, "Lane stack should have height");
-  assert.ok(metrics.bodyHeight <= metrics.windowHeight + 5, `Should not scroll: ${metrics.bodyHeight} > ${metrics.windowHeight}`);
+  expect(metrics.laneStackHeight > 0, "Lane stack should have height").toBeTruthy();
+  expect(metrics.bodyHeight <= metrics.windowHeight + 5, `Should not scroll: ${metrics.bodyHeight} > ${metrics.windowHeight}`).toBeTruthy();
 });

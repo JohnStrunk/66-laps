@@ -1,10 +1,10 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the header should not overflow or scroll', async function (this: CustomWorld) {
   const header = this.page!.locator('[data-testid="bell-lap-header"]');
-  await header.waitFor({ state: 'visible' });
+  await expect(header).toBeVisible();
 
   const check = await header.evaluate((el) => {
     // Check if any element inside the header is wider than the header itself
@@ -28,6 +28,6 @@ Then('the header should not overflow or scroll', async function (this: CustomWor
     };
   });
 
-  assert.strictEqual(check.hasHorizontalScroll, false, `Header has horizontal scroll (scrollWidth: ${check.scrollWidth}px vs clientWidth: ${check.clientWidth}px)`);
-  assert.strictEqual(check.leaderboardScrolls, false, `Leaderboard row has horizontal scroll`);
+  expect(check.hasHorizontalScroll, `Header has horizontal scroll (scrollWidth: ${check.scrollWidth}px vs clientWidth: ${check.clientWidth}px)`).toBe(false);
+  expect(check.leaderboardScrolls, `Leaderboard row has horizontal scroll`).toBe(false);
 });

@@ -1,10 +1,12 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { waitForHidden, advanceClock } from '../../support/utils';
+import { expect } from '@playwright/test';
 
 Then('I should see exactly {int} swimmers represented as emojis on the 2D canvas', async function (this: CustomWorld, count: number) {
     const form = this.page!.locator('form');
     await waitForHidden(form);
+    await expect(form).toBeHidden();
 
     for (let i = 0; i < 10; i++) {
         await advanceClock(this.page!, 100);
@@ -12,5 +14,5 @@ Then('I should see exactly {int} swimmers represented as emojis on the 2D canvas
     }
 
     const container = this.page!.locator(`[data-swimmer-count="${count}"]`);
-    await container.waitFor({ state: 'visible', timeout: 5000 });
+    await expect(container).toBeVisible();
 });

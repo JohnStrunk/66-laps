@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then(`each lane's Zone B should display "Lane" followed by its lane number`, async function (this: CustomWorld) {
   const rows = await this.page!.$$('[data-testid="lane-row"]');
@@ -9,6 +9,6 @@ Then(`each lane's Zone B should display "Lane" followed by its lane number`, asy
     const laneNumber = i + 1;
     const zoneB = await row.$('[data-testid="lane-zone-b"]');
     const text = await zoneB?.textContent();
-    assert.ok(text?.toUpperCase().includes(`LANE ${laneNumber}`), `Lane ${laneNumber} text not found in ${text}`);
+    expect(text?.toUpperCase().includes(`LANE ${laneNumber}`), `Lane ${laneNumber} text not found in ${text}`).toBeTruthy();
   }
 });

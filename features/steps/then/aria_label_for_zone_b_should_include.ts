@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then(`the aria-label for Lane {int}'s Zone B should include {string}`, async function (this: CustomWorld, laneNumber: number, expectedText: string) {
   const zoneB = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-zone-b"]`);
@@ -13,5 +13,5 @@ Then(`the aria-label for Lane {int}'s Zone B should include {string}`, async fun
     { timeout: 5000 }
   );
   const ariaLabel = await zoneB.getAttribute('aria-label');
-  assert.ok(ariaLabel?.includes(expectedText), `Aria-label "${ariaLabel}" does not include "${expectedText}"`);
+  expect(ariaLabel?.includes(expectedText), `Aria-label "${ariaLabel}" does not include "${expectedText}"`).toBeTruthy();
 });

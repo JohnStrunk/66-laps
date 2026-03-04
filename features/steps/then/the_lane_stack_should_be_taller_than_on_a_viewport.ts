@@ -1,12 +1,12 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the lane stack should be taller than on a {string} viewport', async function (this: CustomWorld, otherViewport: string) {
   if (!this.page) throw new Error('No page found');
 
   const locator = this.page.locator('[data-testid="lane-stack"]');
-  await locator.waitFor({ state: 'visible' });
+  await expect(locator).toBeVisible();
 
   // Wait for height to be > 0
   await this.page.waitForFunction(() => {
@@ -32,5 +32,5 @@ Then('the lane stack should be taller than on a {string} viewport', async functi
     await this.page.setViewportSize(currentViewport);
   }
 
-  assert.ok(currentHeight > otherHeight, `Height on large viewport (${currentHeight}) should be greater than on ${otherViewport} (${otherHeight})`);
+  expect(currentHeight > otherHeight, `Height on large viewport (${currentHeight}) should be greater than on ${otherViewport} (${otherHeight})`).toBeTruthy();
 });

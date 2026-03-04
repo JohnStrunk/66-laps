@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the {string} button in Zone A for Lane {int} should be disabled', async function (this: CustomWorld, button: string, laneNumber: number) {
   const type = button === '+' ? 'increment' : 'decrement';
@@ -9,5 +9,5 @@ Then('the {string} button in Zone A for Lane {int} should be disabled', async fu
   // Wait for the button and check its disabled state
   await btn.waitFor({ state: 'attached' });
   const dataDisabled = await btn.getAttribute('data-disabled');
-  assert.strictEqual(dataDisabled, 'true', `Button ${button} for Lane ${laneNumber} should be disabled`);
+  expect(dataDisabled, `Button ${button} for Lane ${laneNumber} should be disabled`).toBe('true');
 });

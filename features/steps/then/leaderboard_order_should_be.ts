@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the order in the Leaderboard should be Lane {int}, Lane {int}, Lane {int}', async function (this: CustomWorld, l1: number, l2: number, l3: number) {
   await this.page!.waitForFunction(
@@ -12,7 +12,7 @@ Then('the order in the Leaderboard should be Lane {int}, Lane {int}, Lane {int}'
     { timeout: 5000 }
   );
   const texts = await this.page!.locator('[data-testid^="leaderboard-lane-"]').allTextContents();
-  assert.strictEqual(texts[0], String(l1));
-  assert.strictEqual(texts[1], String(l2));
-  assert.strictEqual(texts[2], String(l3));
+  expect(texts[0]).toBe(String(l1));
+  expect(texts[1]).toBe(String(l2));
+  expect(texts[2]).toBe(String(l3));
 });

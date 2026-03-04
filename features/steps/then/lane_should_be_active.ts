@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('Lane {int} should be active', async function (this: CustomWorld, laneNumber: number) {
   const row = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"]`);
@@ -16,5 +16,5 @@ Then('Lane {int} should be active', async function (this: CustomWorld, laneNumbe
   );
 
   const text = await row.textContent();
-  assert.ok(!text?.includes('EMPTY'), `Lane ${laneNumber} should be active (not contain EMPTY)`);
+  expect(!text?.includes('EMPTY'), `Lane ${laneNumber} should be active (not contain EMPTY)`).toBeTruthy();
 });

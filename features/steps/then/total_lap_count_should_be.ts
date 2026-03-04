@@ -1,12 +1,12 @@
-import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
+import { Then } from '@cucumber/cucumber';
 import { TestWindow } from '../../support/store-type';
 
 Then('the total lap count should be {int}', async function (this: CustomWorld, laps: number) {
   if (!this.page) throw new Error('No page found');
 
   try {
-    await this.page.waitForFunction((expectedLaps) => {
+    await this.page.waitForFunction((expectedLaps: number) => {
       const state = (window as unknown as TestWindow).__bellLapStore.getState();
       const config: Record<string, number> = {
         '500 SC': 20, '1000 SC': 40, '1650 SC': 66, '800 LC': 16, '1500 LC': 30

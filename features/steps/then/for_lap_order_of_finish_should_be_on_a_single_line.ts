@@ -1,6 +1,6 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import assert from 'node:assert';
+import { expect } from '@playwright/test';
 
 Then('for lap {int}, the order of finish should be on a single line without wrapping', async function (this: CustomWorld, lapNum: number) {
   const row = this.page!.locator('tr').filter({ hasText: lapNum.toString() });
@@ -35,6 +35,6 @@ Then('for lap {int}, the order of finish should be on a single line without wrap
     throw new Error(result.error);
   }
 
-  assert.strictEqual(result.isWrapped, false, 'The order of finish is wrapping to multiple lines');
-  assert.strictEqual(result.hasHorizontalOverflow, false, `The order of finish has horizontal overflow: ${result.scrollWidth} > ${result.clientWidth}`);
+  expect(result.isWrapped, 'The order of finish is wrapping to multiple lines').toBe(false);
+  expect(result.hasHorizontalOverflow, `The order of finish has horizontal overflow: ${result.scrollWidth} > ${result.clientWidth}`).toBe(false);
 });

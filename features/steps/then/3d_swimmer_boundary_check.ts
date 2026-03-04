@@ -1,8 +1,8 @@
 import { Then } from '@cucumber/cucumber';
-import { strict as assert } from 'assert';
 import { CustomWorld } from '../../support/world';
 import { advanceClock } from '../../support/utils';
 import { TestWindow } from '../../../src/modules/testTypes';
+import { expect } from '@playwright/test';
 
 Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and turn ends', { timeout: 60000 }, async function (this: CustomWorld) {
     const page = this.page!;
@@ -43,8 +43,8 @@ Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and
         });
 
         if (data) {
-            assert.ok(data.minX >= -0.01, `Swimmer went past start wall! minX=${data.minX}, xPos=${data.xPos}, location=${data.location}`);
-            assert.ok(data.maxX <= data.poolLength + 0.01, `Swimmer went past turn wall! maxX=${data.maxX}, poolLength=${data.poolLength}, xPos=${data.xPos}, location=${data.location}`);
+            expect(data.minX >= -0.01, `Swimmer went past start wall! minX=${data.minX}, xPos=${data.xPos}, location=${data.location}`).toBeTruthy();
+            expect(data.maxX <= data.poolLength + 0.01, `Swimmer went past turn wall! maxX=${data.maxX}, poolLength=${data.poolLength}, xPos=${data.xPos}, location=${data.location}`).toBeTruthy();
 
             if (data.isAtTurn) hitTurn = true;
             if (data.isAtStart) hitStart = true;

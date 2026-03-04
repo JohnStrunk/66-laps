@@ -1,6 +1,6 @@
 import { Then } from "@cucumber/cucumber";
-import assert from "node:assert";
 import { CustomWorld } from "../../support/world";
+import { expect } from '@playwright/test';
 
 Then('the PDF should have exactly {int} page', async function (this: CustomWorld, expectedPages: number) {
   await this.page!.waitForFunction(() => !!(window as unknown as { __lastPDFDoc: unknown }).__lastPDFDoc, { timeout: 10000 });
@@ -10,5 +10,5 @@ Then('the PDF should have exactly {int} page', async function (this: CustomWorld
     return doc.internal.getNumberOfPages();
   });
 
-  assert.strictEqual(pageCount, expectedPages, `Expected PDF to have ${expectedPages} page(s), but found ${pageCount}`);
+  expect(pageCount, `Expected PDF to have ${expectedPages} page(s), but found ${pageCount}`).toBe(expectedPages);
 });

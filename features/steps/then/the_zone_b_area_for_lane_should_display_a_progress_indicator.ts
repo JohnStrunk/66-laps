@@ -1,8 +1,8 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then(`the Zone B area for Lane {int} should display a progress indicator for the lockout duration`, async function (this: CustomWorld, laneNumber: number) {
   const progress = await this.page!.$(`[data-lane-number="${laneNumber}"] [data-testid="lockout-progress"]`);
-  assert.ok(progress, `Progress indicator for lane ${laneNumber} not found`);
+  expect(progress, `Progress indicator for lane ${laneNumber} not found`).toBeTruthy();
 });

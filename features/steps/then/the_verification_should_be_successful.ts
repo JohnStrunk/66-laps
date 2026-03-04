@@ -1,7 +1,7 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the verification should be successful', function (this: CustomWorld) {
-  assert.strictEqual(this.verificationSuccess, true, `Verification failed: ${this.verificationError}`);
+  expect(this.verificationSuccess, `Verification failed: ${this.verificationError}`).toBe(true);
 });

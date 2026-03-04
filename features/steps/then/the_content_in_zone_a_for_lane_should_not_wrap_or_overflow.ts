@@ -1,11 +1,11 @@
 import { Then } from '@cucumber/cucumber';
-import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { expect } from '@playwright/test';
 
 Then('the content in Zone A for Lane {int} should not wrap or overflow', async function (this: CustomWorld, laneNumber: number) {
   const zoneA = this.page!.locator(`[data-lane-number="${laneNumber}"] [data-testid="lane-zone-a"]`);
 
-  await zoneA.waitFor({ state: 'visible' });
+  await expect(zoneA).toBeVisible();
 
   const check = await zoneA.evaluate((el) => {
     const scrollWidth = el.scrollWidth;
@@ -31,5 +31,5 @@ Then('the content in Zone A for Lane {int} should not wrap or overflow', async f
     };
   });
 
-  assert.strictEqual(check.overflow, false, `Content in Zone A for Lane ${laneNumber} overflows its container (scrollWidth: ${check.scrollWidth}px vs clientWidth: ${check.clientWidth}px)`);
+  expect(check.overflow, `Content in Zone A for Lane ${laneNumber} overflows its container (scrollWidth: ${check.scrollWidth}px vs clientWidth: ${check.clientWidth}px)`).toBe(false);
 });

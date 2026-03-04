@@ -1,8 +1,8 @@
 import { Then } from '@cucumber/cucumber';
-import { strict as assert } from 'assert';
 import { getPosition, getAnchor } from '../../../src/components/Swimmer/swimmerUtils';
 import { CustomWorld } from '../../support/world';
 import { PointData } from 'pixi.js';
+import { expect } from '@playwright/test';
 
 interface SwimmerState {
     startEnd: PointData;
@@ -24,6 +24,6 @@ Then('the swimmer\'s representation should be bounded by {float} and {float}', f
     const leftEdge = pos.x - anchor.x * width;
     const rightEdge = leftEdge + width;
 
-    assert.ok(leftEdge >= minX, `Left edge ${leftEdge} is less than minX ${minX} (at pos.x=${pos.x}, anchor.x=${anchor.x})`);
-    assert.ok(rightEdge <= maxX, `Right edge ${rightEdge} is greater than maxX ${maxX} (at pos.x=${pos.x}, anchor.x=${anchor.x})`);
+    expect(leftEdge >= minX, `Left edge ${leftEdge} is less than minX ${minX} (at pos.x=${pos.x}, anchor.x=${anchor.x})`).toBeTruthy();
+    expect(rightEdge <= maxX, `Right edge ${rightEdge} is greater than maxX ${maxX} (at pos.x=${pos.x}, anchor.x=${anchor.x})`).toBeTruthy();
 });

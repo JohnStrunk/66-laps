@@ -13,7 +13,6 @@
     "build-storybook": "storybook build",
     "test": "yarn coverage:clean && start-server-and-test 'yarn dev -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js --parallel 8'",
     "test:static": "yarn coverage:clean && yarn build && start-server-and-test 'npx serve out -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js --parallel 8'",
-    "test:unit": "yarn coverage:clean && NODE_OPTIONS=\"--import tsx\" cucumber-js --tags \"not @browser\"",
     "test:e2e": "yarn coverage:clean && start-server-and-test 'yarn dev -p 3000' http://localhost:3000 'BASE_URL=http://localhost:3000 NODE_OPTIONS=\"--import tsx\" cucumber-js --tags @browser --parallel 8'",
     "coverage:report": "NODE_OPTIONS=\"--import tsx\" tsx scripts/generate-coverage.ts",
     "coverage:clean": "rm -rf test-results/coverage test-results/report && mkdir -p test-results/coverage test-results/report"
@@ -48,6 +47,7 @@
     "@opentelemetry/context-async-hooks": "2.5.1",
     "@opentelemetry/core": "2.5.1",
     "@opentelemetry/sdk-trace-base": "2.5.1",
+    "@playwright/test": "1.58.2",
     "@storybook/addon-docs": "10.2.14",
     "@storybook/addon-onboarding": "10.2.14",
     "@storybook/addon-themes": "10.2.14",

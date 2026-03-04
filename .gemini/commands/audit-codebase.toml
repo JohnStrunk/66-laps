@@ -14,6 +14,6 @@ prompt = """
     adequately tested. Identify any gaps in test coverage and suggest areas
     where additional tests should be added.
 - Based on your findings from the above steps, make any necessary improvements
-  to the GEMINI.md file to ensure that the codebase will be well-maintained and
-  adhere to best practices in the future.
+  to the GEMINI.md or AGENTS.md file to ensure that the codebase will be
+  well-maintained and adhere to best practices in the future.
 """

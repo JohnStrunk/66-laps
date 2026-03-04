@@ -19,6 +19,7 @@ __metadata:
     "@opentelemetry/core": "npm:2.5.1"
     "@opentelemetry/sdk-trace-base": "npm:2.5.1"
     "@pixi/react": "npm:8.0.5"
+    "@playwright/test": "npm:1.58.2"
     "@react-three/drei": "npm:10.7.7"
     "@react-three/fiber": "npm:9.5.0"
     "@sentry/nextjs": "npm:10.41.0"
@@ -4468,6 +4469,17 @@ __metadata:
     pixi.js: ^8.2.6
     react: ">=19.0.0"
   checksum: 10c0/ca139da0f57c122d7db8cc71e94fcf009987b11efb2e940d96afb2f2501b518112c7d7336ddc4ceb03500358f5c510fe8480bd8c4935dc04e5554e03a885fad8
+  languageName: node
+  linkType: hard
+
+"@playwright/test@npm:1.58.2":
+  version: 1.58.2
+  resolution: "@playwright/test@npm:1.58.2"
+  dependencies:
+    playwright: "npm:1.58.2"
+  bin:
+    playwright: cli.js
+  checksum: 10c0/2164c03ad97c3653ff02e8818a71f3b2bbc344ac07924c9d8e31cd57505d6d37596015a41f51396b3ed8de6840f59143eaa9c21bf65515963da20740119811da
   languageName: node
   linkType: hard
 
