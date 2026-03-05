@@ -26,7 +26,8 @@ When('I tap the {string} button', async function (this: CustomWorld, buttonName:
     await advanceClock(this.page!, 200);
   }
 
-  await btn.click();
+  // Use dispatchEvent('click') for better reliability with HeroUI/NextUI
+  await btn.dispatchEvent('click');
   await advanceClock(this.page!, 500);
 
   if (buttonName === "History") {

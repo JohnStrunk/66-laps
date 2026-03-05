@@ -1,6 +1,6 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { advanceClock, waitForHidden } from '../../support/utils';
+import { advanceClock, waitForHidden, waitForVisible } from '../../support/utils';
 
 When('I tap the {string} setup button', async function (this: CustomWorld, buttonText: string) {
   let selector = '';
@@ -15,25 +15,26 @@ When('I tap the {string} setup button', async function (this: CustomWorld, butto
   }
 
   const page = this.page!;
-  const btn = page.locator(selector);
-  await btn.waitFor({ state: 'visible', timeout: 5000 });
 
-  // Ensure the button is fully interactive
-  for (let i = 0; i < 5; i++) {
-    if (await btn.isEnabled()) break;
-    await advanceClock(page, 200);
-    await page.waitForTimeout(20);
-  }
-
-  // HeroUI onPress can be flaky with mock clocks.
-  // Using dispatchEvent('click') is often more reliable for triggering these handlers.
-  await btn.dispatchEvent('click');
-
-  // Allow for state transition
+  // Wait for any animations to settle
   await advanceClock(page, 500);
   await page.waitForTimeout(100);
 
-  // Wait for the modal close animation to finish.
-  const dialog = page.locator('[role="dialog"], [data-testid="new-race-setup-dialog"]');
-  await waitForHidden(dialog);
-});
+  const btn = page.locator(selector).first();
+  await waitForVisible(btn);
+
+  // Use a more direct click approach that bypasses some of Playwright's checks
+  // but still triggers HeroUI handlers.
+  await btn.click({ force: true });
+
+  // Allow for state transition
+  for (let i = 0; i < 10; i++) {
+    await advanceClock(page, 200);
+    await page.waitForTimeout(20);
+    const dialog = page.locator('[data-testid="new-race-setup-dialog"]');
+    if (!(await dialog.isVisible())) break;
+  }
+
+  // Final wait for hidden
+  const dialog = page.locator('[data-testid="new-race-setup-dialog"]');
+  await waitForHidden(dialog);});

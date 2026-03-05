@@ -60,8 +60,7 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
 
   const handleStartRace = () => {
     startRace(localEvent, localLaneCount, localEventNumber, localHeatNumber);
-    // Note: onClose() is NOT called here because startRace already sets isSetupDialogOpen to false
-    // which triggers the Modal to close via its isOpen prop.
+    onClose();
   };
 
   return (

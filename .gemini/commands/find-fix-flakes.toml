@@ -1,0 +1,15 @@
+description = "Find and fix flaky tests in the current branch"
+prompt = """
+Use the command "until-it-fails yarn test" to identify any flaky tests in the
+current branch. It will repeatedly run the test suite until it encounters a
+failure, then it will print the name of the log file containing the details of
+the failure. Review the log file to identify the flaky test(s), then investigate
+the test code and the test environment to determine the root cause of the
+flakiness. Implement necessary fixes to address the core issue. Do not rely on
+workarounds such as increasing timeouts or adding retries, as these do not
+address the underlying problem and may lead to further issues.
+Repeat this process until there are no more flaky tests in the current branch.
+You should aim to have the script successfully execute at least 50 iterations
+without encountering any failures.
+When adjusting timeouts, no timeouts should exceed 30 seconds.
+"""

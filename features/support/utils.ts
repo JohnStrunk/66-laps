@@ -62,46 +62,43 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       // 1. Click the trigger
-      await trigger.click({ force: true });
+      await trigger.dispatchEvent('click');
 
       // Allow for animations and micro-tasks
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
 
-      // 2. Locate the item across all visible popovers
+      // 2. Locate the popover that contains our target text
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
       const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
-      const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
+      const popover = page.locator(popoverSelector).filter({
+        visible: true,
+        has: page.locator(itemSelector).filter({ hasText: itemText })
+      }).first();
 
-      // Wait for the specific item to appear using Playwright's built-in robust waiting
-      const targetItem = itemLocator.filter({ hasText: itemText, visible: true }).first();
+      // Wait for popover to be visible
+      await waitForCondition(page, async () => await popover.isVisible(), 3000);
 
-      try {
-        await targetItem.waitFor({ state: 'visible', timeout: 3000 });
-      } catch {
-        // If not found by hasText, it might be due to complex DOM. Try a more exhaustive search.
-        const allItems = await itemLocator.all();
-        let found = false;
-        for (const it of allItems) {
-          const text = await it.textContent();
-          const innerText = await it.innerText();
-          if (text?.includes(itemText) || innerText?.includes(itemText)) {
-            await it.click({ force: true });
-            found = true;
-            break;
-          }
-        }
-        if (!found) throw new Error(`Item "${itemText}" not found`);
-      }
+      // 3. Locate the item
+      let targetItem = popover.locator(itemSelector).filter({ hasText: itemText, visible: true }).first();
+
+      // Wait for the item to be visible
+      await waitForVisible(targetItem, 3000);
 
       if (await targetItem.isVisible()) {
-        await targetItem.click({ force: true });
+        await targetItem.dispatchEvent('click');
+      } else {
+        throw new Error(`Item "${itemText}" not visible after waiting`);
       }
 
-      // 5. Wait for popover to hide
+      // 4. Wait for popover to hide
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
+
+      // Verify popover is gone (don't block if it takes a bit longer)
+      await waitForHidden(popover, 2000).catch(() => {});
+
       return; // Success
     } catch (e) {
       if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);

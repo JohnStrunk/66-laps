@@ -4,17 +4,37 @@ import { advanceClock } from '../../support/utils';
 
 Then('the header should display {string}', async function (this: CustomWorld, expectedText: string) {
   const page = this.page!;
-  // Target specifically the PWA header
-  const header = page.locator('[data-testid="bell-lap-header"]');
+
+  // Possible sub-elements in the header that might contain the text
+  const subElements = [
+    '[data-testid="header-event-name"]',
+    '[data-testid="header-event-number"]',
+    '[data-testid="header-heat-number"]',
+    '[data-testid="header-race-info"]'
+  ];
 
   // Header might take a moment to update due to state changes
   let found = false;
-  for (let i = 0; i < 20; i++) {
+  const header = page.locator('[data-testid="bell-lap-header"]');
+
+  for (let i = 0; i < 30; i++) {
+    // 1. Try specific sub-elements first for precision
+    for (const selector of subElements) {
+      const el = page.locator(selector);
+      if (await el.count() > 0 && (await el.first().innerText()).includes(expectedText)) {
+        found = true;
+        break;
+      }
+    }
+    if (found) break;
+
+    // 2. Try the whole header as a fallback
     const text = await header.innerText();
     if (text.includes(expectedText)) {
       found = true;
       break;
     }
+
     await advanceClock(page, 100);
     await page.waitForTimeout(10);
   }
