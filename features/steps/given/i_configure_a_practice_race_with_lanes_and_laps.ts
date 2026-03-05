@@ -1,8 +1,12 @@
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { selectDropdownItem } from '../../support/utils';
+import { Page } from 'playwright';
 
-async function configurePracticeRace(page: any, lanes: number, mode: '2D Overhead' | '3D Perspective') {
+async function configurePracticeRace(page: Page, lanes: number, mode: '2D Overhead' | '3D Perspective', laps: number) {
+    // We use the laps parameter to verify the intent, even if we force 500 SC (20 laps) for now
+    if (laps <= 0) throw new Error('Laps must be positive');
+
     // 1. Set Simulation Mode
     const currentMode = await page.locator('[data-testid="settings-Simulation Mode"]').textContent();
     if (!currentMode?.includes(mode)) {
@@ -28,10 +32,10 @@ async function configurePracticeRace(page: any, lanes: number, mode: '2D Overhea
     }
 }
 
-Given('I configure a practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, _laps: number) {
-    await configurePracticeRace(this.page!, lanes, '2D Overhead');
+Given('I configure a practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
+    await configurePracticeRace(this.page!, lanes, '2D Overhead', laps);
 });
 
-Given('I configure a 3D practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, _laps: number) {
-    await configurePracticeRace(this.page!, lanes, '3D Perspective');
+Given('I configure a 3D practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
+    await configurePracticeRace(this.page!, lanes, '3D Perspective', laps);
 });
