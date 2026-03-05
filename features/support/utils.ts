@@ -57,63 +57,57 @@ const performPress = async (page: Page, box: { x: number; y: number; width: numb
 
 export const selectDropdownItem = async (page: Page, triggerTestId: string, itemText: string) => {
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
-
-  // Wait for trigger to be visible, potentially advancing clock if it's in a modal animation
   await waitForVisible(trigger);
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      // Click the trigger to open the dropdown
+      // 1. Click the trigger
       await trigger.click({ force: true });
 
-      // Wait for the popover/listbox to appear
+      // Allow for animations and micro-tasks
+      await advanceClock(page, 500);
+      await page.waitForTimeout(100);
+
+      // 2. Locate the item across all visible popovers
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
-      const popover = page.locator(popoverSelector).filter({ visible: true });
+      const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
-      let popoverVisible = false;
-      for (let i = 0; i < 10; i++) {
-        await advanceClock(page, 100);
-        if (await popover.count() > 0 && await popover.first().isVisible()) {
-          popoverVisible = true;
-          break;
+      const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
+
+      // Wait for the specific item to appear using Playwright's built-in robust waiting
+      const targetItem = itemLocator.filter({ hasText: itemText, visible: true }).first();
+
+      try {
+        await targetItem.waitFor({ state: 'visible', timeout: 3000 });
+      } catch {
+        // If not found by hasText, it might be due to complex DOM. Try a more exhaustive search.
+        const allItems = await itemLocator.all();
+        let found = false;
+        for (const it of allItems) {
+          const text = await it.textContent();
+          const innerText = await it.innerText();
+          if (text?.includes(itemText) || innerText?.includes(itemText)) {
+            await it.click({ force: true });
+            found = true;
+            break;
+          }
         }
+        if (!found) throw new Error(`Item "${itemText}" not found`);
       }
 
-      if (!popoverVisible) {
-        await trigger.click({ force: true });
-        await advanceClock(page, 500);
+      if (await targetItem.isVisible()) {
+        await targetItem.click({ force: true });
       }
 
-      await popover.first().waitFor({ state: 'visible', timeout: 3000 });
-
-      // Find the item within the visible popover
-      const item = popover.first().locator('button, li, [role="option"], [role="menuitem"], .heroui-listbox-item')
-        .filter({ hasText: itemText })
-        .filter({ visible: true })
-        .first();
-
-      await item.waitFor({ state: 'visible', timeout: 3000 });
-
-      // Click the item
-      await item.click({ force: true });
-
-      // Advance clock in ticks until the popover is hidden
-      for (let i = 0; i < 20; i++) {
-        if (!(await popover.first().isVisible())) break;
-        await advanceClock(page, 200);
-      }
-
-      // Final wait for it to be fully hidden
-      await popover.first().waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
-
-      await advanceClock(page, 200);
+      // 5. Wait for popover to hide
+      await advanceClock(page, 500);
+      await page.waitForTimeout(100);
       return; // Success
     } catch (e) {
       if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);
-
-      // Try to reset by clicking elsewhere
-      await page.mouse.click(0, 0);
+      await page.mouse.click(0, 0); // Click away
       await advanceClock(page, 500);
+      await page.waitForTimeout(100);
     }
   }
 };
@@ -127,10 +121,10 @@ export const waitForVisible = async (locator: Locator, timeoutMs: number = 5000)
       return;
     }
     await advanceClock(page, 100);
+    await page.waitForTimeout(10);
   }
 
-  // Final attempt with standard waitFor to get a good error message if it still fails
-  await locator.first().waitFor({ state: 'visible', timeout: 10000 });
+  await locator.first().waitFor({ state: 'visible', timeout: 5000 });
 };
 
 export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) => {
@@ -142,9 +136,9 @@ export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) 
       return;
     }
     await advanceClock(page, 200);
+    await page.waitForTimeout(20);
   }
 
-  // Final attempt with standard waitFor to get a good error message if it still fails
   await locator.first().waitFor({ state: 'hidden', timeout: 1000 }).catch(() => {});
 };
 
@@ -157,7 +151,6 @@ export const waitForCondition = async (page: Page, condition: () => Promise<bool
     await advanceClock(page, 500);
     await page.waitForTimeout(20);
   }
-  // Final attempt
   if (!(await condition())) {
     throw new Error(`Condition timed out after ${timeoutMs}ms`);
   }

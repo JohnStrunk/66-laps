@@ -182,11 +182,11 @@ function LaneMarkings({ poolLength, zCenter, yFloor }: { poolLength: number, zCe
     );
 }
 
-const WaterShader = {
+const waterShader = {
     uniforms: {
         uTime: { value: 0 },
-        uPositions: { value: Array(MAX_SOURCES).fill(new Vector2(-100, -100)) },
-        uVelocities: { value: Array(MAX_SOURCES).fill(new Vector2(0, 0)) },
+        uPositions: { value: Array(MAX_SOURCES).fill(0).map(() => new Vector2(-100, -100)) },
+        uVelocities: { value: Array(MAX_SOURCES).fill(0).map(() => new Vector2(0, 0)) },
         uWeights: { value: Array(MAX_SOURCES).fill(0) },
         uColor: { value: new Color("#0099ff") }
     },
@@ -307,6 +307,20 @@ export default function PoolScene(props: Pool3DProps) {
     }, []);
 
     useFrame((state, delta) => {
+        const finished = props.swimmers
+            .map((s, i) => {
+                const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                return { lane, done: s.isDone() };
+            })
+            .filter(s => s.done);
+
+        if (finished.length > props.orderOfFinish.length) {
+            const newlyFinished = finished.filter(f => !props.orderOfFinish.includes(f.lane));
+            if (newlyFinished.length > 0) {
+                props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+            }
+        }
+
         const now = state.clock.elapsedTime;
         const speed = 1.5; // Matches 'u' in shader
 
@@ -485,7 +499,7 @@ export default function PoolScene(props: Pool3DProps) {
                 <planeGeometry args={[poolLengthMeters, poolWidthMeters, 128, 64]} />
                 <shaderMaterial
                     ref={waterMaterialRef}
-                    args={[WaterShader]}
+                    args={[waterShader]}
                     transparent
                     side={DoubleSide}
                 />
@@ -536,6 +550,29 @@ export default function PoolScene(props: Pool3DProps) {
                     onPositionUpdate={handleSwimmerPositionUpdate}
                 />
             ))}
+
+            {props.orderOfFinish.length > 0 && (
+                <group
+                    position={[
+                        props.startingEnd === StartingEnd.RIGHT ? poolLengthMeters - 3.0 : 3.0,
+                        DECK_Y + 0.01,
+                        poolWidthMeters + 0.3
+                    ]}
+                    rotation={[-Math.PI / 2, 0, 0]}
+                >
+                    <Text
+                        fontSize={0.4}
+                        color="white"
+                        font={fontDataUri}
+                        anchorX="center"
+                        anchorY="middle"
+                        outlineWidth={0.05}
+                        outlineColor="#000000"
+                    >
+                        {props.orderOfFinish.join(" ")}
+                    </Text>
+                </group>
+            )}
         </>
     );
 }

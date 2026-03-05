@@ -28,8 +28,8 @@ Feature: New Race Configuration
     And I tap the "Start Race" setup button
     Then the "New Race Setup" dialog should be closed
     And the header should display "1000 SC"
-    And the header should display "Event 15"
-    And the header should display "Heat 2"
+    And the header should display "E 15"
+    And the header should display "H 2"
     And there should be 6 lane rows displayed
 
   Scenario: Configuring and starting a new race without optional info
