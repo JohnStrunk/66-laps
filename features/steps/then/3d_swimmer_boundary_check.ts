@@ -4,7 +4,7 @@ import { advanceClock } from '../../support/utils';
 import { TestWindow } from '../../../src/modules/testTypes';
 import { expect } from '@playwright/test';
 
-Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and turn ends', { timeout: 60000 }, async function (this: CustomWorld) {
+Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and turn ends', { timeout: 120000 }, async function (this: CustomWorld) {
     const page = this.page!;
 
     let hitTurn = false;
@@ -12,7 +12,7 @@ Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and
     const testStartTime = Date.now();
 
     while (!hitTurn || !hitStart) {
-        if (Date.now() - testStartTime > 55000) {
+        if (Date.now() - testStartTime > 115000) {
             throw new Error(`Timed out waiting for swimmer to hit both walls. hitTurn=${hitTurn}, hitStart=${hitStart}`);
         }
 

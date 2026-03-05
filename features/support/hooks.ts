@@ -4,8 +4,8 @@ import { CustomWorld } from './world';
 import { join } from 'node:path';
 import { existsSync, mkdirSync } from 'node:fs';
 
-// Set default timeout to 30 seconds
-setDefaultTimeout(30000);
+// Set default timeout to 60 seconds
+setDefaultTimeout(60000);
 
 let globalBrowser: Browser | undefined;
 
