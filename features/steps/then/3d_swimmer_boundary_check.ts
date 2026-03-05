@@ -50,6 +50,6 @@ Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and
             if (data.isAtStart) hitStart = true;
         }
 
-        await advanceClock(page, 2000); // 2s steps
+        await advanceClock(page, 200); // 200ms steps
     }
 });
