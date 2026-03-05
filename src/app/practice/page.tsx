@@ -174,8 +174,7 @@ export default function Page() {
                     <div className="relative w-screen h-screen p-4"
                          data-swimmer-count={swimmers.length}
                          data-numbering={settings.numberingDirection}
-                         data-starting-end={settings.startingEnd}
-                         data-test-ready={isTestMode ? "true" : undefined}>
+                         data-starting-end={settings.startingEnd}>
                         {viewMode === "2D" ? (
                             <Pool
                                 className="w-full h-full"

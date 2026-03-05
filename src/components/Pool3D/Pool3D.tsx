@@ -1,7 +1,7 @@
 'use client'
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { PCFShadowMap } from "three";
 import { PoolLength } from "../Pool/Pool";
 import { NumberingDirection, StartingEnd } from "../Settings/Settings";
@@ -18,79 +18,10 @@ export type Pool3DProps = {
     className?: string;
 };
 
-export function getMockWebGLContext(canvas: HTMLCanvasElement) {
-    const mock = {
-        canvas: canvas,
-        getShaderPrecisionFormat: () => ({ precision: 1, rangeMin: 1, rangeMax: 1 }),
-        getExtension: () => null,
-        getContextAttributes: () => ({}),
-        getParameter: (param: number) => {
-            if (param === 35661) return 16; // MAX_TEXTURE_IMAGE_UNITS
-            if (param === 0x1f00) return 'WebGL Mock'; // UNMASKED_VENDOR_WEBGL
-            if (param === 0x1f01) return 'Mock Renderer'; // UNMASKED_RENDERER_WEBGL
-            if (param === 0x8df8) return 1024; // MAX_VERTEX_UNIFORM_VECTORS
-            if (param === 0x84E2) return 16; // MAX_TEXTURE_IMAGE_UNITS
-            return 0;
-        },
-        createProgram: () => ({}),
-        createShader: () => ({}),
-        shaderSource: () => { },
-        compileShader: () => { },
-        getShaderParameter: () => true,
-        getProgramParameter: () => true,
-        linkProgram: () => { },
-        useProgram: () => { },
-        createBuffer: () => ({}),
-        bindBuffer: () => { },
-        bufferData: () => { },
-        getAttribLocation: () => 0,
-        enableVertexAttribArray: () => { },
-        vertexAttribPointer: () => { },
-        drawArrays: () => { },
-        viewport: () => { },
-        clear: () => { },
-        clearColor: () => { },
-        createTexture: () => ({}),
-        bindTexture: () => { },
-        texImage2D: () => { },
-        texParameteri: () => { },
-        activeTexture: () => { },
-        getError: () => 0,
-        flush: () => { },
-        finish: () => { },
-        getSupportedExtensions: () => [],
-        scissor: () => { },
-        stencilFunc: () => { },
-        stencilMask: () => { },
-        stencilOp: () => { },
-        colorMask: () => { },
-        pixelStorei: () => { },
-        readPixels: () => { },
-        // WebGL Constants
-        VERTEX_SHADER: 35633,
-        FRAGMENT_SHADER: 35632,
-        HIGH_FLOAT: 36338,
-        MEDIUM_FLOAT: 36337,
-        LOW_FLOAT: 36336,
-        MAX_TEXTURE_IMAGE_UNITS: 35661,
-        MAX_VERTEX_TEXTURE_IMAGE_UNITS: 35660,
-        MAX_TEXTURE_SIZE: 3379,
-        MAX_CUBE_MAP_TEXTURE_SIZE: 34076,
-        MAX_VERTEX_ATTRIBS: 34921,
-        MAX_VERTEX_UNIFORM_VECTORS: 36347,
-        MAX_VARYING_VECTORS: 36348,
-        MAX_FRAGMENT_UNIFORM_VECTORS: 36349,
-        MAX_SAMPLES: 36183,
-        SAMPLES: 32937,
-        MAX_COMBINED_TEXTURE_IMAGE_UNITS: 35661,
-        VERSION: 7938,
-    };
-    return mock;
-}
-
 export default function Pool3D(props: Pool3DProps) {
     const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
     const swimmersRef = useRef(props.swimmers);
+    const [testData, setTestData] = useState<string | null>(null);
 
     useEffect(() => {
         swimmersRef.current = props.swimmers;
@@ -98,7 +29,7 @@ export default function Pool3D(props: Pool3DProps) {
 
     const { poolLength, startingEnd, numbering, swimmers, orderOfFinish, onOrderOfFinishChange } = props;
 
-    // Update test data on every render in test mode
+    // Update test data on every render in test mode to support E2E tests
     useEffect(() => {
         if (isTestMode && typeof window !== 'undefined') {
             const update = () => {
@@ -171,19 +102,10 @@ export default function Pool3D(props: Pool3DProps) {
                     testWin.__TEST_SWIMMER_0_MODEL__ = s0;
                     testWin.__TEST_POOL_LENGTH__ = poolLengthMeters;
                 }
-                testWin.__TEST_DATA__ = JSON.stringify(data);
+                const serialized = JSON.stringify(data);
+                testWin.__TEST_DATA__ = serialized;
                 testWin.__TEST_CAMERA__ = data.camera;
-
-                // Set ready attribute on the parent div and canvas
-                const readyDiv = document.querySelector('[data-test-ready="true"]');
-                if (readyDiv) {
-                    readyDiv.setAttribute('data-test-data', testWin.__TEST_DATA__);
-                    readyDiv.setAttribute('data-oof-value', orderOfFinish.join(" "));
-                }
-                const canvas = document.querySelector('canvas[data-test-ready="true"]');
-                if (canvas) {
-                    canvas.setAttribute('data-test-data', testWin.__TEST_DATA__);
-                }
+                setTestData(serialized);
             };
 
             update();
@@ -192,37 +114,29 @@ export default function Pool3D(props: Pool3DProps) {
         }
     }, [isTestMode, poolLength, startingEnd, numbering, swimmers.length, orderOfFinish, onOrderOfFinishChange]);
 
-    if (isTestMode) {
-        return (
-            <div className={props.className} data-testid="3d-pool-container" data-test-ready="true">
-                <div style={{ color: 'white', padding: '20px' }}>3D View Mocked for Testing</div>
-                {orderOfFinish.length > 0 && (
-                    <div data-testid="order-of-finish" data-oof-value={orderOfFinish.join(" ")}>
-                        {orderOfFinish.join(" ")}
-                    </div>
-                )}
-                {/* Render a technically visible but hidden canvas to satisfy tests */}
-                <canvas
-                    data-test-ready="true"
-                    width="1"
-                    height="1"
-                    style={{ opacity: 0, position: 'absolute', pointerEvents: 'none' }}
-                />
-            </div>
-        );
-    }
-
     return (
-        <div className={props.className} data-testid="3d-pool-container">
+        <div
+            className={props.className}
+            data-testid="3d-pool-container"
+            data-test-ready={isTestMode && testData ? "true" : undefined}
+            data-test-data={isTestMode && testData ? testData : undefined}
+            data-swimmer-count={isTestMode ? swimmers.length : undefined}
+            data-oof-value={isTestMode ? orderOfFinish.join(" ") : undefined}
+        >
+            {isTestMode && orderOfFinish.length > 0 && (
+                <div data-testid="order-of-finish" style={{ display: 'none' }}>
+                    {orderOfFinish.join(" ")}
+                </div>
+            )}
             <Canvas
                 shadows={{ type: PCFShadowMap }}
                 camera={{ fov: 90, near: 0.1, far: 1000 }}
-                gl={{ antialias: true }}
+                gl={{ antialias: false }}
             >
                 <color attach="background" args={["#111111"]} />
                 <ambientLight intensity={0.5} />
                 <Suspense fallback={<group />}>
-                    <PoolScene {...props} />
+                    <PoolScene {...props} isTestMode={isTestMode} />
                 </Suspense>
             </Canvas>
         </div>

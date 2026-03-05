@@ -1,4 +1,4 @@
-import { Camera, Group, Scene } from 'three';
+import { Camera, Group, Scene, ShaderMaterial } from 'three';
 import { ISwimmer } from './SwimmerModel';
 
 export interface TestWindow extends Window {
@@ -9,4 +9,5 @@ export interface TestWindow extends Window {
     __TEST_CAMERA__?: Camera | { position: { x: number; y: number; z: number }; rotation: { x: number; y: number; z: number }; fov: number };
     __TEST_PIP_CAMERA__?: Camera | { position: { x: number; y: number; z: number }; rotation: { x: number; y: number; z: number }; fov: number };
     __TEST_SCENE__?: Scene;
+    __TEST_WATER_MATERIAL__?: ShaderMaterial;
 }

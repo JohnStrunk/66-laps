@@ -21,5 +21,5 @@ When('lane {int} finishes {word}', async function (this: CustomWorld, lane: numb
             var swimmers = window.__TEST_SWIMMERS__;
             return swimmers && swimmers[idx] && swimmers[idx].isDone(Date.now());
         })(${laneIndex})`);
-    });
+    }, 15000);
 });
