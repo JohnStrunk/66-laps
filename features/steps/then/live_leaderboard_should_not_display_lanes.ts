@@ -7,13 +7,12 @@ Then('the Live Leaderboard should not display lanes {int}, {int}, and {int}', as
   for (const lane of [l1, l2, l3]) {
     const el = this.page!.locator(`[data-testid="leaderboard-lane-${lane}"]`);
 
-    // Advance clock in ticks until hidden or timeout
-    for (let i = 0; i < 20; i++) {
-      if (!(await el.isVisible())) break;
+    await expect.poll(async () => {
+      if (!(await el.isVisible())) return true;
       await advanceClock(this.page!, 200);
-    }
+      return false;
+    }, { timeout: 5000 }).toBe(true);
 
     await expect(el).toBeHidden();
-    expect(!(await el.isVisible())).toBeTruthy();
   }
 });

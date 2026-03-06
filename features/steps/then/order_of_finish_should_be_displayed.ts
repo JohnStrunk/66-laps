@@ -7,13 +7,15 @@ Then('{string} should be displayed in the order of finish on the {word} pool dec
     const oof = this.page!.locator('[data-testid="order-of-finish"]');
     await expect(oof).toBeAttached();
 
-    // We check the text content or a data attribute
-    const actualOof = await oof.textContent();
-    if (actualOof?.trim() !== expectedOof) {
-        // Try data attribute as fallback for 3D/Canvas
+    await expect.poll(async () => {
+        const actualOof = await oof.textContent();
+        if (actualOof?.trim() === expectedOof) {
+            return true;
+        }
         const attrOof = await oof.getAttribute('data-oof-value');
-        expect(attrOof).toBe(expectedOof);
-    } else {
-        expect(actualOof?.trim()).toBe(expectedOof);
-    }
+        if (attrOof === expectedOof) {
+            return true;
+        }
+        return false;
+    }, { timeout: 10000 }).toBe(true);
 });

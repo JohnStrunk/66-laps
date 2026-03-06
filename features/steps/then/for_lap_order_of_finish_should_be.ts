@@ -4,16 +4,17 @@ import { expect } from '@playwright/test';
 
 Then('for lap {int}, the order of finish should be {string}', async function (this: CustomWorld, lapNum: number, expectedOrder: string) {
   // Find the row with the lap number
-  const row = this.page!.locator('tr').filter({ hasText: lapNum.toString() });
+  // Be specific so we don't accidentally match another row
+  const row = this.page!.locator('tr', { has: this.page!.locator('td').nth(0).filter({ hasText: new RegExp(`^\\s*${lapNum}\\s*$`) }) }).first();
   const cells = row.locator('td');
 
-  // The second cell should contain the lane numbers in order
   const orderCell = cells.nth(1);
-  const actualText = await orderCell.textContent();
 
-  // Clean up actualText: remove whitespace and the pipe separator
-  const cleanedActual = actualText?.replace(/\s+/g, '').split('|').join(',').replace(/,$/, '') || '';
   const cleanedExpected = expectedOrder.replace(/\s+/g, '');
 
-  expect(cleanedActual).toBe(cleanedExpected);
+  await expect.poll(async () => {
+      const actualText = await orderCell.textContent();
+      const cleanedActual = actualText?.replace(/\s+/g, '').split('|').join(',').replace(/,$/, '') || '';
+      return cleanedActual === cleanedExpected;
+  }, { timeout: 5000 }).toBe(true);
 });

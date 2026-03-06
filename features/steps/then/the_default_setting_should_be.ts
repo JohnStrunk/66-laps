@@ -7,6 +7,5 @@ Then('the default {string} should be {string}', async function (this: CustomWorl
     const trigger = this.page!.locator(`div[data-slot="base"]:has(label:text-is("${settingName}"))`).locator('button');
     await waitForVisible(trigger);
     await expect(trigger).toBeVisible();
-    const text = await trigger.textContent();
-    expect(text?.includes(expectedValue), `Expected "${text}" to include "${expectedValue}"`).toBeTruthy();
+    await expect(trigger).toContainText(expectedValue);
 });

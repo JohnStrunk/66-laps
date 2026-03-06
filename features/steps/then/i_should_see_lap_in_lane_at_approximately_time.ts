@@ -11,15 +11,15 @@ Then('I should see {string} in lane {int} at approximately {string}', async func
   const expectedTop = (totalSeconds / SECONDS_PER_LINE) * LINE_HEIGHT + (LINE_HEIGHT / 2);
 
   const locator = this.page!.locator(`[data-testid="lap-count-${lane}-${lap}"]`);
-  expect(await locator.isVisible(), `Lap count ${lap} for lane ${lane} should be visible`).toBeTruthy();
-  expect(await locator.textContent()).toBe(lap);
+  await expect(locator).toBeVisible();
+  await expect(locator).toHaveText(lap);
 
-  const style = await locator.getAttribute('style');
-  const topMatch = style?.match(/top:\s*([\d.]+)px/);
-  expect(topMatch, `Could not find top position in style: ${style}`).toBeTruthy();
-
-  const actualTop = parseFloat(topMatch![1]);
-  const diff = Math.abs(actualTop - expectedTop);
-
-  expect(diff < 5, `Expected top around ${expectedTop}px, but got ${actualTop}px (diff: ${diff}px).toBeTruthy();`);
+  await expect.poll(async () => {
+    const style = await locator.getAttribute('style');
+    const topMatch = style?.match(/top:\s*([\d.]+)px/);
+    if (!topMatch) return false;
+    const actualTop = parseFloat(topMatch[1]);
+    const diff = Math.abs(actualTop - expectedTop);
+    return diff < 5;
+  }, { timeout: 5000 }).toBe(true);
 });

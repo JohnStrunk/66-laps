@@ -11,12 +11,9 @@ Then('Lane {int} should be displayed as a full-width empty state', async functio
   const zoneB = row.locator('[data-testid="lane-zone-b"]');
 
   await expect(emptyState, 'Empty state should be visible').toBeVisible();
-  expect(!(await zoneA.isVisible()), 'Zone A should not be visible').toBeTruthy();
-  expect(!(await zoneB.isVisible()), 'Zone B should not be visible').toBeTruthy();
+  await expect(zoneA, 'Zone A should not be visible').toBeHidden();
+  await expect(zoneB, 'Zone B should not be visible').toBeHidden();
 
-  const text = await emptyState.textContent();
-  expect(text?.includes('EMPTY'), 'Should display EMPTY text').toBeTruthy();
-
-  const classes = await row.getAttribute('class');
-  expect(classes?.includes('bg-neutral-200'), 'Background should be grey (bg-neutral-200)').toBeTruthy();
+  await expect(emptyState).toContainText('EMPTY');
+  await expect(row).toHaveClass(/bg-neutral-200/);
 });

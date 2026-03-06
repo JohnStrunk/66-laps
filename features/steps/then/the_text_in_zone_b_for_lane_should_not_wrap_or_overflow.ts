@@ -8,33 +8,22 @@ Then('the text in Zone B for Lane {int} should not wrap or overflow', async func
 
   await expect(textSpan).toBeVisible();
 
-  const check = await textSpan.evaluate((el) => {
-    const parent = el.parentElement;
-    if (!parent) return { overflow: false, wraps: false, scrollWidth: 0, clientWidth: 0, height: 0, lineHeight: 0 };
+  await expect.poll(async () => {
+    return await textSpan.evaluate((el) => {
+      const parent = el.parentElement;
+      if (!parent) return { overflow: false, wraps: false };
 
-    const style = window.getComputedStyle(el);
-    // If line-height is 'normal', we can approximate it or use a default.
-    // But Tailwind's text-xl/text-3xl usually set a specific line-height.
-    let lh = parseFloat(style.lineHeight);
-    if (isNaN(lh)) {
-      lh = parseFloat(style.fontSize) * 1.2; // fallback
-    }
+      const style = window.getComputedStyle(el);
+      let lh = parseFloat(style.lineHeight);
+      if (isNaN(lh)) {
+        lh = parseFloat(style.fontSize) * 1.2;
+      }
 
-    const height = el.getBoundingClientRect().height;
-    const overflow = el.scrollWidth > parent.clientWidth;
-    const wraps = height > lh * 1.2; // 20% tolerance
+      const height = el.getBoundingClientRect().height;
+      const overflow = el.scrollWidth > parent.clientWidth;
+      const wraps = height > lh * 1.2;
 
-    return {
-      overflow,
-      wraps,
-      scrollWidth: el.scrollWidth,
-      clientWidth: parent.clientWidth,
-      height,
-      lineHeight: lh
-    };
-  });
-
-  const text = await textSpan.textContent();
-  expect(check.wraps, `Text "${text}" in Zone B for Lane ${laneNumber} wrapped to multiple lines (height: ${check.height}px, line-height: ${check.lineHeight}px)`).toBe(false);
-  expect(check.overflow, `Text "${text}" in Zone B for Lane ${laneNumber} overflows its container (width: ${check.scrollWidth}px vs parent: ${check.clientWidth}px)`).toBe(false);
+      return { overflow, wraps };
+    });
+  }, { timeout: 5000 }).toMatchObject({ overflow: false, wraps: false });
 });
