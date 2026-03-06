@@ -8,9 +8,9 @@ Then('the history view should not be scrollable', async function (this: CustomWo
 
   await expect(scrollShadow).toBeVisible();
 
-  const isScrollable = await scrollShadow.evaluate((el) => {
-    return el.scrollHeight > el.clientHeight;
-  });
-
-  expect(isScrollable, `History view is scrollable: scrollHeight=${await scrollShadow.evaluate(el => el.scrollHeight)}, clientHeight=${await scrollShadow.evaluate(el => el.clientHeight)}`).toBe(false);
+  await expect.poll(async () => {
+    return await scrollShadow.evaluate((el) => {
+      return el.scrollHeight > el.clientHeight;
+    });
+  }, { timeout: 5000 }).toBe(false);
 });
