@@ -68,8 +68,8 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
 
       const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
 
-      // Relax the regex because HeroUI might nest text in spans with extra whitespace or elements
-      const targetItem = itemLocator.filter({ hasText: new RegExp(itemText, 'i') }).first();
+      // Use exact text match pattern to avoid substring matching issues (e.g. 500 matching 1500)
+      const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*$`, 'i') }).first();
 
       try {
         await targetItem.waitFor({ state: 'visible', timeout: 3000 });
@@ -79,7 +79,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
         for (const it of allItems) {
           const text = await it.textContent();
           const innerText = await it.innerText();
-          if (text?.includes(itemText) || innerText?.includes(itemText)) {
+          if (text?.trim() === itemText || innerText?.trim() === itemText) {
             await it.click({ force: true });
             found = true;
             break;
