@@ -1,6 +1,5 @@
 import { Locator, Page } from 'playwright';
 import { BellLapState } from '../../src/modules/bellLapStore';
-import { expect } from '@playwright/test';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -69,11 +68,11 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
 
       const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
 
-      // Use a more robust locator with a RegExp to find the specific option
-      const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText}\\s*$`, 'i') }).first();
+      // Relax the regex because HeroUI might nest text in spans with extra whitespace or elements
+      const targetItem = itemLocator.filter({ hasText: new RegExp(itemText, 'i') }).first();
 
       try {
-        await expect(targetItem).toBeVisible({ timeout: 3000 });
+        await targetItem.waitFor({ state: 'visible', timeout: 3000 });
       } catch {
         const allItems = await itemLocator.all();
         let found = false;
@@ -87,6 +86,9 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
           }
         }
         if (!found) throw new Error(`Item "${itemText}" not found`);
+        await advanceClock(page, 500);
+        await page.waitForTimeout(100);
+        return;
       }
 
       if (await targetItem.isVisible()) {
