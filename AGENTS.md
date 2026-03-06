@@ -274,3 +274,5 @@ Refer to these files for detailed guidance on specific topics:
 - `.github/instructions/typescript-react.instructions.md`: TS/React standards.
 - `.github/instructions/commit.instructions.md`: Git/Commit standards.
 - `.github/instructions/markdown.instructions.md`: Markdown standards.
+
+- **Auto-Retrying Assertions (Playwright):** To avoid test flakiness, always use Playwright's auto-retrying matchers (e.g., `await expect(locator).toHaveText(expected)`) instead of synchronously extracting state and then asserting on it (e.g., `const text = await locator.textContent(); expect(text).toBe(expected);`). When more complex logic is needed, wrap the assertion inside `await expect.poll(async () => { ... }).toBe(true)`.
