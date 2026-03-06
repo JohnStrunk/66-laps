@@ -17,12 +17,6 @@
         "--api-key",
         "${CONTEXT7_API_KEY}"
       ]
-    },
-    "github": {
-      "httpUrl": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer $GH_TOKEN"
-      }
     }
   }
 }

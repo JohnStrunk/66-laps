@@ -327,18 +327,10 @@ export async function shareRacePDF(race: RaceRecord): Promise<void> {
 
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
-            let suffix = '';
-            if (race.eventNumber) suffix += ` E:${race.eventNumber}`;
-            if (race.heatNumber) suffix += ` H:${race.heatNumber}`;
-
-            const title = `Race result - ${race.event}${suffix}`;
-            const dateStr = new Date(race.startTime).toLocaleDateString();
-            const text = `Race result for ${race.event}${suffix} on ${dateStr}\nhttps://66-laps.com`;
-
             await navigator.share({
                 files: [file],
-                title,
-                text
+                title: `Race History - ${race.event}`,
+                text: `Race history for ${race.event} on ${new Date(race.startTime).toLocaleDateString()}`
             });
         } catch (err) {
             if ((err as Error).name !== 'AbortError') {

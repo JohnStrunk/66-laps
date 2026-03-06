@@ -1,5 +1,6 @@
 import { Locator, Page } from 'playwright';
 import { BellLapState } from '../../src/modules/bellLapStore';
+import { expect } from '@playwright/test';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -23,10 +24,8 @@ export const advanceClock = async (page: Page, ms: number) => {
 };
 
 export const longPress = async (locator: Locator) => {
-  // Wait for the element to be visible and stable
   await locator.first().waitFor({ state: 'visible' });
 
-  // Try to scroll into view
   try {
     await locator.first().scrollIntoViewIfNeeded();
   } catch {
@@ -35,7 +34,6 @@ export const longPress = async (locator: Locator) => {
 
   let box = await locator.first().boundingBox();
   if (!box) {
-    // If it's gone, it might have re-rendered. Wait and try again once.
     await advanceClock(locator.page(), 200);
     await locator.first().waitFor({ state: 'visible' });
     box = await locator.first().boundingBox();
@@ -61,26 +59,22 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      // 1. Click the trigger
       await trigger.click({ force: true });
 
-      // Allow for animations and micro-tasks
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
 
-      // 2. Locate the item across all visible popovers
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
       const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
       const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
 
-      // Wait for the specific item to appear using Playwright's built-in robust waiting
-      const targetItem = itemLocator.filter({ hasText: itemText, visible: true }).first();
+      // Use a more robust locator with a RegExp to find the specific option
+      const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText}\\s*$`, 'i') }).first();
 
       try {
-        await targetItem.waitFor({ state: 'visible', timeout: 3000 });
+        await expect(targetItem).toBeVisible({ timeout: 3000 });
       } catch {
-        // If not found by hasText, it might be due to complex DOM. Try a more exhaustive search.
         const allItems = await itemLocator.all();
         let found = false;
         for (const it of allItems) {
@@ -99,13 +93,12 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
         await targetItem.click({ force: true });
       }
 
-      // 5. Wait for popover to hide
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
-      return; // Success
+      return;
     } catch (e) {
       if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);
-      await page.mouse.click(0, 0); // Click away
+      await page.mouse.click(0, 0);
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
     }
