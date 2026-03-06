@@ -1,0 +1,20 @@
+--- features/steps/then/the_header_should_display_info.ts
++++ features/steps/then/the_header_should_display_info.ts
+@@ -10,10 +10,13 @@
+   let found = false;
+   for (let i = 0; i < 20; i++) {
+     const text = await header.innerText();
+-    // For event names like "500 SC", we want to ensure we don't accidentally match "1500 SC"
+-    // by checking word boundaries if it's an event name, or fallback to exact string inclusion
+-    const exactPattern = new RegExp(`\\b${expectedText}\\b`);
+-    if (exactPattern.test(text) || text.includes(expectedText)) {
++
++    // If we're looking for an event like "500 SC", ensure we don't match "1500 SC"
++    if (text === expectedText ||
++        text.startsWith(`${expectedText}\n`) ||
++        text.includes(`\n${expectedText}\n`) ||
++        text.endsWith(`\n${expectedText}`) ||
++        text.includes(` ${expectedText} `)) {
+       found = true;
+       break;
+     }
