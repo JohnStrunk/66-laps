@@ -89,12 +89,10 @@ export class SwimmerModel implements ISwimmer {
      * @param lapTimes - An array of lap times (in seconds) for the swimmer.
      * @param startTimeMs - The start time of the swimmer in milliseconds since
      * the Unix epoch. Defaults to the current time.
-     * @param avatar - The avatar assigned to this swimmer.
      */
-    constructor(lapTimes: number[], startTimeMs: number = Date.now(), avatar?: Avatar) {
+    constructor(lapTimes: number[], startTimeMs: number = Date.now()) {
         this._startTimeMs = startTimeMs;
         this._lapTimes = lapTimes;
-        this.avatar = avatar || AVATARS[Math.floor(Math.random() * AVATARS.length)];
     }
 
     /**

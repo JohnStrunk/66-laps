@@ -1,0 +1,15 @@
+--- src/modules/SwimmerModel.ts
++++ src/modules/SwimmerModel.ts
+@@ -93,9 +93,11 @@
+      * @param startTimeMs - The start time of the swimmer in milliseconds since
+      * the Unix epoch. Defaults to the current time.
++     * @param avatar - The avatar assigned to this swimmer.
+      */
+-    constructor(lapTimes: number[], startTimeMs: number = Date.now()) {
++    constructor(lapTimes: number[], startTimeMs: number = Date.now(), avatar?: Avatar) {
+         this._startTimeMs = startTimeMs;
+         this._lapTimes = lapTimes;
++        this.avatar = avatar || AVATARS[Math.floor(Math.random() * AVATARS.length)];
+     }
+
+     /**

@@ -1,0 +1,22 @@
+--- src/components/Swimmer/Swimmer.stories.tsx
++++ src/components/Swimmer/Swimmer.stories.tsx
+@@ -2,7 +2,7 @@
+
+-import { Direction, ISwimmer, SwimmerModel, SwimVector } from '@/modules/SwimmerModel';
++import { AVATARS, Avatar, Direction, ISwimmer, SwimmerModel, SwimVector } from '@/modules/SwimmerModel';
+ import { Application } from '@pixi/react';
+ import Swimmer from './Swimmer';
+
+@@ -19,10 +19,12 @@
+ class MockSwimmer implements ISwimmer {
+     private _location: number;
+     private _direction: Direction;
++    public readonly avatar: Avatar;
+
+     constructor(location: number, direction: Direction) {
+         this._location = location;
+         this._direction = direction;
++        this.avatar = AVATARS[0];
+     }
+
+     where(): SwimVector {

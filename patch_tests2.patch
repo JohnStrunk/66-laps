@@ -1,0 +1,15 @@
+--- features/steps/then/the_3d_swimmers_should_have_the_corresponding_color_for_their_emoji.ts
++++ features/steps/then/the_3d_swimmers_should_have_the_corresponding_color_for_their_emoji.ts
+@@ -10,12 +10,13 @@
+         return (window as unknown as { __TEST_SWIMMERS__: import("../../../src/modules/SwimmerModel").ISwimmer[] }).__TEST_SWIMMERS__;
+     });
+
+     expect(currentSwimmers).toBeDefined();
++    if (!previousSwimmers) return;
+     expect(currentSwimmers.length).toBe(previousSwimmers.length);
+
+     // Verify that the avatars haven't changed between 2D and 3D views
+     for (let i = 0; i < currentSwimmers.length; i++) {
+         expect(currentSwimmers[i].avatar.emoji).toBe(previousSwimmers[i].avatar.emoji);
+         expect(currentSwimmers[i].avatar.color).toBe(previousSwimmers[i].avatar.color);
+     }

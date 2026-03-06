@@ -160,3 +160,11 @@ Feature: Practice View Modes
     When I configure a practice race and click "Start"
     And I toggle the view selector to "3D"
     Then the swimmers should have their rounded heads pointing in the direction of travel
+
+  @browser @practice @2d @3d
+  Scenario: Swimmer avatars are consistent between 2D and 3D views
+    When I configure a practice race and click "Start"
+    And I toggle the view selector to "2D"
+    Then the 2D swimmers should be assigned a consistent avatar emoji and color pair
+    When I toggle the view selector to "3D"
+    Then the 3D swimmers should have the corresponding color for their emoji
