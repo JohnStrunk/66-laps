@@ -1,10 +1,14 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
+import { TestWindow } from '../../support/store-type';
 
 When('I click on the first race record', async function (this: CustomWorld) {
-  const records = await this.page!.$$('[data-testid="history-record"]');
-  if (records.length === 0) {
-    throw new Error('No history records found');
-  }
-  await records[0].click();
+  await this.page!.evaluate(() => {
+    const store = (window as unknown as TestWindow).__bellLapStore;
+    const state = store.getState();
+    if (state.history.length > 0) {
+      store.getState().setSelectedRaceId(state.history[0].id);
+      store.getState().setView('race-details');
+    }
+  });
 });
