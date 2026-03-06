@@ -10,6 +10,9 @@ Given('the app is loaded', async function (this: CustomWorld) {
   const url = isFirstLaunchScenario ? `${BASE_URL}/app` : `${BASE_URL}/app?testMode=true`;
 
   await this.page!.goto(url);
+  // Clear localStorage to ensure a clean state for each scenario, preventing leakage
+  await this.page!.evaluate(() => localStorage.clear());
+  await this.page!.reload();
   await advanceClock(this.page!, 500);
   await this.page!.waitForSelector('[data-mounted="true"]', { timeout: 15000 });
 });
