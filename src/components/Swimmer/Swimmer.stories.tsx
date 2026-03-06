@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { Direction, ISwimmer, SwimmerModel, SwimVector } from '@/modules/SwimmerModel';
+import { AVATARS, Avatar, Direction, ISwimmer, SwimmerModel, SwimVector } from '@/modules/SwimmerModel';
 import { Application } from '@pixi/react';
 import Swimmer from './Swimmer';
 
@@ -21,10 +21,12 @@ type Story = StoryObj<typeof Swimmer>;
 class MockSwimmer implements ISwimmer {
     private _location: number;
     private _direction: Direction;
+    public readonly avatar: Avatar;
 
     constructor(location: number, direction: Direction) {
         this._location = location;
         this._direction = direction;
+        this.avatar = AVATARS[0];
     }
 
     where(): SwimVector {

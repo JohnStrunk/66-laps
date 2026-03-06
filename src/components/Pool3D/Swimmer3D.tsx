@@ -1,7 +1,7 @@
 'use client'
 
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { Group } from "three";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { TestWindow } from "@/modules/testTypes";
@@ -16,25 +16,9 @@ type Swimmer3DProps = {
     onPositionUpdate?: (index: number, x: number, z: number, vx: number, vz: number) => void;
 };
 
-const SWIMMER_COLORS = [
-    "#ff4d4d", // Red
-    "#4d79ff", // Blue
-    "#4dff4d", // Green
-    "#ffff4d", // Yellow
-    "#ff4dff", // Magenta
-    "#4dffff", // Cyan
-    "#ff994d", // Orange
-    "#994dff", // Purple
-];
-
-const getRandomSwimmerColor = () => {
-    return SWIMMER_COLORS[Math.floor(Math.random() * SWIMMER_COLORS.length)];
-};
-
 export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight, waterY, onPositionUpdate }: Swimmer3DProps) {
     const groupRef = useRef<Group>(null);
-    // Stable random color for this swimmer instance
-    const color = useMemo(() => getRandomSwimmerColor(), []);
+    const color = swimmer.avatar.color;
 
     useFrame(() => {
         if (!groupRef.current) return;

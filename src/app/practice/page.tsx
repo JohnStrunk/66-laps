@@ -6,7 +6,7 @@ import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Pool3D from "@/components/Pool3D/Pool3D";
 import Settings, { NumberingDirection, SettingsValue, SimulationMode, StartingEnd } from "@/components/Settings/Settings";
 import { ph_event_swimulation } from "@/modules/phEvents";
-import { ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
+import { AVATARS, ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { Button, ButtonGroup } from "@heroui/react";
 import { usePostHog } from "posthog-js/react";
 
@@ -45,7 +45,8 @@ function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): I
     for (let i = 0; i < laps; i++) {
         lapTimes[i] += perLapDelta;
     }
-    return new SwimmerModel(lapTimes, Date.now());
+    const avatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+    return new SwimmerModel(lapTimes, Date.now(), avatar);
 }
 
 export default function Page() {

@@ -11,7 +11,13 @@ Then('the header should display {string}', async function (this: CustomWorld, ex
   let found = false;
   for (let i = 0; i < 20; i++) {
     const text = await header.innerText();
-    if (text.includes(expectedText)) {
+
+    // If we're looking for an event like "500 SC", ensure we don't match "1500 SC"
+    if (text === expectedText ||
+        text.startsWith(`${expectedText}\n`) ||
+        text.includes(`\n${expectedText}\n`) ||
+        text.endsWith(`\n${expectedText}`) ||
+        text.includes(` ${expectedText} `)) {
       found = true;
       break;
     }

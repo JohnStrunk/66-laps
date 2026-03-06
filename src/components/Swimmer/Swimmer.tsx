@@ -2,17 +2,10 @@
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { extend, useTick } from "@pixi/react";
 import { Container, Graphics, GraphicsContext, PointData, Sprite, Text, TextStyle } from "pixi.js";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { getAnchor, getPosition } from "./swimmerUtils";
 
 extend({ Container, Graphics, GraphicsContext, Sprite, Text });
-const emojis = [
-    "🦈",  // MOR
-    "🩴",  // NCAC
-    "🏠",  // RSA
-    "🔱",  // TAC
-    "🌊",  // WAVE
-];
 
 export type SwimmerProps = {
     /** Coordinates of the end wall at the start end of the pool */
@@ -26,8 +19,6 @@ export type SwimmerProps = {
 };
 
 export default function Swimmer(props: SwimmerProps) {
-    // When first created, pick a random emoji from the list
-    const [useChar] = useState<string>(() => emojis[Math.floor(Math.random() * emojis.length)]);
     const textRef = useRef<Text>(null);
 
     useTick(() => {
@@ -42,7 +33,7 @@ export default function Swimmer(props: SwimmerProps) {
     return (
         <pixiText
             ref={textRef}
-            text={useChar}
+            text={props.swimmer.avatar.emoji}
             style={new TextStyle({
                 fontSize: props.laneWidth * 0.5,
                 fill: "white", // Text color

@@ -17,7 +17,22 @@ export type SwimVector = {
     direction: Direction;
 };
 
+export type Avatar = {
+    emoji: string;
+    color: string;
+};
+
+export const AVATARS: Avatar[] = [
+    { emoji: "🦈", color: "#c4c4c4" }, // Fish (MOR)
+    { emoji: "🩴", color: "#60a3bf" }, // Sandal (NCAC)
+    { emoji: "🏠", color: "#bf1e2d" }, // House (RSA)
+    { emoji: "🔱", color: "#64d439" }, // Trident (TAC)
+    { emoji: "🌊", color: "#0060ae" }, // Wave (WAVE)
+];
+
 export interface ISwimmer {
+    readonly avatar: Avatar;
+
     /**
      * Determines the swimmer's current position and direction in the pool.
      *
@@ -64,15 +79,22 @@ export class SwimmerModel implements ISwimmer {
     private _startTimeMs: number;
 
     /**
+     * The avatar assigned to this swimmer.
+     */
+    public readonly avatar: Avatar;
+
+    /**
      * Creates an instance of the SwimmerModel.
      *
      * @param lapTimes - An array of lap times (in seconds) for the swimmer.
      * @param startTimeMs - The start time of the swimmer in milliseconds since
      * the Unix epoch. Defaults to the current time.
+     * @param avatar - The avatar assigned to this swimmer.
      */
-    constructor(lapTimes: number[], startTimeMs: number = Date.now()) {
+    constructor(lapTimes: number[], startTimeMs: number = Date.now(), avatar?: Avatar) {
         this._startTimeMs = startTimeMs;
         this._lapTimes = lapTimes;
+        this.avatar = avatar || AVATARS[Math.floor(Math.random() * AVATARS.length)];
     }
 
     /**
