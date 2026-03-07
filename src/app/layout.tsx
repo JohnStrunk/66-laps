@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Atkinson_Hyperlegible } from "next/font/google";
+import { Atkinson_Hyperlegible, Noto_Color_Emoji } from "next/font/google";
 import { StrictMode } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -14,6 +14,14 @@ export const metadata: Metadata = {
 };
 
 // https://nextjs.org/docs/app/building-your-application/optimizing/fonts#with-tailwind-css
+const noto_color_emoji = Noto_Color_Emoji({
+  weight: ['400'],
+  subsets: ['emoji'],
+  display: 'swap',
+  variable: '--font-noto-color-emoji',
+  preload: true,
+});
+
 const atkinson_hyperlegible = Atkinson_Hyperlegible({
   weight: ['400', '700'],
   subsets: ['latin'],
@@ -33,7 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={atkinson_hyperlegible.className}
+      className={`${atkinson_hyperlegible.variable} ${noto_color_emoji.variable} font-sans`}
     >
       <body>
         <StrictMode>

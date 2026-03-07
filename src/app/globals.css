@@ -21,3 +21,8 @@ styling. */
     height: 1em;
   }
 }
+
+@theme {
+  --font-sans: var(--font-atkinson-hyperlegible), var(--font-noto-color-emoji), ui-sans-serif, system-ui, sans-serif;
+  --font-emoji: var(--font-noto-color-emoji), "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
