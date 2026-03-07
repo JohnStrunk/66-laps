@@ -80,15 +80,20 @@ fi
 # Cleanup function for background server
 cleanup() {
     if [ -n "$SERVER_PID" ]; then
-        echo "Stopping background server (PID: $SERVER_PID)..."
+        echo "Stopping background server (PID: $SERVER_PID) on port $PORT..."
+        # Try graceful shutdown
         kill "$SERVER_PID" 2>/dev/null || true
+        # Also ensure nothing is left on the port if we started it
+        if command -v fuser >/dev/null 2>&1; then
+            fuser -k "$PORT/tcp" >/dev/null 2>&1 || true
+        fi
     fi
 }
 trap cleanup EXIT INT TERM
 
 # Check if port is in use
 PORT_IN_USE=false
-if curl -s --connect-timeout 1 localhost:"$PORT" >/dev/null 2>&1; then
+if curl -s --connect-timeout 1 127.0.0.1:"$PORT" >/dev/null 2>&1; then
     PORT_IN_USE=true
 fi
 
@@ -110,7 +115,7 @@ else
         echo "Building static export..."
         yarn build
         echo "Starting static server on port $PORT..."
-        npx serve out -p "$PORT" > /dev/null 2>&1 &
+        yarn dlx serve out -p "$PORT" > /dev/null 2>&1 &
         SERVER_PID=$!
     else
         echo "Starting dev server on port $PORT..."
@@ -121,7 +126,7 @@ else
     # Wait for server to be ready (timeout after 60 seconds)
     echo "Waiting for server to be ready on port $PORT..."
     COUNT=0
-    while ! curl -s localhost:"$PORT" >/dev/null 2>&1; do
+    while ! curl -s 127.0.0.1:"$PORT" >/dev/null 2>&1; do
         sleep 1
         COUNT=$((COUNT + 1))
         if [ "$COUNT" -ge 60 ]; then
