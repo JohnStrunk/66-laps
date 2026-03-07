@@ -8,7 +8,6 @@ set -e
 PORT=3000
 STATIC=false
 USE_EXISTING=false
-TEST_ARGS=""
 SERVER_PID=""
 
 # Help/Usage information
@@ -57,7 +56,7 @@ while [ "$#" -gt 0 ]; do
             ;;
         --) # End of options, everything else is for cucumber
             shift
-            TEST_ARGS="$*"
+            # At this point, positional parameters ($1, $2, ...) are for cucumber
             break
             ;;
         -*) # Unknown option
@@ -74,8 +73,8 @@ while [ "$#" -gt 0 ]; do
 done
 
 # Set default test arguments if none provided
-if [ -z "$TEST_ARGS" ]; then
-    TEST_ARGS="--parallel 2"
+if [ "$#" -eq 0 ]; then
+    set -- --parallel 2
 fi
 
 # Cleanup function for background server
@@ -137,7 +136,7 @@ fi
 echo "Preparing coverage directory..."
 yarn coverage:clean
 
-echo "Executing tests with arguments: $TEST_ARGS"
+echo "Executing tests with arguments: $*"
 BASE_URL="http://localhost:$PORT" \
 NODE_OPTIONS="--import tsx" \
-./node_modules/.bin/cucumber-js "$TEST_ARGS"
+./node_modules/.bin/cucumber-js "$@"
