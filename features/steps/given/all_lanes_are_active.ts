@@ -9,4 +9,5 @@ Given('all lanes are active', async function (this: CustomWorld) {
     const lanes = store.getState().lanes.map(l => ({ ...l, isEmpty: false }));
     store.setState({ lanes });
   });
+  await this.page!.waitForFunction(() => window.hasOwnProperty('__bellLapStore'));
 });

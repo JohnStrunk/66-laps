@@ -10,8 +10,10 @@ Then('the header should be at least {string} tall', async function (this: Custom
 
   let box = await header.boundingBox();
   if (!box) {
-    // Retry once if bounding box is null (possible during re-render)
-    await new Promise(r => setTimeout(r, 200));
+    await this.page.waitForFunction(() => {
+        const el = document.querySelector('[data-testid="bell-lap-header"]');
+        return el && el.getBoundingClientRect().height > 0;
+    });
     box = await header.boundingBox();
   }
 

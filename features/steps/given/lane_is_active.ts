@@ -8,4 +8,5 @@ Given('lane {int} is active', async function (this: CustomWorld, laneNumber: num
     const lane = store.lanes.find((l) => l.laneNumber === laneNum);
     if (lane?.isEmpty) store.toggleLaneEmpty(laneNum);
   }, laneNumber);
+  await this.page!.waitForFunction(() => window.hasOwnProperty('__bellLapStore'));
 });

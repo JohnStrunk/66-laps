@@ -16,3 +16,9 @@ Feature: PDF OOF Table Columns
     And I click the "download" button for the first race record
     Then the generated PDF should have an OOF table with 9 columns
     And the generated PDF should use "Atkinson" font
+
+  Scenario: OOF table in PDF handles missing data gracefully when a lane has no splits
+    Given Lane 2 is marked as "EMPTY"
+    When I navigate to the "History" screen
+    And I click the "download" button for the first race record
+    Then the generated PDF should have an OOF table with 9 columns

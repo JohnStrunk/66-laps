@@ -9,4 +9,5 @@ Given('Lane {int} is marked as "EMPTY"', async function (this: CustomWorld, lane
   const row = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"]`);
   const text = await row.textContent();
   assert.ok(text?.includes('EMPTY'));
+  await this.page!.waitForFunction(() => window.hasOwnProperty('__bellLapStore'));
 });
