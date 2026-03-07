@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Atkinson_Hyperlegible, Noto_Color_Emoji } from "next/font/google";
+import { Atkinson_Hyperlegible } from "next/font/google";
 import { StrictMode } from "react";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -22,14 +22,6 @@ const atkinson_hyperlegible = Atkinson_Hyperlegible({
   preload: true,
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const noto_color_emoji = Noto_Color_Emoji({
-  weight: '400',
-  subsets: ['emoji'],
-  preload: true,
-  display: 'swap',
-  variable: '--font-noto-color-emoji',
-});
 
 
 export default function RootLayout({
