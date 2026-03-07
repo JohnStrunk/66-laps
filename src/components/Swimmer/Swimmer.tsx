@@ -37,7 +37,7 @@ export default function Swimmer(props: SwimmerProps) {
             style={new TextStyle({
                 fontSize: props.laneWidth * 0.5,
                 fill: "white", // Text color
-                fontFamily: "Noto Color Emoji",
+                fontFamily: ["var(--font-noto-color-emoji)", "Noto Color Emoji", "sans-serif"],
                 fontStyle: "normal",
             })}
         />
