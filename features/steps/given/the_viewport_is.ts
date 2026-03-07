@@ -8,9 +8,10 @@ Given('the viewport is {string}', async function (this: CustomWorld, viewportSiz
 
   try {
     await this.page.setViewportSize({ width, height });
+    // Give browser/Pixi a moment to react to the resize
+    await this.page.waitForTimeout(500);
   } catch (e) {
-    console.warn('Failed to set viewport size via Playwright, attempting fallback...', e);
-    // Fallback: Use evaluate to set window size if possible, or just ignore if it's a protocol error
-    // Some CI environments don't allow resizing the main window.
+    console.warn(`Failed to set viewport size to ${viewportSize} via Playwright, attempting fallback...`, e);
+    // Ignore protocol errors related to window state in CI
   }
 });

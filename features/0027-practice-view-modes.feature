@@ -172,10 +172,10 @@ Feature: Practice View Modes
   @browser @practice @2d
   Scenario Outline: 2D pool autosizes for various mobile viewports and orientations
     Given I set the "Simulation Mode" setting to "2D Overhead"
-    And the viewport is "1024x1024"
+    And the viewport is "800x800"
     When I click "Start"
     Then I should see the 2D PixiJS canvas
-    And the 2D canvas width should be greater than 800
+    And the 2D canvas width should be greater than 600
     When the viewport is "<width>x<height>"
     And I wait for the canvas to resize
     Then the 2D canvas width should be less than or equal to <width>

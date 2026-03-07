@@ -228,7 +228,7 @@ export default function Pool(props: PoolProps) {
                 backgroundAlpha={0}
                 resizeTo={divRef}
                 autoDensity={true}
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block' }}
+                style={{ display: 'block' }}
             >
                 <PoolContents {...props} />
             </Application>
