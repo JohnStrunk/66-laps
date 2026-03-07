@@ -10,4 +10,5 @@ Given('lanes {int}, {int}, and {int} are active', async function (this: CustomWo
       if (lane?.isEmpty) store.toggleLaneEmpty(laneNum);
     });
   }, { l1, l2, l3 });
+  await this.page!.waitForFunction(() => window.hasOwnProperty('__bellLapStore'));
 });
