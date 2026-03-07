@@ -37,30 +37,28 @@ function PoolContents(props: PoolProps) {
 
     const [canvasRect, setCanvasRect] = useState(new Rectangle());
 
-    const scaleFactor = (Math.min(
-        canvasRect.width / (poolLengthMeters + 2 * poolEdgeMeters),
-        canvasRect.height / (poolWidthMeters + 2 * poolEdgeMeters)
-    ));
-
-    // Convert distances to pixels
-    const poolLengthPixels = poolLengthMeters * scaleFactor;
-    const poolWidthPixels = poolWidthMeters * scaleFactor;
-    const poolEdgePixels = poolEdgeMeters * scaleFactor;
-    const laneWidthPixels = LANE_WIDTH_METERS * scaleFactor;
-
-    // Calculate the offset to center the pool in the canvas
-    const offsetX = (canvasRect.width - poolLengthPixels - 2 * poolEdgePixels) / 2;
-    const offsetY = (canvasRect.height - poolWidthPixels - 2 * poolEdgePixels) / 2;
-
     const updateCanvasSize = useCallback(() => {
-        // Determine if the canvas size has changed
-        const canvas = app.app.renderer?.screen || new Rectangle();
-        if (canvas.width !== canvasRect.width || canvas.height !== canvasRect.height) {
+        // Use the renderer's screen rectangle directly as it correctly accounts for resolution-independent sizing.
+        const screen = app.app.renderer?.screen;
+        if (screen && (screen.width !== canvasRect.width || screen.height !== canvasRect.height)) {
             const canvasCopy = new Rectangle();
-            canvasCopy.copyFrom(canvas);
+            canvasCopy.copyFrom(screen);
             setCanvasRect(canvasCopy);
         }
     }, [app, canvasRect]);
+
+    useEffect(() => {
+        const resizeElement = app.app.resizeTo as HTMLElement;
+        if (resizeElement) {
+            const observer = new ResizeObserver(() => {
+                // Ensure Pixi knows about the resize and re-calculates its screen size.
+                app.app.resize();
+                updateCanvasSize();
+            });
+            observer.observe(resizeElement);
+            return () => observer.disconnect();
+        }
+    }, [app, updateCanvasSize]);
 
     useTick(() => {
         const finished = props.swimmers
@@ -78,6 +76,21 @@ function PoolContents(props: PoolProps) {
         }
         updateCanvasSize();
     });
+
+    const scaleFactor = (Math.min(
+        canvasRect.width / (poolLengthMeters + 2 * poolEdgeMeters),
+        canvasRect.height / (poolWidthMeters + 2 * poolEdgeMeters)
+    )) || 0;
+
+    // Convert distances to pixels
+    const poolLengthPixels = poolLengthMeters * scaleFactor;
+    const poolWidthPixels = poolWidthMeters * scaleFactor;
+    const poolEdgePixels = poolEdgeMeters * scaleFactor;
+    const laneWidthPixels = LANE_WIDTH_METERS * scaleFactor;
+
+    // Calculate the offset to center the pool in the canvas
+    const offsetX = (canvasRect.width - poolLengthPixels - 2 * poolEdgePixels) / 2;
+    const offsetY = (canvasRect.height - poolWidthPixels - 2 * poolEdgePixels) / 2;
 
     const [waterImg, setWaterImg] = useState<Texture>(Texture.EMPTY);
     useEffect(() => {
@@ -207,13 +220,15 @@ export default function Pool(props: PoolProps) {
     const divRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div ref={divRef} className={`${props.className} relative`}>
+        <div ref={divRef} className={`${props.className} overflow-hidden`}>
             <Application
                 antialias={true}
                 resolution={window.devicePixelRatio || 1}
                 backgroundColor={semanticColors.light.background[500]}
                 backgroundAlpha={0}
                 resizeTo={divRef}
+                autoDensity={true}
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'block' }}
             >
                 <PoolContents {...props} />
             </Application>

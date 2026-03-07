@@ -168,3 +168,24 @@ Feature: Practice View Modes
     Then the 2D swimmers should be assigned a consistent avatar emoji and color pair
     When I toggle the view selector to "3D"
     Then the 3D swimmers should have the corresponding color for their emoji
+
+  @browser @practice @2d
+  Scenario Outline: 2D pool autosizes for various mobile viewports and orientations
+    Given I set the "Simulation Mode" setting to "2D Overhead"
+    And the viewport is "1024x1024"
+    When I click "Start"
+    Then I should see the 2D PixiJS canvas
+    And the 2D canvas width should be greater than 800
+    When the viewport is "<width>x<height>"
+    And I wait for the canvas to resize
+    Then the 2D canvas width should be less than or equal to <width>
+    And the 2D canvas height should be less than or equal to <height>
+    And the 2D canvas width should be greater than 0
+    And the 2D canvas height should be greater than 0
+
+    Examples:
+      | width | height |
+      | 360   | 640    |
+      | 430   | 932    |
+      | 640   | 360    |
+      | 932   | 430    |

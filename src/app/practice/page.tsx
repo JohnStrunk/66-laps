@@ -164,21 +164,21 @@ export default function Page() {
 
     return (
         <>
-            <div className="w-full flex flex-col min-h-screen">
+            <div className="w-full h-screen max-h-screen flex flex-col overflow-hidden">
                 {mode !== Mode.SWIM && (
                     <Nav />
                 )}
-                <div hidden={mode !== Mode.SETTINGS} className="p-4 grow">
+                <div hidden={mode !== Mode.SETTINGS} className="p-4 overflow-auto grow">
                     <Settings onClick={handleSettingsClick} />
                 </div>
                 {mode === Mode.SWIM && (
-                    <div className="relative w-screen h-screen p-4"
+                    <div className="relative flex-1 min-h-0 w-full p-4 overflow-hidden"
                          data-swimmer-count={swimmers.length}
                          data-numbering={settings.numberingDirection}
                          data-starting-end={settings.startingEnd}>
                         {viewMode === "2D" ? (
                             <Pool
-                                className="w-full h-full"
+                                className="absolute inset-0"
                                 poolLength={settings.poolLength}
                                 swimmers={swimmers}
                                 numbering={settings.numberingDirection}
@@ -187,7 +187,7 @@ export default function Page() {
                                 onOrderOfFinishChange={handleOrderOfFinishChange} />
                         ) : (
                             <Pool3D
-                                className="w-full h-full"
+                                className="absolute inset-0"
                                 poolLength={settings.poolLength}
                                 swimmers={swimmers}
                                 numbering={settings.numberingDirection}
