@@ -16,3 +16,8 @@ Feature: App Help Instructions
     And I am viewing the help instructions
     When I tap the back button
     Then I should be returned to the main menu
+
+  Scenario: Feedback link exists
+    Given the app is loaded
+    And I am on the main menu
+    Then I should see a link to "Send feedback" with email "feedback@66-laps.com"
