@@ -9,7 +9,7 @@ export default function MainMenu() {
 
   return (
     <div className="relative flex flex-col items-center justify-center h-full w-full p-4 gap-6 bg-background">
-      <div className="flex flex-col items-center gap-2 mb-8">
+      <div className="absolute top-8 flex flex-col items-center gap-2">
         <p className="text-default-500 text-lg">Main menu</p>
       </div>
 
