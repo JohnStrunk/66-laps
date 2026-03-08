@@ -153,7 +153,7 @@ export default function LaneRow({
                 isFinished
                   ? 'bg-white text-black pointer-events-none'
                   : isLocked
-                  ? 'bg-content3 cursor-wait'
+                  ? 'bg-danger-700 cursor-wait'
                   : 'bg-success cursor-pointer active:opacity-80'
               }`}
               data-testid="lane-zone-b"
@@ -178,7 +178,7 @@ export default function LaneRow({
               {/* Content */}
               <span
                 className={`z-10 text-xl sm:text-3xl font-black select-none whitespace-nowrap ${
-                  isFinished ? 'text-black' : isLocked ? 'text-foreground/60' : 'text-white'
+                  isFinished ? 'text-black' : isLocked ? 'text-white' : 'text-white'
                 }`}
               >
                 {symbol && `${symbol} `}

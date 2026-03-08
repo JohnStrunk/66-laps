@@ -48,7 +48,7 @@ export interface RaceRecord {
   lanes: LaneState[];
 }
 
-export type ViewState = 'main-menu' | 'race' | 'history' | 'race-details';
+export type ViewState = 'main-menu' | 'race' | 'history' | 'race-details' | 'help';
 
 export const getLaneStatus = (lane: LaneState | undefined, event: EventType, now: number) => {
   const config = EVENT_CONFIGS[event];
