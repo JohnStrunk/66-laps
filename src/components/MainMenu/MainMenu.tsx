@@ -54,7 +54,7 @@ export default function MainMenu() {
       <div className="absolute bottom-4 left-0 right-0 flex justify-center pb-safe-bottom">
         <a
           href="mailto:feedback@66-laps.com"
-          className="text-default-400 hover:text-primary transition-colors text-sm font-medium underline underline-offset-4"
+          className="text-default-400 hover:text-primary transition-colors text-base font-medium underline underline-offset-4"
           data-testid="feedback-link"
         >
           Send feedback
