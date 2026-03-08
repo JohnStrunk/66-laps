@@ -16,6 +16,7 @@ export default function MainMenu() {
       <div className="flex flex-col gap-4 w-full max-w-xs">
         <Button
           color="primary"
+          variant="solid"
           size="lg"
           startContent={<Play size={24} />}
           className="w-full font-semibold text-lg py-6"
@@ -26,7 +27,8 @@ export default function MainMenu() {
         </Button>
 
         <Button
-          variant="faded"
+          color="default"
+          variant="flat"
           size="lg"
           startContent={<History size={24} />}
           className="w-full font-semibold text-lg py-6"
@@ -37,6 +39,7 @@ export default function MainMenu() {
         </Button>
 
         <Button
+          color="default"
           variant="flat"
           size="lg"
           startContent={<HelpCircle size={24} />}
