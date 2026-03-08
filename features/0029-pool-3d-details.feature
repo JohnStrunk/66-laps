@@ -24,3 +24,11 @@ Feature: 3D Pool Details
     And each 3D lane marker should be a white panel 0.33m square
     And each 3D lane marker should be oriented parallel to the side walls
     And each 3D lane marker should be placed on the deck at the end of the lane
+
+  @browser @practice @3d
+  Scenario: Backstroke flags are positioned correctly
+    Then I should see backstroke flags in the 3D scene
+    And the backstroke flags should be placed 5m from each end of the pool
+    And the backstroke flag poles should be 2m above the water level
+    And the backstroke flags should span the width of the pool
+    And there should be 7 pennants over each lane
