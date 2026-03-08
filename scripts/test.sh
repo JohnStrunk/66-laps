@@ -145,3 +145,8 @@ echo "Executing tests with arguments: $*"
 BASE_URL="http://localhost:$PORT" \
 NODE_OPTIONS="--import tsx" \
 ./node_modules/.bin/cucumber-js "$@"
+
+echo "Tests successful. Generating coverage report..."
+yarn coverage:report
+
+# The trap on EXIT will handle cleanup()

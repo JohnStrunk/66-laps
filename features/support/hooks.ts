@@ -2,7 +2,7 @@ import { Before, After, BeforeAll, AfterAll, setDefaultTimeout, ITestCaseHookPar
 import { chromium, Browser } from 'playwright';
 import { CustomWorld } from './world';
 import { join } from 'node:path';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 
 // Set default timeout to 60 seconds
 setDefaultTimeout(60000);
@@ -24,11 +24,29 @@ Before(async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
   });
   this.page = await this.context.newPage();
 
+  // Start coverage collection
+  await this.page.coverage.startJSCoverage();
+
   // Clock is installed by default for all tests to allow advanceClock() usage
   await this.page.clock.install();
 });
 
 After(async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
+  // Stop coverage and save it
+  if (this.page) {
+    const coverage = await this.page.coverage.stopJSCoverage();
+    const coverageDir = join(process.cwd(), 'test-results', 'coverage');
+    if (!existsSync(coverageDir)) {
+      mkdirSync(coverageDir, { recursive: true });
+    }
+    const timestamp = new Date().getTime();
+    const scenarioSafeName = scenario.pickle.name.replace(/\s+/g, '_').replace(/[^\w-]/g, '');
+    writeFileSync(
+      join(coverageDir, `coverage-${scenarioSafeName}-${timestamp}.json`),
+      JSON.stringify(coverage)
+    );
+  }
+
   if (scenario.result?.status === 'FAILED') {
     const screenshotDir = join(process.cwd(), 'test-results', 'screenshots');
     if (!existsSync(screenshotDir)) {
