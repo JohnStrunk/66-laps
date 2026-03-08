@@ -1,6 +1,6 @@
+import MCR from 'monocart-coverage-reports';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import MCR from 'monocart-coverage-reports';
 
 const COVERAGE_DIR = join(process.cwd(), 'test-results', 'coverage');
 const REPORT_DIR = join(process.cwd(), 'test-results', 'report');
@@ -39,8 +39,9 @@ async function generateReport() {
 
     entryFilter: (entry: MCR.V8CoverageEntry) => {
       return entry.url.includes('localhost:3000') &&
-             !entry.url.includes('node_modules') &&
-             !entry.url.includes('hmr-client');
+        entry.url.includes('src') &&
+        !entry.url.includes('node_modules') &&
+        !entry.url.includes('hmr-client');
     },
 
     sourcePath: (filePath: string) => {
