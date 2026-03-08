@@ -24,6 +24,7 @@ async function generateReport() {
     outputDir: REPORT_DIR,
     reports: [
       ['console-summary'],
+      ['console-details'],
       ['html', {
         subdir: 'html'
       }],
