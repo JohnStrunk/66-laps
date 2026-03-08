@@ -132,6 +132,44 @@ export default function BellLapHeader() {
     );
   }
 
+  if (view === 'help') {
+    return (
+      <header
+        className="z-50 p-2 pb-0"
+        style={{ paddingTop: 'calc(var(--simulated-safe-area-top, env(safe-area-inset-top, 0px)) + 0.5rem)' }}
+        data-testid="bell-lap-header"
+      >
+        <Card className="shadow-md bg-content1">
+          <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
+            <div className="flex items-center gap-2">
+              <Button
+                isIconOnly
+                variant="flat"
+                size="sm"
+                onPress={() => window.history.back()}
+                aria-label="Back to Main Menu"
+                data-testid="exit-help-button"
+              >
+                <ArrowLeft size={18} />
+              </Button>
+              <h1 className="text-xl font-bold px-2">Help</h1>
+            </div>
+            <Button
+              isIconOnly
+              variant="flat"
+              size="sm"
+              onPress={toggleTheme}
+              aria-label="Toggle light/dark mode"
+              data-testid="theme-toggle"
+            >
+              {renderThemeIcon()}
+            </Button>
+          </CardBody>
+        </Card>
+      </header>
+    );
+  }
+
   if (view === 'history') {
     return (
       <header

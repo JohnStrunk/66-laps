@@ -5,6 +5,7 @@ import BellLapHeader from "@/components/BellLapHeader/BellLapHeader";
 import MainMenu from "@/components/MainMenu/MainMenu";
 import HistoryView from "@/components/HistoryView/HistoryView";
 import RaceDetailsView from "@/components/RaceDetailsView/RaceDetailsView";
+import HelpView from "@/components/HelpView/HelpView";
 import NewRaceSetupModal from "@/components/NewRaceSetupModal/NewRaceSetupModal";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useSyncExternalStore } from "react";
@@ -110,6 +111,10 @@ function BellLapContent() {
 
   if (view === 'race-details') {
     return <RaceDetailsView />;
+  }
+
+  if (view === 'help') {
+    return <HelpView />;
   }
 
   return <LaneStack />;

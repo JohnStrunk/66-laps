@@ -2,7 +2,7 @@
 
 import { Button } from "@heroui/react";
 import { useBellLapStore } from "@/modules/bellLapStore";
-import { Play, History } from "lucide-react";
+import { Play, History, HelpCircle } from "lucide-react";
 
 export default function MainMenu() {
   const { setSetupDialogOpen, setView } = useBellLapStore();
@@ -34,6 +34,17 @@ export default function MainMenu() {
           data-testid="history-button"
         >
           History
+        </Button>
+
+        <Button
+          variant="flat"
+          size="lg"
+          startContent={<HelpCircle size={24} />}
+          className="w-full font-semibold text-lg py-6"
+          onPress={() => setView('help')}
+          data-testid="help-button"
+        >
+          Help
         </Button>
       </div>
     </div>
