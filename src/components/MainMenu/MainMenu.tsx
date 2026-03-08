@@ -8,7 +8,7 @@ export default function MainMenu() {
   const { setSetupDialogOpen, setView } = useBellLapStore();
 
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-4 gap-6 bg-background">
+    <div className="relative flex flex-col items-center justify-center h-full w-full p-4 gap-6 bg-background">
       <div className="flex flex-col items-center gap-2 mb-8">
         <p className="text-default-500 text-lg">Main menu</p>
       </div>
@@ -51,7 +51,7 @@ export default function MainMenu() {
         </Button>
       </div>
 
-      <div className="mt-auto pb-4">
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center pb-safe-bottom">
         <a
           href="mailto:feedback@66-laps.com"
           className="text-default-400 hover:text-primary transition-colors text-sm font-medium underline underline-offset-4"
