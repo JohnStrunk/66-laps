@@ -23,3 +23,9 @@ Feature: Manual Override of Lockout
 
     When I tap the "-" button in Zone A for Lane 1
     Then the Zone B area for Lane 1 should be green
+
+  Scenario: Touch is registered immediately after manual increment
+    When I tap the Zone B area for Lane 1
+    And I tap the "+" button in Zone A for Lane 1
+    And I tap the Zone B area for Lane 1 in the UI
+    Then the lap count for Lane 1 should be 6

@@ -40,10 +40,22 @@ Feature: Swimmer Model
     Then the swimmer's location should be 0.7
     And the swimmer's direction should be "TOSTART"
 
+  Scenario: Three length race starts at the turn end
+    Given a race with lap times: "10, 10, 10"
+    When 0 seconds have elapsed
+    Then the swimmer's location should be 1
+    And the swimmer's direction should be "TOSTART"
+
   Scenario: Checking race status while in progress
     Given a race with lap times: "30, 40"
     When 50 seconds have elapsed
     Then the race should not be completed
+
+  Scenario: Swimmer exactly at the turn boundary
+    Given a race with lap times: "30, 40"
+    When 30 seconds have elapsed
+    Then the swimmer's location should be 1
+    And the swimmer's direction should be "TOSTART"
 
   Scenario: Single lap race status
     Given a race with lap times: "10"
