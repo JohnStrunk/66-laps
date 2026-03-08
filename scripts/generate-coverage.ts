@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import MCR from 'monocart-coverage-reports';
 
 const COVERAGE_DIR = join(process.cwd(), 'test-results', 'coverage');
@@ -22,6 +22,42 @@ async function generateReport() {
   const coverageOptions: MCR.CoverageReportOptions = {
     name: '66 Laps Coverage Report',
     outputDir: REPORT_DIR,
+    sourceMap: true,
+
+    // Help MCR find source maps and original files on disk
+    // turbopack-specific mappings can be tricky, but pointing to root often helps
+    // as many maps contain relative paths to the source.
+    baseDir: process.cwd(),
+
+    filter: {
+      '**/node_modules/**': false,
+      '**/hmr-client/**': false,
+      '**/.next/**': false,
+      '**/src/**': true,
+      '**/*': false
+    },
+
+    entryFilter: (entry: MCR.V8CoverageEntry) => {
+      return entry.url.includes('localhost:3000') &&
+             !entry.url.includes('node_modules') &&
+             !entry.url.includes('hmr-client');
+    },
+
+    sourcePath: (filePath: string) => {
+      // Cleaner paths in the report
+      if (filePath.startsWith('file://')) {
+        const path = filePath.replace('file://', '');
+        if (path.startsWith(process.cwd())) {
+          return relative(process.cwd(), path);
+        }
+        return path;
+      }
+      if (filePath.startsWith(process.cwd())) {
+        return relative(process.cwd(), filePath);
+      }
+      return filePath;
+    },
+
     reports: [
       ['console-summary'],
       ['console-details'],
@@ -32,17 +68,19 @@ async function generateReport() {
         file: 'lcov.info'
       }]
     ],
-    entryFilter: (entry: MCR.V8CoverageEntry) => {
-      // Focus on application code
-      return entry.url.includes('localhost:3000') &&
-             !entry.url.includes('node_modules') &&
-             !entry.url.includes('hmr-client');
-    },
-    // Attempt to resolve source maps from local filesystem if they are not in the URL
-    // sourceMap: {
-        // Next.js with Turbopack stores maps in .next/build/chunks or similar
-        // This is a complex mapping, but MCR can sometimes handle it if we point it to the root
-    // }
+
+    // Include all files from src even if they were not touched by tests
+    all: {
+      dir: ['src'],
+      filter: {
+        '**/*.d.ts': false,
+        '**/*.stories.tsx': false,
+        '**/*.stories.ts': false,
+        '**/*.test.ts': false,
+        '**/*.tsx': true,
+        '**/*.ts': true
+      }
+    }
   };
 
   const mcr = MCR(coverageOptions);

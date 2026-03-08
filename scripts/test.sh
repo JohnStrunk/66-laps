@@ -148,3 +148,5 @@ NODE_OPTIONS="--import tsx" \
 
 echo "Tests successful. Generating coverage report..."
 yarn coverage:report
+
+# The trap on EXIT will handle cleanup()
