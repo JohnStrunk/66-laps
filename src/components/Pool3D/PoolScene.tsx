@@ -2,7 +2,7 @@
 
 import { useThree, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useCallback } from "react";
-import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector2, DataTexture, RGBAFormat } from "three";
+import { Color, DoubleSide, InstancedMesh, MeshStandardMaterial, Object3D, PerspectiveCamera, CylinderGeometry, RepeatWrapping, ShaderMaterial, Vector2, DataTexture, RGBAFormat, Shape, ShapeGeometry } from "three";
 import { Text, useTexture } from "@react-three/drei";
 import { useTheme } from "next-themes";
 import { Pool3DProps } from "./Pool3D";
@@ -26,6 +26,90 @@ const FLOOR_Y = WATER_Y - POOL_DEPTH;
 // We use 2 slots per swimmer (current + ghost)
 const MAX_SWIMMERS = 10;
 const MAX_SOURCES = MAX_SWIMMERS * 2;
+
+function BackstrokeFlags({ poolLength, poolWidth, lanes }: { poolLength: number, poolWidth: number, lanes: number }) {
+    const cableHeight = WATER_Y + 2.0;
+    const poleRadius = 0.025; // 5cm diameter -> 2.5cm radius
+    const poleHeight = cableHeight - DECK_Y;
+    const poleY = DECK_Y + poleHeight / 2;
+    const poleZ1 = -0.33;
+    const poleZ2 = poolWidth + 0.33;
+    const cableLength = poleZ2 - poleZ1;
+    const cableZCenter = (poleZ1 + poleZ2) / 2;
+
+    const pennantsPerLane = 7;
+    const totalPennants = lanes * pennantsPerLane * 2; // 2 ends
+
+    const { poleGeo, poleMat, cableGeo, cableMat, pennantGeo, pennantMat } = useMemo(() => {
+        const pGeo = new CylinderGeometry(poleRadius, poleRadius, poleHeight, 16);
+        const pMat = new MeshStandardMaterial({ color: "#dddddd", roughness: 0.3 });
+
+        const cGeo = new CylinderGeometry(0.002, 0.002, cableLength, 8);
+        cGeo.rotateX(Math.PI / 2); // Orient along Z axis
+        const cMat = new MeshStandardMaterial({ color: "#888888", roughness: 0.8 });
+
+        const shape = new Shape();
+        shape.moveTo(-0.1, 0);
+        shape.lineTo(0.1, 0);
+        shape.lineTo(0, -0.4);
+        shape.lineTo(-0.1, 0);
+
+        const penGeo = new ShapeGeometry(shape);
+        const penMat = new MeshStandardMaterial({ side: DoubleSide, roughness: 0.6 });
+
+        return { poleGeo: pGeo, poleMat: pMat, cableGeo: cGeo, cableMat: cMat, pennantGeo: penGeo, pennantMat: penMat };
+    }, [poleHeight, cableLength]);
+
+    const pennantMeshRef = useRef<InstancedMesh>(null);
+
+    useEffect(() => {
+        if (!pennantMeshRef.current || totalPennants === 0) return;
+        const dummy = new Object3D();
+        let idx = 0;
+        const red = new Color("#bb0000");
+        const yellow = new Color("#bbbb00");
+
+        for (const endX of [5, poolLength - 5]) {
+            let colorIdx = 0;
+            for (let lane = 0; lane < lanes; lane++) {
+                const laneStartZ = lane * LANE_WIDTH_METERS;
+                const spacing = LANE_WIDTH_METERS / pennantsPerLane;
+                for (let p = 0; p < pennantsPerLane; p++) {
+                    const z = laneStartZ + (p + 0.5) * spacing;
+                    dummy.position.set(endX, cableHeight, z);
+                    dummy.rotation.set(0, Math.PI / 2, 0);
+                    dummy.updateMatrix();
+                    pennantMeshRef.current.setMatrixAt(idx, dummy.matrix);
+
+                    pennantMeshRef.current.setColorAt(idx, colorIdx % 2 === 0 ? red : yellow);
+                    colorIdx++;
+                    idx++;
+                }
+            }
+        }
+        pennantMeshRef.current.instanceMatrix.needsUpdate = true;
+        if (pennantMeshRef.current.instanceColor) pennantMeshRef.current.instanceColor.needsUpdate = true;
+    }, [lanes, poolLength, cableHeight, totalPennants]);
+
+    return (
+        <group>
+            <mesh geometry={poleGeo} material={poleMat} position={[5, poleY, poleZ1]} castShadow />
+            <mesh geometry={poleGeo} material={poleMat} position={[5, poleY, poleZ2]} castShadow />
+            <mesh geometry={cableGeo} material={cableMat} position={[5, cableHeight, cableZCenter]} castShadow />
+
+            <mesh geometry={poleGeo} material={poleMat} position={[poolLength - 5, poleY, poleZ1]} castShadow />
+            <mesh geometry={poleGeo} material={poleMat} position={[poolLength - 5, poleY, poleZ2]} castShadow />
+            <mesh geometry={cableGeo} material={cableMat} position={[poolLength - 5, cableHeight, cableZCenter]} castShadow />
+
+            <instancedMesh
+                ref={pennantMeshRef}
+                args={[pennantGeo, pennantMat, totalPennants]}
+                castShadow
+                frustumCulled={false}
+            />
+        </group>
+    );
+}
 
 function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number, y: number }) {
     const meshRef = useRef<InstancedMesh>(null);
@@ -570,6 +654,8 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
                     })}
                 </>
             )}
+
+            <BackstrokeFlags poolLength={poolLengthMeters} poolWidth={poolWidthMeters} lanes={lanes} />
 
             {props.swimmers.map((swimmer: ISwimmer, i: number) => (
                 <Swimmer3D
