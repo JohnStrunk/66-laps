@@ -16,21 +16,18 @@ async function waitFor3DReady(page: Page) {
 
 Then('I should see backstroke flags in the 3D scene', async function(this: CustomWorld) {
     await waitFor3DReady(this.page!);
-    const data = await this.page!.evaluate(() => {
-        const scene = (window as unknown as { __TEST_SCENE__?: { traverse: (cb: (obj: { isInstancedMesh?: boolean, isMesh?: boolean, geometry?: { type: string, parameters?: { radiusTop?: number, height?: number } }, count?: number, position: { x: number, y: number, z: number } }) => void) => void } }).__TEST_SCENE__;
-        if (!scene) return { found: false, types: [] };
-        let found = false;
-        let types: string[] = [];
-        scene.traverse((obj) => {
-            if (obj.geometry) {
-                types.push(obj.geometry.type + (obj.isInstancedMesh ? " (Instanced)" : ""));
-            }
-            if (obj.isInstancedMesh && obj.geometry && obj.geometry.type === 'ShapeGeometry') {
-                found = true;
-            }
+
+    await waitForCondition(this.page!, async () => {
+        return await this.page!.evaluate(() => {
+            const scene = (window as unknown as { __TEST_SCENE__?: { traverse: (cb: (obj: { isInstancedMesh?: boolean, isMesh?: boolean, geometry?: { type: string, parameters?: { radiusTop?: number, height?: number } }, count?: number, position: { x: number, y: number, z: number } }) => void) => void } }).__TEST_SCENE__;
+            if (!scene) return false;
+            let found = false;
+            scene.traverse((obj) => {
+                if (obj.isInstancedMesh && obj.geometry && obj.geometry.type === 'ShapeGeometry') {
+                    found = true;
+                }
+            });
+            return found;
         });
-        return { found, types };
-    });
-    console.log('SCENE GEOMETRIES:', data.types);
-    expect(data.found).toBe(true);
+    }, 10000);
 });
