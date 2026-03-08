@@ -50,6 +50,16 @@ export default function MainMenu() {
           Help
         </Button>
       </div>
+
+      <div className="mt-auto pb-4">
+        <a
+          href="mailto:feedback@66-laps.com"
+          className="text-default-400 hover:text-primary transition-colors text-sm font-medium underline underline-offset-4"
+          data-testid="feedback-link"
+        >
+          Send feedback
+        </a>
+      </div>
     </div>
   );
 }
