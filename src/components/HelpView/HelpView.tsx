@@ -118,8 +118,10 @@ export default function HelpView() {
                     <div className="flex flex-col gap-1">
                       <p className="text-xs font-bold text-default-500 uppercase">Lap 16: Bell Lap</p>
                       <div className="border border-default-200 rounded-xl overflow-hidden bg-content1 flex h-20 shadow-sm">
-                        <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-divider bg-content1">
+                        <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-divider bg-content1 p-2">
+                          <Button isIconOnly color="danger" variant="flat" size="sm" className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
                           <span className="text-2xl font-black">16</span>
+                          <Button isIconOnly color="success" variant="flat" size="sm" className="w-10 h-10 min-w-10"><Plus size={20} /></Button>
                         </div>
                         <div className="basis-1/2 flex items-center justify-center bg-success text-white gap-2">
                           <span className="text-xl">🔔</span>
@@ -133,8 +135,10 @@ export default function HelpView() {
                     <div className="flex flex-col gap-1">
                       <p className="text-xs font-bold text-default-500 uppercase">Lap 18: Last Lap</p>
                       <div className="border border-default-200 rounded-xl overflow-hidden bg-content1 flex h-20 shadow-sm">
-                        <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-divider bg-content1">
+                        <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-divider bg-content1 p-2">
+                          <Button isIconOnly color="danger" variant="flat" size="sm" className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
                           <span className="text-2xl font-black">18</span>
+                          <Button isIconOnly color="success" variant="flat" size="sm" className="w-10 h-10 min-w-10"><Plus size={20} /></Button>
                         </div>
                         <div className="basis-1/2 flex items-center justify-center bg-success text-white gap-2">
                           <span className="text-xl">🟥</span>
@@ -148,8 +152,10 @@ export default function HelpView() {
                     <div className="flex flex-col gap-1">
                       <p className="text-xs font-bold text-default-500 uppercase">Lap 20: Finished</p>
                       <div className="border border-default-200 rounded-xl overflow-hidden bg-content1 flex h-20 shadow-sm">
-                        <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-divider bg-content1">
+                        <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-divider bg-content1 p-2">
+                          <Button isIconOnly color="danger" variant="flat" size="sm" className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
                           <span className="text-2xl font-black">20</span>
+                          <Button isIconOnly color="success" variant="flat" size="sm" className="w-10 h-10 min-w-10"><Plus size={20} /></Button>
                         </div>
                         <div className="basis-1/2 flex items-center justify-center bg-white text-black gap-2">
                           <span className="text-xl">🏁</span>
