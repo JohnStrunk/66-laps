@@ -154,3 +154,14 @@ export const waitForCondition = async (page: Page, condition: () => Promise<bool
 export const getStoreState = async (page: Page): Promise<BellLapState> => {
   return await page.evaluate(() => (window as unknown as { __bellLapStore: { getState: () => BellLapState } }).__bellLapStore.getState());
 };
+
+export const waitFor3DReady = async (page: Page) => {
+  const container = page.locator('[data-testid="3d-pool-container"]');
+  await waitForVisible(container);
+
+  await waitForCondition(page, async () => {
+    const hasData = await container.evaluate((el) => el.hasAttribute('data-test-data'));
+    const testReady = await page.evaluate(() => (window as unknown as import('../../src/modules/testTypes').TestWindow).__TEST_READY__ === true);
+    return hasData && testReady;
+  }, 20000);
+};

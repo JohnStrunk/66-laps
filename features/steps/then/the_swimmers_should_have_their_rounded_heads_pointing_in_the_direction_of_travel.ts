@@ -1,19 +1,14 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { advanceClock, waitForVisible, waitForCondition } from '../../support/utils';
+import { advanceClock, waitFor3DReady } from '../../support/utils';
 import { expect } from '@playwright/test';
 
 Then('the swimmers should have their rounded heads pointing in the direction of travel', async function (this: CustomWorld) {
-    const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
-    await waitForVisible(readyDiv);
-    await expect(readyDiv).toBeVisible();
+    await waitFor3DReady(this.page!);
+    const readyDiv = this.page!.locator('[data-testid="3d-pool-container"]');
 
     // Advance clock slightly to ensure movement
     await advanceClock(this.page!, 100);
-
-    await waitForCondition(this.page!, async () => {
-        return await readyDiv.evaluate((el) => el.hasAttribute('data-test-data'));
-    }, 10000);
 
     const data = await readyDiv.evaluate((el) => {
         const testData = JSON.parse(el.getAttribute('data-test-data')!);

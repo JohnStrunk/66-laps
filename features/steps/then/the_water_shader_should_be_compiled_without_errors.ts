@@ -1,10 +1,12 @@
 import { Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { CustomWorld } from '../../support/world';
-import { advanceClock } from '../../support/utils';
+import { advanceClock, waitFor3DReady } from '../../support/utils';
 import { TestWindow } from '../../../src/modules/testTypes';
 
 Then('the water shader should be compiled without errors', async function (this: CustomWorld) {
+    await waitFor3DReady(this.page!);
+
     // Wait for the material to be exposed by PoolScene
     let materialAvailable = false;
     for (let i = 0; i < 30; i++) {

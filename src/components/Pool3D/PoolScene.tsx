@@ -360,9 +360,11 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
 
     const fontDataUri = useMemo(() => (isTestMode ? "" : `data:font/ttf;base64,${ATKINSON_BOLD}`), [isTestMode]);
 
+    const mockTextureUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
+
     // Call hooks with tiny images in test mode to avoid hangs
-    const concreteTextureReal = useTexture(isTestMode ? "/images/500-empty.png" : "/images/concrete2_seamless_diffuse_1k.png");
-    const tileTextureReal = useTexture(isTestMode ? "/images/500-empty.png" : "/images/photoreal_tile_03-512x512_0.png");
+    const concreteTextureReal = useTexture(isTestMode ? mockTextureUrl : "/images/concrete2_seamless_diffuse_1k.png");
+    const tileTextureReal = useTexture(isTestMode ? mockTextureUrl : "/images/photoreal_tile_03-512x512_0.png");
 
     const concreteTexture = isTestMode ? mockTexture : concreteTextureReal;
     const tileTexture = isTestMode ? mockTexture : tileTextureReal;
@@ -544,6 +546,7 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
             const testWin = window as unknown as TestWindow;
             testWin.__TEST_CAMERA__ = camera;
             testWin.__TEST_SCENE__ = scene;
+            testWin.__TEST_READY__ = true;
 
             // In some test environments, gl.domElement might be a mock or detached
             const el = gl.domElement || document.querySelector('canvas');
@@ -627,37 +630,33 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
                 <meshStandardMaterial map={textures.floorTexture} />
             </mesh>
 
-            {!isTestMode && (
-                <>
-                    {Array.from({ length: lanes }).map((_, i: number) => (
-                        <LaneMarkings
-                            key={`marking-${i}`}
-                            poolLength={poolLengthMeters}
-                            zCenter={(i + 0.5) * LANE_WIDTH_METERS}
-                            yFloor={FLOOR_Y}
-                        />
-                    ))}
+            {Array.from({ length: lanes }).map((_, i: number) => (
+                <LaneMarkings
+                    key={`marking-${i}`}
+                    poolLength={poolLengthMeters}
+                    zCenter={(i + 0.5) * LANE_WIDTH_METERS}
+                    yFloor={FLOOR_Y}
+                />
+            ))}
 
-                    <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
+            <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
 
-                    {Array.from({ length: lanes }).map((_, i: number) => {
-                        const isRight = props.startingEnd === StartingEnd.RIGHT;
-                        const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
-                        const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
-                        const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
-                        return (
-                            <LaneMarker
-                                key={i}
-                                x={markerX}
-                                z={markerZ}
-                                y={DECK_Y}
-                                font={fontDataUri}
-                                displayIndex={displayIndex}
-                            />
-                        );
-                    })}
-                </>
-            )}
+            {Array.from({ length: lanes }).map((_, i: number) => {
+                const isRight = props.startingEnd === StartingEnd.RIGHT;
+                const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
+                const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
+                const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                return (
+                    <LaneMarker
+                        key={i}
+                        x={markerX}
+                        z={markerZ}
+                        y={DECK_Y}
+                        font={fontDataUri}
+                        displayIndex={displayIndex}
+                    />
+                );
+            })}
 
             <BackstrokeFlags poolLength={poolLengthMeters} poolWidth={poolWidthMeters} lanes={lanes} />
 

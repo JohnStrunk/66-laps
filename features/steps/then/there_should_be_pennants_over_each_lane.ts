@@ -1,6 +1,5 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { expect } from '@playwright/test';
 import { waitForCondition } from '../../support/utils';
 
 Then('there should be {int} pennants over each lane', async function(this: CustomWorld, expectedPennants: number) {

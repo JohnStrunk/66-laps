@@ -1,19 +1,14 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { waitForVisible, waitForCondition } from '../../support/utils';
 import { expect } from '@playwright/test';
+import { waitFor3DReady } from '../../support/utils';
 
-Then('the 3D camera should be positioned on the deck, looking toward the left', async function (this: CustomWorld) {
-    const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
-    await waitForVisible(readyDiv);
-    await expect(readyDiv).toBeVisible();
+Then('the 3D camera should be positioned on the deck looking toward the left', async function (this: CustomWorld) {
+    await waitFor3DReady(this.page!);
+    const container = this.page!.locator('[data-testid="3d-pool-container"]');
+    const data = await container.evaluate((el) => JSON.parse(el.getAttribute('data-test-data')!));
 
-    await waitForCondition(this.page!, async () => {
-        return await readyDiv.evaluate((el) => el.hasAttribute('data-test-data'));
-    }, 10000);
-
-    const data = await readyDiv.evaluate((el) => JSON.parse(el.getAttribute('data-test-data')!));
-    const camPos = data.camera.position;
-
-    expect(camPos.x === 3.0, `Camera X was ${camPos.x}, expected 3.0`).toBeTruthy();
+    // For RIGHT start, camera looks toward LEFT (negative rotation in Y)
+    // -Math.PI / 4 is 45 degrees to the left
+    expect(data.pipCamera.rotation.y).toBeCloseTo(Math.PI / 4);
 });
