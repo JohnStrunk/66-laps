@@ -58,7 +58,7 @@ export default function Page() {
         lanes: 8,
         laps: 20,
         difficulty: 1.0,
-        spread: 0.05,
+        spread: 0.1,
         numberingDirection: NumberingDirection.AWAY,
         startingEnd: StartingEnd.LEFT,
         simulationMode: SimulationMode.THREE_D,

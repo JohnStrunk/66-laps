@@ -85,7 +85,7 @@ export default function Settings(props: SettingsProps) {
     const [simulationMode, setSimulationMode] = useState<SimulationMode>(SimulationMode.THREE_D);
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
-    const [spread, setSpread] = useState<number>(0.05);
+    const [spread, setSpread] = useState<number>(0.1);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
