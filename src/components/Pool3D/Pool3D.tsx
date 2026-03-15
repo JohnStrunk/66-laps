@@ -39,17 +39,25 @@ export default function Pool3D(props: Pool3DProps) {
                 const observerX = isRight ? poolLengthMeters - 3.0 : 3.0;
 
                 // Update Order of Finish
-                const finished = swimmersRef.current
-                    .map((s, i) => {
-                        const lane = numbering === NumberingDirection.AWAY ? swimmers.length - i : i + 1;
-                        return { lane, done: s.isDone() };
-                    })
-                    .filter(s => s.done);
+                let finishedCount = 0;
+                for (let i = 0; i < swimmersRef.current.length; i++) {
+                    if (swimmersRef.current[i].isDone()) {
+                        finishedCount++;
+                    }
+                }
 
-                if (finished.length > orderOfFinish.length) {
-                    const newlyFinished = finished.filter(f => !orderOfFinish.includes(f.lane));
+                if (finishedCount > orderOfFinish.length) {
+                    const newlyFinished: number[] = [];
+                    for (let i = 0; i < swimmersRef.current.length; i++) {
+                        if (swimmersRef.current[i].isDone()) {
+                            const lane = numbering === NumberingDirection.AWAY ? swimmers.length - i : i + 1;
+                            if (!orderOfFinish.includes(lane)) {
+                                newlyFinished.push(lane);
+                            }
+                        }
+                    }
                     if (newlyFinished.length > 0) {
-                        onOrderOfFinishChange([...orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+                        onOrderOfFinishChange([...orderOfFinish, ...newlyFinished]);
                     }
                 }
 
