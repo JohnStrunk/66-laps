@@ -1,17 +1,11 @@
 import { CustomWorld } from '../../support/world';
-import { waitForCondition } from '../../support/utils';
 import { Then } from '@cucumber/cucumber';
-import { waitForVisible } from '../../support/utils';
+import { waitFor3DReady } from '../../support/utils';
 import { expect } from '@playwright/test';
 
 Then('the swimmers should be at various positions in the pool', async function (this: CustomWorld) {
-    const readyDiv = this.page!.locator('[data-test-ready="true"]').first();
-    await waitForVisible(readyDiv);
-    await expect(readyDiv).toBeVisible();
-
-    await waitForCondition(this.page!, async () => {
-        return await readyDiv.evaluate((el: HTMLElement) => el.hasAttribute('data-test-data'));
-    }, 10000);
+    await waitFor3DReady(this.page!);
+    const readyDiv = this.page!.locator('[data-testid="3d-pool-container"]');
 
     // Check swimmer 0 position
     const pos = await readyDiv.evaluate((el: HTMLElement) => {

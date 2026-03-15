@@ -1,6 +1,5 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { expect } from '@playwright/test';
 import { waitForCondition } from '../../support/utils';
 
 Then('the backstroke flags should span the width of the pool', async function(this: CustomWorld) {

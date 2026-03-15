@@ -107,7 +107,7 @@ export class SwimmerModel implements ISwimmer {
      */
     where(currentTimeMs: number = Date.now()): SwimVector {
         let elapsedTimeMs = currentTimeMs - this._startTimeMs;
-        let direction = this._lapTimes.length % 2 === 0
+        let direction: Direction = this._lapTimes.length % 2 === 0
             ? Direction.TOTURN
             : Direction.TOSTART;
         for (let i = 0; i < this._lapTimes.length; i++) {

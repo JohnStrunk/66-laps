@@ -1,6 +1,5 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { expect } from '@playwright/test';
 import { waitForCondition } from '../../support/utils';
 
 Then('the backstroke flag poles should be {float}m above the water level', async function(this: CustomWorld, height: number) {
