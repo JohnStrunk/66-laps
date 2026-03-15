@@ -1,7 +1,6 @@
 'use client'
 import Swimmer from "@/components/Swimmer/Swimmer";
 import { ISwimmer } from "@/modules/SwimmerModel";
-import { semanticColors } from "@heroui/theme";
 import { Application, extend, useApplication, useTick } from "@pixi/react";
 import { Assets, Container, Graphics, Rectangle, TextStyle, Texture } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -224,7 +223,7 @@ export default function Pool(props: PoolProps) {
             <Application
                 antialias={true}
                 resolution={window.devicePixelRatio || 1}
-                backgroundColor={semanticColors.light.background[500]}
+                backgroundColor={0x222222}
                 backgroundAlpha={0}
                 resizeTo={divRef}
                 autoDensity={true}

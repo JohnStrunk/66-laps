@@ -175,7 +175,7 @@ function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number
     );
 }
 
-function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: number, font: string, displayIndex: number }) {
+function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: number, font?: string, displayIndex: number }) {
     return (
         <group position={[x, y + 0.165, z]}>
             <mesh castShadow receiveShadow>
@@ -358,7 +358,7 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
         return tex;
     }, []);
 
-    const fontDataUri = useMemo(() => (isTestMode ? "" : `data:font/ttf;base64,${ATKINSON_BOLD}`), [isTestMode]);
+    const fontDataUri = useMemo(() => (isTestMode ? undefined : `data:font/ttf;base64,${ATKINSON_BOLD}`), [isTestMode]);
 
     const mockTextureUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
 

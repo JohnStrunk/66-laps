@@ -5,11 +5,10 @@ import Nav from "@/components/Nav/Nav";
 import Pool, { PoolLength } from "@/components/Pool/Pool";
 import Pool3D from "@/components/Pool3D/Pool3D";
 import Settings, { NumberingDirection, SettingsValue, SimulationMode, StartingEnd } from "@/components/Settings/Settings";
-import { ph_event_swimulation } from "@/modules/phEvents";
 import { AVATARS, ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
+import { ph_event_swimulation } from "@/modules/phEvents";
 import { Button, ButtonGroup } from "@heroui/react";
 import { usePostHog } from "posthog-js/react";
-
 import { useCallback, useEffect, useRef, useState } from "react";
 
 enum Mode {
@@ -51,11 +50,10 @@ function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): I
 
 export default function Page() {
     const [mode, setMode] = useState<Mode>(Mode.SETTINGS);
-    const [orderOfFinish, setOrderOfFinish] = useState<number[]>([]);
     const [viewMode, setViewMode] = useState<ViewMode>("3D");
     const [swimmers, setSwimmers] = useState<ISwimmer[]>([]);
+    const [orderOfFinish, setOrderOfFinish] = useState<number[]>([]);
     const [settings, setSettings] = useState<SettingsValue>({
-        // dummy values
         poolLength: PoolLength.SC,
         lanes: 8,
         laps: 20,
@@ -65,6 +63,7 @@ export default function Page() {
         startingEnd: StartingEnd.LEFT,
         simulationMode: SimulationMode.THREE_D,
     });
+    const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
     const wakeLock = useRef<WakeLockSentinel | null>(null);
     const startTime = useRef<number>(0);
     const postHog = usePostHog();
@@ -91,17 +90,22 @@ export default function Page() {
 
     // For small screens, request fullscreen when we start the simulation.
     useEffect(() => {
+        if (isTestMode) return;
         if (mode === Mode.SWIM && (window.innerWidth <= 768 || window.innerHeight <= 768)) {
             if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.error('Failed to request fullscreen:', err);
+                });
             }
         }
         if (mode !== Mode.SWIM) {
             if (document.fullscreenElement && document.exitFullscreen) {
-                document.exitFullscreen();
+                document.exitFullscreen().catch((err) => {
+                    console.error('Failed to exit fullscreen:', err);
+                });
             }
         }
-    }, [mode]);
+    }, [mode, isTestMode]);
 
     // Ensure the screen stays awake when the simulation is running.
     // This is important for mobile devices, where the screen may turn off
@@ -154,8 +158,6 @@ export default function Page() {
         setOrderOfFinish(newOof);
     }, []);
 
-    const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
-
     useEffect(() => {
         if (isTestMode && typeof window !== 'undefined') {
             (window as unknown as { __TEST_SWIMMERS__: ISwimmer[] }).__TEST_SWIMMERS__ = swimmers;
@@ -173,6 +175,7 @@ export default function Page() {
                 </div>
                 {mode === Mode.SWIM && (
                     <div className="relative flex-1 min-h-0 w-full overflow-hidden"
+                         data-testid="swim-container"
                          data-swimmer-count={swimmers.length}
                          data-numbering={settings.numberingDirection}
                          data-starting-end={settings.startingEnd}>
@@ -196,10 +199,12 @@ export default function Page() {
                                 onOrderOfFinishChange={handleOrderOfFinishChange} />
                         )}
                         <div data-testid="practice-controls" className={`absolute top-6 ${settings.startingEnd === StartingEnd.LEFT ? 'left-6' : 'right-6'} flex gap-4`}>
-                            <ButtonGroup color="secondary" data-testid="view-selector">
-                                <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
-                                <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>
-                            </ButtonGroup>
+                            <div data-testid="view-selector">
+                                <ButtonGroup color="secondary">
+                                    <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
+                                    <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>
+                                </ButtonGroup>
+                            </div>
                             <Button
                                 color="primary"
                                 onPress={() => setMode(Mode.SETTINGS)}
