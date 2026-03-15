@@ -368,10 +368,7 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
     const tileTexture = isTestMode ? mockTexture : tileTextureReal;
 
     // PIP Camera
-    const pipCamera = useMemo(() => {
-        const cam = new PerspectiveCamera(60, 1, 0.1, 1000);
-        return cam;
-    }, []);
+    const pipCameraRef = useRef(new PerspectiveCamera(60, 1, 0.1, 1000));
 
     // State for current and ghost sources
     const positionsRef = useRef<Vector2[]>(Array(MAX_SOURCES).fill(0).map(() => new Vector2(-100, -100)));
@@ -463,15 +460,14 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
         const isRight = props.startingEnd === StartingEnd.RIGHT;
 
         // Update PIP camera
-        pipCamera.position.copy(mainCamera.position);
+        pipCameraRef.current.position.copy(mainCamera.position);
         const pipLookAtX = isRight ? 0 : poolLengthMeters;
         const pipLookAtZ = 0; // Opposite side of the pool
-        pipCamera.lookAt(pipLookAtX, WATER_Y, pipLookAtZ);
+        pipCameraRef.current.lookAt(pipLookAtX, WATER_Y, pipLookAtZ);
         if (mainCamera instanceof PerspectiveCamera) {
-            // eslint-disable-next-line react-hooks/immutability
-            pipCamera.aspect = mainCamera.aspect;
+            pipCameraRef.current.aspect = mainCamera.aspect;
         }
-        pipCamera.updateProjectionMatrix();
+        pipCameraRef.current.updateProjectionMatrix();
 
         // Viewport settings for PIP (1/4 size)
         const w = canvasSize.width / 4;
@@ -505,7 +501,7 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
         renderer.setViewport(pipX, pipY, w, h);
         renderer.setScissor(pipX, pipY, w, h);
         renderer.clearDepth();
-        renderer.render(activeScene, pipCamera);
+        renderer.render(activeScene, pipCameraRef.current);
 
         renderer.setScissorTest(false);
         // Reset clear color for next frame
