@@ -413,17 +413,25 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
             (window as unknown as TestWindow).__TEST_WATER_MATERIAL__ = waterMaterialRef.current ?? undefined;
         }
 
-        const finished = props.swimmers
-            .map((s, i) => {
-                const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
-                return { lane, done: s.isDone() };
-            })
-            .filter(s => s.done);
+        let finishedCount = 0;
+        for (let i = 0; i < props.swimmers.length; i++) {
+            if (props.swimmers[i].isDone()) {
+                finishedCount++;
+            }
+        }
 
-        if (finished.length > props.orderOfFinish.length) {
-            const newlyFinished = finished.filter(f => !props.orderOfFinish.includes(f.lane));
+        if (finishedCount > props.orderOfFinish.length) {
+            const newlyFinished: number[] = [];
+            for (let i = 0; i < props.swimmers.length; i++) {
+                if (props.swimmers[i].isDone()) {
+                    const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                    if (!props.orderOfFinish.includes(lane)) {
+                        newlyFinished.push(lane);
+                    }
+                }
+            }
             if (newlyFinished.length > 0) {
-                props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+                props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished]);
             }
         }
 
