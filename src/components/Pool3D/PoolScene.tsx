@@ -579,7 +579,9 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
 
     return (
         <>
-            <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow />
+            <ambientLight intensity={0.4} />
+            <hemisphereLight intensity={0.4} color="#ffffff" groundColor="#000000" />
+            <directionalLight position={[10, 20, 10]} intensity={1.0} castShadow />
 
             <mesh position={[poolLengthMeters / 2, DECK_Y, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters + 20, 10]} />
