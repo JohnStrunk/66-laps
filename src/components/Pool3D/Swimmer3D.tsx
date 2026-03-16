@@ -1,8 +1,9 @@
 'use client'
 
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
-import { Group } from "three";
+import { useRef, useMemo } from "react";
+import { Box3, Color, Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { useGLTF } from "@react-three/drei";
 import { ISwimmer } from "@/modules/SwimmerModel";
 import { TestWindow } from "@/modules/testTypes";
 
@@ -15,6 +16,73 @@ type Swimmer3DProps = {
     waterY: number;
     onPositionUpdate?: (index: number, x: number, z: number, vx: number, vz: number) => void;
 };
+
+function BoatModel({ color }: { color: string }) {
+    const { scene } = useGLTF('/images/boat.glb');
+
+    // Clone the scene so each swimmer/boat has its own color
+    const clonedScene = useMemo(() => {
+        const clone = scene.clone();
+
+        // Calculate current length of the boat in the GLB (usually Y or Z depending on export)
+        const bbox = new Box3().setFromObject(clone);
+        const size = new Vector3();
+        bbox.getSize(size);
+
+        // We want the total length to be 1.5m
+        // We'll find the largest dimension (assuming it's the length)
+        const currentLength = Math.max(size.x, size.y, size.z);
+        const scale = 1.5 / currentLength;
+        clone.scale.set(scale, scale, scale);
+
+        // Re-center the boat so it's centered at (0,0,0) locally
+        const center = new Vector3();
+        bbox.getCenter(center);
+        clone.position.sub(center.multiplyScalar(scale));
+
+        // Shift it slightly up so it's not half-underwater if that's the intention,
+        // but for now let's just center it as the avatar was.
+        // The original avatar was centered at waterY.
+
+        return clone;
+    }, [scene]);
+
+    // Apply color to all meshes in the boat
+    useMemo(() => {
+        const threeColor = new Color(color);
+        clonedScene.traverse((obj) => {
+            if ((obj as Mesh).isMesh) {
+                const mesh = obj as Mesh;
+                // If it already has a material, clone it and set the color
+                if (mesh.material) {
+                    const mat = (mesh.material as MeshStandardMaterial).clone();
+                    mat.color.set(threeColor);
+                    // Remove existing textures so they don't multiply with the color and make it look dark
+                    mat.map = null;
+                    mat.normalMap = null;
+                    mat.roughnessMap = null;
+                    mat.metalnessMap = null;
+                    mat.aoMap = null;
+
+                    // Explicitly opaque to avoid transparency sorting issues
+                    mat.transparent = false;
+                    mat.opacity = 1.0;
+
+                    // Don't let vertex colors darken the model
+                    mat.vertexColors = false;
+
+                    // Standard properties for a clean look
+                    mat.roughness = 0.7;
+                    mat.metalness = 0.2;
+
+                    mesh.material = mat;
+                }
+            }
+        });
+    }, [clonedScene, color]);
+
+    return <primitive object={clonedScene} />;
+}
 
 export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, isRight, waterY, onPositionUpdate }: Swimmer3DProps) {
     const groupRef = useRef<Group>(null);
@@ -37,7 +105,7 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         // In SwimmerModel, Direction.TOTURN is 1, Direction.TOSTART is 0
         const headingToTurn = dir === 1;
 
-        // Swimmer dimensions: Sphere (r=0.3) + Cylinder (l=1.2) = 1.5m total
+        // Swimmer dimensions: Current avatars are 1.5m total
         const swimmerLength = 1.5;
         const halfLength = swimmerLength / 2;
         const travelRange = poolLength - swimmerLength;
@@ -69,7 +137,7 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
         const vx = isDone ? 0.0 : (movingRight ? 1.0 : -1.0);
         const vz = 0.0;
 
-        groupRef.current.position.set(xPos, waterY, zPos);
+        groupRef.current.position.set(xPos, waterY + 0.1, zPos);
 
         if (onPositionUpdate) {
             // The head tip is 0.75m from the group center in the direction of travel
@@ -77,21 +145,16 @@ export default function Swimmer3D({ swimmer, laneIndex, laneWidth, poolLength, i
             onPositionUpdate(laneIndex, xPos + forwardX, zPos, vx, vz);
         }
 
-        groupRef.current.rotation.y = movingRight ? Math.PI / 2 : -Math.PI / 2;
+        // The boat model should point in the direction of travel
+        // We add Math.PI / 2 to the previous rotation to rotate 90 degrees CCW
+        groupRef.current.rotation.y = movingRight ? Math.PI : 0;
     });
 
     return (
         <group ref={groupRef}>
-            {/* Ice cream cone shape: sphere head + cone body */}
-            {/* Centered so total length is 1.5m, from -0.75 to +0.75 in local Z */}
-            <mesh position={[0, 0, 0.45]} castShadow>
-                <sphereGeometry args={[0.3, 16, 16]} />
-                <meshStandardMaterial color={color} />
-            </mesh>
-            <mesh position={[0, 0, -0.15]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                <cylinderGeometry args={[0.3, 0.1, 1.2, 16]} />
-                <meshStandardMaterial color={color} />
-            </mesh>
+            <BoatModel color={color} />
         </group>
     );
 }
+
+useGLTF.preload('/images/boat.glb');
