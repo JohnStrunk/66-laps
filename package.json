@@ -63,7 +63,7 @@
     "@vitest/browser-playwright": "4.1.0",
     "@vitest/coverage-v8": "4.1.0",
     "baseline-browser-mapping": "2.10.8",
-    "eslint": "9.39.4",
+    "eslint": "10.0.3",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-storybook": "10.2.19",
     "monocart-coverage-reports": "2.12.9",
