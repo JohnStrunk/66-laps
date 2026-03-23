@@ -82,7 +82,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       const itemLocator = popoverLocator.locator(itemSelector);
 
       // Use exact text match pattern to avoid substring matching issues (e.g. 500 matching 1500)
-      const targetItem = itemLocator.filter({ hasText: new RegExp(`^${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i') }).first();
+      const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*$`, 'i') }).first();
 
       try {
         await targetItem.waitFor({ state: 'visible', timeout: 3000 });

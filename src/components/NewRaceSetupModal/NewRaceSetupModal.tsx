@@ -77,8 +77,6 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           }}
           data-testid="event-selection-dropdown"
         >
-          <SelectItem key="50 SC">50 SC</SelectItem>
-          <SelectItem key="50 LC">50 LC</SelectItem>
           <SelectItem key="500 SC">500 SC</SelectItem>
           <SelectItem key="1000 SC">1000 SC</SelectItem>
           <SelectItem key="1650 SC">1650 SC</SelectItem>

@@ -79,7 +79,7 @@ export type SettingsProps = {
 };
 
 export default function Settings(props: SettingsProps) {
-    const [raceLength, setRaceLength] = useState<string>("50_SC");
+    const [raceLength, setRaceLength] = useState<string>("500_SC");
     const [lanes, setLanes] = useState<number>(8);
     const [difficulty, setDifficulty] = useState<number>(1.0);
     const [numberingDirection, setNumberingDirection] = useState<NumberingDirection>(NumberingDirection.AWAY);
