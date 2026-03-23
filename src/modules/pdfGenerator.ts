@@ -67,20 +67,14 @@ function getFilename(race: RaceRecord): string {
 }
 
 export function calculateTimelineScale(durationSeconds: number, availableHeight: number): { secondsPerMarker: number, lineHeight: number } {
-    const MIN_LINE_HEIGHT = 8;
-    const POSSIBLE_MARKERS = [15, 30, 60, 120, 300, 600];
-    let secondsPerMarker = 15;
+    let secondsPerMarker = 60;
+    if (durationSeconds <= 600) secondsPerMarker = 30; // <= 10 mins: 30s markers
+    if (durationSeconds <= 300) secondsPerMarker = 15; // <= 5 mins: 15s markers
+    if (durationSeconds <= 120) secondsPerMarker = 10; // <= 2 mins: 10s markers
+    if (durationSeconds <= 60) secondsPerMarker = 5;   // <= 1 min: 5s markers
 
-    for (const m of POSSIBLE_MARKERS) {
-        secondsPerMarker = m;
-        const markersCount = Math.ceil(durationSeconds / secondsPerMarker) + 1;
-        if (availableHeight / (markersCount + 2.5) >= MIN_LINE_HEIGHT) {
-            break;
-        }
-    }
-
-    const markersCount = Math.ceil(durationSeconds / secondsPerMarker) + 1;
-    const lineHeight = Math.min(18, availableHeight / (markersCount + 2.5));
+    const markers = Math.ceil(durationSeconds / secondsPerMarker) + 1;
+    const lineHeight = availableHeight / Math.max(markers, 10); // Minimum 10 markers height for readability
 
     return { secondsPerMarker, lineHeight };
 }
