@@ -1,9 +1,9 @@
-import { Then } from '@cucumber/cucumber';
+import { Then, DataTable } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { waitForVisible, advanceClock } from '../../support/utils';
 import { expect } from '@playwright/test';
 
-Then('the {string} setting should have exactly these options:', async function (this: CustomWorld, settingName: string, dataTable: any) {
+Then('the {string} setting should have exactly these options:', async function (this: CustomWorld, settingName: string, dataTable: DataTable) {
     const expectedOptions = dataTable.raw().map((row: string[]) => row[0]);
     const isTestMode = this.page!.url().includes('testMode=true');
     const triggerTestId = `settings-${settingName}`;
@@ -36,9 +36,8 @@ Then('the {string} setting should have exactly these options:', async function (
     }
 });
 
-Then('the Event Selection dropdown should have exactly these options:', async function (this: CustomWorld, dataTable: any) {
-    const expectedOptions = dataTable.raw().map((row: string[]) => row[0]);
-    const trigger = this.page!.locator('[data-testid="event-selection-dropdown"]');
+Then('the Event Selection dropdown should have exactly these options:', async function (this: CustomWorld, dataTable: DataTable) {
+    const expectedOptions = dataTable.raw().map((row: string[]) => row[0]);    const trigger = this.page!.locator('[data-testid="event-selection-dropdown"]');
     await waitForVisible(trigger);
     await trigger.click({ force: true });
 
