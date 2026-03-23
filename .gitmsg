@@ -1,0 +1,5 @@
+🧪 testing improvement missing webgl coverage
+
+🎯 What: The testing gap addressed is the missing test for getContext failure in src/components/Pool3D/Pool3D.tsx.
+📊 Coverage: Added tests to ensure webGLAvailable is appropriately derived based on successful or failed context retrieval, and that the UI falls back correctly.
+✨ Result: Pool3D component error handling for missing WebGL context is now thoroughly tested.
