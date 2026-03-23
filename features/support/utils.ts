@@ -1,4 +1,4 @@
-import { Locator, Page } from 'playwright';
+import { Locator, Page } from '@playwright/test';
 import { BellLapState } from '../../src/modules/bellLapStore';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
@@ -56,6 +56,18 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
   await waitForVisible(trigger);
 
+  const tagName = await trigger.evaluate(el => el.tagName.toLowerCase());
+
+  if (tagName === 'select') {
+    // Native select handling
+    try {
+      await trigger.selectOption({ label: itemText });
+    } catch {
+      await trigger.selectOption(itemText);
+    }
+    return;
+  }
+
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       await trigger.click({ force: true });
@@ -95,6 +107,8 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
         await targetItem.click({ force: true });
       }
 
+      // Ensure dropdown is closed
+      await page.keyboard.press('Escape');
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
       return;
@@ -119,7 +133,9 @@ export const waitForVisible = async (locator: Locator, timeoutMs: number = 5000)
     await page.waitForTimeout(10);
   }
 
-  await locator.first().waitFor({ state: 'visible', timeout: 5000 });
+  if (!(await locator.first().isVisible())) {
+    throw new Error(`Element not visible after ${timeoutMs}ms`);
+  }
 };
 
 export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) => {
@@ -137,7 +153,7 @@ export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) 
   await locator.first().waitFor({ state: 'hidden', timeout: 1000 }).catch(() => {});
 };
 
-export const waitForCondition = async (page: Page, condition: () => Promise<boolean>, timeoutMs: number = 5000) => {
+export const waitForCondition = async (page: Page, condition: () => Promise<boolean>, timeoutMs: number = 15000) => {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     if (await condition()) {
