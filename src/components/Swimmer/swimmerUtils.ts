@@ -24,13 +24,18 @@ export function getPosition(startEnd: PointData, turnEnd: PointData, location: n
  * @returns Anchor point (x, y)
  */
 export function getAnchor(startEnd: PointData, turnEnd: PointData, location: number): PointData {
-    // If startEnd is to the left of turnEnd (normal case)
-    if (startEnd.x <= turnEnd.x) {
-        return { x: location, y: 0.5 };
+    // Determine direction based on location
+    const normalizedLocation = location % 2;
+    const goingToTurn = normalizedLocation <= 1;
+
+    // If going left to right (dx > 0)
+    const dx = turnEnd.x - startEnd.x;
+    const movingRight = goingToTurn ? dx > 0 : dx < 0;
+
+    // Anchor at the leading edge
+    if (movingRight) {
+        return { x: 1, y: 0.5 }; // Right edge
     } else {
-        // If startEnd is to the right of turnEnd
-        // When location is 0 (at startEnd), anchor should be 1
-        // When location is 1 (at turnEnd), anchor should be 0
-        return { x: 1 - location, y: 0.5 };
+        return { x: 0, y: 0.5 }; // Left edge
     }
 }
