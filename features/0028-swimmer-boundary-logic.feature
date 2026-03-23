@@ -10,8 +10,15 @@ Feature: Swimmer Boundary Logic
       | startX | turnX | location | expectedPosX | expectedAnchorX | minX | maxX |
       | 0      | 100   | 0        | 0            | 0               | 0    | 100  |
       | 0      | 100   | 1        | 100          | 1               | 0    | 100  |
+      | 0      | 100   | 0.5      | 50           | 0.5             | 0    | 100  |
       | 100    | 0     | 0        | 100          | 1               | 0    | 100  |
       | 100    | 0     | 1        | 0            | 0               | 0    | 100  |
+      | 100    | 0     | 0.5      | 50           | 0.5             | 0    | 100  |
+      | 0      | 100   | 1.5      | 150          | 1.5             | 0    | 200  |
+      | 100    | 0     | 1.5      | -50          | -0.5            | -100 | 100  |
+      | 100    | 50    | 0.25     | 87.5         | 0.75            | 50   | 100  |
+      | 0      | 100   | 2        | 200          | 2               | 0    | 200  |
+      | 0      | 100   | 1.0001   | 100.01       | 1.0001          | 0    | 200  |
 
   @browser @practice @3d
   Scenario Outline: 3D Swimmer should stay within the pool walls
