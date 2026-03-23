@@ -20,3 +20,10 @@ Feature: Practice 50 Lengths
     And I click "Start"
     Then the practice lap count should be 1
     And the 3D swimmers should start at the turn end
+
+  @browser @practice @3d
+  Scenario: 50 LC swimmers should finish at the start end
+    When I set the "Race Length" setting to "50 LC"
+    And I click "Start"
+    And I wait for the race to complete
+    Then the 3D swimmers should be at the start end and isDone should be true

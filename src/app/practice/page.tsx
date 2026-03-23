@@ -19,7 +19,6 @@ enum Mode {
 type ViewMode = "2D" | "3D";
 
 function makeSwimmer({ poolLength, difficulty, laps, spread }: SettingsValue): ISwimmer {
-    console.log("makeSwimmer inputs:", { poolLength, difficulty, laps, spread });
     const secondsPerLap = poolLength === PoolLength.SC ? 16 : 34; // Average lap time in seconds
     const maxDeviationPerLap = 1.0; // Maximum deviation from the average lap time in seconds
     const maxSlope = 0.15; // Maximum slope of the lap times in percentage over the entire race

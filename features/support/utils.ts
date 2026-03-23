@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from 'playwright';
 import { BellLapState } from '../../src/modules/bellLapStore';
 
 export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
@@ -78,37 +78,34 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
       const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
-      const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
+      const popoverLocator = page.locator(popoverSelector).filter({ visible: true }).first();
+      const itemLocator = popoverLocator.locator(itemSelector);
 
       // Use exact text match pattern to avoid substring matching issues (e.g. 500 matching 1500)
-      const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*$`, 'i') }).first();
+      const targetItem = itemLocator.filter({ hasText: new RegExp(`^${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i') }).first();
 
       try {
         await targetItem.waitFor({ state: 'visible', timeout: 3000 });
+
+        await targetItem.click({ force: true });
+        // Ensure dropdown is closed
+        await page.keyboard.press('Escape');
       } catch {
         const allItems = await itemLocator.all();
         let found = false;
         for (const it of allItems) {
           const text = await it.textContent();
-          const innerText = await it.innerText();
-          if (text?.trim() === itemText || innerText?.trim() === itemText) {
+          if (text?.trim() === itemText) {
             await it.click({ force: true });
+            // Ensure dropdown is closed
+            await page.keyboard.press('Escape');
             found = true;
             break;
           }
         }
         if (!found) throw new Error(`Item "${itemText}" not found`);
-        await advanceClock(page, 500);
-        await page.waitForTimeout(100);
-        return;
       }
 
-      if (await targetItem.isVisible()) {
-        await targetItem.click({ force: true });
-      }
-
-      // Ensure dropdown is closed
-      await page.keyboard.press('Escape');
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
       return;
@@ -153,7 +150,7 @@ export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) 
   await locator.first().waitFor({ state: 'hidden', timeout: 1000 }).catch(() => {});
 };
 
-export const waitForCondition = async (page: Page, condition: () => Promise<boolean>, timeoutMs: number = 15000) => {
+export const waitForCondition = async (page: Page, condition: () => Promise<boolean>, timeoutMs: number = 5000) => {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     if (await condition()) {

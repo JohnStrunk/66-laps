@@ -9,8 +9,7 @@ Then('the practice lap count should be {int}', async function (this: CustomWorld
             const testWin = window as unknown as TestWindow;
             const model = testWin.__TEST_SWIMMER_0_MODEL__;
             if (!model) return null;
-            // @ts-expect-error - _lapTimes is private but available in JS
-            return model._lapTimes?.length;
+            return model.lapCount;
         });
     }, { timeout: 10000 }).toBe(expectedLaps);
 });

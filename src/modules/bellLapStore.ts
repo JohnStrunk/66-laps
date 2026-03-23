@@ -8,7 +8,7 @@ import {
   ph_event_bell_lap_lane_toggle_empty
 } from './phEvents';
 
-export type EventType = '500 SC' | '1000 SC' | '1650 SC' | '800 LC' | '1500 LC';
+export type EventType = '50 SC' | '50 LC' | '500 SC' | '1000 SC' | '1650 SC' | '800 LC' | '1500 LC';
 
 interface EventConfig {
   laps: number;
@@ -16,6 +16,8 @@ interface EventConfig {
 }
 
 export const EVENT_CONFIGS: Record<EventType, EventConfig> = {
+  '50 SC': { laps: 2, lockout: 15 },
+  '50 LC': { laps: 1, lockout: 30 },
   '500 SC': { laps: 20, lockout: 15 },
   '1000 SC': { laps: 40, lockout: 15 },
   '1650 SC': { laps: 66, lockout: 15 },

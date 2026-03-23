@@ -137,8 +137,15 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
     const config = EVENT_CONFIGS[race.event];
     const maxLaps = config.laps;
     const laps: number[] = [];
-    for (let i = 2; i <= maxLaps; i += 2) {
-        laps.push(i);
+    if (maxLaps === 1) {
+        laps.push(1);
+    } else {
+        for (let i = 2; i <= maxLaps; i += 2) {
+            laps.push(i);
+        }
+        if (maxLaps % 2 !== 0 && !laps.includes(maxLaps)) {
+            laps.push(maxLaps);
+        }
     }
 
     const oofHeaders = [
