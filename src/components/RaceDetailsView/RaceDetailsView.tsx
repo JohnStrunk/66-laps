@@ -39,23 +39,36 @@ export default function RaceDetailsView() {
       laps.push(i);
     }
 
-    return laps.map(lapNum => {
-      const laneTimes: { laneNumber: number, timestamp: number }[] = [];
+    const numLaps = maxLaps / 2;
+    const completionsByLap: { laneNumber: number; timestamp: number }[][] = Array.from({ length: numLaps + 1 }, () => []);
 
-      race.lanes.forEach(lane => {
-        // Find the latest event where this lane completed this lap
-        // Completion means newCount >= lapNum AND prevCount < lapNum
-        const completions = lane.events.filter(e => e.newCount >= lapNum && e.prevCount < lapNum);
-        if (completions.length > 0) {
-          const latestCompletion = completions.reduce((latest, current) =>
-            current.timestamp > latest.timestamp ? current : latest
-          );
-          laneTimes.push({
-            laneNumber: lane.laneNumber,
-            timestamp: latestCompletion.timestamp
-          });
+    race.lanes.forEach(lane => {
+      const latestPerLap = new Float64Array(numLaps + 1);
+
+      lane.events.forEach(e => {
+        if (e.newCount <= e.prevCount) return;
+
+        const startLap = Math.floor(e.prevCount / 2) * 2 + 2;
+        for (let lapNum = startLap; lapNum <= e.newCount; lapNum += 2) {
+          if (lapNum <= maxLaps) {
+            const idx = lapNum / 2;
+            if (e.timestamp > latestPerLap[idx]) {
+              latestPerLap[idx] = e.timestamp;
+            }
+          }
         }
       });
+
+      for (let idx = 1; idx <= numLaps; idx++) {
+        if (latestPerLap[idx] > 0) {
+          completionsByLap[idx].push({ laneNumber: lane.laneNumber, timestamp: latestPerLap[idx] });
+        }
+      }
+    });
+
+    return laps.map(lapNum => {
+      const idx = lapNum / 2;
+      const laneTimes = completionsByLap[idx];
 
       // Sort lanes by timestamp
       laneTimes.sort((a, b) => a.timestamp - b.timestamp);
