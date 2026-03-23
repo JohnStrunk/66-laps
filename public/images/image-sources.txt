@@ -12,3 +12,7 @@ photoreal_tile_03-512x512_0.png
 https://opengameart.org/content/photorealistic-texture-pack-1-photorealtile03-512x512png-0
 License: CC0
 by: Screaming Brain Studios
+
+boat.glb
+https://www.meshy.ai/3d-models/Wooden-boat-v2-019962e1-79b6-78ef-9dd8-5b3892660865
+License: CC0

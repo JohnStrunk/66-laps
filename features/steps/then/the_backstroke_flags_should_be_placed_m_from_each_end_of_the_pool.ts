@@ -1,6 +1,5 @@
 import { Then } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { expect } from '@playwright/test';
 import { waitForCondition } from '../../support/utils';
 
 Then('the backstroke flags should be placed {float}m from each end of the pool', async function(this: CustomWorld, distance: number) {

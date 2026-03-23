@@ -175,7 +175,7 @@ function LaneRopes({ poolLength, lanes, y }: { poolLength: number, lanes: number
     );
 }
 
-function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: number, font: string, displayIndex: number }) {
+function LaneMarker({ x, z, y, font, displayIndex }: { x: number, z: number, y: number, font?: string, displayIndex: number }) {
     return (
         <group position={[x, y + 0.165, z]}>
             <mesh castShadow receiveShadow>
@@ -358,20 +358,19 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
         return tex;
     }, []);
 
-    const fontDataUri = useMemo(() => (isTestMode ? "" : `data:font/ttf;base64,${ATKINSON_BOLD}`), [isTestMode]);
+    const fontDataUri = useMemo(() => (isTestMode ? undefined : `data:font/ttf;base64,${ATKINSON_BOLD}`), [isTestMode]);
+
+    const mockTextureUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
 
     // Call hooks with tiny images in test mode to avoid hangs
-    const concreteTextureReal = useTexture(isTestMode ? "/images/500-empty.png" : "/images/concrete2_seamless_diffuse_1k.png");
-    const tileTextureReal = useTexture(isTestMode ? "/images/500-empty.png" : "/images/photoreal_tile_03-512x512_0.png");
+    const concreteTextureReal = useTexture(isTestMode ? mockTextureUrl : "/images/concrete2_seamless_diffuse_1k.png");
+    const tileTextureReal = useTexture(isTestMode ? mockTextureUrl : "/images/photoreal_tile_03-512x512_0.png");
 
     const concreteTexture = isTestMode ? mockTexture : concreteTextureReal;
     const tileTexture = isTestMode ? mockTexture : tileTextureReal;
 
     // PIP Camera
-    const pipCamera = useMemo(() => {
-        const cam = new PerspectiveCamera(60, 1, 0.1, 1000);
-        return cam;
-    }, []);
+    const pipCameraRef = useRef(new PerspectiveCamera(60, 1, 0.1, 1000));
 
     // State for current and ghost sources
     const positionsRef = useRef<Vector2[]>(Array(MAX_SOURCES).fill(0).map(() => new Vector2(-100, -100)));
@@ -413,17 +412,25 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
             (window as unknown as TestWindow).__TEST_WATER_MATERIAL__ = waterMaterialRef.current ?? undefined;
         }
 
-        const finished = props.swimmers
-            .map((s, i) => {
-                const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
-                return { lane, done: s.isDone() };
-            })
-            .filter(s => s.done);
+        let finishedCount = 0;
+        for (let i = 0; i < props.swimmers.length; i++) {
+            if (props.swimmers[i].isDone()) {
+                finishedCount++;
+            }
+        }
 
-        if (finished.length > props.orderOfFinish.length) {
-            const newlyFinished = finished.filter(f => !props.orderOfFinish.includes(f.lane));
+        if (finishedCount > props.orderOfFinish.length) {
+            const newlyFinished: number[] = [];
+            for (let i = 0; i < props.swimmers.length; i++) {
+                if (props.swimmers[i].isDone()) {
+                    const lane = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                    if (!props.orderOfFinish.includes(lane)) {
+                        newlyFinished.push(lane);
+                    }
+                }
+            }
             if (newlyFinished.length > 0) {
-                props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+                props.onOrderOfFinishChange([...props.orderOfFinish, ...newlyFinished]);
             }
         }
 
@@ -455,15 +462,14 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
         const isRight = props.startingEnd === StartingEnd.RIGHT;
 
         // Update PIP camera
-        pipCamera.position.copy(mainCamera.position);
+        pipCameraRef.current.position.copy(mainCamera.position);
         const pipLookAtX = isRight ? 0 : poolLengthMeters;
         const pipLookAtZ = 0; // Opposite side of the pool
-        pipCamera.lookAt(pipLookAtX, WATER_Y, pipLookAtZ);
+        pipCameraRef.current.lookAt(pipLookAtX, WATER_Y, pipLookAtZ);
         if (mainCamera instanceof PerspectiveCamera) {
-            // eslint-disable-next-line react-hooks/immutability
-            pipCamera.aspect = mainCamera.aspect;
+            pipCameraRef.current.aspect = mainCamera.aspect;
         }
-        pipCamera.updateProjectionMatrix();
+        pipCameraRef.current.updateProjectionMatrix();
 
         // Viewport settings for PIP (1/4 size)
         const w = canvasSize.width / 4;
@@ -497,7 +503,7 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
         renderer.setViewport(pipX, pipY, w, h);
         renderer.setScissor(pipX, pipY, w, h);
         renderer.clearDepth();
-        renderer.render(activeScene, pipCamera);
+        renderer.render(activeScene, pipCameraRef.current);
 
         renderer.setScissorTest(false);
         // Reset clear color for next frame
@@ -540,6 +546,7 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
             const testWin = window as unknown as TestWindow;
             testWin.__TEST_CAMERA__ = camera;
             testWin.__TEST_SCENE__ = scene;
+            testWin.__TEST_READY__ = true;
 
             // In some test environments, gl.domElement might be a mock or detached
             const el = gl.domElement || document.querySelector('canvas');
@@ -572,7 +579,9 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
 
     return (
         <>
-            <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow />
+            <ambientLight intensity={0.4} />
+            <hemisphereLight intensity={0.4} color="#ffffff" groundColor="#000000" />
+            <directionalLight position={[10, 20, 10]} intensity={1.0} castShadow />
 
             <mesh position={[poolLengthMeters / 2, DECK_Y, -5]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <planeGeometry args={[poolLengthMeters + 20, 10]} />
@@ -623,37 +632,33 @@ export default function PoolScene(props: Pool3DProps & { isTestMode?: boolean })
                 <meshStandardMaterial map={textures.floorTexture} />
             </mesh>
 
-            {!isTestMode && (
-                <>
-                    {Array.from({ length: lanes }).map((_, i: number) => (
-                        <LaneMarkings
-                            key={`marking-${i}`}
-                            poolLength={poolLengthMeters}
-                            zCenter={(i + 0.5) * LANE_WIDTH_METERS}
-                            yFloor={FLOOR_Y}
-                        />
-                    ))}
+            {Array.from({ length: lanes }).map((_, i: number) => (
+                <LaneMarkings
+                    key={`marking-${i}`}
+                    poolLength={poolLengthMeters}
+                    zCenter={(i + 0.5) * LANE_WIDTH_METERS}
+                    yFloor={FLOOR_Y}
+                />
+            ))}
 
-                    <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
+            <LaneRopes poolLength={poolLengthMeters} lanes={lanes} y={WATER_Y} />
 
-                    {Array.from({ length: lanes }).map((_, i: number) => {
-                        const isRight = props.startingEnd === StartingEnd.RIGHT;
-                        const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
-                        const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
-                        const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
-                        return (
-                            <LaneMarker
-                                key={i}
-                                x={markerX}
-                                z={markerZ}
-                                y={DECK_Y}
-                                font={fontDataUri}
-                                displayIndex={displayIndex}
-                            />
-                        );
-                    })}
-                </>
-            )}
+            {Array.from({ length: lanes }).map((_, i: number) => {
+                const isRight = props.startingEnd === StartingEnd.RIGHT;
+                const markerX = isRight ? poolLengthMeters + 0.2 : -0.2;
+                const markerZ = (i + 0.5) * LANE_WIDTH_METERS;
+                const displayIndex = props.numbering === NumberingDirection.AWAY ? lanes - i : i + 1;
+                return (
+                    <LaneMarker
+                        key={i}
+                        x={markerX}
+                        z={markerZ}
+                        y={DECK_Y}
+                        font={fontDataUri}
+                        displayIndex={displayIndex}
+                    />
+                );
+            })}
 
             <BackstrokeFlags poolLength={poolLengthMeters} poolWidth={poolWidthMeters} lanes={lanes} />
 

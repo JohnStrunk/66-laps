@@ -85,7 +85,8 @@ export default function Settings(props: SettingsProps) {
     const [simulationMode, setSimulationMode] = useState<SimulationMode>(SimulationMode.THREE_D);
     // Spread is the percentage difference in speed between the fastest and
     // slowest swimmers
-    const [spread, setSpread] = useState<number>(0.05);
+    const [spread, setSpread] = useState<number>(0.1);
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const poolLength = raceLength.slice(-2) as PoolLength;
@@ -162,7 +163,7 @@ export default function Settings(props: SettingsProps) {
                             }
                             const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!NUMBERING_OPTIONS.some(opt => opt.value === String(stringValue))) {
-                                return "Please select a valid lane numbering direction";
+                                return "Please select a valid numbering direction";
                             }
                             return true;
                         }}
@@ -180,11 +181,11 @@ export default function Settings(props: SettingsProps) {
                         selectedKeys={new Set([difficulty.toString()])}
                         validate={(value) => {
                             if (value === "" || value === null || value === undefined) {
-                                return "Please select a difficulty";
+                                return "Please select a difficulty level";
                             }
                             const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!DIFFICULTY_OPTIONS.some(opt => opt.value === String(stringValue))) {
-                                return "Please select a valid difficulty";
+                                return "Please select a valid difficulty level";
                             }
                             return true;
                         }}
@@ -202,11 +203,11 @@ export default function Settings(props: SettingsProps) {
                         selectedKeys={new Set([spread.toString()])}
                         validate={(value) => {
                             if (value === "" || value === null || value === undefined) {
-                                return "Please select a spread";
+                                return "Please select a speed spread";
                             }
                             const stringValue = typeof value === 'object' && 'entries' in value ? Array.from(value as Iterable<unknown>)[0] : Array.isArray(value) ? value[0] : value;
                             if (!SPREAD_OPTIONS.some(opt => opt.value === String(stringValue))) {
-                                return "Please select a valid spread";
+                                return "Please select a valid speed spread";
                             }
                             return true;
                         }}
@@ -266,6 +267,7 @@ export default function Settings(props: SettingsProps) {
                 <Button
                     color="primary"
                     type="submit"
+                    data-testid="start-button"
                 >
                     Start
                 </Button>
