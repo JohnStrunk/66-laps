@@ -66,7 +66,7 @@ function getFilename(race: RaceRecord): string {
     return `${filename}.pdf`;
 }
 
-export function calculateTimelineScale(durationSeconds: number, availableHeight: number): { secondsPerMarker: number, lineHeight: number } {
+function calculateTimelineScale(durationSeconds: number, availableHeight: number): { secondsPerMarker: number, lineHeight: number } {
     const MIN_LINE_HEIGHT = 8;
     const POSSIBLE_MARKERS = [15, 30, 60, 120, 300, 600];
     let secondsPerMarker = 15;
