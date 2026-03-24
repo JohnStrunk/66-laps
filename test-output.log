@@ -1,0 +1,42 @@
+Starting dev server on port 3000...
+Waiting for server to be ready on port 3000...
+Server is ready.
+Preparing coverage directory...
+Executing tests with arguments: features/0012-new-race-configuration.feature
+............................................F--.................................................
+
+Failures:
+
+1) Scenario: Configuring and starting a new race without optional info # features/0012-new-race-configuration.feature:45
+   ✔ Before # features/support/hooks.ts:19
+   ✔ Given the app is loaded # features/steps/given/the_app_is_loaded.ts:5
+   ✔ Given I am on the main menu # features/steps/given/i_am_on_the_main_menu.ts:6
+   ✔ When I tap the "New Race" button # features/steps/when/i_tap_button.ts:5
+   ✔ And I select "500 SC" from the Event Selection dropdown # features/steps/when/i_select_from_the_event_selection_dropdown.ts:5
+   ✔ And I select "8 lanes" from the Lanes dropdown # features/steps/when/i_select_from_the_lanes_dropdown.ts:5
+   ✔ And I clear the Event Number field # features/steps/when/i_clear_the_event_number_field.ts:4
+   ✔ And I clear the Heat Number field # features/steps/when/i_clear_the_heat_number_field.ts:4
+   ✔ And I tap the "Start Race" setup button # features/steps/when/i_tap_confirm_cancel.ts:5
+   ✔ Then the "New Race Setup" dialog should be closed # features/steps/then/the_dialog_should_be_closed.ts:6
+   ✖ And the header should display "500 SC" # features/steps/then/the_header_should_display_info.ts:5
+       Error: Expected header to display "500 SC", but it displayed "1000 SC
+       1 - 8
+       Order:
+       1
+       2
+       3
+       4
+       5
+       6
+       7
+       8"
+           at CustomWorld.<anonymous> (/app/features/steps/then/the_header_should_display_info.ts:30:11)
+   - And the header should not display "Event" # features/steps/then/the_header_should_not_display_info.ts:5
+   - And the header should not display "Heat" # features/steps/then/the_header_should_not_display_info.ts:5
+   ✔ After # features/support/hooks.ts:34
+       Attachment (image/png)
+
+13 scenarios (1 failed, 12 passed)
+70 steps (1 failed, 2 skipped, 67 passed)
+1m36.847s (executing steps: 1m36.415s)
+Stopping background server (PID: 45884) on port 3000...
