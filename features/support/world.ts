@@ -18,6 +18,10 @@ export class CustomWorld extends World {
   verificationError?: unknown;
 
   [key: string]: unknown;
+  pdfDuration?: number;
+  pdfHeight?: number;
+  pdfTimelineScale?: { secondsPerMarker: number; lineHeight: number };
+
 
   constructor(options: IWorldOptions) {
     super(options);
