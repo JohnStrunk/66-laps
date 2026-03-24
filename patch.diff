@@ -1,0 +1,36 @@
+--- features/steps/when/when_i_calculate_timeline_scale.ts
++++ features/steps/when/when_i_calculate_timeline_scale.ts
+@@ -1,9 +1,10 @@
+ import { When } from "@cucumber/cucumber";
+-import { calculateTimelineScale } from "../../../src/modules/pdfGenerator";
+-import { CustomWorld } from "../../support/world";
++import { calculateTimelineScale } from "../../../src/modules/pdfGenerator.ts";
++import { CustomWorld } from "../../support/world.ts";
+
+ When('I calculate the timeline scale', function (this: CustomWorld) {
+--- features/steps/given/a_race_duration_of_n_seconds_and_available_height_of_h.ts
++++ features/steps/given/a_race_duration_of_n_seconds_and_available_height_of_h.ts
+@@ -1,5 +1,5 @@
+ import { Given } from "@cucumber/cucumber";
+-import { CustomWorld } from "../../support/world";
++import { CustomWorld } from "../../support/world.ts";
+
+ Given('a race duration of {float} seconds and available height of {float}', function (this: CustomWorld, duration: number, height: number) {
+--- features/steps/then/the_seconds_per_marker_should_be_n.ts
++++ features/steps/then/the_seconds_per_marker_should_be_n.ts
+@@ -1,5 +1,5 @@
+ import { Then } from "@cucumber/cucumber";
+-import { CustomWorld } from "../../support/world";
++import { CustomWorld } from "../../support/world.ts";
+ import { expect } from "@playwright/test";
+
+ Then('the seconds per marker should be {int}', function (this: CustomWorld, expectedMarker: number) {
+--- features/steps/then/the_line_height_should_be_n.ts
++++ features/steps/then/the_line_height_should_be_n.ts
+@@ -1,5 +1,5 @@
+ import { Then } from "@cucumber/cucumber";
+-import { CustomWorld } from "../../support/world";
++import { CustomWorld } from "../../support/world.ts";
+ import { expect } from "@playwright/test";
+
+ Then('the line height should be {float}', function (this: CustomWorld, expectedLineHeight: number) {
