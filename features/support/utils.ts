@@ -80,7 +80,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
           const text = await it.textContent();
           const innerText = await it.innerText();
           if (text?.trim() === itemText || innerText?.trim() === itemText) {
-            await it.click({ force: true });
+            await it.click();
             found = true;
             break;
           }
@@ -92,7 +92,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       }
 
       if (await targetItem.isVisible()) {
-        await targetItem.click({ force: true });
+        await targetItem.click();
       }
 
       await advanceClock(page, 500);
