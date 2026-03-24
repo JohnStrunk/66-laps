@@ -5,6 +5,7 @@ import { advanceClock, waitForVisible } from '../../support/utils';
 When('I configure a practice race and click {string}', async function (this: CustomWorld, buttonName: string) {
     const button = this.page!.locator(`[data-testid="${buttonName.toLowerCase().replace(/ /g, '-')}-button"]`);
     await waitForVisible(button);
+    await advanceClock(this.page!, 200);
     await button.click({ force: true });
 
     // Wait for the simulation to start
