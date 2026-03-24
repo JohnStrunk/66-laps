@@ -23,7 +23,8 @@ Given('I have a device that does not support WebGL', async function (this: Custo
 
 When('I view the Pool3D component', async function (this: CustomWorld) {
     if (!this.page) throw new Error("Page not initialized");
-    await this.page.goto('http://localhost:3000/practice?testMode=true');
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    await this.page.goto(`${baseUrl}/practice?testMode=true`);
     await this.page.waitForLoadState('networkidle');
 
     // Click on 'Start' button
