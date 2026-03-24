@@ -18,6 +18,16 @@ Feature: New Race Configuration
     And I should see a "Heat Number" field
     And I should see a "Start Race" button
 
+  Scenario: Available race distances in PWA
+    Given I am on the main menu
+    When I tap the "New Race" button
+    Then the Event Selection dropdown should have exactly these options:
+      | 500 SC  |
+      | 1000 SC |
+      | 1650 SC |
+      | 800 LC  |
+      | 1500 LC |
+
   Scenario: Configuring and starting a new race with optional info
     Given I am on the main menu
     When I tap the "New Race" button
