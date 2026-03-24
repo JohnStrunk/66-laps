@@ -66,7 +66,7 @@ function getFilename(race: RaceRecord): string {
     return `${filename}.pdf`;
 }
 
-function calculateTimelineScale(durationSeconds: number, availableHeight: number): { secondsPerMarker: number, lineHeight: number } {
+export function calculateTimelineScale(durationSeconds: number, availableHeight: number): { secondsPerMarker: number, lineHeight: number } {
     const MIN_LINE_HEIGHT = 8;
     const POSSIBLE_MARKERS = [15, 30, 60, 120, 300, 600];
     let secondsPerMarker = 15;
@@ -146,31 +146,20 @@ export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         { content: 'ORDER OF FINISH', colSpan: race.laneCount, styles: { halign: 'center' as const } }
     ];
 
-    const lapTimes = new Map<number, { laneNumber: number, timestamp: number }[]>();
-    for (const lap of laps) {
-        lapTimes.set(lap, []);
-    }
-
-    for (const lane of race.lanes) {
-        const laneLatest = new Array(maxLaps + 1).fill(0);
-
-        for (const event of lane.events) {
-            for (let count = event.prevCount + 1; count <= event.newCount; count++) {
-                if (count <= maxLaps && event.timestamp > laneLatest[count]) {
-                    laneLatest[count] = event.timestamp;
-                }
-            }
-        }
-
-        for (const lapNum of laps) {
-            if (laneLatest[lapNum] > 0) {
-                lapTimes.get(lapNum)!.push({ laneNumber: lane.laneNumber, timestamp: laneLatest[lapNum] });
-            }
-        }
-    }
-
     const lapOOFData = laps.map(lapNum => {
-        const laneTimes = lapTimes.get(lapNum) || [];
+        const laneTimes: { laneNumber: number, timestamp: number }[] = [];
+        race.lanes.forEach(lane => {
+            const completions = lane.events.filter(e => e.newCount >= lapNum && e.prevCount < lapNum);
+            if (completions.length > 0) {
+                const latestCompletion = completions.reduce((latest, current) =>
+                    current.timestamp > latest.timestamp ? current : latest
+                );
+                laneTimes.push({
+                    laneNumber: lane.laneNumber,
+                    timestamp: latestCompletion.timestamp
+                });
+            }
+        });
         laneTimes.sort((a, b) => a.timestamp - b.timestamp);
 
         const row = [lapNum.toString()];

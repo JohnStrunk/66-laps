@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
   // Settings for deploying to GitHub Pages
   output: "export", // Static HTML export
   allowedDevOrigins: ["localhost", "127.0.0.1"],
-  poweredByHeader: false,
 };
 
 export default withSentryConfig(withPWA(nextConfig), {

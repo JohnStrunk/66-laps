@@ -22,8 +22,6 @@ class MockSwimmer implements ISwimmer {
     private _location: number;
     private _direction: Direction;
     public readonly avatar: Avatar;
-    public readonly lapCount: number = 2;
-    public readonly lapTimes: number[] = [15, 15];
 
     constructor(location: number, direction: Direction) {
         this._location = location;
