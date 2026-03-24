@@ -40,6 +40,7 @@ type TestData = {
         position: { x: number, y: number, z: number };
         rotation: { y: number };
     };
+    swimmers: { location: number; direction: number }[];
 };
 
 export default function Pool3D(props: Pool3DProps) {
@@ -154,7 +155,8 @@ export default function Pool3D(props: Pool3DProps) {
                         fov: 60,
                         corner: pipCorner
                     },
-                    pipPosition: pipCorner
+                    pipPosition: pipCorner,
+                    swimmers: []
                 };
 
                 const currentSwimmers = swimmersRef.current;
@@ -163,6 +165,7 @@ export default function Pool3D(props: Pool3DProps) {
                 }
                 currentSwimmers.forEach((s, i) => {
                     const { location: loc, direction: dir } = s.where();
+                    data.swimmers.push({ location: loc, direction: dir });
                     // SwimmerModel location is 0.0 to 1.0 along CURRENT lap.
                     // travelRange is poolLength - 1.5 (swimmer length)
                     const travelRange = poolLengthMeters - 1.5;
