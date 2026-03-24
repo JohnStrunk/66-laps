@@ -34,6 +34,16 @@ export interface ISwimmer {
     readonly avatar: Avatar;
 
     /**
+     * The number of laps in the race.
+     */
+    readonly lapCount: number;
+
+    /**
+     * The lap times for the swimmer.
+     */
+    readonly lapTimes: number[];
+
+    /**
      * Determines the swimmer's current position and direction in the pool.
      *
      * @param currentTimeMs - The current time in milliseconds since the Unix
@@ -84,6 +94,16 @@ export class SwimmerModel implements ISwimmer {
     public readonly avatar: Avatar;
 
     /**
+     * The number of laps in the race.
+     */
+    public readonly lapCount: number;
+
+    /**
+     * The lap times for the swimmer.
+     */
+    public readonly lapTimes: number[];
+
+    /**
      * Creates an instance of the SwimmerModel.
      *
      * @param lapTimes - An array of lap times (in seconds) for the swimmer.
@@ -94,6 +114,8 @@ export class SwimmerModel implements ISwimmer {
     constructor(lapTimes: number[], startTimeMs: number = Date.now(), avatar?: Avatar) {
         this._startTimeMs = startTimeMs;
         this._lapTimes = lapTimes;
+        this.lapTimes = lapTimes;
+        this.lapCount = lapTimes.length;
         this.avatar = avatar || AVATARS[Math.floor(Math.random() * AVATARS.length)];
     }
 
@@ -107,6 +129,9 @@ export class SwimmerModel implements ISwimmer {
      */
     where(currentTimeMs: number = Date.now()): SwimVector {
         let elapsedTimeMs = currentTimeMs - this._startTimeMs;
+        // If the race has an odd number of laps (e.g., 50 LC = 1 lap),
+        // the swimmer starts at the turn end and moves toward the start.
+        // If even (e.g., 50 SC = 2 laps), they start at start and move toward turn.
         let direction: Direction = this._lapTimes.length % 2 === 0
             ? Direction.TOTURN
             : Direction.TOSTART;
