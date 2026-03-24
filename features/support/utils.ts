@@ -56,6 +56,18 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
   const trigger = page.locator(`[data-testid="${triggerTestId}"]`);
   await waitForVisible(trigger);
 
+  const tagName = await trigger.evaluate(el => el.tagName.toLowerCase());
+
+  if (tagName === 'select') {
+    // Native select handling
+    try {
+      await trigger.selectOption({ label: itemText });
+    } catch {
+      await trigger.selectOption(itemText);
+    }
+    return;
+  }
+
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       await trigger.click({ force: true });
@@ -66,13 +78,17 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
       const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
-      const itemLocator = page.locator(popoverSelector).filter({ visible: true }).locator(itemSelector);
+      const popoverLocator = page.locator(popoverSelector).filter({ visible: true }).first();
+      const itemLocator = popoverLocator.locator(itemSelector);
 
       // Use exact text match pattern to avoid substring matching issues (e.g. 500 matching 1500)
       const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*$`, 'i') }).first();
 
       try {
         await targetItem.waitFor({ state: 'visible', timeout: 3000 });
+        await targetItem.click();
+        // Ensure dropdown is closed
+        await page.keyboard.press('Escape');
       } catch {
         const allItems = await itemLocator.all();
         let found = false;
@@ -81,18 +97,13 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
           const innerText = await it.innerText();
           if (text?.trim() === itemText || innerText?.trim() === itemText) {
             await it.click();
+            // Ensure dropdown is closed
+            await page.keyboard.press('Escape');
             found = true;
             break;
           }
         }
         if (!found) throw new Error(`Item "${itemText}" not found`);
-        await advanceClock(page, 500);
-        await page.waitForTimeout(100);
-        return;
-      }
-
-      if (await targetItem.isVisible()) {
-        await targetItem.click();
       }
 
       await advanceClock(page, 500);
@@ -119,7 +130,9 @@ export const waitForVisible = async (locator: Locator, timeoutMs: number = 5000)
     await page.waitForTimeout(10);
   }
 
-  await locator.first().waitFor({ state: 'visible', timeout: 5000 });
+  if (!(await locator.first().isVisible())) {
+    throw new Error(`Element not visible after ${timeoutMs}ms`);
+  }
 };
 
 export const waitForHidden = async (locator: Locator, timeoutMs: number = 5000) => {
