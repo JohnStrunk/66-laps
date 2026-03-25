@@ -1,6 +1,7 @@
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord, LapEvent } from '../../support/store-type';
+import { expect } from '@playwright/test';
 
 Given('I have a race in my history with {string} laps', async function (this: CustomWorld, lapCount: string) {
   const count = parseInt(lapCount, 10);
@@ -49,4 +50,15 @@ Given('I have a race in my history with {string} laps', async function (this: Cu
     };
     localStorage.setItem('bell-lap-storage', JSON.stringify(persistedState));
   }, count);
+
+  const { historyCount, firstLaneCount } = await this.page!.evaluate(() => {
+    const history = (window as unknown as TestWindow).__bellLapStore.getState().history;
+    return {
+      historyCount: history.length,
+      firstLaneCount: history[0]?.lanes[0]?.count
+    };
+  });
+
+  expect(historyCount).toBeGreaterThan(0);
+  expect(firstLaneCount).toBe(count);
 });

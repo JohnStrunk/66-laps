@@ -1,6 +1,7 @@
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord } from '../../support/store-type';
+import { expect } from '@playwright/test';
 
 Given('I have a race in my history that lasted {string}', async function (this: CustomWorld, duration: string) {
   let durationMs = 0;
@@ -44,4 +45,10 @@ Given('I have a race in my history that lasted {string}', async function (this: 
     };
     localStorage.setItem('bell-lap-storage', JSON.stringify(persistedState));
   }, durationMs);
+
+  const historyLength = await this.page!.evaluate(() => {
+    return (window as unknown as TestWindow).__bellLapStore.getState().history.length;
+  });
+
+  expect(historyLength).toBeGreaterThan(0);
 });

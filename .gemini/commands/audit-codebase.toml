@@ -3,13 +3,28 @@ prompt = """
 - Review the software architecture and design patterns used in the codebase.
   Identify any areas where the design could be improved for better
   maintainability, scalability, or performance.
-- Analyze the tests:
-  - Ensure that all test steps have appropriate assertions to validate the
-    expected outcomes and that they are testing the intended functionality
-    effectively. Ensure that their name reflects the functionality being tested.
-  - Ensure that all steps are used by at least one test. If there are any steps
-    that are not used by any tests, identify them and suggest whether they
-    should be removed or if additional tests should be created to utilize them.
+- Review the dependencies in `package.json` and ensure that they are necessary.
+  Remove any unused dependencies.
+- Audit the tests in this repository.
+  - For each feature file, determine whether additional scenarios should be
+    added to increase the test coverage
+  - Use `.github/find-unused-steps.sh` to locate unused step files and remove
+    them.
+  - For each step file:
+    - Ensure it only contains one step, and that the name matches the file name.
+    - Ensure that it properly asserts what it's name implies.
+    - If the step file is templatized, ensure the template parameters are used
+      correctly.
+    - Audit the structure of each step to ensure it is properly structured to
+      prevent flakes and timing issues.
+  - For the "given" type of steps, ensure they put the system into the desired
+    state by testing (asserting) the resulting state at the end of their
+    execution.
+  - Ensure common code is factored out into utility functions to keep the code
+    DRY.
+  - Ensure there are no `console.log` messages left in the main code from prior
+    debugging efforts.
+  - All timeouts in the tests should be set to no more than 10 seconds.
   - Review the test coverage to ensure that all critical paths and edge cases are
     adequately tested. Identify any gaps in test coverage and suggest areas
     where additional tests should be added.

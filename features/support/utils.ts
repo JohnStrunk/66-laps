@@ -176,5 +176,5 @@ export const waitFor3DReady = async (page: Page) => {
     const hasData = await container.evaluate((el) => el.hasAttribute('data-test-data'));
     const testReady = await page.evaluate(() => (window as unknown as import('../../src/modules/testTypes').TestWindow).__TEST_READY__ === true);
     return hasData && testReady;
-  }, 20000);
+  }, 10000);
 };

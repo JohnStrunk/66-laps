@@ -151,7 +151,7 @@ Feature: Practice View Modes
     Given I set the "Race Length" setting to "500 SC"
     And I click "Start"
     And I toggle the view selector to "3D"
-    When I wait for 30 seconds to elapse
+    When I wait for 60 seconds to elapse
     Then the swimmers should be at various positions in the pool
     And the swimmers should have completed at least one turn and be heading back
 

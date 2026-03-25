@@ -2,6 +2,7 @@ import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { EventType } from '../../../src/modules/bellLapStore';
 import { TestWindow } from '../../support/store-type';
+import { expect } from '@playwright/test';
 
 Given('Bell Lap is configured for event {int} heat {int} for {string}', async function (this: CustomWorld, eventNum: number, heatNum: number, eventName: string) {
   await this.page!.evaluate(({ e, h, name }) => {
@@ -11,4 +12,19 @@ Given('Bell Lap is configured for event {int} heat {int} for {string}', async fu
     store.getState().setEvent(name as EventType);
     store.getState().setSetupDialogOpen(false);
   }, { e: eventNum, h: heatNum, name: eventName });
+
+  const { eventNumber, heatNumber, event, isSetupDialogOpen } = await this.page!.evaluate(() => {
+    const store = (window as unknown as TestWindow).__bellLapStore;
+    return {
+      eventNumber: store.getState().eventNumber,
+      heatNumber: store.getState().heatNumber,
+      event: store.getState().event,
+      isSetupDialogOpen: store.getState().isSetupDialogOpen
+    };
+  });
+
+  expect(eventNumber).toBe(eventNum.toString());
+  expect(heatNumber).toBe(heatNum.toString());
+  expect(event).toBe(eventName);
+  expect(isSetupDialogOpen).toBe(false);
 });

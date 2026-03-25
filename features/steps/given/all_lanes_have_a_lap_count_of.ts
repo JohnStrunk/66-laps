@@ -2,6 +2,7 @@ import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
 import { EVENT_CONFIGS } from '../../../src/modules/bellLapStore';
+import { expect } from '@playwright/test';
 
 Given('all lanes have a lap count of {int}', async function (this: CustomWorld, count: number) {
   if (!this.page) throw new Error('No page found');
@@ -36,4 +37,13 @@ Given('all lanes have a lap count of {int}', async function (this: CustomWorld, 
     });
     store.setState({ lanes: newLanes });
   }, { targetCount: count, configs: EVENT_CONFIGS });
+
+  const lapCounts = await this.page.evaluate(() => {
+    const store = (window as unknown as TestWindow).__bellLapStore;
+    return store.getState().lanes.map((l: { count: number }) => l.count);
+  });
+
+  for (const lapCount of lapCounts) {
+    expect(lapCount).toBe(count);
+  }
 });

@@ -42,6 +42,10 @@ This document provides essential information for AI agents working on the
 - **Package Management:** This project strictly uses **Yarn**. Never use `npm`
   for installing packages or running scripts. Ensure `yarn.lock` is updated and
   not `package-lock.json`.
+- **Dependency Audits:** Regularly audit `package.json` for unused dependencies
+  (e.g., using `npx depcheck`, but beware of false positives for peer
+  dependencies like `framer-motion` or styling tools). Remove dependencies
+  that are no longer actively used in the codebase.
 
 ## Essential Commands
 
@@ -197,6 +201,16 @@ This document provides essential information for AI agents working on the
 - **Feature Coverage:** All features that are implemented or changed MUST be
   described in a feature file (`features/*.feature`) and have corresponding
   test scenarios that verify the functionality.
+- **Strict One-to-One Step Mapping:** Each step file MUST contain only ONE
+  step definition (Given, When, or Then) and its name should match the file
+  name. Do not group multiple steps into a single file.
+- **Assertive Setup:** All `Given` steps MUST ensure they put the system into
+  the desired state by testing (asserting) the resulting state at the end of
+  their execution. Do not assume the setup succeeded.
+- **Fast Execution / Strict Timeouts:** All timeouts in the tests must be set
+  to no more than 10 seconds. Time-based tests should aggressively use
+  `advanceClock()` to bypass real-time waiting rather than looping or waiting
+  for long periods of real time.
 - **Meaningful Tests:** Never create tests that "pass" without actually
   verifying the intended functionality. Steps that are not yet implemented
   should use Cucumber's `return 'pending';` rather than a "noop" return. Once a

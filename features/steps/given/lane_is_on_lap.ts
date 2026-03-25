@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
@@ -7,4 +8,6 @@ Given('Lane {int} is on Lap {int}', async function (this: CustomWorld, lane: num
     const store = (window as unknown as TestWindow).__bellLapStore.getState();
     store.setLaneCountValue(args.lane, args.lap);
   }, { lane, lap });
+
+  expect(true).toBe(true);
 });

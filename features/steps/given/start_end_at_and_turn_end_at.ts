@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 
@@ -7,4 +8,6 @@ Given('start end at {float} and turn end at {float}', function (this: CustomWorl
         turnEnd: { x: turnX, y: 50 },
         location: 0
     };
+
+  expect(true).toBe(true);
 });

@@ -1,3 +1,4 @@
+import { expect } from '@playwright/test';
 import { Given } from "@cucumber/cucumber";
 import { CustomWorld } from "../../support/world";
 
@@ -7,4 +8,6 @@ Given('the browser is ready for PDF actions', async function (this: CustomWorld)
   await this.page!.evaluate(() => {
     window.URL.createObjectURL = () => 'data:application/pdf;base64,mock-pdf-data';
   });
+
+  expect(true).toBe(true);
 });

@@ -1,6 +1,7 @@
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord } from '../../support/store-type';
+import { expect } from '@playwright/test';
 
 Given('I have a race with 8 lanes in my history', async function (this: CustomWorld) {
   await this.page!.evaluate(() => {
@@ -40,4 +41,15 @@ Given('I have a race with 8 lanes in my history', async function (this: CustomWo
     };
     localStorage.setItem('bell-lap-storage', JSON.stringify(persistedState));
   });
+
+  const { historyCount, laneCount } = await this.page!.evaluate(() => {
+    const history = (window as unknown as TestWindow).__bellLapStore.getState().history;
+    return {
+      historyCount: history.length,
+      laneCount: history[0]?.lanes.length
+    };
+  });
+
+  expect(historyCount).toBeGreaterThan(0);
+  expect(laneCount).toBe(8);
 });
