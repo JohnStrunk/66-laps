@@ -1,0 +1,85 @@
+import os
+
+content1 = """import { Given } from '@cucumber/cucumber';
+import { CustomWorld } from '../../support/world';
+import { selectDropdownItem } from '../../support/utils';
+import { Page } from 'playwright';
+
+async function configurePracticeRace(page: Page, lanes: number, mode: '2D Overhead' | '3D Perspective', laps: number) {
+    // We use the laps parameter to verify the intent, even if we force 500 SC (20 laps) for now
+    if (laps <= 0) throw new Error('Laps must be positive');
+
+    // 1. Set Simulation Mode
+    const currentMode = await page.locator('[data-testid="settings-Simulation Mode"]').textContent();
+    if (!currentMode?.includes(mode)) {
+        await selectDropdownItem(page, 'settings-Simulation Mode', mode);
+    }
+
+    // 2. Set Number of Lanes
+    const currentLanes = await page.locator('[data-testid="settings-Number of Lanes"]').textContent();
+    if (!currentLanes?.includes(lanes.toString())) {
+        await selectDropdownItem(page, 'settings-Number of Lanes', lanes.toString());
+    }
+
+    // 3. Set Race Length (Use 500 SC for tests)
+    const currentLength = await page.locator('[data-testid="settings-Race Length"]').textContent();
+    if (!currentLength?.includes('500 SC')) {
+        await selectDropdownItem(page, 'settings-Race Length', '500 SC');
+    }
+
+    // 4. Set Spread to Minimal
+    const currentSpread = await page.locator('[data-testid="settings-Spread"]').textContent();
+    if (!currentSpread?.includes('Minimal')) {
+        await selectDropdownItem(page, 'settings-Spread', 'Minimal');
+    }
+}
+
+Given('I configure a practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
+    await configurePracticeRace(this.page!, lanes, '2D Overhead', laps);
+});
+"""
+
+content2 = """import { Given } from '@cucumber/cucumber';
+import { CustomWorld } from '../../support/world';
+import { selectDropdownItem } from '../../support/utils';
+import { Page } from 'playwright';
+
+async function configurePracticeRace(page: Page, lanes: number, mode: '2D Overhead' | '3D Perspective', laps: number) {
+    // We use the laps parameter to verify the intent, even if we force 500 SC (20 laps) for now
+    if (laps <= 0) throw new Error('Laps must be positive');
+
+    // 1. Set Simulation Mode
+    const currentMode = await page.locator('[data-testid="settings-Simulation Mode"]').textContent();
+    if (!currentMode?.includes(mode)) {
+        await selectDropdownItem(page, 'settings-Simulation Mode', mode);
+    }
+
+    // 2. Set Number of Lanes
+    const currentLanes = await page.locator('[data-testid="settings-Number of Lanes"]').textContent();
+    if (!currentLanes?.includes(lanes.toString())) {
+        await selectDropdownItem(page, 'settings-Number of Lanes', lanes.toString());
+    }
+
+    // 3. Set Race Length (Use 500 SC for tests)
+    const currentLength = await page.locator('[data-testid="settings-Race Length"]').textContent();
+    if (!currentLength?.includes('500 SC')) {
+        await selectDropdownItem(page, 'settings-Race Length', '500 SC');
+    }
+
+    // 4. Set Spread to Minimal
+    const currentSpread = await page.locator('[data-testid="settings-Spread"]').textContent();
+    if (!currentSpread?.includes('Minimal')) {
+        await selectDropdownItem(page, 'settings-Spread', 'Minimal');
+    }
+}
+
+Given('I configure a 3D practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
+    await configurePracticeRace(this.page!, lanes, '3D Perspective', laps);
+});
+"""
+
+with open("features/steps/given/i_configure_a_practice_race_with_lanes_and_laps.ts", "w") as f:
+    f.write(content1)
+
+with open("features/steps/given/i_configure_a_3d_practice_race_with_lanes_and_laps.ts", "w") as f:
+    f.write(content2)

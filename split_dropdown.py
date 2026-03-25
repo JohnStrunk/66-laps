@@ -1,4 +1,6 @@
-import { Then, DataTable } from '@cucumber/cucumber';
+import os
+
+content1 = """import { Then, DataTable } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { waitForVisible, advanceClock } from '../../support/utils';
 import { expect } from '@playwright/test';
@@ -35,9 +37,16 @@ Then('the {string} setting should have exactly these options:', async function (
         expect(actualOptions.map(o => o.trim())).toEqual(expectedOptions);
     }
 });
+"""
+
+content2 = """import { Then, DataTable } from '@cucumber/cucumber';
+import { CustomWorld } from '../../support/world';
+import { waitForVisible, advanceClock } from '../../support/utils';
+import { expect } from '@playwright/test';
 
 Then('the Event Selection dropdown should have exactly these options:', async function (this: CustomWorld, dataTable: DataTable) {
-    const expectedOptions = dataTable.raw().map((row: string[]) => row[0]);    const trigger = this.page!.locator('[data-testid="event-selection-dropdown"]');
+    const expectedOptions = dataTable.raw().map((row: string[]) => row[0]);
+    const trigger = this.page!.locator('[data-testid="event-selection-dropdown"]');
     await waitForVisible(trigger);
     await trigger.click({ force: true });
 
@@ -57,3 +66,12 @@ Then('the Event Selection dropdown should have exactly these options:', async fu
 
     expect(actualOptions.map(o => o.trim())).toEqual(expectedOptions);
 });
+"""
+
+with open("features/steps/then/the_setting_should_have_exactly_these_options.ts", "w") as f:
+    f.write(content1)
+
+with open("features/steps/then/the_event_selection_dropdown_should_have_exactly_these_options.ts", "w") as f:
+    f.write(content2)
+
+os.remove("features/steps/then/the_dropdown_should_have_exactly_these_options.ts")

@@ -1,11 +1,11 @@
 import { Given, DataTable } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { TestWindow, RaceRecord, LapEvent } from '../../support/store-type';
+import { TestWindow, RaceRecord, LapEvent, EventType } from '../../support/store-type';
 
-Given('I have a race in my history with the following events:', async function (this: CustomWorld, table: DataTable) {
+Given('I have a(n) {string} race in my history with the following events:', async function (this: CustomWorld, eventName: string, table: DataTable) {
   const data = table.hashes();
 
-  await this.page!.evaluate(({ eventsData }) => {
+  await this.page!.evaluate(({ eventsData, event }) => {
     const store = (window as unknown as TestWindow).__bellLapStore;
 
     // Group events by lane
@@ -45,12 +45,12 @@ Given('I have a race in my history with the following events:', async function (
     const record: RaceRecord = {
       id: 'test-race-id',
       startTime: 0,
-      event: '500 SC',
+      event: event as EventType,
       laneCount: 8,
       eventNumber: '1',
       heatNumber: '1',
       lanes: lanes as unknown as RaceRecord['lanes']
     };
     store.setState({ history: [record] });
-  }, { eventsData: data });
+  }, { eventsData: data, event: eventName });
 });

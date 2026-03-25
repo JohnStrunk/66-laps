@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 
 // Set default timeout to 60 seconds
-setDefaultTimeout(60000);
+setDefaultTimeout(10000);
 
 let globalBrowser: Browser | undefined;
 
