@@ -85,7 +85,7 @@ export function calculateTimelineScale(durationSeconds: number, availableHeight:
     return { secondsPerMarker, lineHeight };
 }
 
-export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
+async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
     const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'pt',
