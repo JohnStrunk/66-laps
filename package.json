@@ -57,7 +57,7 @@
     "@types/react-dom": "19.2.3",
     "@vitest/browser": "4.1.0",
     "@vitest/browser-playwright": "4.1.0",
-    "eslint": "9.39.4",
+    "eslint": "10.1.0",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-storybook": "10.2.19",
     "jsdom": "29.0.1",
