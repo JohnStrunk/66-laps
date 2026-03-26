@@ -13,6 +13,7 @@
     "build-storybook": "storybook build",
     "test": "./scripts/test.sh",
     "test:static": "./scripts/test.sh --static",
+    "test:profile": "./scripts/test.sh --profile",
     "coverage:report": "NODE_OPTIONS=\"--import tsx\" tsx scripts/generate-coverage.ts",
     "coverage:clean": "rm -rf test-results/coverage test-results/report && mkdir -p test-results/coverage test-results/report"
   },

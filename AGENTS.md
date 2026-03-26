@@ -68,6 +68,9 @@ This document provides essential information for AI agents working on the
 - **Type Check:** `yarn tsc --noEmit`
 - **Storybook:** `yarn storybook`
 - **All-in-one Lint:** `./.github/lint-all.sh`
+- **Profiling:** `yarn test:profile` or `./scripts/test.sh --profile`.
+  Generates a summary of the slowest step definitions and individual step
+  instances to identify performance bottlenecks.
 
 ## Development Standards
 

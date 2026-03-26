@@ -8,6 +8,7 @@ set -e
 PORT=3000
 STATIC=false
 USE_EXISTING=false
+PROFILE=false
 SERVER_PID=""
 
 # Help/Usage information
@@ -19,6 +20,7 @@ Options:
   -s, --static         Run tests against a static build (Next.js build + serve).
   -e, --use-existing   Assume a server is already running on the target port.
   -p, --port PORT      Specify the port to use (default: 3000).
+  -r, --profile        Enable test profiling (generates a timing summary).
   -h, --help           Show this help message.
 
 Cucumber-JS arguments:
@@ -49,6 +51,10 @@ while [ "$#" -gt 0 ]; do
         -p|--port)
             PORT="$2"
             shift 2
+            ;;
+        -r|--profile)
+            PROFILE=true
+            shift
             ;;
         -h|--help)
             usage
@@ -141,10 +147,22 @@ fi
 echo "Preparing coverage directory..."
 yarn coverage:clean
 
+# If profiling is enabled, add the JSON formatter to the arguments
+if [ "$PROFILE" = true ]; then
+    mkdir -p test-results
+    set -- "$@" --format json:test-results/results.json
+fi
+
 echo "Executing tests with arguments: $*"
 BASE_URL="http://localhost:$PORT" \
 NODE_OPTIONS="--import tsx" \
 ./node_modules/.bin/cucumber-js "$@"
+
+if [ "$PROFILE" = true ]; then
+    echo "Tests successful. Generating profile summary..."
+    NODE_OPTIONS="--import tsx" \
+    tsx scripts/profile-summary.ts
+fi
 
 echo "Tests successful. Generating coverage report..."
 yarn coverage:report
