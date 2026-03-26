@@ -68,7 +68,7 @@ function getFilename(race: RaceRecord): string {
 }
 
 
-export async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
+async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
     const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'pt',
