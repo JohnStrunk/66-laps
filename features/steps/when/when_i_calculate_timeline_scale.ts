@@ -1,5 +1,5 @@
 import { When } from "@cucumber/cucumber";
-import { calculateTimelineScale } from "../../../src/modules/pdfGenerator";
+import { calculateTimelineScale } from "../../../src/modules/pdf/timelineScale";
 import { CustomWorld } from "../../support/world";
 
 When('I calculate the timeline scale', function (this: CustomWorld) {
