@@ -5,17 +5,14 @@ import { Button, Tooltip } from "@heroui/react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
-import { useEffect, useState } from "react";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 export default function LightDark() {
-    const [mounted, setMounted] = useState(false)
+  const mounted = useIsMounted();
     const { theme, setTheme } = useTheme()
     const postHog = usePostHog();
 
-    useEffect(() => {
-        const handle = requestAnimationFrame(() => setMounted(true));
-        return () => cancelAnimationFrame(handle);
-    }, [])
+
 
     if (!mounted) return null
 

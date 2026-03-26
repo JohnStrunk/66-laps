@@ -32,6 +32,6 @@ async function configurePracticeRace(page: Page, lanes: number, mode: '2D Overhe
     }
 }
 
-Given('I configure a practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
-    await configurePracticeRace(this.page!, lanes, '2D Overhead', laps);
+Given('I configure a 3D practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
+    await configurePracticeRace(this.page!, lanes, '3D Perspective', laps);
 });
