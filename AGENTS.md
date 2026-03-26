@@ -281,3 +281,20 @@ Refer to these files for detailed guidance on specific topics:
   `const text = await locator.textContent(); expect(text).toBe(expected);`).
   When more complex logic is needed, wrap the assertion inside
   `await expect.poll(async () => { ... }).toBe(true)`.
+
+## General
+
+- **Dependency Management:** Regularly audit dependencies (e.g., using
+  `depcheck`). Remove unused dependencies, ensure correct categorization
+  (dependencies vs devDependencies), and ensure that essential testing
+  packages are retained.
+- **Hook Encapsulation:** When common hook patterns are identified, such as
+  hydration checks using `useIsMounted`, factor them out into isolated
+  hooks within the `src/hooks` directory instead of duplicating them across
+  components.
+- **Timeout Management:** All feature step timeouts MUST be 10,000 milliseconds
+  (10 seconds) or less. Test timeouts should be globally enforced via
+  `setDefaultTimeout` in the support hooks and rigorously adhered to.
+- **Console Log Hygiene:** Ensure that no debugging artifacts
+  (`console.log`, `console.warn`, etc.) remain in `features/` or the source
+  tree unless explicitly part of an expected output mechanism.

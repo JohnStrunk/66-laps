@@ -1,6 +1,5 @@
-import { Given, When, Then } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
-import { CustomWorld } from '../support/world';
+import { Given } from '@cucumber/cucumber';
+import { CustomWorld } from '../../support/world';
 
 Given('I have a device that does not support WebGL', async function (this: CustomWorld) {
     if (!this.page) throw new Error("Page not initialized");
@@ -19,20 +18,4 @@ Given('I have a device that does not support WebGL', async function (this: Custo
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
     });
-});
-
-When('I view the Pool3D component', async function (this: CustomWorld) {
-    if (!this.page) throw new Error("Page not initialized");
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    await this.page.goto(`${baseUrl}/practice?testMode=true`);
-    await this.page.waitForLoadState('networkidle');
-
-    // Click on 'Start' button
-    await this.page.getByTestId('start-button').click();
-});
-
-Then('I should see the WebGL fallback message', async function (this: CustomWorld) {
-    if (!this.page) throw new Error("Page not initialized");
-    const fallbackText = this.page.locator('text="WebGL not available. Shadow Mock is active."');
-    await expect(fallbackText).toBeVisible({ timeout: 5000 });
 });
