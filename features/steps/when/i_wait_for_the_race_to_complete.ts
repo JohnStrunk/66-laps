@@ -1,20 +1,31 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { advanceClock, waitForCondition } from '../../support/utils';
+import { advanceClock } from '../../support/utils';
 import { TestWindow } from '../../../src/modules/testTypes';
 import { ISwimmer } from '../../../src/modules/SwimmerModel';
 
 When('I wait for the race to complete', async function (this: CustomWorld) {
-    // Fast-forward by a large amount of time to instantly finish the race
-    // We can jump ahead 10 minutes (600,000 ms)
-    await advanceClock(this.page!, 600000);
+    // A 1500m race might take 15-20 minutes depending on speed.
+    // Instead of waiting in real-time, aggressively fast-forward the simulation
+    // in chunks until all swimmers are done.
 
-    await waitForCondition(this.page!, async () => {
-        return await this.page!.evaluate(() => {
+    let isDone = false;
+    for (let i = 0; i < 400; i++) { // Max ~33 minutes of simulated time
+        await advanceClock(this.page!, 5000); // 5 seconds per tick
+
+        isDone = await this.page!.evaluate(() => {
             const testWin = window as unknown as TestWindow;
             const swimmers = testWin.__TEST_SWIMMERS__;
             if (!swimmers || swimmers.length === 0) return false;
             return swimmers.every((s: ISwimmer) => s.isDone(Date.now()));
         });
-    }, 5000);
+
+        if (isDone) {
+            break;
+        }
+    }
+
+    if (!isDone) {
+        throw new Error('Race did not complete within the simulated time limit.');
+    }
 });
