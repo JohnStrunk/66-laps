@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "ts", "tsx"],
   // Settings for deploying to GitHub Pages
   output: "export", // Static HTML export
+  poweredByHeader: false,
   allowedDevOrigins: ["localhost", "127.0.0.1"],
 };
 
