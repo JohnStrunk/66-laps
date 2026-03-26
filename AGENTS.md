@@ -289,8 +289,9 @@ Refer to these files for detailed guidance on specific topics:
   (dependencies vs devDependencies), and ensure that essential testing
   packages are retained.
 - **Hook Encapsulation:** When common hook patterns are identified, such as
-  hydration checks using `useIsMounted`, factor them out into isolated hooks
-  within the `src/hooks` directory instead of duplicating them across components.
+  hydration checks using `useIsMounted`, factor them out into isolated
+  hooks within the `src/hooks` directory instead of duplicating them across
+  components.
 - **Timeout Management:** All feature step timeouts MUST be 10,000 milliseconds
   (10 seconds) or less. Test timeouts should be globally enforced via
   `setDefaultTimeout` in the support hooks and rigorously adhered to.
