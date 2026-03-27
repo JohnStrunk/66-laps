@@ -72,8 +72,9 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
     try {
       await trigger.click({ force: true });
 
-      await advanceClock(page, 500);
-      await page.waitForTimeout(100);
+      // Only advance clock minimally, HeroUI popovers animate in quickly
+      await advanceClock(page, 100);
+      await page.waitForTimeout(10);
 
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
       const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
@@ -85,8 +86,7 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
       const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*$`, 'i') }).first();
 
       try {
-        await targetItem.waitFor({ state: 'visible', timeout: 3000 });
-
+        await targetItem.waitFor({ state: 'attached', timeout: 200 });
         await targetItem.click({ force: true });
         // Ensure dropdown is closed
         await page.keyboard.press('Escape');

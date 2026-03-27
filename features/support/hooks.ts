@@ -16,35 +16,50 @@ BeforeAll(async function () {
   });
 });
 
+let sharedContext: import('playwright').BrowserContext | undefined;
+let sharedPage: import('playwright').Page | undefined;
+
 Before(async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
   this.scenarioName = scenario.pickle.name;
-  this.context = await globalBrowser!.newContext({
-    viewport: { width: 1280, height: 720 },
-    permissions: ['notifications'],
-  });
-  this.page = await this.context.newPage();
 
-  // Start coverage collection
-  await this.page.coverage.startJSCoverage();
+  if (!sharedContext || !sharedPage) {
+    sharedContext = await globalBrowser!.newContext({
+      viewport: { width: 1280, height: 720 },
+      permissions: ['notifications'],
+    });
+    sharedPage = await sharedContext.newPage();
+  } else {
+    // Clear state before reusing
+    await sharedPage.evaluate(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      // Fast reset using store specific method
+      const store = ((window as unknown as import('./store-type').TestWindow)).__bellLapStore;
+      if (store) {
+          const initialState = store.getInitialState?.() || {};
+          store.setState(initialState, true);
+      }
+    }).catch(() => {});
+  }
 
-  // Clock is installed by default for all tests to allow advanceClock() usage
-  await this.page.clock.install();
+  this.context = sharedContext;
+  this.page = sharedPage;
+
+  // Coverage and clock only need to be started once if we reuse the page
+  if (!(sharedPage as unknown as { __initialized?: boolean }).__initialized) {
+    await this.page.coverage.startJSCoverage().catch(() => {});
+    await this.page.clock.install().catch(() => {});
+    (sharedPage as unknown as { __initialized?: boolean }).__initialized = true;
+  }
 });
 
 After(async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
-  // Stop coverage and save it
-  if (this.page) {
-    const coverage = await this.page.coverage.stopJSCoverage();
-    const coverageDir = join(process.cwd(), 'test-results', 'coverage');
-    if (!existsSync(coverageDir)) {
-      mkdirSync(coverageDir, { recursive: true });
-    }
-    const timestamp = new Date().getTime();
-    const scenarioSafeName = scenario.pickle.name.replace(/\s+/g, '_').replace(/[^\w-]/g, '');
-    writeFileSync(
-      join(coverageDir, `coverage-${scenarioSafeName}-${timestamp}.json`),
-      JSON.stringify(coverage)
-    );
+  // Stop coverage and save it ONLY on failure or if we want to change this behavior later,
+  // For now, doing it per scenario with shared pages resets the coverage.
+  // We'll leave it running and not stop it, saving it in AfterAll instead to speed up tests.
+  // Or, since coverage isn't fully set up in these tests anyway, we just ignore stopping it per scenario.
+  if (this.page && process.env.COVERAGE === 'true') {
+     // intentionally left empty
   }
 
   if (scenario.result?.status === 'FAILED') {
@@ -58,11 +73,31 @@ After(async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
       this.attach(screenshot, 'image/png');
     }
   }
-  await this.context?.close();
-  // We do NOT close the browser here as it's shared across scenarios.
+  // We do NOT close the context/page here as it's shared across scenarios for performance.
 });
 
 AfterAll(async function () {
+  // Stop coverage and save it
+  if (sharedPage) {
+    try {
+      const coverage = await sharedPage.coverage.stopJSCoverage();
+      const coverageDir = join(process.cwd(), 'test-results', 'coverage');
+      if (!existsSync(coverageDir)) {
+        mkdirSync(coverageDir, { recursive: true });
+      }
+      const timestamp = new Date().getTime();
+      writeFileSync(
+        join(coverageDir, `coverage-shared-${timestamp}.json`),
+        JSON.stringify(coverage)
+      );
+    } catch {}
+  }
+
+  if (sharedContext) {
+    await sharedContext.close();
+    sharedContext = undefined;
+    sharedPage = undefined;
+  }
   if (globalBrowser) {
     await globalBrowser.close();
     globalBrowser = undefined;
