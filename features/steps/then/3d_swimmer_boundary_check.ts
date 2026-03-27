@@ -7,13 +7,38 @@ import { expect } from '@playwright/test';
 Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and turn ends', { timeout: 120000 }, async function (this: CustomWorld) {
     const page = this.page!;
 
-    let hitTurn = false;
-    let hitStart = false;
-    const testStartTime = Date.now();
+    const lapTimesMs = await page.evaluate(() => {
+        const testWin = window as unknown as TestWindow;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const model = testWin.__TEST_SWIMMER_0_MODEL__ as any;
+        if (!model) return [];
+        const times: number[] = [];
+        let cumTime = model.startTime || 0;
+        for (let i = 0; i < model.lapTimes.length; i++) {
+            cumTime += model.lapTimes[i] * 1000;
+            times.push(cumTime);
+        }
+        return times;
+    });
 
-    while (!hitTurn || !hitStart) {
-        if (Date.now() - testStartTime > 115000) {
-            throw new Error(`Timed out waiting for swimmer to hit both walls. hitTurn=${hitTurn}, hitStart=${hitStart}`);
+    if (lapTimesMs.length < 2) {
+        throw new Error("Not enough lap times available to check both start and turn ends");
+    }
+
+    // Check points a bit before the end of the laps
+    const points = [
+        { time: lapTimesMs[0] - 50, expectedAtTurn: true, expectedAtStart: false },
+        { time: lapTimesMs[0] + 50, expectedAtTurn: true, expectedAtStart: false },
+        { time: lapTimesMs[1] - 50, expectedAtTurn: false, expectedAtStart: true },
+        { time: lapTimesMs[1] + 50, expectedAtTurn: false, expectedAtStart: true },
+    ];
+
+    for (const point of points) {
+        const currentSimTime = await page.evaluate(() => Date.now());
+
+        if (point.time > currentSimTime) {
+            await advanceClock(page, point.time - currentSimTime);
+            await page.waitForTimeout(20);
         }
 
         const data = await page.evaluate(() => {
@@ -25,31 +50,15 @@ Then('the 3D swimmer in lane 0 should be within the pool boundaries at start and
             if (!swimmer || !model || !poolLength) return null;
             const { location } = model.where();
             const xPos = swimmer.position.x;
-
-            // Now that meshes are centered, the world X range is always [xPos - 0.75, xPos + 0.75]
-            // regardless of rotation (since rotation is only around Y).
             const minX = xPos - 0.75;
             const maxX = xPos + 0.75;
 
-            return {
-                location,
-                xPos,
-                minX,
-                maxX,
-                poolLength,
-                isAtTurn: location > 0.95, // Relaxed slightly for faster clock
-                isAtStart: location < 0.05
-            };
+            return { location, xPos, minX, maxX, poolLength, isAtTurn: location > 0.95, isAtStart: location < 0.05 };
         });
 
         if (data) {
-            expect(data.minX >= -0.01, `Swimmer went past start wall! minX=${data.minX}, xPos=${data.xPos}, location=${data.location}`).toBeTruthy();
-            expect(data.maxX <= data.poolLength + 0.01, `Swimmer went past turn wall! maxX=${data.maxX}, poolLength=${data.poolLength}, xPos=${data.xPos}, location=${data.location}`).toBeTruthy();
-
-            if (data.isAtTurn) hitTurn = true;
-            if (data.isAtStart) hitStart = true;
+            expect(data.minX >= -0.01, `[Time: ${point.time}] Swimmer went past start wall! minX=${data.minX}, xPos=${data.xPos}, location=${data.location}`).toBeTruthy();
+            expect(data.maxX <= data.poolLength + 0.01, `[Time: ${point.time}] Swimmer went past turn wall! maxX=${data.maxX}, poolLength=${data.poolLength}, xPos=${data.xPos}, location=${data.location}`).toBeTruthy();
         }
-
-        await advanceClock(page, 200); // 200ms steps
     }
 });

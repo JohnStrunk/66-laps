@@ -1,6 +1,6 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { waitForCondition } from '../../support/utils';
+import { advanceClock } from '../../support/utils';
 
 When('lane {int} finishes {word}', async function (this: CustomWorld, lane: number, _order: string) {
     if (!_order) throw new Error('order is required');
@@ -16,10 +16,23 @@ When('lane {int} finishes {word}', async function (this: CustomWorld, lane: numb
         laneIndex = totalLanes - lane;
     }
 
-    await waitForCondition(page, async function() {
-        return await page.evaluate(`(function(idx) {
+    const timeoutMs = 15000;
+    const chunkMs = 5000;
+    const start = Date.now();
+
+    while (Date.now() - start < timeoutMs) {
+        const isDone = await page.evaluate(`(function(idx) {
             var swimmers = window.__TEST_SWIMMERS__;
             return swimmers && swimmers[idx] && swimmers[idx].isDone(Date.now());
         })(${laneIndex})`);
-    }, 15000);
+
+        if (isDone) {
+            return;
+        }
+
+        await advanceClock(page, chunkMs);
+        await page.waitForTimeout(20);
+    }
+
+    throw new Error(`Condition timed out after ${timeoutMs}ms waiting for lane ${lane} to finish`);
 });
