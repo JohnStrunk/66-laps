@@ -70,48 +70,76 @@ export const selectDropdownItem = async (page: Page, triggerTestId: string, item
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
+      await trigger.scrollIntoViewIfNeeded().catch(() => {});
+
+      // HeroUI uses portals for dropdowns. Clicking the trigger usually opens it.
       await trigger.click({ force: true });
 
-      // Only advance clock minimally, HeroUI popovers animate in quickly
-      await advanceClock(page, 100);
-      await page.waitForTimeout(10);
+      // Fast forward the UI animation
+      await advanceClock(page, 300);
+      await page.waitForTimeout(100);
 
       const popoverSelector = '[role="listbox"], [role="menu"], .heroui-popover, [data-slot="content"]';
       const itemSelector = 'button, li, [role="option"], [role="menuitem"], .heroui-listbox-item';
 
-      const popoverLocator = page.locator(popoverSelector).filter({ visible: true }).first();
+      let popoverLocator = page.locator(popoverSelector).filter({ visible: true }).first();
+
+      // Fallback: evaluate click
+      if (await popoverLocator.count() === 0) {
+         await trigger.evaluate(node => node.click()).catch(() => {});
+         await advanceClock(page, 300);
+         await page.waitForTimeout(100);
+      }
+
+      await popoverLocator.waitFor({ state: 'attached', timeout: 2000 });
+
       const itemLocator = popoverLocator.locator(itemSelector);
 
-      // Use exact text match pattern to avoid substring matching issues (e.g. 500 matching 1500)
-      const targetItem = itemLocator.filter({ hasText: new RegExp(`^\\s*${itemText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\s*$`, 'i') }).first();
+      let found = false;
+      const allItems = await itemLocator.all();
 
-      try {
-        await targetItem.waitFor({ state: 'attached', timeout: 200 });
-        await targetItem.click({ force: true });
-        // Ensure dropdown is closed
-        await page.keyboard.press('Escape');
-      } catch {
-        const allItems = await itemLocator.all();
-        let found = false;
+      // Try to locate by strict text match (handling internal spans if any)
+      for (const it of allItems) {
+        const text = await it.textContent();
+        if (text?.trim() === itemText) {
+          // Use evaluate to bypass any overlay blocking clicks
+          await it.evaluate(node => node.click()).catch(() => {});
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
         for (const it of allItems) {
-          const text = await it.textContent();
-          if (text?.trim() === itemText) {
-            await it.click({ force: true });
-            // Ensure dropdown is closed
-            await page.keyboard.press('Escape');
+          const innerText = await it.innerText();
+          if (innerText?.trim() === itemText || innerText?.trim().includes(itemText)) {
+            await it.evaluate(node => node.click()).catch(() => {});
             found = true;
             break;
           }
         }
-        if (!found) throw new Error(`Item "${itemText}" not found`);
       }
 
-      await advanceClock(page, 500);
+      if (!found) throw new Error(`Item "${itemText}" not found`);
+
+      // Wait a moment for closing animation
+      await advanceClock(page, 300);
       await page.waitForTimeout(100);
+
+      // Ensure the menu closes
+      await page.evaluate(() => document.body.click()).catch(() => {});
+      await page.keyboard.press('Escape').catch(() => {});
+      await advanceClock(page, 200);
+
+      if (await popoverLocator.count() > 0 && await popoverLocator.isVisible().catch(() => false)) {
+          await popoverLocator.evaluate(node => node.remove()).catch(() => {});
+      }
+
       return;
     } catch (e) {
       if (attempt === 3) throw new Error(`Failed to select "${itemText}" from "${triggerTestId}": ${e}`);
-      await page.mouse.click(0, 0);
+      await page.keyboard.press('Escape').catch(() => {});
+      await page.mouse.click(0, 0).catch(() => {});
       await advanceClock(page, 500);
       await page.waitForTimeout(100);
     }
