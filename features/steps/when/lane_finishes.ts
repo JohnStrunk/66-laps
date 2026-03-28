@@ -16,23 +16,47 @@ When('lane {int} finishes {word}', async function (this: CustomWorld, lane: numb
         laneIndex = totalLanes - lane;
     }
 
-    const timeoutMs = 15000;
-    const chunkMs = 5000;
-    const start = Date.now();
+    // Retrieve the remaining time for the swimmer to finish
+    const remainingTime = await page.evaluate(`(function(idx) {
+        var swimmers = window.__TEST_SWIMMERS__;
+        if (!swimmers || !swimmers[idx]) return null;
+        var s = swimmers[idx];
+        var now = Date.now();
+        if (s.isDone(now)) return 0;
 
-    while (Date.now() - start < timeoutMs) {
-        const isDone = await page.evaluate(`(function(idx) {
-            var swimmers = window.__TEST_SWIMMERS__;
-            return swimmers && swimmers[idx] && swimmers[idx].isDone(Date.now());
-        })(${laneIndex})`);
-
-        if (isDone) {
-            return;
+        // Calculate the total time the swimmer takes for the race
+        var totalLaps = s._lapTimes ? s._lapTimes.length : (s.lapTimes ? s.lapTimes.length : 0);
+        var totalTimeSec = 0;
+        for (var i = 0; i < totalLaps; i++) {
+            totalTimeSec += (s._lapTimes || s.lapTimes)[i];
         }
 
-        await advanceClock(page, chunkMs);
-        await page.waitForTimeout(20);
+        var startTime = s._startTimeMs || now;
+        return Math.max(0, (startTime + totalTimeSec * 1000) - now);
+    })(${laneIndex})`);
+
+    if (remainingTime === null || typeof remainingTime !== 'number') {
+        throw new Error(`Could not determine finish time for lane ${lane}`);
     }
 
-    throw new Error(`Condition timed out after ${timeoutMs}ms waiting for lane ${lane} to finish`);
+    if (remainingTime > 0) {
+        const chunkMs = 60000;
+        let elapsed = 0;
+        while (elapsed < remainingTime + 100) {
+            const step = Math.min(chunkMs, (remainingTime + 100) - elapsed);
+            await advanceClock(page, step);
+            elapsed += step;
+            await page.waitForTimeout(10);
+        }
+    }
+
+    // Verify it is actually done
+    const isDone = await page.evaluate(`(function(idx) {
+        var swimmers = window.__TEST_SWIMMERS__;
+        return swimmers && swimmers[idx] && swimmers[idx].isDone(Date.now());
+    })(${laneIndex})`);
+
+    if (!isDone) {
+        throw new Error(`Lane ${lane} did not finish after advancing clock by ${remainingTime}ms`);
+    }
 });
