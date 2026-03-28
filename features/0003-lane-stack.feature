@@ -58,6 +58,13 @@ Feature: Lane Stack
       And I tap the Zone B area for Lane 2
       Then the lap count for Lane 2 should be 4
 
+    Scenario: Rapidly tapping Zone B correctly increments multiple times avoiding double counting prevention
+      Given Bell Lap is configured for an 8-lane event
+      When I tap the Zone B area for Lane 2
+      And I tap the Zone B area for Lane 2
+      And I tap the Zone B area for Lane 2
+      Then the lap count for Lane 2 should be 6
+
     Scenario: Touch Pad aria-label updates with count
       Given Bell Lap is configured for an 8-lane event
       When I tap the Zone B area for Lane 4
