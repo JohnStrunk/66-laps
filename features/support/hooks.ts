@@ -29,17 +29,17 @@ Before(async function (this: CustomWorld, scenario: ITestCaseHookParameter) {
     });
     sharedPage = await sharedContext.newPage();
   } else {
-    // Clear state before reusing
+    // Some components like HeroUI modals and overlays do not reliably unmount when state is changed
+    // rapidly under a fake timer. It's safer to reload the page to get a completely clean DOM.
+    // We clear storage first.
     await sharedPage.evaluate(() => {
       localStorage.clear();
       sessionStorage.clear();
-      // Fast reset using store specific method
-      const store = ((window as unknown as import('./store-type').TestWindow)).__bellLapStore;
-      if (store) {
-          const initialState = store.getInitialState?.() || {};
-          store.setState(initialState, true);
-      }
     }).catch(() => {});
+
+    // We navigate to about:blank to fully detach everything, then the specific step
+    // (e.g. "the app is loaded") will navigate to the proper URL.
+    await sharedPage.goto('about:blank').catch(()=>{});
   }
 
   this.context = sharedContext;
