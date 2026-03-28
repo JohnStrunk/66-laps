@@ -1,24 +1,35 @@
 import { Given } from '@cucumber/cucumber';
 import assert from 'node:assert';
 import { CustomWorld } from '../../support/world';
+import { TestWindow } from '../../support/store-type';
 
-Given('Lane {int} has a lap count of {int}', async function (this: CustomWorld, laneNumber: number, count: number) {
-  const countEl = this.page!.locator(`[data-testid="lane-row"][data-lane-number="${laneNumber}"] [data-testid="lane-count"]`);
-  const currentText = await countEl.textContent();
-  let current = parseInt(currentText || '0', 10);
+Given(/^Lane (\d+) (?:has a lap count of|has completed|is on Lap) (\d+)(?: laps)?(?: but touched earlier than Lane (\d+))?$/, async function (this: CustomWorld, laneNumberStr: string, countStr: string, touchedEarlierLaneStr?: string) {
+  const laneNumber = parseInt(laneNumberStr, 10);
+  const count = parseInt(countStr, 10);
+  const touchedEarlierLane = touchedEarlierLaneStr ? parseInt(touchedEarlierLaneStr, 10) : undefined;
 
-  if (current === count) return;
+  await this.page!.evaluate((args) => {
+    const store = (window as unknown as TestWindow).__bellLapStore;
+    const state = store.getState();
+    const lanes = state.lanes.map((l) => {
+      if (args.touchedEarlierLane) {
+        if (l.laneNumber === args.laneNumber) return { ...l, count: args.count, history: [Date.now() - 1000] };
+        if (l.laneNumber === args.touchedEarlierLane) return { ...l, count: args.count, history: [Date.now()] };
+      } else {
+        if (l.laneNumber === args.laneNumber) return { ...l, count: args.count };
+      }
+      return l;
+    });
+    store.setState({ lanes });
+  }, { laneNumber, count, touchedEarlierLane });
 
-  while (current < count) {
-     await this.page!.locator(`button[aria-label="Increment lane ${laneNumber}"]`).click();
-     current += 2;
-  }
+  // Verify the state using the store, not the UI, for robust Given steps.
+  const stateVerified = await this.page!.evaluate((args) => {
+    const store = (window as unknown as TestWindow).__bellLapStore;
+    const state = store.getState();
+    const lane = state.lanes.find(l => l.laneNumber === args.laneNumber);
+    return lane?.count === args.count;
+  }, { laneNumber, count });
 
-  while (current > count) {
-     await this.page!.locator(`button[aria-label="Decrement lane ${laneNumber}"]`).click();
-     current -= 2;
-  }
-
-  const finalContent = await countEl.textContent();
-  assert.strictEqual(parseInt(finalContent || '0', 10), count, `Failed to set lane ${laneNumber} to count ${count}`);
+  assert.strictEqual(stateVerified, true, `Failed to set lane ${laneNumber} to count ${count}`);
 });
