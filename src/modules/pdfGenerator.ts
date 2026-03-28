@@ -129,17 +129,28 @@ async function generateRacePDF(race: RaceRecord): Promise<jsPDF> {
         { content: 'ORDER OF FINISH', colSpan: race.laneCount, styles: { halign: 'center' as const } }
     ];
 
+    const laneLapCompletions = new Map<number, Map<number, number>>();
+    race.lanes.forEach(lane => {
+        const lapTimes = new Map<number, number>();
+        lane.events.forEach(e => {
+            for (let lap = e.prevCount + 1; lap <= e.newCount; lap++) {
+                const existing = lapTimes.get(lap);
+                if (existing === undefined || e.timestamp > existing) {
+                    lapTimes.set(lap, e.timestamp);
+                }
+            }
+        });
+        laneLapCompletions.set(lane.laneNumber, lapTimes);
+    });
+
     const lapOOFData = laps.map(lapNum => {
         const laneTimes: { laneNumber: number, timestamp: number }[] = [];
         race.lanes.forEach(lane => {
-            const completions = lane.events.filter(e => e.newCount >= lapNum && e.prevCount < lapNum);
-            if (completions.length > 0) {
-                const latestCompletion = completions.reduce((latest, current) =>
-                    current.timestamp > latest.timestamp ? current : latest
-                );
+            const timestamp = laneLapCompletions.get(lane.laneNumber)?.get(lapNum);
+            if (timestamp !== undefined) {
                 laneTimes.push({
                     laneNumber: lane.laneNumber,
-                    timestamp: latestCompletion.timestamp
+                    timestamp: timestamp
                 });
             }
         });
