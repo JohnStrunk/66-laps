@@ -23,7 +23,7 @@
     "@pixi/react": "8.0.5",
     "@react-three/drei": "10.7.7",
     "@react-three/fiber": "9.5.0",
-    "@sentry/nextjs": "10.43.0",
+    "@sentry/nextjs": "10.46.0",
     "@types/three": "0.183.1",
     "jspdf": "4.2.1",
     "jspdf-autotable": "5.0.7",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@cucumber/cucumber": "12.7.0",
-    "@opentelemetry/api": "1.9.0",
+    "@opentelemetry/api": "1.9.1",
     "@opentelemetry/context-async-hooks": "2.6.1",
     "@opentelemetry/core": "2.6.1",
     "@opentelemetry/sdk-trace-base": "2.6.1",
@@ -55,8 +55,8 @@
     "@types/node": "24.12.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitest/browser": "4.1.0",
-    "@vitest/browser-playwright": "4.1.0",
+    "@vitest/browser": "4.1.2",
+    "@vitest/browser-playwright": "4.1.2",
     "eslint": "9.39.4",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-storybook": "10.2.19",
@@ -68,7 +68,7 @@
     "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vite": "8.0.0",
-    "vitest": "4.1.0",
+    "vitest": "4.1.2",
     "webpack": "5.105.4"
   },
   "packageManager": "yarn@4.12.0"
