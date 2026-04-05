@@ -45,7 +45,7 @@ __metadata:
     motion: "npm:12.38.0"
     next: "npm:16.1.7"
     next-themes: "npm:0.4.6"
-    pixi.js: "npm:8.17.0"
+    pixi.js: "npm:8.17.1"
     playwright: "npm:1.58.2"
     posthog-js: "npm:1.364.1"
     react: "npm:19.2.4"
@@ -12840,9 +12840,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixi.js@npm:8.17.0":
-  version: 8.17.0
-  resolution: "pixi.js@npm:8.17.0"
+"pixi.js@npm:8.17.1":
+  version: 8.17.1
+  resolution: "pixi.js@npm:8.17.1"
   dependencies:
     "@pixi/colord": "npm:^2.9.6"
     "@types/earcut": "npm:^3.0.0"
@@ -12854,7 +12854,7 @@ __metadata:
     ismobilejs: "npm:^1.1.1"
     parse-svg-path: "npm:^0.1.2"
     tiny-lru: "npm:^11.4.7"
-  checksum: 10c0/8d321e9baba011170ca7392c743fd37474c524a1ef21394d65a15d15a9c38e6e2b297811adc29116a098ee4a7c61c3f1dd8567d4f92741f3576a8404a7b271bd
+  checksum: 10c0/ec62ac79dc78fe3a6b56b1b1e6ce301fd77b40d33810e55ba22f5d6558595d8cf692df242f2370820f424907bc1d864e1df175eab0478a2e4a2309fcad0c21a4
   languageName: node
   linkType: hard
 
