@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { EventType } from '../../../src/modules/bellLapStore';
@@ -35,4 +36,13 @@ Given('I have a {string} race with {int} lanes in my history', async function (t
       history: [record, ...store.history]
     });
   }, { event, laneCount });
+
+  const state = await this.page!.evaluate(() => {
+    const r = window.__bellLapStore.getState().history[0];
+    return { event: r.event, laneCount: r.laneCount };
+  });
+
+
+  assert.strictEqual(state.event, event);
+  assert.strictEqual(state.laneCount, laneCount);
 });

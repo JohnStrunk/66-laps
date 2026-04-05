@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { selectDropdownItem } from '../../support/utils';
@@ -34,4 +35,10 @@ async function configurePracticeRace(page: Page, lanes: number, mode: '2D Overhe
 
 Given('I configure a practice race with {int} lanes and {int} laps', async function (this: CustomWorld, lanes: number, laps: number) {
     await configurePracticeRace(this.page!, lanes, '2D Overhead', laps);
+
+    const modeText = await this.page!.locator('[data-testid="settings-Simulation Mode"]').textContent();
+    assert.ok(modeText?.includes('2D Overhead'), 'Expected Simulation Mode to be 2D Overhead');
+
+    const lanesText = await this.page!.locator('[data-testid="settings-Number of Lanes"]').textContent();
+    assert.ok(lanesText?.includes(lanes.toString()), `Expected Number of Lanes to be ${lanes}`);
 });

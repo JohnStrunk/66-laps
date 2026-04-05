@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
@@ -10,4 +11,18 @@ Given('Bell Lap is configured for a {string} event', async function (this: Custo
     store.getState().setEvent(name as EventType);
     store.getState().setSetupDialogOpen(false);
   }, eventName);
+
+  const state = await this.page!.evaluate(() => {
+    const store = (window as unknown as TestWindow).__bellLapStore.getState();
+    return {
+      view: store.view,
+      event: store.event,
+      isSetupDialogOpen: store.isSetupDialogOpen
+    };
+  });
+
+
+  assert.strictEqual(state.view, 'race');
+  assert.strictEqual(state.event, eventName);
+  assert.strictEqual(state.isSetupDialogOpen, false);
 });

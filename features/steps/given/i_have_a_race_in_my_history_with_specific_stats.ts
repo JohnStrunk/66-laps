@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord } from '../../support/store-type';
@@ -44,4 +45,11 @@ Given('I have a race in my history that lasted {string}', async function (this: 
     };
     localStorage.setItem('bell-lap-storage', JSON.stringify(persistedState));
   }, durationMs);
+
+  const historyExists = await this.page!.evaluate(() => {
+    return (window as unknown as TestWindow).__bellLapStore.getState().history.length > 0;
+  });
+
+
+  assert.strictEqual(historyExists, true);
 });

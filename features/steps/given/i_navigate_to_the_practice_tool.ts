@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { advanceClock } from '../../support/utils';
@@ -9,4 +10,8 @@ Given('I navigate to the Practice tool', async function (this: CustomWorld) {
     await this.page!.waitForSelector('text=Settings', { timeout: 60000 });
     // Advance clock to ensure hydration
     await advanceClock(this.page!, 1000);
+
+    const url = this.page!.url();
+
+    assert.ok(url.includes('/practice'), `Expected to be on practice page, got ${url}`);
 });

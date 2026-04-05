@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
@@ -5,7 +6,7 @@ import { EVENT_CONFIGS } from '../../../src/modules/bellLapStore';
 
 Given('all lanes have a lap count of {int}', async function (this: CustomWorld, count: number) {
   if (!this.page) throw new Error('No page found');
-  await this.page.evaluate(({ targetCount, configs }) => {
+  await this.page!.evaluate(({ targetCount, configs }) => {
     const store = (window as unknown as TestWindow).__bellLapStore;
     const state = store.getState();
     const newLanes = state.lanes.map(lane => {
@@ -36,4 +37,11 @@ Given('all lanes have a lap count of {int}', async function (this: CustomWorld, 
     });
     store.setState({ lanes: newLanes });
   }, { targetCount: count, configs: EVENT_CONFIGS });
+
+  const verifiedCounts = await this.page!.evaluate(() => {
+    const store = (window as unknown as TestWindow).__bellLapStore.getState();
+    return store.lanes.map(l => l.count);
+  });
+
+  assert.ok(verifiedCounts.every(c => c === count), `Failed to set all lanes to ${count}. Got: ${verifiedCounts}`);
 });

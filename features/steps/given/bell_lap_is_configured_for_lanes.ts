@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { BASE_URL } from '../../support/utils';
@@ -17,4 +18,8 @@ Given('Bell Lap is configured for a/an {int}-lane event', async function (this: 
   });
 
   await this.page!.waitForSelector('[data-testid="lane-row"]');
+
+  const laneRowCount = await this.page!.locator('[data-testid="lane-row"]').count();
+
+  assert.strictEqual(laneRowCount, laneCount);
 });

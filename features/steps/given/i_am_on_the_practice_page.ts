@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 
@@ -6,4 +7,8 @@ Given('I am on the practice page', async function (this: CustomWorld) {
     await this.page!.goto(`${baseUrl}/practice?testMode=true`, { timeout: 60000 });
     // Wait for the Settings screen to render so we know we are ready
     await this.page!.waitForSelector('text=Settings', { timeout: 60000 });
+
+    const url = this.page!.url();
+
+    assert.ok(url.includes('/practice'), `Expected to be on practice page, got ${url}`);
 });

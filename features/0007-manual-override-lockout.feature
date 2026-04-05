@@ -29,3 +29,13 @@ Feature: Manual Override of Lockout
     And I tap the "+" button in Zone A for Lane 1
     And I tap the Zone B area for Lane 1 in the UI
     Then the lap count for Lane 1 should be 6
+
+  Scenario: Pressing - at 0 laps does not go below 0
+    Given all lanes have a lap count of 0
+    When I attempt to tap the "-" button in Zone A for Lane 1
+    Then the lap count for Lane 1 should be 0
+
+  Scenario: Pressing + at maximum laps does not exceed maximum
+    Given all lanes have a lap count of 20
+    When I attempt to tap the "+" button in Zone A for Lane 1
+    Then the lap count for Lane 1 should be 20

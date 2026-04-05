@@ -8,7 +8,7 @@ Feature: Delete Race History
   Background:
     Given the app is loaded
     And I am on the main menu
-    And I have several completed races in my history
+    And I have completed several races
     And I am on the "History" screen
 
   Scenario: Delete a single race from history

@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given, DataTable } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord, LapEvent, EventType } from '../../support/store-type';
@@ -53,4 +54,11 @@ Given('I have a(n) {string} race in my history with the following events:', asyn
     };
     store.setState({ history: [record] });
   }, { eventsData: data, event: eventName });
+
+  const historyEvents = await this.page!.evaluate(() => {
+    return (window as unknown as TestWindow).__bellLapStore.getState().history[0].lanes.length;
+  });
+
+
+  assert.ok(historyEvents > 0, 'History should contain lanes with events');
 });

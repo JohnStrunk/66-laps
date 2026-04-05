@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow } from '../../support/store-type';
@@ -12,4 +13,16 @@ Given('a race is in progress with non-zero counts', async function (this: Custom
   await this.page!.waitForFunction(
     () => document.querySelector('[data-lane-number="1"] [data-testid="lane-count"]')?.textContent === '2'
   );
+
+  const state = await this.page!.evaluate(() => {
+    const store = (window as unknown as TestWindow).__bellLapStore.getState();
+    return {
+        view: store.view,
+        lane1Count: store.lanes.find(l => l.laneNumber === 1)?.count
+    };
+  });
+
+
+  assert.strictEqual(state.view, 'race');
+  assert.strictEqual(state.lane1Count, 2);
 });

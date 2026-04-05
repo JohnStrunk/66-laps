@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import { Given } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
 import { TestWindow, RaceRecord, LapEvent } from '../../support/store-type';
@@ -49,4 +50,11 @@ Given('I have a race in my history with {string} laps', async function (this: Cu
     };
     localStorage.setItem('bell-lap-storage', JSON.stringify(persistedState));
   }, count);
+
+  const actualLaps = await this.page!.evaluate(() => {
+    return (window as unknown as TestWindow).__bellLapStore.getState().history[0].lanes[0].count;
+  });
+
+
+  assert.strictEqual(actualLaps, count);
 });
