@@ -9,7 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "66-laps@workspace:."
   dependencies:
-    "@cucumber/cucumber": "npm:12.7.0"
+    "@cucumber/cucumber": "npm:12.8.1"
     "@ducanh2912/next-pwa": "npm:10.2.9"
     "@heroui/react": "npm:2.8.10"
     "@opentelemetry/api": "npm:1.9.1"
@@ -1333,9 +1333,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:12.7.0":
-  version: 12.7.0
-  resolution: "@cucumber/cucumber@npm:12.7.0"
+"@cucumber/cucumber@npm:12.8.1":
+  version: 12.8.1
+  resolution: "@cucumber/cucumber@npm:12.8.1"
   dependencies:
     "@cucumber/ci-environment": "npm:13.0.0"
     "@cucumber/cucumber-expressions": "npm:19.0.0"
@@ -1343,9 +1343,9 @@ __metadata:
     "@cucumber/gherkin-streams": "npm:6.0.0"
     "@cucumber/gherkin-utils": "npm:11.0.0"
     "@cucumber/html-formatter": "npm:23.0.0"
-    "@cucumber/junit-xml-formatter": "npm:0.9.0"
-    "@cucumber/message-streams": "npm:4.0.1"
-    "@cucumber/messages": "npm:32.0.1"
+    "@cucumber/junit-xml-formatter": "npm:0.13.3"
+    "@cucumber/message-streams": "npm:4.1.1"
+    "@cucumber/messages": "npm:32.2.0"
     "@cucumber/pretty-formatter": "npm:1.0.1"
     "@cucumber/tag-expressions": "npm:9.1.0"
     assertion-error-formatter: "npm:^3.0.0"
@@ -1365,7 +1365,6 @@ __metadata:
     lodash.merge: "npm:^4.6.2"
     lodash.mergewith: "npm:^4.6.2"
     luxon: "npm:3.7.2"
-    mime: "npm:^3.0.0"
     mkdirp: "npm:^3.0.0"
     mz: "npm:^2.7.0"
     progress: "npm:^2.0.3"
@@ -1379,7 +1378,7 @@ __metadata:
     yup: "npm:1.7.1"
   bin:
     cucumber-js: bin/cucumber.js
-  checksum: 10c0/e9de27b6260af4a2104561e7dbf0980428cedf40b05b4fb9d77b65698e2826fd7d941c56f04fb8053bb11f28c6ad03fd984cf183bfd73f7f13c33fe58cd96d5a
+  checksum: 10c0/de9b7bbae8c2646760c62878bcddd61684a7e8d8ed44d1f7af5badf3ada6a2b5932e657741bb1a63cbc9505cc3290721382e62a5636f73da67da56da5fcdd9ed
   languageName: node
   linkType: hard
 
@@ -1432,40 +1431,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/junit-xml-formatter@npm:0.9.0":
-  version: 0.9.0
-  resolution: "@cucumber/junit-xml-formatter@npm:0.9.0"
+"@cucumber/junit-xml-formatter@npm:0.13.3":
+  version: 0.13.3
+  resolution: "@cucumber/junit-xml-formatter@npm:0.13.3"
   dependencies:
-    "@cucumber/query": "npm:^14.0.1"
+    "@cucumber/query": "npm:^15.0.1"
     "@teppeis/multimaps": "npm:^3.0.0"
     luxon: "npm:^3.5.0"
     xmlbuilder: "npm:^15.1.1"
   peerDependencies:
     "@cucumber/messages": "*"
-  checksum: 10c0/c99deb87d200749e5cae82a1331ddd15e254a9da83b4b2a5d41624cfd8fc76023fafc821f009c3d9b105423f39e98758250ae4aef287bdd0254734d5ec638837
+  checksum: 10c0/1a124b3738745110ea353e473efc53e4e34e0830a36b54e8b88091e2dee4a077d9951cabbb25a5c46ebd0dc47cd7a6d695cea5d651f848703d2318c4d54b3b26
   languageName: node
   linkType: hard
 
-"@cucumber/message-streams@npm:4.0.1":
-  version: 4.0.1
-  resolution: "@cucumber/message-streams@npm:4.0.1"
+"@cucumber/message-streams@npm:4.1.1":
+  version: 4.1.1
+  resolution: "@cucumber/message-streams@npm:4.1.1"
+  dependencies:
+    mime: "npm:^3.0.0"
   peerDependencies:
     "@cucumber/messages": ">=17.1.1"
-  checksum: 10c0/521b68b4a8c00fbdc950f80c057537d1fed9ca532c3d2d3b03b72051a410ee1530e2a5a4f0207086068a0250d9056e23b6c6cd0322b6fd2ec1a520868b696efa
+  checksum: 10c0/a0ee5da0d3bedd4e739959b6dafef59d6d4f1dfbad8a7d4f2d2d4ecd787aa362945686a3c318954eadd9cd9ccc9d41e204999f778b0d750d22b94d609d3120aa
   languageName: node
   linkType: hard
 
-"@cucumber/messages@npm:32.0.1":
-  version: 32.0.1
-  resolution: "@cucumber/messages@npm:32.0.1"
-  dependencies:
-    class-transformer: "npm:0.5.1"
-    reflect-metadata: "npm:0.2.2"
-  checksum: 10c0/ae9379318cf04c011fea7ab4ba1c5e9c08101beec27dde2a2bd1bb4c4dff9cda229dca3fd638900bc7bf707fa4a452ca01198532fe2a7f36d0973ea1bc5c9587
-  languageName: node
-  linkType: hard
-
-"@cucumber/messages@npm:>=31.0.0 <33, @cucumber/messages@npm:^32.0.0":
+"@cucumber/messages@npm:32.2.0, @cucumber/messages@npm:>=31.0.0 <33, @cucumber/messages@npm:^32.0.0":
   version: 32.2.0
   resolution: "@cucumber/messages@npm:32.2.0"
   dependencies:
@@ -1490,15 +1481,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/query@npm:^14.0.1":
-  version: 14.7.0
-  resolution: "@cucumber/query@npm:14.7.0"
+"@cucumber/query@npm:^15.0.1":
+  version: 15.0.1
+  resolution: "@cucumber/query@npm:15.0.1"
   dependencies:
     "@teppeis/multimaps": "npm:3.0.0"
     lodash.sortby: "npm:^4.7.0"
   peerDependencies:
     "@cucumber/messages": "*"
-  checksum: 10c0/b3884d7f29d3a89f4cf2fa8456dd57fe64ab7412fef6b9e8e0f6115c17349ff2610427daa81e693cb82a8fa453c4fdcb4245054af8d433da4c1959599a3bd8a0
+  checksum: 10c0/93969c90dd52923135723e46a3cb5f3b903151b86ff95f3e9c552b75e9e67fc3e0acd2b24b25682aa9eaf2b27e4ac798d04cc514a6eb1980b31e2023d62248c1
   languageName: node
   linkType: hard
 
