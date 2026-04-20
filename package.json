@@ -41,9 +41,9 @@
   "devDependencies": {
     "@cucumber/cucumber": "12.8.1",
     "@opentelemetry/api": "1.9.1",
-    "@opentelemetry/context-async-hooks": "2.6.1",
-    "@opentelemetry/core": "2.6.1",
-    "@opentelemetry/sdk-trace-base": "2.6.1",
+    "@opentelemetry/context-async-hooks": "2.7.0",
+    "@opentelemetry/core": "2.7.0",
+    "@opentelemetry/sdk-trace-base": "2.7.0",
     "@playwright/test": "1.59.1",
     "@storybook/addon-themes": "10.3.5",
     "@storybook/addon-vitest": "10.3.5",
@@ -69,7 +69,7 @@
     "typescript": "5.9.3",
     "vite": "8.0.9",
     "vitest": "4.1.4",
-    "webpack": "5.105.4"
+    "webpack": "5.106.2"
   },
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.14.1"
 }
