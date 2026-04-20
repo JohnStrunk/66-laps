@@ -71,5 +71,5 @@
     "vitest": "4.1.4",
     "webpack": "5.105.4"
   },
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.14.1"
 }
