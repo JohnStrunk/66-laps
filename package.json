@@ -55,8 +55,8 @@
     "@types/node": "24.12.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@vitest/browser": "4.1.4",
-    "@vitest/browser-playwright": "4.1.4",
+    "@vitest/browser": "4.1.5",
+    "@vitest/browser-playwright": "4.1.5",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.4",
     "eslint-plugin-storybook": "10.3.5",
@@ -68,7 +68,7 @@
     "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vite": "8.0.10",
-    "vitest": "4.1.4",
+    "vitest": "4.1.5",
     "webpack": "5.106.2"
   },
   "packageManager": "yarn@4.14.1"
