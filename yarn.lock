@@ -9,7 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "66-laps@workspace:."
   dependencies:
-    "@cucumber/cucumber": "npm:12.8.1"
+    "@cucumber/cucumber": "npm:12.8.2"
     "@ducanh2912/next-pwa": "npm:10.2.9"
     "@heroui/react": "npm:2.8.10"
     "@opentelemetry/api": "npm:1.9.1"
@@ -1333,19 +1333,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:12.8.1":
-  version: 12.8.1
-  resolution: "@cucumber/cucumber@npm:12.8.1"
+"@cucumber/cucumber@npm:12.8.2":
+  version: 12.8.2
+  resolution: "@cucumber/cucumber@npm:12.8.2"
   dependencies:
     "@cucumber/ci-environment": "npm:13.0.0"
     "@cucumber/cucumber-expressions": "npm:19.0.0"
     "@cucumber/gherkin": "npm:38.0.0"
     "@cucumber/gherkin-streams": "npm:6.0.0"
     "@cucumber/gherkin-utils": "npm:11.0.0"
-    "@cucumber/html-formatter": "npm:23.0.0"
+    "@cucumber/html-formatter": "npm:23.1.0"
     "@cucumber/junit-xml-formatter": "npm:0.13.3"
     "@cucumber/message-streams": "npm:4.1.1"
-    "@cucumber/messages": "npm:32.2.0"
+    "@cucumber/messages": "npm:32.3.1"
     "@cucumber/pretty-formatter": "npm:1.0.1"
     "@cucumber/tag-expressions": "npm:9.1.0"
     assertion-error-formatter: "npm:^3.0.0"
@@ -1378,7 +1378,7 @@ __metadata:
     yup: "npm:1.7.1"
   bin:
     cucumber-js: bin/cucumber.js
-  checksum: 10c0/de9b7bbae8c2646760c62878bcddd61684a7e8d8ed44d1f7af5badf3ada6a2b5932e657741bb1a63cbc9505cc3290721382e62a5636f73da67da56da5fcdd9ed
+  checksum: 10c0/916787ab90cdafe785c6f23a23c4419e71508f744aa15c7e55d25134963ffd62d7b7f9254c925911540dae770b93bf280caa4c5456b32a9f0078325181f5dbaa
   languageName: node
   linkType: hard
 
@@ -1422,12 +1422,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/html-formatter@npm:23.0.0":
-  version: 23.0.0
-  resolution: "@cucumber/html-formatter@npm:23.0.0"
+"@cucumber/html-formatter@npm:23.1.0":
+  version: 23.1.0
+  resolution: "@cucumber/html-formatter@npm:23.1.0"
   peerDependencies:
     "@cucumber/messages": ">=18"
-  checksum: 10c0/695b9ce602f705fbc09efee81503b5da9e07521a071601f2a984b622097ae143a0ece2042192faae57419f24b71c2b5fb9a87d75b0436146ef694d7ebb24d252
+  checksum: 10c0/af3f62fe00f6e2cb087abfef2916ec5c791285a1e2ee6215f88184d485f86aa08d614a2d3cce1670239c4e8759f210dbf5d7d167dac0a6a60c3ac84b1638b70f
   languageName: node
   linkType: hard
 
@@ -1456,7 +1456,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/messages@npm:32.2.0, @cucumber/messages@npm:>=31.0.0 <33, @cucumber/messages@npm:^32.0.0":
+"@cucumber/messages@npm:32.3.1":
+  version: 32.3.1
+  resolution: "@cucumber/messages@npm:32.3.1"
+  dependencies:
+    class-transformer: "npm:0.5.1"
+    reflect-metadata: "npm:0.2.2"
+  checksum: 10c0/030182a0746603e2188a9af4299249ff75262c21552b1e9e341b211710ba6cb0143583d5073a9dd51070bcb51a7420335e7479dc552d6b995350ab5dedada6da
+  languageName: node
+  linkType: hard
+
+"@cucumber/messages@npm:>=31.0.0 <33, @cucumber/messages@npm:^32.0.0":
   version: 32.2.0
   resolution: "@cucumber/messages@npm:32.2.0"
   dependencies:
