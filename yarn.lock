@@ -47,7 +47,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.18.1"
     playwright: "npm:1.59.1"
-    posthog-js: "npm:1.372.1"
+    posthog-js: "npm:1.372.2"
     react: "npm:19.2.5"
     react-dom: "npm:19.2.5"
     storybook: "npm:10.3.5"
@@ -4616,19 +4616,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/core@npm:1.27.5":
-  version: 1.27.5
-  resolution: "@posthog/core@npm:1.27.5"
+"@posthog/core@npm:1.27.6":
+  version: 1.27.6
+  resolution: "@posthog/core@npm:1.27.6"
   dependencies:
-    "@posthog/types": "npm:1.372.1"
-  checksum: 10c0/b050ec78eced0d8152b1dd7c591586daad76da56f64fec9e2cab44447ee5b3c0378b2f69ee9244d5d78814178fc691ddab5f0519d15f9f2f1e76110c60acd0a9
+    "@posthog/types": "npm:1.372.2"
+  checksum: 10c0/b6bbefc50850d5116841d8d89bb5215824b15c3bc23a490872cc5cecad1c4ba149aae5275e6cc644995779a5fa4594e95e341b808dfb3a2346afd3e30aa040fa
   languageName: node
   linkType: hard
 
-"@posthog/types@npm:1.372.1":
-  version: 1.372.1
-  resolution: "@posthog/types@npm:1.372.1"
-  checksum: 10c0/a903ed1e2b486db40733b8e5222537e307eda52e94689dcba9afd2e2d6be1f8eb11323401dc87bd66061ec90614dbdab8fc69dbd9101fae74d3f7179ff5de89b
+"@posthog/types@npm:1.372.2":
+  version: 1.372.2
+  resolution: "@posthog/types@npm:1.372.2"
+  checksum: 10c0/c1fa247389a74a451b83651fc0e10abd9d13a3f726caf28ca4d34c906e38b7814a5cb132bc9928c047a71db76bfe57ef3d99d4232613457e76b7d9eda1a5d4a2
   languageName: node
   linkType: hard
 
@@ -13142,24 +13142,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.372.1":
-  version: 1.372.1
-  resolution: "posthog-js@npm:1.372.1"
+"posthog-js@npm:1.372.2":
+  version: 1.372.2
+  resolution: "posthog-js@npm:1.372.2"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.0"
     "@opentelemetry/api-logs": "npm:^0.208.0"
     "@opentelemetry/exporter-logs-otlp-http": "npm:^0.208.0"
     "@opentelemetry/resources": "npm:^2.2.0"
     "@opentelemetry/sdk-logs": "npm:^0.208.0"
-    "@posthog/core": "npm:1.27.5"
-    "@posthog/types": "npm:1.372.1"
+    "@posthog/core": "npm:1.27.6"
+    "@posthog/types": "npm:1.372.2"
     core-js: "npm:^3.38.1"
     dompurify: "npm:^3.3.2"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.28.2"
     query-selector-shadow-dom: "npm:^1.0.1"
     web-vitals: "npm:^5.1.0"
-  checksum: 10c0/d7ccfb5fdb70d3a351d0eed066e47d07eed7f7c6096b30576c38315392c38e67cfcc9b417253678eba708400c45ae33156c084e108206fdde4c5a60ad03f1a38
+  checksum: 10c0/0d47b428dae76448f1ea2bc4adce5fe01a252c84e947835bdac4615284996a09543f878dd497cd50e9ba055d86db5a84998c109786e2e8af870e610878e60ced
   languageName: node
   linkType: hard
 
