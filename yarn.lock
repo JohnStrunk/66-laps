@@ -19,7 +19,7 @@ __metadata:
     "@pixi/react": "npm:8.0.5"
     "@playwright/test": "npm:1.59.1"
     "@react-three/drei": "npm:10.7.7"
-    "@react-three/fiber": "npm:9.6.0"
+    "@react-three/fiber": "npm:9.6.1"
     "@sentry/nextjs": "npm:10.50.0"
     "@storybook/addon-themes": "npm:10.3.5"
     "@storybook/addon-vitest": "npm:10.3.5"
@@ -5752,9 +5752,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/fiber@npm:9.6.0":
-  version: 9.6.0
-  resolution: "@react-three/fiber@npm:9.6.0"
+"@react-three/fiber@npm:9.6.1":
+  version: 9.6.1
+  resolution: "@react-three/fiber@npm:9.6.1"
   dependencies:
     "@babel/runtime": "npm:^7.17.8"
     "@types/webxr": "npm:*"
@@ -5788,7 +5788,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 10c0/efe71eb27b4ba68118c806f7d72f9af85f499f3dc348e04955e8eed75a92033e98e7ea2f8b5f298df7bdcf7bd01856e1fd1068bcbfdab17c2ca9afdcc8f3e746
+  checksum: 10c0/669d78d126ab61977356936d3a89ce0f15051ec4d49e130d009cdc1ee3f6e01763322d4ef0b2720852d0cb457595417aeffccc433b33abd1d07b23b891527ea2
   languageName: node
   linkType: hard
 
