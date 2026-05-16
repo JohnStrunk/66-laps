@@ -47,11 +47,15 @@ function PoolContents(props: PoolProps) {
     }, [app, canvasRect]);
 
     useEffect(() => {
+        if (!app.isInitialised) return;
+
         const resizeElement = app.app.resizeTo as HTMLElement;
         if (resizeElement) {
             const observer = new ResizeObserver(() => {
-                // Ensure Pixi knows about the resize and re-calculates its screen size.
-                app.app.resize();
+                // Note: PixiJS v8's Application handles its own resizing automatically when
+                // the `resizeTo` prop is provided. Calling `app.app.resize()` manually here
+                // is redundant and can cause TypeErrors if called during initialization or
+                // destruction (where Pixi specifically nullifies the method).
                 updateCanvasSize();
             });
             observer.observe(resizeElement);
