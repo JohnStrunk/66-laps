@@ -40,21 +40,21 @@ __metadata:
     jsdom: "npm:29.1.1"
     jspdf: "npm:4.2.1"
     jspdf-autotable: "npm:5.0.7"
-    lucide-react: "npm:1.7.0"
+    lucide-react: "npm:1.16.0"
     monocart-coverage-reports: "npm:2.12.11"
     motion: "npm:12.38.0"
     next: "npm:16.2.6"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.18.1"
     playwright: "npm:1.59.1"
-    posthog-js: "npm:1.372.2"
+    posthog-js: "npm:1.373.5"
     react: "npm:19.2.6"
     react-dom: "npm:19.2.6"
     storybook: "npm:10.3.6"
     tailwindcss: "npm:4.3.0"
     three: "npm:0.184.0"
     tsx: "npm:4.21.0"
-    typescript: "npm:5.9.3"
+    typescript: "npm:6.0.3"
     vite: "npm:8.0.12"
     vitest: "npm:4.1.5"
     webpack: "npm:5.106.2"
@@ -4555,19 +4555,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/core@npm:1.27.6":
-  version: 1.27.6
-  resolution: "@posthog/core@npm:1.27.6"
+"@posthog/core@npm:1.29.2":
+  version: 1.29.2
+  resolution: "@posthog/core@npm:1.29.2"
   dependencies:
-    "@posthog/types": "npm:1.372.2"
-  checksum: 10c0/b6bbefc50850d5116841d8d89bb5215824b15c3bc23a490872cc5cecad1c4ba149aae5275e6cc644995779a5fa4594e95e341b808dfb3a2346afd3e30aa040fa
+    "@posthog/types": "npm:1.373.5"
+  checksum: 10c0/eb598df780c90838d1fad7f135e0c6d3a3a505182902778543b5e10d0588057b032c618baf45cb58bb19efb80b0dcd88af9f328886524a3d99bafde90b59e02f
   languageName: node
   linkType: hard
 
-"@posthog/types@npm:1.372.2":
-  version: 1.372.2
-  resolution: "@posthog/types@npm:1.372.2"
-  checksum: 10c0/c1fa247389a74a451b83651fc0e10abd9d13a3f726caf28ca4d34c906e38b7814a5cb132bc9928c047a71db76bfe57ef3d99d4232613457e76b7d9eda1a5d4a2
+"@posthog/types@npm:1.373.5":
+  version: 1.373.5
+  resolution: "@posthog/types@npm:1.373.5"
+  checksum: 10c0/5627050abb167a9b6b8c419be5f6b1933ad32107154eaff58c4c8f54b3e97ee3a41444bbb64db726fdc80d0ca15e644ab74d5c9890f517be0e3060a5e40bdcd9
   languageName: node
   linkType: hard
 
@@ -12018,12 +12018,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:1.7.0":
-  version: 1.7.0
-  resolution: "lucide-react@npm:1.7.0"
+"lucide-react@npm:1.16.0":
+  version: 1.16.0
+  resolution: "lucide-react@npm:1.16.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/bf913e1c9b8438fd1e19dbee602b4c1a596109faadd361b452e210135e51ff1147cbce9c1aa686a9c419f01541540536507a03202bc2cebebc04eb9a3cf8be2e
+  checksum: 10c0/d1c4b7f1abdc8b5c729a5bd74d875f0b0db732b2e8d0cc8c76f9e167818b81a6b246a64986ab2fc1ae74cf9f8d16ce2cefe98fe5a6420b31f4fd6742b3181d5a
   languageName: node
   linkType: hard
 
@@ -13086,24 +13086,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.372.2":
-  version: 1.372.2
-  resolution: "posthog-js@npm:1.372.2"
+"posthog-js@npm:1.373.5":
+  version: 1.373.5
+  resolution: "posthog-js@npm:1.373.5"
   dependencies:
     "@opentelemetry/api": "npm:^1.9.0"
     "@opentelemetry/api-logs": "npm:^0.208.0"
     "@opentelemetry/exporter-logs-otlp-http": "npm:^0.208.0"
     "@opentelemetry/resources": "npm:^2.2.0"
     "@opentelemetry/sdk-logs": "npm:^0.208.0"
-    "@posthog/core": "npm:1.27.6"
-    "@posthog/types": "npm:1.372.2"
+    "@posthog/core": "npm:1.29.2"
+    "@posthog/types": "npm:1.373.5"
     core-js: "npm:^3.38.1"
     dompurify: "npm:^3.3.2"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.28.2"
     query-selector-shadow-dom: "npm:^1.0.1"
     web-vitals: "npm:^5.1.0"
-  checksum: 10c0/0d47b428dae76448f1ea2bc4adce5fe01a252c84e947835bdac4615284996a09543f878dd497cd50e9ba055d86db5a84998c109786e2e8af870e610878e60ced
+  checksum: 10c0/75763f63d52a3d32c588a94a596fceb6514171c8434f18f039209927e79292c3f8f10ae8b0028ea2322df4b6ec0aa4c6dd9cb69d41546e5b06d3c5f7a27bd3aa
   languageName: node
   linkType: hard
 
@@ -15228,23 +15228,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.9.3":
-  version: 5.9.3
-  resolution: "typescript@npm:5.9.3"
+"typescript@npm:6.0.3":
+  version: 6.0.3
+  resolution: "typescript@npm:6.0.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/6bd7552ce39f97e711db5aa048f6f9995b53f1c52f7d8667c1abdc1700c68a76a308f579cd309ce6b53646deb4e9a1be7c813a93baaf0a28ccd536a30270e1c5
+  checksum: 10c0/4a25ff5045b984370f48f196b3a0120779b1b343d40b9a68d114ea5e5fff099809b2bb777576991a63a5cd59cf7bffd96ff6fe10afcefbcb8bd6fb96ad4b6606
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>":
-  version: 5.9.3
-  resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
+"typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>":
+  version: 6.0.3
+  resolution: "typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>::version=6.0.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/ad09fdf7a756814dce65bc60c1657b40d44451346858eea230e10f2e95a289d9183b6e32e5c11e95acc0ccc214b4f36289dcad4bf1886b0adb84d711d336a430
+  checksum: 10c0/2f25c74e65663c248fa1ade2b8459d9ce5372ff9dad07067310f132966ebec1d93f6c42f0baf77a6b6a7a91460463f708e6887013aaade22111037457c6b25df
   languageName: node
   linkType: hard
 
