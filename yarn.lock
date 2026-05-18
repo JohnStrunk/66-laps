@@ -9,7 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "66-laps@workspace:."
   dependencies:
-    "@cucumber/cucumber": "npm:12.8.3"
+    "@cucumber/cucumber": "npm:12.9.0"
     "@ducanh2912/next-pwa": "npm:10.2.9"
     "@heroui/react": "npm:2.8.10"
     "@opentelemetry/api": "npm:1.9.1"
@@ -1333,9 +1333,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:12.8.3":
-  version: 12.8.3
-  resolution: "@cucumber/cucumber@npm:12.8.3"
+"@cucumber/cucumber@npm:12.9.0":
+  version: 12.9.0
+  resolution: "@cucumber/cucumber@npm:12.9.0"
   dependencies:
     "@cucumber/ci-environment": "npm:13.0.0"
     "@cucumber/cucumber-expressions": "npm:19.0.0"
@@ -1378,7 +1378,7 @@ __metadata:
     yup: "npm:1.7.1"
   bin:
     cucumber-js: bin/cucumber.js
-  checksum: 10c0/8a1d5e8816dfbaa75aa17be6edb915d88ead809aa28fc86bef82ede22463cebb9b40015a7fc81ede40d19cdc55492a94004a17167e8052739145ba2a745ac3cf
+  checksum: 10c0/bbcb94ee9ae5f69d5f8d53b8e35fb7781acda3021992e3a7a98e93e8a37693bbeb019f19c69a944caec83cd1ad66fe056bd48bfe433064fd6a6d7812de1348ad
   languageName: node
   linkType: hard
 
