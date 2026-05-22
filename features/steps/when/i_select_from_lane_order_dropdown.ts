@@ -1,7 +1,5 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
-import { selectDropdownItem } from '../../support/utils';
-import { TestWindow } from '../../support/store-type';
 
 When('I select {string} from the Lane Order Dropdown', async function (this: CustomWorld, orderOption: string) {
   const trigger = this.page!.locator('[data-testid="lane-order-dropdown-trigger"]');

@@ -1,5 +1,5 @@
 import { PoolLength } from "@/components/Pool/Pool";
-import { Button, Form, Select, ListBox, Label } from "@heroui/react";
+import { Button, Form, Select, ListBox } from "@heroui/react";
 import { useState } from "react";
 
 export enum NumberingDirection {

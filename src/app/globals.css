@@ -34,9 +34,13 @@ styling. */
   --color-success: #00bc7d;
   --color-danger: #82181a;
   --color-danger-700: #b91c1c; /* red-700 */
+
+  /* Missing theme variables from v2 migration */
+  --drop-shadow-accent-soft: 0 10px 20px rgba(25, 60, 184, 0.3);
 }
 
 .dark {
   --accent: #8ec5ff;
   --accent-foreground: #000000;
+  --drop-shadow-accent-soft: 0 10px 20px rgba(142, 197, 255, 0.4);
 }
