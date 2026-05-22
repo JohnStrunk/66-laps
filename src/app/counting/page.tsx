@@ -1,7 +1,7 @@
 'use client'
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
-import { Image } from "@heroui/react";
+import Image from "next/image";
 
 export default function Page() {
     return (
@@ -27,10 +27,12 @@ export default function Page() {
                         <Image
                             alt="Lap counting"
                             src="/images/500-empty.png"
-                            fetchPriority="high"
+                            width={320}
+                            height={320}
                             loading="eager"
                             className="max-w-2xs mt-2 mb-2 md:ml-6 md:mt-6 p-2 shadow-lg shadow-black/20 border border-gray-300"
                         />
+
                     </div>
 
                     <div className="flex flex-col items-center md:flex-row-reverse md:items-start">
@@ -45,11 +47,13 @@ export default function Page() {
                         </div>
                         <Image
                             src="/images/500-L2.png"
-                            fetchPriority="high"
+                            width={320}
+                            height={320}
                             loading="eager"
                             alt="Sheet with only a few places indicated for lap 2"
                             className="max-w-2xs mt-2 mb-2 md:mr-6 md:mt-6 p-2 shadow-lg shadow-black/20 border border-gray-300"
                         />
+
                     </div>
 
                     <div className="flex flex-col items-center md:flex-row md:items-start">
@@ -60,6 +64,8 @@ export default function Page() {
                         </div>
                         <Image
                             src="/images/500-L6.png"
+                            width={320}
+                            height={320}
                             loading="eager"
                             alt="Sheet filled out through lap 6"
                             className="max-w-2xs mt-2 mb-2 md:ml-6 md:mt-6 p-2 shadow-lg shadow-black/20 border border-gray-300"
@@ -76,6 +82,8 @@ export default function Page() {
                         </div>
                         <Image
                             src="/images/500-L16.png"
+                            width={320}
+                            height={320}
                             loading="lazy"
                             alt="Sheet showing a swimmer that has been lapped"
                             className="max-w-2xs mt-2 mb-2 md:mr-6 md:mt-6 p-2 shadow-lg shadow-black/20 border border-gray-300"
@@ -92,6 +100,8 @@ export default function Page() {
                         </div>
                         <Image
                             src="/images/500-L18.png"
+                            width={320}
+                            height={320}
                             loading="lazy"
                             alt="Sheet with a single swimmer on the bell lap"
                             className="max-w-2xs mt-2 mb-2 md:ml-6 md:mt-6 p-2 shadow-lg shadow-black/20 border border-gray-300"
@@ -107,6 +117,8 @@ export default function Page() {
                         </div>
                         <Image
                             src="/images/500-L20.png"
+                            width={320}
+                            height={320}
                             loading="lazy"
                             alt="Completed lap counting sheet"
                             className="max-w-2xs mt-2 mb-2 md:mr-6 md:mt-6 p-2 shadow-lg shadow-black/20 border border-gray-300"

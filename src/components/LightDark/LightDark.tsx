@@ -19,44 +19,53 @@ export default function LightDark() {
     return (
         <>
             <div className="flex flex-row gap-2 items-center justify-center">
-                <Tooltip content="Automatic">
-                    <Button
-                        isIconOnly
-                        variant={theme === "system" ? "solid" : "faded"}
-                        aria-label="Automatic light/dark mode"
-                        onPress={() => {
-                            setTheme("system");
-                            ph_event_set_theme(postHog, "system");
-                        }}
-                    >
-                        <SunMoon className="w-full h-full m-2" />
-                    </Button>
+                <Tooltip>
+                    <Tooltip.Trigger>
+                        <Button
+                            isIconOnly
+                            variant={theme === "system" ? "primary" : "outline"}
+                            aria-label="Automatic light/dark mode"
+                            onPress={() => {
+                                setTheme("system");
+                                ph_event_set_theme(postHog, "system");
+                            }}
+                        >
+                            <SunMoon className="w-full h-full m-2" />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>Automatic</Tooltip.Content>
                 </Tooltip>
-                <Tooltip content="Dark">
-                    <Button
-                        isIconOnly
-                        variant={theme === "dark" ? "solid" : "faded"}
-                        aria-label="Switch to dark mode"
-                        onPress={() => {
-                            setTheme("dark");
-                            ph_event_set_theme(postHog, "dark");
-                        }}
-                    >
-                        <Moon className="w-full h-full m-2" />
-                    </Button>
+                <Tooltip>
+                    <Tooltip.Trigger>
+                        <Button
+                            isIconOnly
+                            variant={theme === "dark" ? "primary" : "outline"}
+                            aria-label="Switch to dark mode"
+                            onPress={() => {
+                                setTheme("dark");
+                                ph_event_set_theme(postHog, "dark");
+                            }}
+                        >
+                            <Moon className="w-full h-full m-2" />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>Dark</Tooltip.Content>
                 </Tooltip>
-                <Tooltip content="Light">
-                    <Button
-                        isIconOnly
-                        variant={theme === "light" ? "solid" : "faded"}
-                        aria-label="Switch to light mode"
-                        onPress={() => {
-                            setTheme("light");
-                            ph_event_set_theme(postHog, "light");
-                        }}
-                    >
-                        <Sun className="w-full h-full m-2" />
-                    </Button>
+                <Tooltip>
+                    <Tooltip.Trigger>
+                        <Button
+                            isIconOnly
+                            variant={theme === "light" ? "primary" : "outline"}
+                            aria-label="Switch to light mode"
+                            onPress={() => {
+                                setTheme("light");
+                                ph_event_set_theme(postHog, "light");
+                            }}
+                        >
+                            <Sun className="w-full h-full m-2" />
+                        </Button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>Light</Tooltip.Content>
                 </Tooltip>
             </div>
         </>

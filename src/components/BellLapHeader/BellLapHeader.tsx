@@ -3,11 +3,7 @@
 import {
   Button,
   Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Card,
-  CardBody,
   Tooltip,
 } from "@heroui/react";
 import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
@@ -114,11 +110,11 @@ export default function BellLapHeader() {
         data-testid="bell-lap-header"
       >
         <Card className="shadow-md bg-content1">
-          <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
+          <Card.Content className="flex flex-row items-center justify-between p-2 sm:p-3">
             <h1 className="text-xl font-bold px-2">66 Laps</h1>
             <Button
               isIconOnly
-              variant="flat"
+              variant="secondary"
               size="sm"
               onPress={toggleTheme}
               aria-label="Toggle light/dark mode"
@@ -126,7 +122,7 @@ export default function BellLapHeader() {
             >
               {renderThemeIcon()}
             </Button>
-          </CardBody>
+          </Card.Content>
         </Card>
       </header>
     );
@@ -140,11 +136,11 @@ export default function BellLapHeader() {
         data-testid="bell-lap-header"
       >
         <Card className="shadow-md bg-content1">
-          <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
+          <Card.Content className="flex flex-row items-center justify-between p-2 sm:p-3">
             <div className="flex items-center gap-2">
               <Button
                 isIconOnly
-                variant="flat"
+                variant="secondary"
                 size="sm"
                 onPress={() => window.history.back()}
                 aria-label="Back to Main Menu"
@@ -156,7 +152,7 @@ export default function BellLapHeader() {
             </div>
             <Button
               isIconOnly
-              variant="flat"
+              variant="secondary"
               size="sm"
               onPress={toggleTheme}
               aria-label="Toggle light/dark mode"
@@ -164,7 +160,7 @@ export default function BellLapHeader() {
             >
               {renderThemeIcon()}
             </Button>
-          </CardBody>
+          </Card.Content>
         </Card>
       </header>
     );
@@ -178,11 +174,11 @@ export default function BellLapHeader() {
         data-testid="bell-lap-header"
       >
         <Card className="shadow-md bg-content1">
-          <CardBody className="flex flex-row items-center justify-between p-2 sm:p-3">
+          <Card.Content className="flex flex-row items-center justify-between p-2 sm:p-3">
             <div className="flex items-center gap-2">
               <Button
                 isIconOnly
-                variant="flat"
+                variant="secondary"
                 size="sm"
                 onPress={handleExit}
                 aria-label="Back to Main Menu"
@@ -194,7 +190,7 @@ export default function BellLapHeader() {
             </div>
             <Button
               isIconOnly
-              variant="flat"
+              variant="secondary"
               size="sm"
               onPress={toggleTheme}
               aria-label="Toggle light/dark mode"
@@ -202,7 +198,7 @@ export default function BellLapHeader() {
             >
               {renderThemeIcon()}
             </Button>
-          </CardBody>
+          </Card.Content>
         </Card>
       </header>
     );
@@ -216,12 +212,12 @@ export default function BellLapHeader() {
         data-testid="bell-lap-header"
       >
         <Card className="shadow-md bg-content1">
-          <CardBody className="flex flex-col gap-1 p-2 sm:p-3">
+          <Card.Content className="flex flex-col gap-1 p-2 sm:p-3">
             <div className="flex flex-row items-center justify-between">
               <div className="flex items-center gap-2 overflow-hidden">
                 <Button
                   isIconOnly
-                  variant="flat"
+                  variant="secondary"
                   size="sm"
                   onPress={handleBackToHistory}
                   aria-label="Back to History"
@@ -240,35 +236,41 @@ export default function BellLapHeader() {
               <div className="flex gap-1">
                 {selectedRace && (
                   <>
-                    <Tooltip content="Share PDF">
-                      <Button
-                        isIconOnly
-                        variant="flat"
-                        size="sm"
-                        onPress={() => shareRacePDF(selectedRace)}
-                        aria-label="Share"
-                        data-testid="share-history-button"
-                      >
-                        <Share2 size={18} />
-                      </Button>
+                    <Tooltip>
+                      <Tooltip.Trigger>
+                        <Button
+                          isIconOnly
+                          variant="secondary"
+                          size="sm"
+                          onPress={() => shareRacePDF(selectedRace)}
+                          aria-label="Share"
+                          data-testid="share-history-button"
+                        >
+                          <Share2 size={18} />
+                        </Button>
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>Share PDF</Tooltip.Content>
                     </Tooltip>
-                    <Tooltip content="Download PDF">
-                      <Button
-                        isIconOnly
-                        variant="flat"
-                        size="sm"
-                        onPress={() => downloadRacePDF(selectedRace)}
-                        aria-label="Download"
-                        data-testid="download-history-button"
-                      >
-                        <Download size={18} />
-                      </Button>
+                    <Tooltip>
+                      <Tooltip.Trigger>
+                        <Button
+                          isIconOnly
+                          variant="secondary"
+                          size="sm"
+                          onPress={() => downloadRacePDF(selectedRace)}
+                          aria-label="Download"
+                          data-testid="download-history-button"
+                        >
+                          <Download size={18} />
+                        </Button>
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>Download PDF</Tooltip.Content>
                     </Tooltip>
                   </>
                 )}
                 <Button
                   isIconOnly
-                  variant="flat"
+                  variant="secondary"
                   size="sm"
                   onPress={toggleTheme}
                   aria-label="Toggle light/dark mode"
@@ -278,7 +280,7 @@ export default function BellLapHeader() {
                 </Button>
               </div>
             </div>
-          </CardBody>
+          </Card.Content>
         </Card>
       </header>
     );
@@ -291,13 +293,13 @@ export default function BellLapHeader() {
       data-testid="bell-lap-header"
     >
       <Card className="shadow-md bg-content1">
-        <CardBody className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-3">
+        <Card.Content className="flex flex-col gap-1 sm:gap-2 p-2 sm:p-3">
           {/* Row 1: Race Info & Controls */}
           <div className="flex flex-row items-center justify-between gap-1">
             <div className="flex flex-row items-center gap-2 flex-grow overflow-hidden">
               <Button
                 isIconOnly
-                variant="flat"
+                variant="secondary"
                 size="sm"
                 onPress={handleExit}
                 aria-label="Back to Main Menu"
@@ -312,25 +314,26 @@ export default function BellLapHeader() {
 
             <div className="flex flex-row items-center gap-1">
               <Dropdown>
-                <DropdownTrigger>
-                  <Button variant="flat" size="sm" className="min-w-0 px-2" endContent={<ChevronDown size={14} />} aria-label="Lane Order" data-testid="lane-order-dropdown-trigger">
+                <Dropdown.Trigger>
+                  <Button variant="secondary" size="sm" className="min-w-0 px-2 flex items-center gap-1" aria-label="Lane Order" data-testid="lane-order-dropdown-trigger">
                     {isFlipped ? `${safeLaneCount} - 1` : `1 - ${safeLaneCount}`}
+                    <ChevronDown size={14} />
                   </Button>
-                </DropdownTrigger>
-                <DropdownMenu
+                </Dropdown.Trigger>
+                <Dropdown.Menu
                   aria-label="Lane Order Selection"
                   onAction={(key) => setIsFlipped(key === "bottom-to-top")}
                   selectedKeys={[isFlipped ? "bottom-to-top" : "top-to-bottom"]}
                   selectionMode="single"
                 >
-                  <DropdownItem key="top-to-bottom">{`1 - ${safeLaneCount}`}</DropdownItem>
-                  <DropdownItem key="bottom-to-top">{`${safeLaneCount} - 1`}</DropdownItem>
-                </DropdownMenu>
+                  <Dropdown.Item id="top-to-bottom" data-testid="lane-order-item-top">{`1 - ${safeLaneCount}`}</Dropdown.Item>
+                  <Dropdown.Item id="bottom-to-top" data-testid="lane-order-item-bottom">{`${safeLaneCount} - 1`}</Dropdown.Item>
+                </Dropdown.Menu>
               </Dropdown>
 
               <Button
                 isIconOnly
-                variant="flat"
+                variant="secondary"
                 size="sm"
                 onPress={toggleTheme}
                 aria-label="Toggle light/dark mode"
@@ -356,7 +359,7 @@ export default function BellLapHeader() {
               ))}
             </div>
           </div>
-        </CardBody>
+        </Card.Content>
       </Card>
     </header>
   );

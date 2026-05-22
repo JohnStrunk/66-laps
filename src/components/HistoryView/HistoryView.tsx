@@ -5,15 +5,9 @@ import { downloadRacePDF, shareRacePDF } from "@/modules/pdfGenerator";
 import {
   Button,
   Card,
-  CardBody,
   ScrollShadow,
   Tooltip,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure
+  Modal
 } from "@heroui/react";
 import { History, Share2, Download, Trash2 } from "lucide-react";
 import { useSyncExternalStore, useState } from "react";
@@ -23,11 +17,7 @@ const subscribe = () => () => {};
 export default function HistoryView() {
   const { history, setSelectedRaceId, setView, deleteRace, clearHistory } = useBellLapStore();
   const [raceToDelete, setRaceToDelete] = useState<RaceRecord | null>(null);
-  const {
-    isOpen: isDeleteAllOpen,
-    onOpen: onDeleteAllOpen,
-    onOpenChange: onDeleteAllOpenChange
-  } = useDisclosure();
+  const [isDeleteAllOpen, setIsDeleteAllOpen] = useState(false);
 
   const mounted = useSyncExternalStore(
     subscribe,
@@ -64,7 +54,7 @@ export default function HistoryView() {
 
   const confirmDeleteAll = () => {
     clearHistory();
-    onDeleteAllOpenChange();
+    setIsDeleteAllOpen(false);
   };
 
   if (!mounted) {
@@ -72,12 +62,12 @@ export default function HistoryView() {
   }
 
   return (
-    <div className="flex flex-col h-full w-full bg-background" data-testid="history-view">
-      <ScrollShadow className="flex-1 p-4 flex flex-col">
-        {(!history || history.length === 0) ? (
-          <div className="flex flex-col items-center justify-center flex-1 text-default-400">
-            <History size={48} className="mb-4 opacity-50" />
-            <p>No race history recorded yet.</p>
+    <div className="flex flex-col h-full w-full bg-background overflow-hidden p-2" data-testid="history-view">
+      <ScrollShadow className="flex-1 min-h-0 px-2 py-4">
+        {history.length === 0 ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-4 text-default-400">
+            <History size={64} opacity={0.2} />
+            <p className="text-xl font-medium">No race history recorded yet.</p>
           </div>
         ) : (
           <>
@@ -85,17 +75,17 @@ export default function HistoryView() {
               {history.map((record: RaceRecord) => (
                 <Card
                   key={record.id}
-                  className="w-full"
+                  className="w-full shadow-sm hover:shadow-md transition-shadow bg-content1 cursor-pointer"
+                  onClick={() => handleRecordClick(record.id)}
                   data-testid="history-record"
                 >
-                  <CardBody className="flex flex-row items-center justify-between p-0">
+                  <Card.Content className="flex flex-row items-center justify-between p-0">
                     <div
-                      className="flex-1 flex flex-col gap-1 p-3 sm:p-4 cursor-pointer hover:bg-default-100 transition-colors"
-                      onClick={() => handleRecordClick(record.id)}
+                      className="flex-1 flex flex-col gap-1 p-3 sm:p-4 hover:bg-default-100 transition-colors"
                       role="button"
                       tabIndex={0}
                     >
-                      <div className="flex items-baseline gap-2">
+                      <div className="flex items-baseline gap-2 pointer-events-none">
                         <span className="font-bold text-xl sm:text-2xl">{record.event}</span>
                         <span className="text-base sm:text-lg text-default-500">
                           {new Date(record.startTime).toLocaleString(undefined, {
@@ -103,7 +93,7 @@ export default function HistoryView() {
                           })}
                         </span>
                       </div>
-                      <div className="flex gap-3 text-base sm:text-lg text-default-500" data-testid="history-record-info">
+                      <div className="flex gap-3 text-base sm:text-lg text-default-500 pointer-events-none" data-testid="history-record-info">
                         <span>{record.laneCount} Lanes</span>
                         {(record.eventNumber || record.heatNumber) && (
                           <span>
@@ -115,62 +105,73 @@ export default function HistoryView() {
                       </div>
                     </div>
                     <div className="flex gap-1 pr-2 sm:pr-3">
-                      <Tooltip content="Share PDF">
-                        <Button
-                          isIconOnly
-                          variant="light"
-                          size="sm"
-                          onClick={(e) => {
-                              e.stopPropagation();
-                              void handleShare(e as unknown as React.MouseEvent, record);
-                          }}
-                          aria-label="Share"
-                          data-testid="share-history-button"
-                        >
-                          <Share2 size={20} />
-                        </Button>
+                      <Tooltip>
+                        <Tooltip.Trigger data-testid="share-history-button-trigger">
+                          <Button
+                            isIconOnly
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                void handleShare(e as unknown as React.MouseEvent, record);
+                            }}
+                            aria-label="Share"
+                            data-testid="share-history-button"
+                          >
+                            <Share2 size={20} />
+                          </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>Share PDF</Tooltip.Content>
                       </Tooltip>
-                      <Tooltip content="Download PDF">
-                        <Button
-                          isIconOnly
-                          variant="light"
-                          size="sm"
-                          onClick={(e) => {
-                              e.stopPropagation();
-                              void handleDownload(e as unknown as React.MouseEvent, record);
-                          }}
-                          aria-label="Download"
-                          data-testid="download-history-button"
-                        >
-                          <Download size={20} />
-                        </Button>
+                      <Tooltip>
+                        <Tooltip.Trigger data-testid="download-history-button-trigger">
+                          <Button
+                            isIconOnly
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                void handleDownload(e as unknown as React.MouseEvent, record);
+                            }}
+                            aria-label="Download"
+                            data-testid="download-history-button"
+                          >
+                            <Download size={20} />
+                          </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>Download PDF</Tooltip.Content>
                       </Tooltip>
-                      <Tooltip content="Delete Race">
-                        <Button
-                          isIconOnly
-                          variant="light"
-                          color="danger"
-                          size="sm"
-                          onClick={(e) => handleDeleteClick(e as unknown as React.MouseEvent, record)}
-                          aria-label="Delete"
-                          data-testid="delete-history-button"
-                        >
-                          <Trash2 size={20} />
-                        </Button>
+                      <Tooltip>
+                        <Tooltip.Trigger data-testid="delete-history-button-trigger">
+                          <Button
+                            isIconOnly
+                            variant="ghost"
+                            className="text-danger"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick(e as unknown as React.MouseEvent, record);
+                            }}
+                            aria-label="Delete"
+                            data-testid="delete-history-button"
+                          >
+                            <Trash2 size={20} />
+                          </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>Delete Race</Tooltip.Content>
                       </Tooltip>
                     </div>
-                  </CardBody>
+                  </Card.Content>
                 </Card>
               ))}
             </div>
             <div className="mt-6 mb-8 flex justify-center pb-safe-bottom">
               <Button
-                color="danger"
-                variant="flat"
-                startContent={<Trash2 size={18} />}
-                onClick={onDeleteAllOpen}
+                variant="danger-soft"
+                onPress={() => setIsDeleteAllOpen(true)}
                 data-testid="delete-all-history-button"
               >
+                <Trash2 size={18} className="mr-2" />
                 Delete all
               </Button>
             </div>
@@ -179,74 +180,86 @@ export default function HistoryView() {
       </ScrollShadow>
 
       {/* Delete Single Race Modal */}
-      <Modal isOpen={!!raceToDelete} onOpenChange={() => setRaceToDelete(null)}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Delete Race</ModalHeader>
-              <ModalBody>
-                <p>Are you sure you want to delete this race record?</p>
-                {raceToDelete && (
-                  <div className="p-3 bg-default-100 rounded-lg">
-                    <p className="font-bold">{raceToDelete.event}</p>
-                    <p className="text-sm text-default-500">
-                      {new Date(raceToDelete.startTime).toLocaleString()}
-                    </p>
-                  </div>
-                )}
-                <p className="text-danger text-sm">This action cannot be undone.</p>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  variant="light"
-                  onPress={onClose}
-                  data-testid="cancel-delete-button"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="danger"
-                  onPress={confirmDelete}
-                  data-testid="confirm-delete-button"
-                >
-                  Delete
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {!!raceToDelete && (
+        <Modal isOpen={true} onOpenChange={(isOpen) => !isOpen && setRaceToDelete(null)}>
+          <Modal.Backdrop />
+          <Modal.Container>
+            <Modal.Dialog data-testid="delete-race-dialog" aria-label="Delete Race">
+              {({ close }) => (
+                <>
+                  <Modal.Header className="flex flex-col gap-1">
+                    <header>Delete Race</header>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>Are you sure you want to delete this race record?</p>
+                    <div className="p-3 bg-default-100 rounded-lg">
+                      <p className="font-bold">{raceToDelete.event}</p>
+                      <p className="text-sm text-default-500">
+                        {new Date(raceToDelete.startTime).toLocaleString()}
+                      </p>
+                    </div>
+                    <p className="text-danger text-sm">This action cannot be undone.</p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="tertiary"
+                      onPress={close}
+                      data-testid="cancel-delete-button"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onPress={confirmDelete}
+                      data-testid="confirm-delete-button"
+                    >
+                      Delete
+                    </Button>
+                  </Modal.Footer>
+                </>
+              )}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal>
+      )}
 
       {/* Delete All History Modal */}
-      <Modal isOpen={isDeleteAllOpen} onOpenChange={onDeleteAllOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Delete All History</ModalHeader>
-              <ModalBody>
-                <p>Are you sure you want to delete <b>all</b> race history?</p>
-                <p className="text-danger text-sm">This will permanently remove all {history.length} records. This action cannot be undone.</p>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  variant="light"
-                  onPress={onClose}
-                  data-testid="cancel-delete-all-button"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="danger"
-                  onPress={confirmDeleteAll}
-                  data-testid="confirm-delete-all-button"
-                >
-                  Delete All
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {isDeleteAllOpen && (
+        <Modal isOpen={true} onOpenChange={setIsDeleteAllOpen}>
+          <Modal.Backdrop />
+          <Modal.Container>
+            <Modal.Dialog data-testid="delete-all-dialog" aria-label="Delete All History">
+              {({ close }) => (
+                <>
+                  <Modal.Header className="flex flex-col gap-1">
+                    <header>Delete All History</header>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>Are you sure you want to delete <b>all</b> race history?</p>
+                    <p className="text-danger text-sm">This will permanently remove all {history.length} records. This action cannot be undone.</p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="tertiary"
+                      onPress={close}
+                      data-testid="cancel-delete-all-button"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onPress={confirmDeleteAll}
+                      data-testid="confirm-delete-all-button"
+                    >
+                      Delete All
+                    </Button>
+                  </Modal.Footer>
+                </>
+              )}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal>
+      )}
     </div>
   );
 }

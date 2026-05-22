@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button, Card } from "@heroui/react";
 import { Minus, Plus } from "lucide-react";
 import { useBellLapStore, EVENT_CONFIGS, getLaneStatus } from "@/modules/bellLapStore";
 import { useRef } from "react";
@@ -78,13 +78,13 @@ export default function LaneRow({
   return (
     <Card
       className={`flex-1 min-h-0 transition-opacity shadow-sm ${
-        lane.isEmpty ? 'bg-neutral-200 dark:bg-neutral-900 opacity-60' : 'bg-content1'
+        lane.isEmpty ? 'bg-neutral-200 dark:bg-neutral-900 opacity-60' : 'bg-white dark:bg-neutral-800'
       }`}
       data-testid="lane-row"
       data-lane-number={laneNumber}
     >
-      <CardBody
-        className="p-0 flex flex-row w-full h-full overflow-hidden"
+      <Card.Content
+        className="p-0 grid grid-cols-2 w-full h-full overflow-hidden"
         onPointerDown={lane.isEmpty ? handlePointerDown : undefined}
         onPointerUp={lane.isEmpty ? handlePointerUp : undefined}
         onPointerLeave={lane.isEmpty ? handlePointerCancel : undefined}
@@ -93,7 +93,7 @@ export default function LaneRow({
       >
         {lane.isEmpty ? (
           <div
-            className="flex-1 flex items-center justify-center"
+            className="col-span-2 flex items-center justify-center"
             data-testid="lane-empty-state"
           >
             <span className="text-4xl font-black select-none text-foreground/40">
@@ -104,13 +104,13 @@ export default function LaneRow({
           <>
             {/* Zone A: Manual Controls (50%) */}
             <div
-              className="basis-[50%] w-[50%] flex-none flex flex-row items-center justify-center gap-1 sm:gap-2 border-r border-divider p-2 overflow-hidden"
+              className="flex flex-row items-center justify-center gap-1 sm:gap-2 border-r border-black/10 dark:border-white/10 p-2 overflow-hidden"
               data-testid="lane-zone-a"
             >
               <Button
                 isIconOnly
-                color="danger"
-                variant="flat"
+                variant="danger-soft"
+                className="w-12 h-12 min-w-12 bg-danger"
                 onPress={() => {
                   updateLaneCount(laneNumber, -2);
                 }}
@@ -118,7 +118,6 @@ export default function LaneRow({
                 data-disabled={lane.count <= 0}
                 data-testid={`decrement-button-lane-${laneNumber}`}
                 aria-label={`Decrement lane ${laneNumber}`}
-                className="w-12 h-12 min-w-12"
               >
                 <Minus size={24} />
               </Button>
@@ -132,8 +131,7 @@ export default function LaneRow({
               </div>
               <Button
                 isIconOnly
-                color="success"
-                variant="flat"
+                variant="secondary"
                 onPress={() => {
                   updateLaneCount(laneNumber, 2);
                 }}
@@ -141,7 +139,7 @@ export default function LaneRow({
                 data-disabled={lane.count >= config.laps}
                 data-testid={`increment-button-lane-${laneNumber}`}
                 aria-label={`Increment lane ${laneNumber}`}
-                className="w-12 h-12 min-w-12"
+                className="w-12 h-12 min-w-12 bg-success text-[#00bc7d]"
               >
                 <Plus size={24} />
               </Button>
@@ -149,7 +147,7 @@ export default function LaneRow({
 
             {/* Zone B: Touch Pad (50%) */}
             <div
-              className={`basis-[50%] relative flex items-center justify-center overflow-hidden transition-colors ${
+              className={`relative flex items-center justify-center overflow-hidden transition-colors ${
                 isFinished
                   ? 'bg-white text-black pointer-events-none'
                   : isLocked
@@ -188,7 +186,7 @@ export default function LaneRow({
             </div>
           </>
         )}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

@@ -1,5 +1,5 @@
 import { PoolLength } from "@/components/Pool/Pool";
-import { Button, Form, Select, SelectItem } from "@heroui/react";
+import { Button, Form, Select, ListBox, Label } from "@heroui/react";
 import { useState } from "react";
 
 export enum NumberingDirection {
@@ -115,15 +115,21 @@ export default function Settings(props: SettingsProps) {
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
                     <Select
                         data-testid="settings-Number of Lanes"
-                        label="Number of Lanes"
-                        selectedKeys={new Set([lanes.toString()])}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0];
-                            if (selected) setLanes(parseInt(selected.toString()));
+                        selectedKey={lanes.toString()}
+                        onSelectionChange={(key) => {
+                            if (key) setLanes(parseInt(key.toString()));
                         }}>
-                        {LANE_OPTIONS.map(opt => (
-                            <SelectItem key={opt}>{opt}</SelectItem>
-                        ))}
+                        <label className="text-small font-medium">Number of Lanes</label>
+                        <Select.Trigger aria-label="Number of Lanes">
+                            <Select.Value />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox aria-label="Number of Lanes">
+                                {LANE_OPTIONS.map(opt => (
+                                    <ListBox.Item id={opt} key={opt}>{opt}</ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
                     </Select>
 
                     {isTestMode ? (
@@ -133,7 +139,7 @@ export default function Settings(props: SettingsProps) {
                                 data-testid="settings-Race Length"
                                 value={raceLength}
                                 onChange={(e) => setRaceLength(e.target.value)}
-                                className="bg-content1 rounded-medium p-2 border-1"
+                                className="bg-white dark:bg-black rounded-medium p-2 border-1"
                             >
                                 {RACE_LENGTH_OPTIONS.map(opt => (
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -143,84 +149,119 @@ export default function Settings(props: SettingsProps) {
                     ) : (
                         <Select
                             data-testid="settings-Race Length"
-                            label="Race Length"
-                            disallowEmptySelection
-                            selectedKeys={new Set([raceLength])}
-                            onSelectionChange={(keys) => {
-                                const selected = Array.from(keys)[0];
-                                if (selected) {
-                                    setRaceLength(selected.toString());
+                            selectedKey={raceLength}
+                            onSelectionChange={(key) => {
+                                if (key) {
+                                    setRaceLength(key.toString());
                                 }
                             }}>
-                            {RACE_LENGTH_OPTIONS.map(opt => (
-                                <SelectItem key={opt.value}>{opt.label}</SelectItem>
-                            ))}
+                            <label className="text-small font-medium">Race Length</label>
+                            <Select.Trigger aria-label="Race Length">
+                                <Select.Value />
+                            </Select.Trigger>
+                            <Select.Popover>
+                                <ListBox aria-label="Race Length">
+                                    {RACE_LENGTH_OPTIONS.map(opt => (
+                                        <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
+                                    ))}
+                                </ListBox>
+                            </Select.Popover>
                         </Select>
                     )}
 
                     <Select
                         data-testid="settings-Lane Numbering"
-                        label="Lane Numbering"
-                        selectedKeys={new Set([numberingDirection])}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0];
-                            if (selected) setNumberingDirection(selected.toString() as NumberingDirection);
+                        selectedKey={numberingDirection}
+                        onSelectionChange={(key) => {
+                            if (key) setNumberingDirection(key.toString() as NumberingDirection);
                         }}>
-                        {NUMBERING_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
-                        ))}
+                        <label className="text-small font-medium">Lane Numbering</label>
+                        <Select.Trigger aria-label="Lane Numbering">
+                            <Select.Value />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox aria-label="Lane Numbering">
+                                {NUMBERING_OPTIONS.map(opt => (
+                                    <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
                     </Select>
                     <Select
                         data-testid="settings-Difficulty"
-                        label="Difficulty"
-                        selectedKeys={new Set([difficulty.toString()])}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0];
-                            if (selected) setDifficulty(parseFloat(selected.toString()));
+                        selectedKey={difficulty.toString()}
+                        onSelectionChange={(key) => {
+                            if (key) setDifficulty(parseFloat(key.toString()));
                         }}>
-                        {DIFFICULTY_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
-                        ))}
+                        <label className="text-small font-medium">Difficulty</label>
+                        <Select.Trigger aria-label="Difficulty">
+                            <Select.Value />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox aria-label="Difficulty">
+                                {DIFFICULTY_OPTIONS.map(opt => (
+                                    <ListBox.Item id={opt.value.toString()} key={opt.value}>{opt.label}</ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
                     </Select>
                     <Select
                         data-testid="settings-Spread"
-                        label="Spread"
-                        selectedKeys={new Set([spread.toString()])}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0];
-                            if (selected) setSpread(parseFloat(selected.toString()));
+                        selectedKey={spread.toString()}
+                        onSelectionChange={(key) => {
+                            if (key) setSpread(parseFloat(key.toString()));
                         }}>
-                        {SPREAD_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
-                        ))}
+                        <label className="text-small font-medium">Spread</label>
+                        <Select.Trigger aria-label="Spread">
+                            <Select.Value />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox aria-label="Spread">
+                                {SPREAD_OPTIONS.map(opt => (
+                                    <ListBox.Item id={opt.value.toString()} key={opt.value}>{opt.label}</ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
                     </Select>
                     <Select
                         data-testid="settings-Starting End"
-                        label="Starting End"
-                        selectedKeys={new Set([startingEnd])}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0];
-                            if (selected) setStartingEnd(selected.toString() as StartingEnd);
+                        selectedKey={startingEnd}
+                        onSelectionChange={(key) => {
+                            if (key) setStartingEnd(key.toString() as StartingEnd);
                         }}>
-                        {STARTING_END_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
-                        ))}
+                        <label className="text-small font-medium">Starting End</label>
+                        <Select.Trigger aria-label="Starting End">
+                            <Select.Value />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox aria-label="Starting End">
+                                {STARTING_END_OPTIONS.map(opt => (
+                                    <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
                     </Select>
                     <Select
                         data-testid="settings-Simulation Mode"
-                        label="Simulation Mode"
-                        selectedKeys={new Set([simulationMode])}
-                        onSelectionChange={(keys) => {
-                            const selected = Array.from(keys)[0];
-                            if (selected) setSimulationMode(selected.toString() as SimulationMode);
+                        selectedKey={simulationMode}
+                        onSelectionChange={(key) => {
+                            if (key) setSimulationMode(key.toString() as SimulationMode);
                         }}>
-                        {MODE_OPTIONS.map(opt => (
-                            <SelectItem key={opt.value}>{opt.label}</SelectItem>
-                        ))}
+                        <label className="text-small font-medium">Simulation Mode</label>
+                        <Select.Trigger aria-label="Simulation Mode">
+                            <Select.Value />
+                        </Select.Trigger>
+                        <Select.Popover>
+                            <ListBox aria-label="Simulation Mode">
+                                {MODE_OPTIONS.map(opt => (
+                                    <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
+                                ))}
+                            </ListBox>
+                        </Select.Popover>
                     </Select>
                 </div>
                 <Button
-                    color="primary"
+                    variant="primary"
                     type="submit"
                     data-testid="start-button"
                 >

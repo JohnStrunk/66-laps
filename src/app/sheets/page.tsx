@@ -3,7 +3,7 @@
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import { ph_event_download_sheet } from "@/modules/phEvents";
-import { Divider, Link, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import { Link, Separator, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, TableContent } from "@heroui/react";
 import { FileText } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { externalSheets } from "./sheets";
@@ -21,8 +21,8 @@ export default function Page() {
                     <p className="text-sm">
                         Want to customize these sheets? Check out the{' '}
                         <Link
-                            isExternal
-                            showAnchorIcon
+                            target="_blank"
+                            rel="noopener noreferrer"
                             onPress={() => {
                                 ph_event_download_sheet(postHog, "editable", "all", false);
                             }}
@@ -60,94 +60,93 @@ export default function Page() {
                             </Link>
                         </li>
                     </ul>
-                    <Divider />
+                    <Separator />
                     <h2 className="text-inherit bg-inherit text-lg mb-2">Other counting sheets</h2>
                     <p className="text-sm mb-0">
                         The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
                     </p>
 
-                    <Table aria-label="Lap counting sheets" isStriped removeWrapper
-                        classNames={{
-                            th: "dark:text-foreground",
-                        }}>
-                        <TableHeader>
-                            <TableColumn>ORGANIZATION</TableColumn>
-                            <TableColumn align="center">SHORT COURSE</TableColumn>
-                            <TableColumn align="center">LONG COURSE</TableColumn>
-                        </TableHeader>
-                        <TableBody
-                            items={Object.keys(externalSheets).map((org) => ({
-                                org,
-                                sheet: externalSheets[org as keyof typeof externalSheets],
-                            }))}
-                        >
-                            {(item) => {
-                                const sheet = item.sheet;
-                                const hasAll = 'all' in sheet && sheet.all && Object.keys(sheet.all as object).length > 0;
-                                const hasSC = 'SC' in sheet && sheet.SC && Object.keys(sheet.SC as object).length > 0;
-                                const hasLC = 'LC' in sheet && sheet.LC && Object.keys(sheet.LC as object).length > 0;
-                                if (hasAll) {
+                    <Table aria-label="Lap counting sheets"
+                        className="[&_tr:nth-child(even)]:bg-black/5 dark:[&_tr:nth-child(even)]:bg-white/5"
+                    >
+                        <TableContent>
+                            <TableHeader>
+                                <TableColumn>ORGANIZATION</TableColumn>
+                                <TableColumn className="text-center">SHORT COURSE</TableColumn>
+                                <TableColumn className="text-center">LONG COURSE</TableColumn>
+                            </TableHeader>
+                            <TableBody
+                                items={Object.keys(externalSheets).map((org) => ({
+                                    id: org,
+                                    org,
+                                    sheet: externalSheets[org as keyof typeof externalSheets],
+                                }))}
+                            >
+                                {(item) => {
+                                    const sheet = item.sheet;
+                                    const hasAll = 'all' in sheet && sheet.all && Object.keys(sheet.all as object).length > 0;
+                                    const hasSC = 'SC' in sheet && sheet.SC && Object.keys(sheet.SC as object).length > 0;
+                                    const hasLC = 'LC' in sheet && sheet.LC && Object.keys(sheet.LC as object).length > 0;
+
                                     return (
-                                        <TableRow key={item.org}>
+                                        <TableRow id={item.org}>
                                             <TableCell>{item.org}</TableCell>
-                                            <TableCell colSpan={2}>
-                                                {Object.keys(sheet.all as object).map((distance, idx, arr) => (
-                                                    <span key={distance}>
-                                                        <Link
-                                                            isExternal
-                                                            onPress={() => {
-                                                                ph_event_download_sheet(postHog, distance, "all", true);
-                                                            }}
-                                                            href={(sheet.all as Record<string, string>)[distance]}>
-                                                            {distance}
-                                                        </Link>
-                                                        {idx < arr.length - 1 && ', '}
-                                                    </span>
-                                                ))}
+                                            <TableCell className="text-center">
+                                                {hasAll ? (
+                                                    Object.keys(sheet.all as object).map((distance, idx, arr) => (
+                                                        <span key={distance}>
+                                                            <Link
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onPress={() => {
+                                                                    ph_event_download_sheet(postHog, distance, "all", true);
+                                                                }}
+                                                                href={(sheet.all as Record<string, string>)[distance]}>
+                                                                {distance}
+                                                            </Link>
+                                                            {idx < arr.length - 1 && ', '}
+                                                        </span>
+                                                    ))
+                                                ) : hasSC ? (
+                                                    Object.keys(sheet.SC as object).map((distance, idx, arr) => (
+                                                        <span key={distance}>
+                                                            <Link
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onPress={() => {
+                                                                    ph_event_download_sheet(postHog, distance, "SC", true);
+                                                                }}
+                                                                href={(sheet.SC as Record<string, string>)[distance]}>
+                                                                {distance}
+                                                            </Link>
+                                                            {idx < arr.length - 1 && ', '}
+                                                        </span>
+                                                    ))
+                                                ) : '—'}
+                                            </TableCell>
+                                            <TableCell className="text-center">
+                                                {hasAll ? '—' : hasLC ? (
+                                                    Object.keys(sheet.LC as object).map((distance, idx, arr) => (
+                                                        <span key={distance}>
+                                                            <Link
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onPress={() => {
+                                                                    ph_event_download_sheet(postHog, distance, "LC", true);
+                                                                }}
+                                                                href={(sheet.LC as Record<string, string>)[distance]}>
+                                                                {distance}
+                                                            </Link>
+                                                            {idx < arr.length - 1 && ', '}
+                                                        </span>
+                                                    ))
+                                                ) : '—'}
                                             </TableCell>
                                         </TableRow>
                                     );
-                                } else {
-                                    return (
-                                        <TableRow key={item.org}>
-                                            <TableCell>{item.org}</TableCell>
-                                            <TableCell>
-                                                {hasSC ? (Object.keys(sheet.SC as object).map((distance, idx, arr) => (
-                                                    <span key={distance}>
-                                                        <Link
-                                                            isExternal
-                                                            onPress={() => {
-                                                                ph_event_download_sheet(postHog, distance, "SC", true);
-                                                            }}
-                                                            href={(sheet.SC as Record<string, string>)[distance]}>
-                                                            {distance}
-                                                        </Link>
-                                                        {idx < arr.length - 1 && ', '}
-                                                    </span>
-                                                ))
-                                                ) : null}
-                                            </TableCell>
-                                            <TableCell>
-                                                {hasLC ? (Object.keys(sheet.LC as object).map((distance, idx, arr) => (
-                                                    <span key={distance}>
-                                                        <Link
-                                                            isExternal
-                                                            onPress={() => {
-                                                                ph_event_download_sheet(postHog, distance, "LC", true);
-                                                            }}
-                                                            href={(sheet.LC as Record<string, string>)[distance]}>
-                                                            {distance}
-                                                        </Link>
-                                                        {idx < arr.length - 1 && ', '}
-                                                    </span>
-                                                ))
-                                                ) : null}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                }
-                            }}
-                        </TableBody>
+                                }}
+                            </TableBody>
+                        </TableContent>
                     </Table>
                 </div>
                 <Footer />

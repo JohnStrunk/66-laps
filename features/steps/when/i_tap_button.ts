@@ -13,7 +13,7 @@ When('I tap the {string} button', async function (this: CustomWorld, buttonName:
   } else if (buttonName === "Reset") {
     locator = this.page!.locator('button[aria-label="Reset"]');
   } else {
-    locator = this.page!.locator(`button:has-text("${buttonName}")`);
+    locator = this.page!.locator(`button:has-text("${buttonName}"), [role="tab"]:has-text("${buttonName}")`);
   }
 
   // Robust click pattern

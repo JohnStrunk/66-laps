@@ -15,38 +15,35 @@ export default function MainMenu() {
 
       <div className="flex flex-col gap-4 w-full max-w-xs">
         <Button
-          color="primary"
-          variant="solid"
+          variant="primary"
           size="lg"
-          startContent={<Play size={24} />}
-          className="w-full font-semibold text-lg py-6"
+          className="w-full font-semibold text-lg py-6 flex items-center justify-center gap-2"
           onPress={() => setSetupDialogOpen(true)}
           data-testid="new-race-button"
         >
+          <Play size={24} />
           New Race
         </Button>
 
         <Button
-          color="default"
-          variant="flat"
+          variant="secondary"
           size="lg"
-          startContent={<History size={24} />}
-          className="w-full font-semibold text-lg py-6"
+          className="w-full font-semibold text-lg py-6 flex items-center justify-center gap-2"
           onPress={() => setView('history')}
           data-testid="history-button"
         >
+          <History size={24} />
           History
         </Button>
 
         <Button
-          color="default"
-          variant="flat"
+          variant="secondary"
           size="lg"
-          startContent={<HelpCircle size={24} />}
-          className="w-full font-semibold text-lg py-6"
+          className="w-full font-semibold text-lg py-6 flex items-center justify-center gap-2"
           onPress={() => setView('help')}
           data-testid="help-button"
         >
+          <HelpCircle size={24} />
           Help
         </Button>
       </div>

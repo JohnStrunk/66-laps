@@ -3,13 +3,11 @@
 import {
   Button,
   Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
+  TextField,
+  Label,
+  Input as HeroUIInput,
   Select,
-  SelectItem,
+  ListBox,
 } from "@heroui/react";
 import { useBellLapStore, EventType } from "@/modules/bellLapStore";
 import { useState } from "react";
@@ -30,19 +28,21 @@ export default function NewRaceSetupModal() {
     setPrevOpen(false);
   }
 
-  return (
+  return isSetupDialogOpen ? (
     <Modal
-      isOpen={isSetupDialogOpen}
+      isOpen={true}
       onOpenChange={setSetupDialogOpen}
-      data-testid="new-race-setup-dialog"
     >
-      <ModalContent>
-        {(onClose) => (
-          <NewRaceSetupModalContent key={contentKey} onClose={onClose} />
-        )}
-      </ModalContent>
+      <Modal.Backdrop />
+      <Modal.Container>
+        <Modal.Dialog data-testid="new-race-setup-dialog">
+          {({ close }) => (
+            <NewRaceSetupModalContent key={contentKey} onClose={close} />
+          )}
+        </Modal.Dialog>
+      </Modal.Container>
     </Modal>
-  );
+  ) : null;
 }
 
 function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
@@ -60,69 +60,81 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
 
   const handleStartRace = () => {
     startRace(localEvent, localLaneCount, localEventNumber, localHeatNumber);
-    // Note: onClose() is NOT called here because startRace already sets isSetupDialogOpen to false
-    // which triggers the Modal to close via its isOpen prop.
+    // Explicitly call onClose to ensure v3 handles exit correctly
+    onClose();
   };
 
   return (
     <>
-      <ModalHeader>New Race Setup</ModalHeader>
-      <ModalBody className="flex flex-col gap-4">
+      <Modal.Header>New Race Setup</Modal.Header>
+      <Modal.Body className="flex flex-col gap-4">
         <Select
-          label="Event Selection"
-          selectedKeys={[localEvent]}
-          onSelectionChange={(keys) => {
-            const selected = Array.from(keys)[0] as EventType;
-            if (selected) setLocalEvent(selected);
+          selectedKey={localEvent}
+          onSelectionChange={(key) => {
+            if (key) setLocalEvent(key as EventType);
           }}
           data-testid="event-selection-dropdown"
         >
-          <SelectItem key="500 SC">500 SC</SelectItem>
-          <SelectItem key="1000 SC">1000 SC</SelectItem>
-          <SelectItem key="1650 SC">1650 SC</SelectItem>
-          <SelectItem key="800 LC">800 LC</SelectItem>
-          <SelectItem key="1500 LC">1500 LC</SelectItem>
+          <Label>Event Selection</Label>
+          <Select.Trigger>
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              <ListBox.Item id="500 SC">500 SC</ListBox.Item>
+              <ListBox.Item id="1000 SC">1000 SC</ListBox.Item>
+              <ListBox.Item id="1650 SC">1650 SC</ListBox.Item>
+              <ListBox.Item id="800 LC">800 LC</ListBox.Item>
+              <ListBox.Item id="1500 LC">1500 LC</ListBox.Item>
+            </ListBox>
+          </Select.Popover>
         </Select>
 
         <Select
-          label="Lanes"
-          selectedKeys={[String(localLaneCount)]}
-          onSelectionChange={(keys) => {
-            const selected = Number(Array.from(keys)[0]);
-            if (!isNaN(selected)) setLocalLaneCount(selected);
+          selectedKey={String(localLaneCount)}
+          onSelectionChange={(key) => {
+            if (key) setLocalLaneCount(Number(key));
           }}
           data-testid="lanes-dropdown"
         >
-          <SelectItem key="6">6 lanes</SelectItem>
-          <SelectItem key="8">8 lanes</SelectItem>
-          <SelectItem key="10">10 lanes</SelectItem>
+          <Label>Lanes</Label>
+          <Select.Trigger>
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              <ListBox.Item id="6">6 lanes</ListBox.Item>
+              <ListBox.Item id="8">8 lanes</ListBox.Item>
+              <ListBox.Item id="10">10 lanes</ListBox.Item>
+            </ListBox>
+          </Select.Popover>
         </Select>
 
         <div className="flex gap-4">
-          <Input
-            label="Event Number"
+          <TextField
             value={localEventNumber}
-            onValueChange={setLocalEventNumber}
-            placeholder="e.g. 15"
-            data-testid="event-number-input"
-          />
-          <Input
-            label="Heat Number"
+            onChange={setLocalEventNumber}
+          >
+            <Label>Event Number</Label>
+            <HeroUIInput placeholder="e.g. 15" data-testid="event-number-input" />
+          </TextField>
+          <TextField
             value={localHeatNumber}
-            onValueChange={setLocalHeatNumber}
-            placeholder="e.g. 2"
-            data-testid="heat-number-input"
-          />
+            onChange={setLocalHeatNumber}
+          >
+            <Label>Heat Number</Label>
+            <HeroUIInput placeholder="e.g. 2" data-testid="heat-number-input" />
+          </TextField>
         </div>
-      </ModalBody>
-      <ModalFooter>
-        <Button variant="light" onPress={onClose} data-testid="cancel-setup-button">
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="tertiary" onPress={onClose} data-testid="cancel-setup-button">
           Cancel
         </Button>
-        <Button color="primary" onPress={handleStartRace} data-testid="start-race-button">
+        <Button variant="primary" onPress={handleStartRace} data-testid="start-race-button">
           Start Race
         </Button>
-      </ModalFooter>
+      </Modal.Footer>
     </>
   );
 }

@@ -204,19 +204,19 @@ export default function Page() {
                         )}
                             <div data-testid="practice-controls" className={`absolute top-6 ${settings.startingEnd === StartingEnd.LEFT ? 'left-6' : 'right-6'} flex gap-4`}>
                                 <div data-testid="view-selector">
-                                    <ButtonGroup color="secondary">
-                                        <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "solid" : "bordered"} onPress={() => setViewMode("2D")}>2D</Button>
-                                        <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "solid" : "bordered"} onPress={() => setViewMode("3D")}>3D</Button>
+                                    <ButtonGroup variant="secondary">
+                                        <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "primary" : "outline"} onPress={() => setViewMode("2D")}>2D</Button>
+                                        <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "primary" : "outline"} onPress={() => setViewMode("3D")}>3D</Button>
                                     </ButtonGroup>
                                 </div>
                                 <Button
-                                    color="secondary"
+                                    variant="secondary"
                                     onPress={handleRestart}
                                 >
                                     Restart
                                 </Button>
                                 <Button
-                                    color="primary"
+                                    variant="primary"
                                     onPress={() => setMode(Mode.SETTINGS)}
                                 >
                                     Back to Settings

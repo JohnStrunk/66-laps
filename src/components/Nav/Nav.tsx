@@ -1,8 +1,9 @@
 'use client'
 
 import LightDark from "@/components/LightDark/LightDark";
-import { Divider, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
+import { Link, Separator } from "@heroui/react";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -19,60 +20,65 @@ export default function Nav() {
         { name: "Count", path: "/app" },
     ];
 
-    const menuIcon = (isOpen: boolean = false) => {
-        const className = "w-[1.5em] h-[1.5em]";
-        return isOpen ? (<X className={className} />) : (<Menu className={className} />);
-    }
-
     return (
-        <>
-            <Navbar onMenuOpenChange={setIsMenuOpen} isBordered shouldHideOnScroll classNames={{
-                base: "bg-content2 border-b-3 border-b-foreground",
-                item: [
-                    "data-[active=true]:border-b-3",
-                    "data-[active=true]:border-b-foreground",
-                ]
-            }}>
-                <NavbarContent>
-                    <NavbarMenuToggle className="sm:hidden" aria-label={isMenuOpen ? "Close menu" : "Open menu"} icon={menuIcon} />
-                    <Link href="/" className="text-foreground">
-                        <NavbarBrand>
-                            <Image src="/icon.svg" alt="66 Laps" className="w-[2em] h-[2em] mr-2 rounded-sm" />
-                            <p className="text-xl font-bold">66-Laps</p>
-                        </NavbarBrand>
-                    </Link>
-                </NavbarContent>
+        <nav className="sticky top-0 z-50 w-full bg-[#00bc7d] border-b-3 border-b-black dark:bg-[#00bc7d] dark:border-b-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16 items-center">
+                    <div className="flex items-center">
+                        <div className="sm:hidden mr-2">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="inline-flex items-center justify-center p-2 rounded-md text-black hover:bg-black/10 focus:outline-none"
+                            >
+                                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            </button>
+                        </div>
+...
+                        <Link href="/" className="flex items-center no-underline text-black font-bold">
+                            <Image src="/icon.svg" alt="66 Laps" width={32} height={32} className="mr-2 rounded-sm" />
+                            <span className="text-xl">66-Laps</span>
+                        </Link>
+                    </div>
 
-                <NavbarContent className="hidden sm:flex gap-4" justify="start">
-                    {menuItems.map((item, index) => (
-                        <NavbarItem key={`${item}-${index}`} isActive={isActive(item.path)}>
-                            <Link href={item.path} className="text-foreground">
+                    <div className="hidden sm:flex sm:items-center sm:gap-6">
+                        {menuItems.map((item) => (
+                            <Link
+                                key={item.path}
+                                href={item.path}
+                                className={`text-black font-bold no-underline hover:opacity-70 ${isActive(item.path) ? 'border-b-3 border-b-black' : ''}`}
+                            >
                                 {item.name}
                             </Link>
-                        </NavbarItem>
-                    ))}
-                </NavbarContent>
+                        ))}
+                        <div className="ml-4">
+                            <LightDark />
+                        </div>
+                    </div>
 
-                <NavbarContent className="hidden sm:flex" justify="end">
-                    <NavbarItem>
+                    <div className="sm:hidden flex items-center">
                         <LightDark />
-                    </NavbarItem>
-                </NavbarContent>
+                    </div>
+                </div>
+            </div>
 
-                <NavbarMenu>
-                    {menuItems.map((item, index) => (
-                        <NavbarMenuItem key={`${item}-${index}`}>
-                            <Link className="w-full font-bold" href={item.path}>
+            {/* Mobile menu */}
+            {isMenuOpen && (
+                <div className="sm:hidden bg-[#00bc7d] border-t-1 border-t-black/20 pb-4">
+                    <div className="px-2 pt-2 pb-3 space-y-1">
+                        {menuItems.map((item) => (
+                            <Link
+                                key={item.path}
+                                href={item.path}
+                                className={`block px-3 py-2 text-black font-bold no-underline hover:bg-black/10 rounded-md ${isActive(item.path) ? 'bg-black/10' : ''}`}
+                                onPress={() => setIsMenuOpen(false)}
+                            >
                                 {item.name}
                             </Link>
-                        </NavbarMenuItem>
-                    ))}
-                    <Divider className="my-2" />
-                    <NavbarMenuItem className="flex flex-row items-center gap-4">
-                        <LightDark />
-                    </NavbarMenuItem>
-                </NavbarMenu>
-            </Navbar>
-        </>
+                        ))}
+                    </div>
+                    <Separator className="my-2 opacity-20" />
+                </div>
+            )}
+        </nav>
     );
 }
