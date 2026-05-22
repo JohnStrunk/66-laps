@@ -33,7 +33,6 @@ export default function Nav() {
                                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                             </button>
                         </div>
-...
                         <Link href="/" className="flex items-center no-underline text-black font-bold">
                             <Image src="/icon.svg" alt="66 Laps" width={32} height={32} className="mr-2 rounded-sm" />
                             <span className="text-xl">66-Laps</span>

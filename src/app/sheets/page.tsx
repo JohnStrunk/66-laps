@@ -15,9 +15,9 @@ export default function Page() {
         <>
             <div className="w-full flex flex-col min-h-screen">
                 <Nav />
-                <div className="prose mx-auto p-6 grow text-inherit bg-inherit">
-                    <h1 className="text-inherit bg-inherit">Lap counting sheets</h1>
-                    <h2 className="text-inherit bg-inherit text-lg mb-2">66-Laps custom counting sheets</h2>
+                <div className="prose mx-auto p-6 grow">
+                    <h1>Lap counting sheets</h1>
+                    <h2 className="text-lg mb-2">66-Laps custom counting sheets</h2>
                     <p className="text-sm">
                         Want to customize these sheets? Check out the{' '}
                         <Link
@@ -61,19 +61,19 @@ export default function Page() {
                         </li>
                     </ul>
                     <Separator />
-                    <h2 className="text-inherit bg-inherit text-lg mb-2">Other counting sheets</h2>
+                    <h2 className="text-lg mb-2">Other counting sheets</h2>
                     <p className="text-sm mb-0">
                         The following counting sheets are provided for convenience and are unaffiliated with 66-Laps. All rights belong to their respective owners.
                     </p>
 
                     <Table aria-label="Lap counting sheets"
-                        className="[&_tr:nth-child(even)]:bg-black/5 dark:[&_tr:nth-child(even)]:bg-white/5"
+                        className="text-foreground [&_tr:nth-child(even)]:bg-black/5 dark:[&_tr:nth-child(even)]:bg-white/5"
                     >
                         <TableContent>
                             <TableHeader>
-                                <TableColumn>ORGANIZATION</TableColumn>
-                                <TableColumn className="text-center">SHORT COURSE</TableColumn>
-                                <TableColumn className="text-center">LONG COURSE</TableColumn>
+                                <TableColumn className="px-4 py-3">ORGANIZATION</TableColumn>
+                                <TableColumn className="text-center px-4 py-3">SHORT COURSE</TableColumn>
+                                <TableColumn className="text-center px-4 py-3">LONG COURSE</TableColumn>
                             </TableHeader>
                             <TableBody
                                 items={Object.keys(externalSheets).map((org) => ({
@@ -90,8 +90,8 @@ export default function Page() {
 
                                     return (
                                         <TableRow id={item.org}>
-                                            <TableCell>{item.org}</TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell className="px-4 py-3">{item.org}</TableCell>
+                                            <TableCell className="text-center px-4 py-3">
                                                 {hasAll ? (
                                                     Object.keys(sheet.all as object).map((distance, idx, arr) => (
                                                         <span key={distance}>
@@ -124,7 +124,7 @@ export default function Page() {
                                                     ))
                                                 ) : '—'}
                                             </TableCell>
-                                            <TableCell className="text-center">
+                                            <TableCell className="text-center px-4 py-3">
                                                 {hasAll ? '—' : hasLC ? (
                                                     Object.keys(sheet.LC as object).map((distance, idx, arr) => (
                                                         <span key={distance}>
