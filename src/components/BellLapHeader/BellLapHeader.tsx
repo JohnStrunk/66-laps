@@ -237,7 +237,7 @@ export default function BellLapHeader() {
                 {selectedRace && (
                   <>
                     <Tooltip>
-                      <Tooltip.Trigger>
+                      <Tooltip.Trigger tabIndex={0}>
                         <Button
                           isIconOnly
                           variant="secondary"
@@ -252,7 +252,7 @@ export default function BellLapHeader() {
                       <Tooltip.Content>Share PDF</Tooltip.Content>
                     </Tooltip>
                     <Tooltip>
-                      <Tooltip.Trigger>
+                      <Tooltip.Trigger tabIndex={0}>
                         <Button
                           isIconOnly
                           variant="secondary"

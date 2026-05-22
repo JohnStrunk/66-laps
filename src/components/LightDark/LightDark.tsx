@@ -20,7 +20,7 @@ export default function LightDark() {
         <>
             <div className="flex flex-row gap-2 items-center justify-center">
                 <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger tabIndex={0}>
                         <Button
                             isIconOnly
                             variant={theme === "system" ? "primary" : "outline"}
@@ -36,7 +36,7 @@ export default function LightDark() {
                     <Tooltip.Content>Automatic</Tooltip.Content>
                 </Tooltip>
                 <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger tabIndex={0}>
                         <Button
                             isIconOnly
                             variant={theme === "dark" ? "primary" : "outline"}
@@ -52,7 +52,7 @@ export default function LightDark() {
                     <Tooltip.Content>Dark</Tooltip.Content>
                 </Tooltip>
                 <Tooltip>
-                    <Tooltip.Trigger>
+                    <Tooltip.Trigger tabIndex={0}>
                         <Button
                             isIconOnly
                             variant={theme === "light" ? "primary" : "outline"}

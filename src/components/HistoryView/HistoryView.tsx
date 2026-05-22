@@ -106,7 +106,7 @@ export default function HistoryView() {
                     </div>
                     <div className="flex gap-1 pr-2 sm:pr-3">
                       <Tooltip>
-                        <Tooltip.Trigger data-testid="share-history-button-trigger">
+                        <Tooltip.Trigger tabIndex={0} data-testid="share-history-button-trigger">
                           <Button
                             isIconOnly
                             variant="ghost"
@@ -124,7 +124,7 @@ export default function HistoryView() {
                         <Tooltip.Content>Share PDF</Tooltip.Content>
                       </Tooltip>
                       <Tooltip>
-                        <Tooltip.Trigger data-testid="download-history-button-trigger">
+                        <Tooltip.Trigger tabIndex={0} data-testid="download-history-button-trigger">
                           <Button
                             isIconOnly
                             variant="ghost"
@@ -142,7 +142,7 @@ export default function HistoryView() {
                         <Tooltip.Content>Download PDF</Tooltip.Content>
                       </Tooltip>
                       <Tooltip>
-                        <Tooltip.Trigger data-testid="delete-history-button-trigger">
+                        <Tooltip.Trigger tabIndex={0} data-testid="delete-history-button-trigger">
                           <Button
                             isIconOnly
                             variant="ghost"
