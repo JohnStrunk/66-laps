@@ -1,11 +1,12 @@
 'use client'
 
 import LightDark from "@/components/LightDark/LightDark";
-import { Link, Separator } from "@heroui/react";
+import { Separator } from "@heroui/react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Nav() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,7 +70,7 @@ export default function Nav() {
                                 key={item.path}
                                 href={item.path}
                                 className={`block px-3 py-2 text-black font-bold no-underline hover:bg-black/10 rounded-md ${isActive(item.path) ? 'bg-black/10' : ''}`}
-                                onPress={() => setIsMenuOpen(false)}
+                                onClick={() => setIsMenuOpen(false)}
                             >
                                 {item.name}
                             </Link>

@@ -2,9 +2,10 @@
 
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
-import { Card, Separator, Link } from "@heroui/react";
+import { Card, Separator } from "@heroui/react";
 import { ClipboardList, FolderOpen, MonitorPlay, MonitorSmartphone } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
     return (
@@ -28,6 +29,7 @@ export default function Home() {
                                     alt="Example lap counting sheet"
                                     width={240}
                                     height={240}
+                                    style={{ width: 'auto', height: 'auto' }}
                                     className="max-h-[240px] object-contain" />
                                 <p className="mt-2 text-center">Learn how to count laps</p>
                             </Card.Content>
@@ -49,6 +51,7 @@ export default function Home() {
                                     alt="Stack of lap counting sheets"
                                     width={240}
                                     height={240}
+                                    style={{ width: 'auto', height: 'auto' }}
                                     className="max-h-[240px] object-contain" />
                                 <p className="mt-2 text-center">Download lap counting sheets</p>
                             </Card.Content>
@@ -70,6 +73,7 @@ export default function Home() {
                                     alt="Pool preview"
                                     width={240}
                                     height={240}
+                                    style={{ width: 'auto', height: 'auto' }}
                                     className="max-h-[240px] object-contain" />
                                 <p className="mt-2 text-center">Practice counting for distance events</p>
                             </Card.Content>
@@ -91,6 +95,7 @@ export default function Home() {
                                     alt="App preview"
                                     width={240}
                                     height={240}
+                                    style={{ width: 'auto', height: 'auto' }}
                                     className="max-h-[240px] object-contain" />
                                 <p className="mt-2 text-center">Use the app to count laps</p>
                             </Card.Content>

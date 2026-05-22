@@ -1,7 +1,6 @@
 'use client'
 
 import { ph_event_link_out } from "@/modules/phEvents";
-import { Link } from "@heroui/react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
 
@@ -16,15 +15,15 @@ export default function Footer() {
                 </div>
                 <div className="mx-auto flex flex-col justify-center items-center">
                     <p className="text-sm">Suggestions?</p>
-                    <Link className="text-sm text-center text-blue-300" href="mailto:feedback@66-laps.com">
+                    <a className="text-sm text-center text-blue-300" href="mailto:feedback@66-laps.com">
                         feedback@66-laps.com
-                    </Link>
+                    </a>
                 </div>
                 <div className="mx-6 min-w-8">
-                    <Link
+                    <a
                         target="_blank"
                         rel="noopener noreferrer"
-                        onPress={() => {
+                        onClick={() => {
                             ph_event_link_out(
                                 postHog,
                                 "GitHub - 66-laps",
@@ -33,7 +32,7 @@ export default function Footer() {
                         }}
                         href="https://github.com/JohnStrunk/66-laps">
                         <Image className="invert h-8 w-8" src="/images/github-mark.svg" alt="GitHub" width={32} height={32} />
-                    </Link>
+                    </a>
                 </div>
             </div>
         </>
