@@ -19,6 +19,7 @@ export default function HistoryView() {
   const [raceToDelete, setRaceToDelete] = useState<RaceRecord | null>(null);
   const [isDeleteAllOpen, setIsDeleteAllOpen] = useState(false);
 
+
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,
@@ -79,89 +80,84 @@ export default function HistoryView() {
                   onClick={() => handleRecordClick(record.id)}
                   data-testid="history-record"
                 >
-                  <Card.Content className="flex flex-row items-center justify-between p-0">
+                  <div className="flex flex-col p-0">
                     <div
                       className="flex-1 flex flex-col gap-1 p-3 sm:p-4 hover:bg-default-100 transition-colors"
                       role="button"
                       tabIndex={0}
                     >
                       <div className="flex items-baseline gap-2 pointer-events-none">
-                        <span className="font-bold text-xl sm:text-2xl">{record.event}</span>
-                        <span className="text-base sm:text-lg text-default-500">
+                        <span className="font-bold text-base sm:text-lg">{record.event}</span>
+                        <span className="text-xs sm:text-sm text-default-500">
                           {new Date(record.startTime).toLocaleString(undefined, {
                             month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
                           })}
                         </span>
                       </div>
-                      <div className="flex gap-3 text-base sm:text-lg text-default-500 pointer-events-none" data-testid="history-record-info">
-                        <span>{record.laneCount} Lanes</span>
-                        {(record.eventNumber || record.heatNumber) && (
-                          <span>
-                            {record.eventNumber && `E ${record.eventNumber}`}
-                            {record.eventNumber && record.heatNumber && ' • '}
-                            {record.heatNumber && `H ${record.heatNumber}`}
-                          </span>
+                      <div className="flex items-center gap-2 pr-2 sm:pr-3">
+                        {/* Event Number */}
+                        {record.eventNumber && (
+                          <span className="text-sm text-default-500">E {record.eventNumber}</span>
                         )}
-                      </div>
-                    </div>
-                    <div className="flex gap-1 pr-2 sm:pr-3">
-                      <Tooltip>
-                        <Tooltip.Trigger tabIndex={0} data-testid="share-history-button-trigger">
-                          <Button
-                            isIconOnly
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
+                        {/* Heat Number */}
+                        {record.heatNumber && (
+                          <span className="text-sm text-default-500">H {record.heatNumber}</span>
+                        )}
+                        {/* Action Buttons */}
+                        <div className="flex gap-2 ml-auto">
+                          <Tooltip>
+                            <Button
+                              isIconOnly
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
                                 e.stopPropagation();
                                 void handleShare(e as unknown as React.MouseEvent, record);
-                            }}
-                            aria-label="Share"
-                            data-testid="share-history-button"
-                          >
-                            <Share2 size={20} />
-                          </Button>
-                        </Tooltip.Trigger>
-                        <Tooltip.Content>Share PDF</Tooltip.Content>
-                      </Tooltip>
-                      <Tooltip>
-                        <Tooltip.Trigger tabIndex={0} data-testid="download-history-button-trigger">
-                          <Button
-                            isIconOnly
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
+                              }}
+                              aria-label="Share"
+                              data-testid="share-history-button"
+                            >
+                              <Share2 size={20} />
+                            </Button>
+                            <Tooltip.Content>Share PDF</Tooltip.Content>
+                          </Tooltip>
+                          <Tooltip>
+                            <Button
+                              isIconOnly
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
                                 e.stopPropagation();
                                 void handleDownload(e as unknown as React.MouseEvent, record);
-                            }}
-                            aria-label="Download"
-                            data-testid="download-history-button"
-                          >
-                            <Download size={20} />
-                          </Button>
-                        </Tooltip.Trigger>
-                        <Tooltip.Content>Download PDF</Tooltip.Content>
-                      </Tooltip>
-                      <Tooltip>
-                        <Tooltip.Trigger tabIndex={0} data-testid="delete-history-button-trigger">
-                          <Button
-                            isIconOnly
-                            variant="ghost"
-                            className="text-danger"
-                            size="sm"
-                            onClick={(e) => {
+                              }}
+                              aria-label="Download"
+                              data-testid="download-history-button"
+                            >
+                              <Download size={20} />
+                            </Button>
+                            <Tooltip.Content>Download PDF</Tooltip.Content>
+                          </Tooltip>
+                          <Tooltip>
+                            <Button
+                              isIconOnly
+                              variant="ghost"
+                              className="text-danger"
+                              size="sm"
+                              onClick={(e) => {
                                 e.stopPropagation();
                                 handleDeleteClick(e as unknown as React.MouseEvent, record);
-                            }}
-                            aria-label="Delete"
-                            data-testid="delete-history-button"
-                          >
-                            <Trash2 size={20} />
-                          </Button>
-                        </Tooltip.Trigger>
-                        <Tooltip.Content>Delete Race</Tooltip.Content>
-                      </Tooltip>
+                              }}
+                              aria-label="Delete"
+                              data-testid="delete-history-button"
+                            >
+                              <Trash2 size={20} />
+                            </Button>
+                            <Tooltip.Content>Delete Race</Tooltip.Content>
+                          </Tooltip>
+                        </div>
+                      </div>
                     </div>
-                  </Card.Content>
+                  </div>
                 </Card>
               ))}
             </div>
@@ -182,6 +178,7 @@ export default function HistoryView() {
       {/* Delete Single Race Modal */}
       {!!raceToDelete && (
         <Modal isOpen={true} onOpenChange={(isOpen) => !isOpen && setRaceToDelete(null)}>
+          <Button className="hidden">Open</Button>
           <Modal.Backdrop />
           <Modal.Container>
             <Modal.Dialog data-testid="delete-race-dialog" aria-label="Delete Race">
@@ -226,6 +223,7 @@ export default function HistoryView() {
       {/* Delete All History Modal */}
       {isDeleteAllOpen && (
         <Modal isOpen={true} onOpenChange={setIsDeleteAllOpen}>
+          <Button className="hidden">Open</Button>
           <Modal.Backdrop />
           <Modal.Container>
             <Modal.Dialog data-testid="delete-all-dialog" aria-label="Delete All History">
