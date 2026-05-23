@@ -88,3 +88,15 @@ Feature: New Race Configuration
         | 1650 SC | 66   |
         | 800 LC  | 16   |
         | 1500 LC | 30   |
+  Rule: New Race Setup dialog is vertically centered
+    Scenario: Dialog appears centered on desktop
+      Given the app is loaded
+      When I tap the "New Race" button
+      Then the "New Race Setup" dialog should be vertically centered
+
+    @mobile
+    Scenario: Dialog appears centered on mobile
+      Given the app is loaded
+      And I set viewport size to 375x667
+      When I tap the "New Race" button
+      Then the "New Race Setup" dialog should be vertically centered

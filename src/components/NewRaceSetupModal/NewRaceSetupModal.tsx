@@ -12,7 +12,7 @@ import {
 import { useBellLapStore, EventType } from "@/modules/bellLapStore";
 import { useState } from "react";
 
-export default function NewRaceSetupModal() {
+export default function NewRaceSetupModal({ portalContainer }: { portalContainer?: HTMLElement }) {
   const isSetupDialogOpen = useBellLapStore(state => state.isSetupDialogOpen);
   const setSetupDialogOpen = useBellLapStore(state => state.setSetupDialogOpen);
 
@@ -33,9 +33,10 @@ export default function NewRaceSetupModal() {
       isOpen={true}
       onOpenChange={setSetupDialogOpen}
     >
-      <Modal.Backdrop />
-      <Modal.Container>
-        <Modal.Dialog data-testid="new-race-setup-dialog">
+      <Button className="hidden">Open</Button>
+      <Modal.Backdrop className="bg-transparent" />
+      <Modal.Container className="fixed inset-0 flex items-center justify-center w-full h-full" {...({ portalContainer } as unknown as Record<string, unknown>)}>
+        <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto" data-testid="new-race-setup-dialog">
           {({ close }) => (
             <NewRaceSetupModalContent key={contentKey} onClose={close} />
           )}
@@ -81,11 +82,11 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           </Select.Trigger>
           <Select.Popover>
             <ListBox>
-              <ListBox.Item id="500 SC">500 SC</ListBox.Item>
-              <ListBox.Item id="1000 SC">1000 SC</ListBox.Item>
-              <ListBox.Item id="1650 SC">1650 SC</ListBox.Item>
-              <ListBox.Item id="800 LC">800 LC</ListBox.Item>
-              <ListBox.Item id="1500 LC">1500 LC</ListBox.Item>
+              <ListBox.Item id="500 SC" textValue="500 SC">500 SC</ListBox.Item>
+              <ListBox.Item id="1000 SC" textValue="1000 SC">1000 SC</ListBox.Item>
+              <ListBox.Item id="1650 SC" textValue="1650 SC">1650 SC</ListBox.Item>
+              <ListBox.Item id="800 LC" textValue="800 LC">800 LC</ListBox.Item>
+              <ListBox.Item id="1500 LC" textValue="1500 LC">1500 LC</ListBox.Item>
             </ListBox>
           </Select.Popover>
         </Select>
@@ -103,9 +104,9 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           </Select.Trigger>
           <Select.Popover>
             <ListBox>
-              <ListBox.Item id="6">6 lanes</ListBox.Item>
-              <ListBox.Item id="8">8 lanes</ListBox.Item>
-              <ListBox.Item id="10">10 lanes</ListBox.Item>
+              <ListBox.Item id="6" textValue="6 lanes">6 lanes</ListBox.Item>
+              <ListBox.Item id="8" textValue="8 lanes">8 lanes</ListBox.Item>
+              <ListBox.Item id="10" textValue="10 lanes">10 lanes</ListBox.Item>
             </ListBox>
           </Select.Popover>
         </Select>
