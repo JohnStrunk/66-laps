@@ -116,16 +116,18 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           <TextField
             value={localEventNumber}
             onChange={setLocalEventNumber}
+            className="flex flex-col gap-1.5 p-1 max-w-[8.5rem] w-full"
           >
             <Label>Event Number</Label>
-            <HeroUIInput placeholder="e.g. 15" data-testid="event-number-input" className="max-w-[8rem]" />
+            <HeroUIInput placeholder="e.g. 15" data-testid="event-number-input" className="w-full" />
           </TextField>
           <TextField
             value={localHeatNumber}
             onChange={setLocalHeatNumber}
+            className="flex flex-col gap-1.5 p-1 max-w-[8.5rem] w-full"
           >
             <Label>Heat Number</Label>
-            <HeroUIInput placeholder="e.g. 2" data-testid="heat-number-input" className="max-w-[8rem]" />
+            <HeroUIInput placeholder="e.g. 2" data-testid="heat-number-input" className="w-full" />
           </TextField>
         </div>
       </Modal.Body>
