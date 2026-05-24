@@ -110,7 +110,7 @@ export default function LaneRow({
               <Button
                 isIconOnly
                 variant="danger-soft"
-                className="w-12 h-12 min-w-12 bg-danger"
+                className="w-12 h-12 min-w-12 rounded-full"
                 onPress={() => {
                   updateLaneCount(laneNumber, -2);
                 }}
@@ -139,7 +139,7 @@ export default function LaneRow({
                 data-disabled={lane.count >= config.laps}
                 data-testid={`increment-button-lane-${laneNumber}`}
                 aria-label={`Increment lane ${laneNumber}`}
-                className="w-12 h-12 min-w-12 bg-success text-[#00bc7d]"
+                className="w-12 h-12 min-w-12 rounded-full bg-[#00bc7d]/20 text-[#00bc7d]"
               >
                 <Plus size={24} />
               </Button>
@@ -147,7 +147,7 @@ export default function LaneRow({
 
             {/* Zone B: Touch Pad (50%) */}
             <div
-              className={`relative flex items-center justify-center overflow-hidden transition-colors ${
+              className={`relative flex items-center justify-center overflow-hidden transition-colors rounded-lg ${
                 isFinished
                   ? 'bg-white text-black pointer-events-none'
                   : isLocked

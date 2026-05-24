@@ -2,14 +2,23 @@
 
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
-import Pool, { PoolLength } from "@/components/Pool/Pool";
+import { PoolLength } from "@/components/Pool/Pool";
 import Pool3D from "@/components/Pool3D/Pool3D";
-import Settings, { NumberingDirection, SettingsValue, SimulationMode, StartingEnd } from "@/components/Settings/Settings";
+import { NumberingDirection, SettingsValue, SimulationMode, StartingEnd } from "@/components/Settings/Settings";
 import { AVATARS, ISwimmer, SwimmerModel } from "@/modules/SwimmerModel";
 import { ph_event_swimulation } from "@/modules/phEvents";
 import { Button, ButtonGroup } from "@heroui/react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from 'next/dynamic';
+
+const Settings = dynamic(() => import('@/components/Settings/Settings'), {
+    ssr: false,
+});
+
+const Pool = dynamic(() => import('@/components/Pool/Pool'), {
+    ssr: false,
+});
 
 enum Mode {
     SETTINGS = "SETTINGS",
@@ -182,7 +191,8 @@ export default function Page() {
                          data-testid="swim-container"
                          data-swimmer-count={swimmers.length}
                          data-numbering={settings.numberingDirection}
-                         data-starting-end={settings.startingEnd}>
+                         data-starting-end={settings.startingEnd}
+                         data-view-mode={viewMode}>
                         {viewMode === "2D" ? (
                             <Pool
                                 className="w-full h-full"
@@ -204,9 +214,23 @@ export default function Page() {
                         )}
                             <div data-testid="practice-controls" className={`absolute top-6 ${settings.startingEnd === StartingEnd.LEFT ? 'left-6' : 'right-6'} flex gap-4`}>
                                 <div data-testid="view-selector">
-                                    <ButtonGroup variant="secondary">
-                                        <Button data-active={viewMode === "2D"} variant={viewMode === "2D" ? "primary" : "outline"} onPress={() => setViewMode("2D")}>2D</Button>
-                                        <Button data-active={viewMode === "3D"} variant={viewMode === "3D" ? "primary" : "outline"} onPress={() => setViewMode("3D")}>3D</Button>
+                                    <ButtonGroup>
+                                        <Button
+                                            data-active={viewMode === "2D"}
+                                            variant={viewMode === "2D" ? "primary" : "secondary"}
+                                            onPress={() => setViewMode("2D")}
+                                            data-testid="view-selector-2d"
+                                        >
+                                            2D
+                                        </Button>
+                                        <Button
+                                            data-active={viewMode === "3D"}
+                                            variant={viewMode === "3D" ? "primary" : "secondary"}
+                                            onPress={() => setViewMode("3D")}
+                                            data-testid="view-selector-3d"
+                                        >
+                                            3D
+                                        </Button>
                                     </ButtonGroup>
                                 </div>
                                 <Button

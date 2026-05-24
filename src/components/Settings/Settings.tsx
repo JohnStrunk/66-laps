@@ -85,10 +85,9 @@ export default function Settings(props: SettingsProps) {
     const [numberingDirection, setNumberingDirection] = useState<NumberingDirection>(NumberingDirection.AWAY);
     const [startingEnd, setStartingEnd] = useState<StartingEnd>(StartingEnd.LEFT);
     const [simulationMode, setSimulationMode] = useState<SimulationMode>(SimulationMode.THREE_D);
-    // Spread is the percentage difference in speed between the fastest and
-    // slowest swimmers
     const [spread, setSpread] = useState<number>(0.1);
     const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
+
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -114,6 +113,7 @@ export default function Settings(props: SettingsProps) {
             <Form onSubmit={handleSubmit} className="flex flex-col items-center gap-6">
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full">
                     <Select
+                        aria-label="Number of Lanes"
                         data-testid="settings-Number of Lanes"
                         selectedKey={lanes.toString()}
                         onSelectionChange={(key) => {
@@ -126,7 +126,7 @@ export default function Settings(props: SettingsProps) {
                         <Select.Popover>
                             <ListBox aria-label="Number of Lanes">
                                 {LANE_OPTIONS.map(opt => (
-                                    <ListBox.Item id={opt} key={opt}>{opt}</ListBox.Item>
+                                    <ListBox.Item id={opt} key={opt} textValue={opt}>{opt}</ListBox.Item>
                                 ))}
                             </ListBox>
                         </Select.Popover>
@@ -148,6 +148,7 @@ export default function Settings(props: SettingsProps) {
                         </div>
                     ) : (
                         <Select
+                            aria-label="Race Length"
                             data-testid="settings-Race Length"
                             selectedKey={raceLength}
                             onSelectionChange={(key) => {
@@ -162,7 +163,7 @@ export default function Settings(props: SettingsProps) {
                             <Select.Popover>
                                 <ListBox aria-label="Race Length">
                                     {RACE_LENGTH_OPTIONS.map(opt => (
-                                        <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
+                                        <ListBox.Item id={opt.value} key={opt.value} textValue={opt.label}>{opt.label}</ListBox.Item>
                                     ))}
                                 </ListBox>
                             </Select.Popover>
@@ -170,6 +171,7 @@ export default function Settings(props: SettingsProps) {
                     )}
 
                     <Select
+                        aria-label="Lane Numbering"
                         data-testid="settings-Lane Numbering"
                         selectedKey={numberingDirection}
                         onSelectionChange={(key) => {
@@ -179,15 +181,16 @@ export default function Settings(props: SettingsProps) {
                         <Select.Trigger aria-label="Lane Numbering">
                             <Select.Value />
                         </Select.Trigger>
-                        <Select.Popover>
-                            <ListBox aria-label="Lane Numbering">
-                                {NUMBERING_OPTIONS.map(opt => (
-                                    <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
-                                ))}
-                            </ListBox>
-                        </Select.Popover>
+                         <Select.Popover>
+                             <ListBox aria-label="Lane Numbering">
+                                 {NUMBERING_OPTIONS.map(opt => (
+                                     <ListBox.Item id={opt.value} key={opt.value} textValue={opt.label}>{opt.label}</ListBox.Item>
+                                 ))}
+                             </ListBox>
+                         </Select.Popover>
                     </Select>
                     <Select
+                        aria-label="Difficulty"
                         data-testid="settings-Difficulty"
                         selectedKey={difficulty.toString()}
                         onSelectionChange={(key) => {
@@ -197,15 +200,16 @@ export default function Settings(props: SettingsProps) {
                         <Select.Trigger aria-label="Difficulty">
                             <Select.Value />
                         </Select.Trigger>
-                        <Select.Popover>
-                            <ListBox aria-label="Difficulty">
-                                {DIFFICULTY_OPTIONS.map(opt => (
-                                    <ListBox.Item id={opt.value.toString()} key={opt.value}>{opt.label}</ListBox.Item>
-                                ))}
-                            </ListBox>
-                        </Select.Popover>
+                         <Select.Popover>
+                             <ListBox aria-label="Difficulty">
+                                 {DIFFICULTY_OPTIONS.map(opt => (
+                                     <ListBox.Item id={opt.value.toString()} key={opt.value} textValue={opt.label}>{opt.label}</ListBox.Item>
+                                 ))}
+                             </ListBox>
+                         </Select.Popover>
                     </Select>
                     <Select
+                        aria-label="Spread"
                         data-testid="settings-Spread"
                         selectedKey={spread.toString()}
                         onSelectionChange={(key) => {
@@ -215,15 +219,16 @@ export default function Settings(props: SettingsProps) {
                         <Select.Trigger aria-label="Spread">
                             <Select.Value />
                         </Select.Trigger>
-                        <Select.Popover>
-                            <ListBox aria-label="Spread">
-                                {SPREAD_OPTIONS.map(opt => (
-                                    <ListBox.Item id={opt.value.toString()} key={opt.value}>{opt.label}</ListBox.Item>
-                                ))}
-                            </ListBox>
-                        </Select.Popover>
+                         <Select.Popover>
+                             <ListBox aria-label="Spread">
+                                 {SPREAD_OPTIONS.map(opt => (
+                                     <ListBox.Item id={opt.value.toString()} key={opt.value} textValue={opt.label}>{opt.label}</ListBox.Item>
+                                 ))}
+                             </ListBox>
+                         </Select.Popover>
                     </Select>
                     <Select
+                        aria-label="Starting End"
                         data-testid="settings-Starting End"
                         selectedKey={startingEnd}
                         onSelectionChange={(key) => {
@@ -233,15 +238,16 @@ export default function Settings(props: SettingsProps) {
                         <Select.Trigger aria-label="Starting End">
                             <Select.Value />
                         </Select.Trigger>
-                        <Select.Popover>
-                            <ListBox aria-label="Starting End">
-                                {STARTING_END_OPTIONS.map(opt => (
-                                    <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
-                                ))}
-                            </ListBox>
-                        </Select.Popover>
+                         <Select.Popover>
+                             <ListBox aria-label="Starting End">
+                                 {STARTING_END_OPTIONS.map(opt => (
+                                     <ListBox.Item id={opt.value} key={opt.value} textValue={opt.label}>{opt.label}</ListBox.Item>
+                                 ))}
+                             </ListBox>
+                         </Select.Popover>
                     </Select>
                     <Select
+                        aria-label="Simulation Mode"
                         data-testid="settings-Simulation Mode"
                         selectedKey={simulationMode}
                         onSelectionChange={(key) => {
@@ -251,13 +257,13 @@ export default function Settings(props: SettingsProps) {
                         <Select.Trigger aria-label="Simulation Mode">
                             <Select.Value />
                         </Select.Trigger>
-                        <Select.Popover>
-                            <ListBox aria-label="Simulation Mode">
-                                {MODE_OPTIONS.map(opt => (
-                                    <ListBox.Item id={opt.value} key={opt.value}>{opt.label}</ListBox.Item>
-                                ))}
-                            </ListBox>
-                        </Select.Popover>
+                         <Select.Popover>
+                             <ListBox aria-label="Simulation Mode">
+                                 {MODE_OPTIONS.map(opt => (
+                                     <ListBox.Item id={opt.value} key={opt.value} textValue={opt.label}>{opt.label}</ListBox.Item>
+                                 ))}
+                             </ListBox>
+                         </Select.Popover>
                     </Select>
                 </div>
                 <Button

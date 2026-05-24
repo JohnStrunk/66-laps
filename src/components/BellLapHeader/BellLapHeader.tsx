@@ -237,33 +237,29 @@ export default function BellLapHeader() {
                 {selectedRace && (
                   <>
                     <Tooltip>
-                      <Tooltip.Trigger tabIndex={0}>
-                        <Button
-                          isIconOnly
-                          variant="secondary"
-                          size="sm"
-                          onPress={() => shareRacePDF(selectedRace)}
-                          aria-label="Share"
-                          data-testid="share-history-button"
-                        >
-                          <Share2 size={18} />
-                        </Button>
-                      </Tooltip.Trigger>
+                      <Button
+                        isIconOnly
+                        variant="secondary"
+                        size="sm"
+                        onPress={() => shareRacePDF(selectedRace)}
+                        aria-label="Share"
+                        data-testid="share-history-button"
+                      >
+                        <Share2 size={18} />
+                      </Button>
                       <Tooltip.Content>Share PDF</Tooltip.Content>
                     </Tooltip>
                     <Tooltip>
-                      <Tooltip.Trigger tabIndex={0}>
-                        <Button
-                          isIconOnly
-                          variant="secondary"
-                          size="sm"
-                          onPress={() => downloadRacePDF(selectedRace)}
-                          aria-label="Download"
-                          data-testid="download-history-button"
-                        >
-                          <Download size={18} />
-                        </Button>
-                      </Tooltip.Trigger>
+                      <Button
+                        isIconOnly
+                        variant="secondary"
+                        size="sm"
+                        onPress={() => downloadRacePDF(selectedRace)}
+                        aria-label="Download"
+                        data-testid="download-history-button"
+                      >
+                        <Download size={18} />
+                      </Button>
                       <Tooltip.Content>Download PDF</Tooltip.Content>
                     </Tooltip>
                   </>
@@ -314,21 +310,29 @@ export default function BellLapHeader() {
 
             <div className="flex flex-row items-center gap-1">
               <Dropdown>
-                <Dropdown.Trigger>
-                  <Button variant="secondary" size="sm" className="min-w-0 px-2 flex items-center gap-1" aria-label="Lane Order" data-testid="lane-order-dropdown-trigger">
-                    {isFlipped ? `${safeLaneCount} - 1` : `1 - ${safeLaneCount}`}
-                    <ChevronDown size={14} />
-                  </Button>
-                </Dropdown.Trigger>
-                <Dropdown.Menu
-                  aria-label="Lane Order Selection"
-                  onAction={(key) => setIsFlipped(key === "bottom-to-top")}
-                  selectedKeys={[isFlipped ? "bottom-to-top" : "top-to-bottom"]}
-                  selectionMode="single"
+                <Dropdown.Trigger
+                  {...({
+                    variant: "secondary",
+                    size: "sm",
+                    className: "min-w-0 px-2 flex items-center gap-1",
+                    "aria-label": "Lane Order",
+                    "data-testid": "lane-order-dropdown-trigger"
+                  } as unknown as Record<string, unknown>)}
                 >
-                  <Dropdown.Item id="top-to-bottom" data-testid="lane-order-item-top">{`1 - ${safeLaneCount}`}</Dropdown.Item>
-                  <Dropdown.Item id="bottom-to-top" data-testid="lane-order-item-bottom">{`${safeLaneCount} - 1`}</Dropdown.Item>
-                </Dropdown.Menu>
+                  {isFlipped ? `${safeLaneCount} - 1` : `1 - ${safeLaneCount}`}
+                  <ChevronDown size={14} />
+                </Dropdown.Trigger>
+                <Dropdown.Popover>
+                  <Dropdown.Menu
+                    aria-label="Lane Order Selection"
+                    onAction={(key) => setIsFlipped(key === "bottom-to-top")}
+                    selectedKeys={[isFlipped ? "bottom-to-top" : "top-to-bottom"]}
+                    selectionMode="single"
+                  >
+                    <Dropdown.Item id="top-to-bottom" data-testid="lane-order-item-top">{`1 - ${safeLaneCount}`}</Dropdown.Item>
+                    <Dropdown.Item id="bottom-to-top" data-testid="lane-order-item-bottom">{`${safeLaneCount} - 1`}</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
               </Dropdown>
 
               <Button

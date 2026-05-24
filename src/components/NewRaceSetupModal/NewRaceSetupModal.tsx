@@ -36,7 +36,7 @@ export default function NewRaceSetupModal({ portalContainer }: { portalContainer
       <Button className="hidden">Open</Button>
       <Modal.Backdrop className="bg-transparent" />
       <Modal.Container className="fixed inset-0 flex items-center justify-center w-full h-full" {...({ portalContainer } as unknown as Record<string, unknown>)}>
-        <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto" data-testid="new-race-setup-dialog">
+        <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto p-8 max-w-md w-full" data-testid="new-race-setup-dialog">
           {({ close }) => (
             <NewRaceSetupModalContent key={contentKey} onClose={close} />
           )}
@@ -68,14 +68,13 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
   return (
     <>
       <Modal.Header>New Race Setup</Modal.Header>
-      <Modal.Body className="flex flex-col gap-4">
-        <Select
-          selectedKey={localEvent}
+      <Modal.Body className="flex flex-col gap-4 p-0 w-full">
+        <Select className="w-full" selectedKey={localEvent}
           onSelectionChange={(key) => {
             if (key) setLocalEvent(key as EventType);
           }}
-          data-testid="event-selection-dropdown"
-        >
+          data-testid="event-selection-dropdown">
+
           <Label>Event Selection</Label>
           <Select.Trigger>
             <Select.Value />
@@ -91,13 +90,13 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           </Select.Popover>
         </Select>
 
-        <Select
+        <Select className="w-full"
           selectedKey={String(localLaneCount)}
           onSelectionChange={(key) => {
             if (key) setLocalLaneCount(Number(key));
           }}
-          data-testid="lanes-dropdown"
-        >
+          data-testid="lanes-dropdown">
+
           <Label>Lanes</Label>
           <Select.Trigger>
             <Select.Value />
@@ -117,14 +116,14 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
             onChange={setLocalEventNumber}
           >
             <Label>Event Number</Label>
-            <HeroUIInput placeholder="e.g. 15" data-testid="event-number-input" />
+            <HeroUIInput placeholder="e.g. 15" data-testid="event-number-input" className="max-w-[8rem]" />
           </TextField>
           <TextField
             value={localHeatNumber}
             onChange={setLocalHeatNumber}
           >
             <Label>Heat Number</Label>
-            <HeroUIInput placeholder="e.g. 2" data-testid="heat-number-input" />
+            <HeroUIInput placeholder="e.g. 2" data-testid="heat-number-input" className="max-w-[8rem]" />
           </TextField>
         </div>
       </Modal.Body>

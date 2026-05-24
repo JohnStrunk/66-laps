@@ -30,7 +30,15 @@ Feature: Delete Race History
     Then I should see a confirmation dialog for deleting all history
     When I confirm deleting all history
     Then the history should be empty
-    And I should see the text "No race history recorded yet." on the screen
+    Then I should see the text "No race history recorded yet." on the screen
+
+  Rule: Delete Race modal should be centered vertically and horizontally and not dimmed
+    # UI requirement for centered and non-dimmed modal
+    Scenario: Delete Race modal is centered and not dimmed
+      When I click the delete button for the first race in history
+      Then I should see a confirmation dialog for deleting the race
+      And the dialog should be centered on screen
+      And the background should not be dimmed
 
   Scenario: Cancel deleting all race history
     When I click the "Delete all" button at the bottom of the history

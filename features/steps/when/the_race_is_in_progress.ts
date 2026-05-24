@@ -9,6 +9,13 @@ When('the race is in progress', async function (this: CustomWorld) {
     const container = page.locator('[data-swimmer-count]');
     await container.first().waitFor({ state: 'attached' });
 
+    const viewMode = await container.first().getAttribute('data-view-mode');
+    if (viewMode === '3D') {
+        await page.locator('[data-testid="3d-pool-container"]').waitFor({ state: 'attached' });
+    } else {
+        await page.locator('[data-testid="2d-pool-container"][data-test-ready="true"]').waitFor({ state: 'attached' });
+    }
+
     const numbering = await container.first().getAttribute('data-numbering');
     const totalLanesAttr = await container.first().getAttribute('data-swimmer-count');
     const totalLanes = parseInt(totalLanesAttr || '8');

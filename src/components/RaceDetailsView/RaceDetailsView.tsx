@@ -86,18 +86,18 @@ export default function RaceDetailsView() {
         <Tabs.Panel id="lap-oof" className="flex-1 min-h-0 overflow-hidden p-0 pt-2 h-full flex flex-col">
           <Table
             aria-label="Lap Order of Finish"
-            className="flex-1 min-h-0"
+            className="flex-1 min-h-0 px-4"
           >
             <Table.ScrollContainer className="h-full overflow-y-auto lap-oof-table-wrapper">
               <Table.Content>
                 <Table.Header className="sticky top-0 z-10 bg-background shadow-sm">
-                  <Table.Column className="w-[30px]">LAP</Table.Column>
+                  <Table.Column className="w-[30px]" isRowHeader={true}>LAP</Table.Column>
                   <Table.Column>ORDER OF FINISH</Table.Column>
                 </Table.Header>
                 <Table.Body>
                   {lapOOFData.map((data) => (
                     <Table.Row id={String(data.lap)} key={data.lap} data-testid="lap-row">
-                      <Table.Cell className="font-bold text-default-500 text-xs px-1">{data.lap}</Table.Cell>
+                      <Table.Cell className="font-bold text-default-500 text-xs px-4">{data.lap}</Table.Cell>
                       <Table.Cell className="px-1">
                         <div className="flex gap-x-0.5 flex-nowrap items-baseline">
                           {data.lanes.map((laneNum, idx) => (

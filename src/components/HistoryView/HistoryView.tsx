@@ -75,18 +75,19 @@ export default function HistoryView() {
             <div className="flex flex-col gap-3">
               {history.map((record: RaceRecord) => (
                 <Card
-                  key={record.id}
-                  className="w-full shadow-sm hover:shadow-md transition-shadow bg-content1 cursor-pointer"
-                  onClick={() => handleRecordClick(record.id)}
-                  data-testid="history-record"
-                >
+  key={record.id}
+  className="w-full shadow-sm hover:shadow-md transition-shadow bg-content1 cursor-pointer truncate"
+  onClick={() => handleRecordClick(record.id)}
+  data-testid="history-record"
+  title={`${record.event} ${new Date(record.startTime).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}`}
+>
                   <div className="flex flex-col p-0">
                     <div
                       className="flex-1 flex flex-col gap-1 p-3 sm:p-4 hover:bg-default-100 transition-colors"
                       role="button"
                       tabIndex={0}
                     >
-                      <div className="flex items-baseline gap-2 pointer-events-none">
+                      <div className="flex items-baseline gap-2 overflow-hidden whitespace-nowrap truncate text-base sm:text-lg" data-testid="history-record-info" title={`${record.event} ${new Date(record.startTime).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}`}>
                         <span className="font-bold text-base sm:text-lg">{record.event}</span>
                         <span className="text-xs sm:text-sm text-default-500">
                           {new Date(record.startTime).toLocaleString(undefined, {
@@ -102,7 +103,8 @@ export default function HistoryView() {
                         {/* Heat Number */}
                         {record.heatNumber && (
                           <span className="text-sm text-default-500">H {record.heatNumber}</span>
-                        )}
+                        ) }
+                      {record.laneCount && (<span className="text-sm text-default-500">Lanes {record.laneCount}</span>)}
                         {/* Action Buttons */}
                         <div className="flex gap-2 ml-auto">
                           <Tooltip>
@@ -179,15 +181,15 @@ export default function HistoryView() {
       {!!raceToDelete && (
         <Modal isOpen={true} onOpenChange={(isOpen) => !isOpen && setRaceToDelete(null)}>
           <Button className="hidden">Open</Button>
-          <Modal.Backdrop />
-          <Modal.Container>
-            <Modal.Dialog data-testid="delete-race-dialog" aria-label="Delete Race">
+          <Modal.Backdrop className="bg-transparent" />
+          <Modal.Container className="fixed inset-0 flex items-center justify-center w-full h-full">
+            <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto" data-testid="delete-race-dialog" aria-label="Delete Race">
               {({ close }) => (
                 <>
                   <Modal.Header className="flex flex-col gap-1">
                     <header>Delete Race</header>
                   </Modal.Header>
-                  <Modal.Body>
+                  <Modal.Body className="p-0">
                     <p>Are you sure you want to delete this race record?</p>
                     <div className="p-3 bg-default-100 rounded-lg">
                       <p className="font-bold">{raceToDelete.event}</p>
@@ -224,7 +226,6 @@ export default function HistoryView() {
       {isDeleteAllOpen && (
         <Modal isOpen={true} onOpenChange={setIsDeleteAllOpen}>
           <Button className="hidden">Open</Button>
-          <Modal.Backdrop />
           <Modal.Container>
             <Modal.Dialog data-testid="delete-all-dialog" aria-label="Delete All History">
               {({ close }) => (

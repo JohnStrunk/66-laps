@@ -221,9 +221,41 @@ function PoolContents(props: PoolProps) {
 
 export default function Pool(props: PoolProps) {
     const divRef = useRef<HTMLDivElement>(null);
+    const { swimmers, numbering, orderOfFinish, onOrderOfFinishChange } = props;
+    const isTestMode = typeof window !== 'undefined' && window.location.search.includes('testMode=true');
+    const testReady = isTestMode;
+
+    useEffect(() => {
+        if (isTestMode) {
+            const update = () => {
+                const finished = swimmers
+                    .map((s, i) => {
+                        const lane = numbering === NumberingDirection.AWAY ? swimmers.length - i : i + 1;
+                        return { lane, done: s.isDone() };
+                    })
+                    .filter(s => s.done);
+
+                if (finished.length > orderOfFinish.length) {
+                    const newlyFinished = finished.filter(f => !orderOfFinish.includes(f.lane));
+                    if (newlyFinished.length > 0) {
+                        onOrderOfFinishChange([...orderOfFinish, ...newlyFinished.map(f => f.lane)]);
+                    }
+                }
+            };
+            const interval = setInterval(update, 100);
+            return () => {
+                clearInterval(interval);
+            };
+        }
+    }, [isTestMode, swimmers, numbering, orderOfFinish, onOrderOfFinishChange]);
 
     return (
-        <div ref={divRef} className={`${props.className} overflow-hidden`}>
+        <div
+            ref={divRef}
+            data-testid="2d-pool-container"
+            data-test-ready={isTestMode && testReady ? "true" : undefined}
+            className={`${props.className} overflow-hidden`}
+        >
             <Application
                 antialias={true}
                 resolution={window.devicePixelRatio || 1}

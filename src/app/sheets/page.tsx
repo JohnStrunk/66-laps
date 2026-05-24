@@ -3,7 +3,7 @@
 import Footer from "@/components/Footer/Footer";
 import Nav from "@/components/Nav/Nav";
 import { ph_event_download_sheet } from "@/modules/phEvents";
-import { Link, Separator, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, TableContent } from "@heroui/react";
+import { Separator, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, TableContent } from "@heroui/react";
 import { FileText } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import { externalSheets } from "./sheets";
@@ -20,44 +20,47 @@ export default function Page() {
                     <h2 className="text-lg mb-2">66-Laps custom counting sheets</h2>
                     <p className="text-sm">
                         Want to customize these sheets? Check out the{' '}
-                        <Link
+                        <a
                             target="_blank"
                             rel="noopener noreferrer"
-                            onPress={() => {
+                            onClick={() => {
                                 ph_event_download_sheet(postHog, "editable", "all", false);
                             }}
                             href="https://docs.google.com/spreadsheets/d/1GHPSscX-hn9-Av33UEZ2iyQLtknGxFwlX46lGB50Xc8/edit?usp=sharing"
-                            className="text-sm leading-none">
+                            className="text-sm leading-none text-primary hover:underline">
                             editable version.
-                        </Link>
+                        </a>
                     </p>
                     <ul className="list-none p-0">
                         <li>
-                            <Link
-                                onPress={() => {
+                            <a
+                                onClick={() => {
                                     ph_event_download_sheet(postHog, "SC500", "SC", false);
                                 }}
-                                href="/sheets/SC500.pdf">
-                                <FileText />&nbsp;66-Laps SC 500
-                            </Link>
+                                href="/sheets/SC500.pdf"
+                                className="inline-flex items-center text-primary hover:underline my-1">
+                                <FileText className="mr-1" />66-Laps SC 500
+                            </a>
                         </li>
                         <li>
-                            <Link
-                                onPress={() => {
+                            <a
+                                onClick={() => {
                                     ph_event_download_sheet(postHog, "SC1000-1650", "SC", false);
                                 }}
-                                href="/sheets/SC1000-1650.pdf">
-                                <FileText />&nbsp;66-Laps SC 1000/1650
-                            </Link>
+                                href="/sheets/SC1000-1650.pdf"
+                                className="inline-flex items-center text-primary hover:underline my-1">
+                                <FileText className="mr-1" />66-Laps SC 1000/1650
+                            </a>
                         </li>
                         <li>
-                            <Link
-                                onPress={() => {
+                            <a
+                                onClick={() => {
                                     ph_event_download_sheet(postHog, "LC800-1500", "LC", false);
                                 }}
-                                href="/sheets/LC800-1500.pdf">
-                                <FileText />&nbsp;66-Laps LC 800/1500
-                            </Link>
+                                href="/sheets/LC800-1500.pdf"
+                                className="inline-flex items-center text-primary hover:underline my-1">
+                                <FileText className="mr-1" />66-Laps LC 800/1500
+                            </a>
                         </li>
                     </ul>
                     <Separator />
@@ -69,9 +72,9 @@ export default function Page() {
                     <Table aria-label="Lap counting sheets"
                         className="text-foreground [&_tr:nth-child(even)]:bg-black/5 dark:[&_tr:nth-child(even)]:bg-white/5"
                     >
-                        <TableContent>
+                        <TableContent aria-label="Lap counting sheets">
                             <TableHeader>
-                                <TableColumn className="px-4 py-3">ORGANIZATION</TableColumn>
+                                <TableColumn className="px-4 py-3" isRowHeader>ORGANIZATION</TableColumn>
                                 <TableColumn className="text-center px-4 py-3">SHORT COURSE</TableColumn>
                                 <TableColumn className="text-center px-4 py-3">LONG COURSE</TableColumn>
                             </TableHeader>
@@ -95,30 +98,32 @@ export default function Page() {
                                                 {hasAll ? (
                                                     Object.keys(sheet.all as object).map((distance, idx, arr) => (
                                                         <span key={distance}>
-                                                            <Link
+                                                            <a
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                onPress={() => {
+                                                                onClick={() => {
                                                                     ph_event_download_sheet(postHog, distance, "all", true);
                                                                 }}
-                                                                href={(sheet.all as Record<string, string>)[distance]}>
+                                                                href={(sheet.all as Record<string, string>)[distance]}
+                                                                className="text-primary hover:underline">
                                                                 {distance}
-                                                            </Link>
+                                                            </a>
                                                             {idx < arr.length - 1 && ', '}
                                                         </span>
                                                     ))
                                                 ) : hasSC ? (
                                                     Object.keys(sheet.SC as object).map((distance, idx, arr) => (
                                                         <span key={distance}>
-                                                            <Link
+                                                            <a
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                onPress={() => {
+                                                                onClick={() => {
                                                                     ph_event_download_sheet(postHog, distance, "SC", true);
                                                                 }}
-                                                                href={(sheet.SC as Record<string, string>)[distance]}>
+                                                                href={(sheet.SC as Record<string, string>)[distance]}
+                                                                className="text-primary hover:underline">
                                                                 {distance}
-                                                            </Link>
+                                                            </a>
                                                             {idx < arr.length - 1 && ', '}
                                                         </span>
                                                     ))
@@ -128,15 +133,16 @@ export default function Page() {
                                                 {hasAll ? '—' : hasLC ? (
                                                     Object.keys(sheet.LC as object).map((distance, idx, arr) => (
                                                         <span key={distance}>
-                                                            <Link
+                                                            <a
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                onPress={() => {
+                                                                onClick={() => {
                                                                     ph_event_download_sheet(postHog, distance, "LC", true);
                                                                 }}
-                                                                href={(sheet.LC as Record<string, string>)[distance]}>
+                                                                href={(sheet.LC as Record<string, string>)[distance]}
+                                                                className="text-primary hover:underline">
                                                                 {distance}
-                                                            </Link>
+                                                            </a>
                                                             {idx < arr.length - 1 && ', '}
                                                         </span>
                                                     ))
