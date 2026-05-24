@@ -89,7 +89,7 @@ export default function RaceDetailsView() {
             className="flex-1 min-h-0 px-4"
           >
             <Table.ScrollContainer className="h-full overflow-y-auto lap-oof-table-wrapper">
-              <Table.Content>
+              <Table.Content aria-label="Lap Order of Finish">
                 <Table.Header className="sticky top-0 z-10 bg-background shadow-sm">
                   <Table.Column className="w-[30px]" isRowHeader={true}>LAP</Table.Column>
                   <Table.Column>ORDER OF FINISH</Table.Column>
