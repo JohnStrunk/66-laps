@@ -86,6 +86,7 @@ export default function HistoryView() {
                       className="flex-1 flex flex-col gap-1 p-3 sm:p-4 hover:bg-default-100 transition-colors"
                       role="button"
                       tabIndex={0}
+                      aria-label={`Race: ${record.event}, ${new Date(record.startTime).toLocaleString()}`}
                     >
                       <div className="flex items-baseline gap-2 overflow-hidden whitespace-nowrap truncate text-base sm:text-lg" data-testid="history-record-info" title={`${record.event} ${new Date(record.startTime).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}`}>
                         <span className="font-bold text-base sm:text-lg">{record.event}</span>

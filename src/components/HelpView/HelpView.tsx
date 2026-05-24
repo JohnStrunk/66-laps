@@ -41,11 +41,11 @@ export default function HelpView() {
                     <div className="border border-default-200 rounded-xl overflow-hidden bg-white dark:bg-neutral-800 flex h-20 shadow-sm">
                       {/* Zone A: Manual */}
                       <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 p-2">
-                        <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10">
+                        <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10" aria-label="Decrement (mock)">
                           <Minus size={20} />
                         </Button>
                         <span className="text-2xl font-black">12</span>
-                        <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm">
+                        <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm" aria-label="Increment (mock)">
                           <Plus size={20} />
                         </Button>
                       </div>
@@ -77,9 +77,9 @@ export default function HelpView() {
                   </p>
                   <div className="border border-default-200 rounded-xl overflow-hidden bg-white dark:bg-neutral-800 flex h-20 shadow-sm max-w-md">
                     <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 p-2">
-                      <Button isIconOnly variant="danger-soft" size="sm" isDisabled className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
+                      <Button isIconOnly variant="danger-soft" size="sm" isDisabled className="w-10 h-10 min-w-10" aria-label="Decrement (mock)"><Minus size={20} /></Button>
                       <span className="text-2xl font-black">12</span>
-                      <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm"><Plus size={20} /></Button>
+                      <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm" aria-label="Increment (mock)"><Plus size={20} /></Button>
                     </div>
                     <div className="basis-1/2 relative flex items-center justify-center bg-red-700 text-white overflow-hidden">
                       <div className="absolute inset-0 bg-foreground/20 origin-left scale-x-[0.6]"></div>
@@ -119,9 +119,9 @@ export default function HelpView() {
                       <p className="text-xs font-bold text-default-500 uppercase">Lap 16: Bell Lap</p>
                       <div className="border border-default-200 rounded-xl overflow-hidden bg-white dark:bg-neutral-800 flex h-20 shadow-sm">
                         <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 p-2">
-                          <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
+                          <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10" aria-label="Decrement (mock)"><Minus size={20} /></Button>
                           <span className="text-2xl font-black">16</span>
-                          <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm"><Plus size={20} /></Button>
+                          <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm" aria-label="Increment (mock)"><Plus size={20} /></Button>
                         </div>
                         <div className="basis-1/2 flex items-center justify-center bg-[#00bc7d] text-white gap-2">
                           <span className="text-xl">🔔</span>
@@ -136,9 +136,9 @@ export default function HelpView() {
                       <p className="text-xs font-bold text-default-500 uppercase">Lap 18: Last Lap</p>
                       <div className="border border-default-200 rounded-xl overflow-hidden bg-white dark:bg-neutral-800 flex h-20 shadow-sm">
                         <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 p-2">
-                          <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
+                          <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10" aria-label="Decrement (mock)"><Minus size={20} /></Button>
                           <span className="text-2xl font-black">18</span>
-                          <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm"><Plus size={20} /></Button>
+                          <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm" aria-label="Increment (mock)"><Plus size={20} /></Button>
                         </div>
                         <div className="basis-1/2 flex items-center justify-center bg-[#00bc7d] text-white gap-2">
                           <span className="text-xl">🟥</span>
@@ -153,9 +153,9 @@ export default function HelpView() {
                       <p className="text-xs font-bold text-default-500 uppercase">Lap 20: Finished</p>
                       <div className="border border-default-200 rounded-xl overflow-hidden bg-white dark:bg-neutral-800 flex h-20 shadow-sm">
                         <div className="basis-1/2 flex items-center justify-center gap-2 border-r border-black/10 dark:border-white/10 bg-white dark:bg-neutral-800 p-2">
-                          <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10"><Minus size={20} /></Button>
+                          <Button isIconOnly variant="danger-soft" size="sm" className="w-10 h-10 min-w-10" aria-label="Decrement (mock)"><Minus size={20} /></Button>
                           <span className="text-2xl font-black">20</span>
-                          <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm"><Plus size={20} /></Button>
+                          <Button isIconOnly variant="secondary" className="w-10 h-10 min-w-10 bg-[#00bc7d]/20 text-[#00bc7d]" size="sm" aria-label="Increment (mock)"><Plus size={20} /></Button>
                         </div>
                         <div className="basis-1/2 flex items-center justify-center bg-white text-black gap-2">
                           <span className="text-xl">🏁</span>

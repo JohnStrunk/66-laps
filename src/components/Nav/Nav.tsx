@@ -30,6 +30,7 @@ export default function Nav() {
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-black hover:bg-black/10 focus:outline-none"
+                                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                             >
                                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                             </button>

@@ -36,7 +36,7 @@ export default function NewRaceSetupModal({ portalContainer }: { portalContainer
       <Button className="hidden">Open</Button>
       <Modal.Backdrop className="bg-transparent" />
       <Modal.Container className="fixed inset-0 flex items-center justify-center w-full h-full" {...({ portalContainer } as unknown as Record<string, unknown>)}>
-        <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto p-8 max-w-md w-full" data-testid="new-race-setup-dialog">
+        <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto p-8 max-w-md w-full" data-testid="new-race-setup-dialog" aria-label="New Race Setup">
           {({ close }) => (
             <NewRaceSetupModalContent key={contentKey} onClose={close} />
           )}
@@ -73,14 +73,15 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           onSelectionChange={(key) => {
             if (key) setLocalEvent(key as EventType);
           }}
-          data-testid="event-selection-dropdown">
+          data-testid="event-selection-dropdown"
+          aria-label="Event Selection">
 
           <Label>Event Selection</Label>
-          <Select.Trigger>
+          <Select.Trigger aria-label="Event Selection">
             <Select.Value />
           </Select.Trigger>
           <Select.Popover>
-            <ListBox>
+            <ListBox aria-label="Event Selection">
               <ListBox.Item id="500 SC" textValue="500 SC">500 SC</ListBox.Item>
               <ListBox.Item id="1000 SC" textValue="1000 SC">1000 SC</ListBox.Item>
               <ListBox.Item id="1650 SC" textValue="1650 SC">1650 SC</ListBox.Item>
@@ -95,14 +96,15 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
           onSelectionChange={(key) => {
             if (key) setLocalLaneCount(Number(key));
           }}
-          data-testid="lanes-dropdown">
+          data-testid="lanes-dropdown"
+          aria-label="Lanes">
 
           <Label>Lanes</Label>
-          <Select.Trigger>
+          <Select.Trigger aria-label="Lanes">
             <Select.Value />
           </Select.Trigger>
           <Select.Popover>
-            <ListBox>
+            <ListBox aria-label="Lanes">
               <ListBox.Item id="6" textValue="6 lanes">6 lanes</ListBox.Item>
               <ListBox.Item id="8" textValue="8 lanes">8 lanes</ListBox.Item>
               <ListBox.Item id="10" textValue="10 lanes">10 lanes</ListBox.Item>
