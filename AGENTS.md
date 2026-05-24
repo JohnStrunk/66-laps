@@ -6,13 +6,16 @@ This document provides essential information for AI agents working on the
 ## Core Stack
 
 - **Framework:** [Next.js](https://nextjs.org/) 16+ (React 19)
-- **Language:** TypeScript 5+ (Strict Mode)
+- **Language:** TypeScript 6+ (Strict Mode)
 - **Package Manager:** [Yarn](https://yarnpkg.com/) 4 (Berry)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/) 4
 - **UI Components:** [HeroUI](https://heroui.com/) (formerly NextUI)
-- **Graphics:** [PixiJS](https://pixijs.com/) (via `@pixi/react`)
-- **Testing:** [Vitest](https://vitest.dev/) (Unit),
-  [Playwright](https://playwright.dev/) (E2E/Browser)
+- **Graphics:** [PixiJS](https://pixijs.com/) (via `@pixi/react`),
+  [Three.js](https://threejs.org/) (via `@react-three/fiber` and
+  `@react-three/drei`)
+- **Testing:** [Cucumber / Gherkin](https://cucumber.io/) (BDD / E2E Testing),
+  [Vitest](https://vitest.dev/) (Unit),
+  [Playwright](https://playwright.dev/) (Browser Automation)
 - **Documentation:** [Storybook](https://storybook.js.org/)
 - **Observability:** Sentry, PostHog
 
@@ -49,12 +52,12 @@ This document provides essential information for AI agents working on the
 - **Build:** `yarn build`
 - **Linting:** `yarn lint`
 - **Testing:**
-  - `yarn test`: Runs the full suite against the dev server with 2 parallel
-    workers. Good for general regression checks during development.
-  - `yarn test:static`: Builds the project and runs tests against the static
-    export. This is the **most stable and fastest** way to run the full suite.
-    Use this for final verification before committing or in CI.
-  - `yarn test:e2e`: Runs only browser-dependent tests.
+  - `yarn test`: Runs the Cucumber/Playwright BDD suite against a dynamically
+    managed dev server on port 3000 with 2 parallel workers. Good for general
+    regression checks during development.
+  - `yarn test:static`: Builds the project and runs the BDD suite against the
+    static export. This is the **most stable and fastest** way to run the full
+    suite. Use this for final verification before committing or in CI.
 - **Subset Testing (for faster dev cycles):**
   - Ensure `yarn dev` is running in the background.
   - Run a single feature:
@@ -65,6 +68,10 @@ This document provides essential information for AI agents working on the
     `NODE_OPTIONS="--import tsx" npx cucumber-js --tags "@yourtag"`
   - Run by line number:
     `NODE_OPTIONS="--import tsx" npx cucumber-js features/file.feature:10`
+- **BDD Spec Auditing:**
+  `python .agents/skills/ears-gherkin-dev/scripts/audit.py features/`
+  Runs the quality checks against your feature files and step definitions to
+  ensure conformance to EARS and Gherkin rules.
 - **Type Check:** `yarn tsc --noEmit`
 - **Storybook:** `yarn storybook`
 - **All-in-one Lint:** `./.github/lint-all.sh`
@@ -188,6 +195,95 @@ This document provides essential information for AI agents working on the
   - Completing and exiting a race.
 - **Custom Events:** Use the helpers in `src/modules/phEvents.ts` to ensure
   consistent event naming and properties.
+
+## EARS & Gherkin BDD Development (ears-gherkin-dev)
+
+All behavioral changes in this repository — whether new features, bug fixes,
+addressing unwanted behaviors, or responding to review feedback — **MUST** be
+guided by the `ears-gherkin-dev` workflow.
+
+### The Golden Rule
+
+> [!IMPORTANT]
+> **Any request from the user to change the behavior of the code becomes a
+> requirement.** All requirements must be expressed in formal EARS syntax and
+> verified by declarative Gherkin scenarios to ensure they are enforced before
+> implementation begins.
+
+### 1. EARS Requirements Syntax
+
+Every requirement must follow a single generalized structure containing exactly
+one **"shall"**:
+
+```text
+While <optional precondition(s)>, when <optional trigger>, the <system name> shall <system response>.
+```
+
+Or for unwanted conditions:
+
+```text
+If <unwanted condition>, then the <system name> shall <system response>.
+```
+
+Use the correct keyword pattern for the context:
+
+- **Ubiquitous:** `The <system> shall <response>.` (Always-active properties).
+- **Event-Driven:** `When <trigger>, the <system> shall <response>.`
+  (Instantaneous triggers).
+- **State-Driven:** `While <precondition>, the <system> shall <response>.`
+  (Duration-based states).
+- **Unwanted Behavior:** `If <unwanted condition>, then the <system> shall
+  <response>.` (Error handling/faults).
+- **Optional Feature:** `Where <feature>, the <system> shall <response>.`
+  (Feature-dependent conditions).
+- **Complex:** Combine patterns using the canonical temporal clause order:
+  `Where` -> `While` -> `When` -> `If/Then` -> `shall`.
+
+### 2. Feature Specification Structure
+
+- **Requirement Location:** EARS requirements are defined as a `Rule:` title
+  inside the appropriate `.feature` file (e.g., in `features/`).
+- **Rule Cardinality:** There must be exactly one `Rule:` block per EARS
+  requirement. The title of the `Rule:` **IS** the requirement itself.
+- **One "Shall":** Every `Rule:` title must contain exactly one "shall"
+  statement and no more.
+
+### 3. Red/Green BDD/TDD Workflow
+
+For any behavioral change, you must strictly follow this 8-step workflow:
+
+1. **Understand the Change:** Read the request, identify what behavior is
+   changing and why, and clarify any ambiguity.
+2. **Write or Update the EARS Requirement:** Place the requirement as a `Rule:`
+   title in the appropriate `.feature` file.
+3. **Write Failing Scenario(s):** Write declarative Gherkin scenarios under the
+   `Rule:` demonstrating the desired behavior. Use property-based testing where
+   practical.
+4. **Run and Confirm RED:** Run the tests and confirm they fail. This ensures
+   that the test actually validates something new.
+5. **Write or Update Step Definitions:**
+   - **Search first:** Scan `features/steps/` for steps with similar patterns to
+     avoid duplicates.
+   - **One step per file:** Put each step in its own separate TypeScript file
+     inside `features/steps/{given,when,then}/`.
+   - **snake_case filenames:** Name files after their step pattern in
+     `snake_case` without the keyword prefix (e.g.,
+     `features/steps/then/lane_should_be_active.ts`).
+6. **Implement the Code:** Write the absolute minimum code to satisfy the
+   scenarios.
+7. **Run and Confirm GREEN:** Run the BDD tests and confirm everything passes.
+8. **Audit Specifications:** Run
+   `python .agents/skills/ears-gherkin-dev/scripts/audit.py features/` and
+   resolve all findings before completing the task.
+
+### 4. Features Setup
+
+Ensure that the features directory setup is correct:
+
+1. If `features/dashboard.html` does not exist, copy it from
+   `.agents/skills/ears-gherkin-dev/templates/dashboard.html`.
+2. If `features/README.md` does not exist, copy it from
+   `.agents/skills/ears-gherkin-dev/templates/README.md`.
 
 ## Testing Standards
 
