@@ -6,5 +6,5 @@ Then(`the minus button in Zone A for Lane {int} should be red`, async function (
   const button = await this.page!.$(`[data-lane-number="${laneNumber}"] [aria-label="Decrement lane ${laneNumber}"]`);
   expect(button, `Minus button for lane ${laneNumber} not found`).toBeTruthy();
   const classes = await button!.getAttribute('class');
-  expect(classes?.includes('bg-danger'), `Minus button for lane ${laneNumber} is not red. Classes: ${classes}`).toBeTruthy();
+  expect(classes?.includes('button--danger-soft'), `Minus button for lane ${laneNumber} is not red. Classes: ${classes}`).toBeTruthy();
 });

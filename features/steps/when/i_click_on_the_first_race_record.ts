@@ -1,10 +1,10 @@
 import { When } from '@cucumber/cucumber';
 import { CustomWorld } from '../../support/world';
+import { advanceClock, waitForVisible } from '../../support/utils';
 
 When('I click on the first race record', async function (this: CustomWorld) {
-  const records = await this.page!.$$('[data-testid="history-record"]');
-  if (records.length === 0) {
-    throw new Error('No history records found');
-  }
-  await records[0].click();
+  const locator = this.page!.locator('[data-testid="history-record"]').first();
+  await waitForVisible(locator);
+  await locator.evaluate(el => (el as HTMLElement).click());
+  await advanceClock(this.page!, 500);
 });

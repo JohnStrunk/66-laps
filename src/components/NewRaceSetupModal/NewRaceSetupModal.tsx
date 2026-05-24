@@ -3,18 +3,16 @@
 import {
   Button,
   Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
+  TextField,
+  Label,
+  Input as HeroUIInput,
   Select,
-  SelectItem,
+  ListBox,
 } from "@heroui/react";
 import { useBellLapStore, EventType } from "@/modules/bellLapStore";
 import { useState } from "react";
 
-export default function NewRaceSetupModal() {
+export default function NewRaceSetupModal({ portalContainer }: { portalContainer?: HTMLElement }) {
   const isSetupDialogOpen = useBellLapStore(state => state.isSetupDialogOpen);
   const setSetupDialogOpen = useBellLapStore(state => state.setSetupDialogOpen);
 
@@ -30,19 +28,22 @@ export default function NewRaceSetupModal() {
     setPrevOpen(false);
   }
 
-  return (
+  return isSetupDialogOpen ? (
     <Modal
-      isOpen={isSetupDialogOpen}
+      isOpen={true}
       onOpenChange={setSetupDialogOpen}
-      data-testid="new-race-setup-dialog"
     >
-      <ModalContent>
-        {(onClose) => (
-          <NewRaceSetupModalContent key={contentKey} onClose={onClose} />
-        )}
-      </ModalContent>
+      <Button className="hidden">Open</Button>
+      <Modal.Backdrop className="bg-transparent" />
+      <Modal.Container className="fixed inset-0 flex items-center justify-center w-full h-full" {...({ portalContainer } as unknown as Record<string, unknown>)}>
+        <Modal.Dialog className="flex items-center justify-center my-auto max-h-screen overflow-y-auto p-8 max-w-md w-full" data-testid="new-race-setup-dialog" aria-label="New Race Setup">
+          {({ close }) => (
+            <NewRaceSetupModalContent key={contentKey} onClose={close} />
+          )}
+        </Modal.Dialog>
+      </Modal.Container>
     </Modal>
-  );
+  ) : null;
 }
 
 function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
@@ -60,69 +61,84 @@ function NewRaceSetupModalContent({ onClose }: { onClose: () => void }) {
 
   const handleStartRace = () => {
     startRace(localEvent, localLaneCount, localEventNumber, localHeatNumber);
-    // Note: onClose() is NOT called here because startRace already sets isSetupDialogOpen to false
-    // which triggers the Modal to close via its isOpen prop.
+    // Explicitly call onClose to ensure v3 handles exit correctly
+    onClose();
   };
 
   return (
     <>
-      <ModalHeader>New Race Setup</ModalHeader>
-      <ModalBody className="flex flex-col gap-4">
-        <Select
-          label="Event Selection"
-          selectedKeys={[localEvent]}
-          onSelectionChange={(keys) => {
-            const selected = Array.from(keys)[0] as EventType;
-            if (selected) setLocalEvent(selected);
+      <Modal.Header>New Race Setup</Modal.Header>
+      <Modal.Body className="flex flex-col gap-4 p-0 w-full">
+        <Select className="w-full" selectedKey={localEvent}
+          onSelectionChange={(key) => {
+            if (key) setLocalEvent(key as EventType);
           }}
           data-testid="event-selection-dropdown"
-        >
-          <SelectItem key="500 SC">500 SC</SelectItem>
-          <SelectItem key="1000 SC">1000 SC</SelectItem>
-          <SelectItem key="1650 SC">1650 SC</SelectItem>
-          <SelectItem key="800 LC">800 LC</SelectItem>
-          <SelectItem key="1500 LC">1500 LC</SelectItem>
+          aria-label="Event Selection">
+
+          <Label>Event Selection</Label>
+          <Select.Trigger aria-label="Event Selection">
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox aria-label="Event Selection">
+              <ListBox.Item id="500 SC" textValue="500 SC">500 SC</ListBox.Item>
+              <ListBox.Item id="1000 SC" textValue="1000 SC">1000 SC</ListBox.Item>
+              <ListBox.Item id="1650 SC" textValue="1650 SC">1650 SC</ListBox.Item>
+              <ListBox.Item id="800 LC" textValue="800 LC">800 LC</ListBox.Item>
+              <ListBox.Item id="1500 LC" textValue="1500 LC">1500 LC</ListBox.Item>
+            </ListBox>
+          </Select.Popover>
         </Select>
 
-        <Select
-          label="Lanes"
-          selectedKeys={[String(localLaneCount)]}
-          onSelectionChange={(keys) => {
-            const selected = Number(Array.from(keys)[0]);
-            if (!isNaN(selected)) setLocalLaneCount(selected);
+        <Select className="w-full"
+          selectedKey={String(localLaneCount)}
+          onSelectionChange={(key) => {
+            if (key) setLocalLaneCount(Number(key));
           }}
           data-testid="lanes-dropdown"
-        >
-          <SelectItem key="6">6 lanes</SelectItem>
-          <SelectItem key="8">8 lanes</SelectItem>
-          <SelectItem key="10">10 lanes</SelectItem>
+          aria-label="Lanes">
+
+          <Label>Lanes</Label>
+          <Select.Trigger aria-label="Lanes">
+            <Select.Value />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox aria-label="Lanes">
+              <ListBox.Item id="6" textValue="6 lanes">6 lanes</ListBox.Item>
+              <ListBox.Item id="8" textValue="8 lanes">8 lanes</ListBox.Item>
+              <ListBox.Item id="10" textValue="10 lanes">10 lanes</ListBox.Item>
+            </ListBox>
+          </Select.Popover>
         </Select>
 
         <div className="flex gap-4">
-          <Input
-            label="Event Number"
+          <TextField
             value={localEventNumber}
-            onValueChange={setLocalEventNumber}
-            placeholder="e.g. 15"
-            data-testid="event-number-input"
-          />
-          <Input
-            label="Heat Number"
+            onChange={setLocalEventNumber}
+            className="flex flex-col gap-1.5 p-1 max-w-[8.5rem] w-full"
+          >
+            <Label>Event Number</Label>
+            <HeroUIInput placeholder="e.g. 15" data-testid="event-number-input" className="w-full" />
+          </TextField>
+          <TextField
             value={localHeatNumber}
-            onValueChange={setLocalHeatNumber}
-            placeholder="e.g. 2"
-            data-testid="heat-number-input"
-          />
+            onChange={setLocalHeatNumber}
+            className="flex flex-col gap-1.5 p-1 max-w-[8.5rem] w-full"
+          >
+            <Label>Heat Number</Label>
+            <HeroUIInput placeholder="e.g. 2" data-testid="heat-number-input" className="w-full" />
+          </TextField>
         </div>
-      </ModalBody>
-      <ModalFooter>
-        <Button variant="light" onPress={onClose} data-testid="cancel-setup-button">
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="tertiary" onPress={onClose} data-testid="cancel-setup-button">
           Cancel
         </Button>
-        <Button color="primary" onPress={handleStartRace} data-testid="start-race-button">
+        <Button variant="primary" onPress={handleStartRace} data-testid="start-race-button">
           Start Race
         </Button>
-      </ModalFooter>
+      </Modal.Footer>
     </>
   );
 }

@@ -24,14 +24,9 @@
         "UV_CACHE_DIR": "${containerWorkspaceFolder}/.uv_cache",
     },
     "postCreateCommand": {
-        "Enable corepack": "sudo corepack enable && corepack install -g yarn",
+        "Install packages": "./.devcontainer/install-packages.sh",
         "Initialize pre-commit environment": "nohup sh -c 'pre-commit install -f --install-hooks &' < /dev/null > /dev/null 2>&1",
-        "Install Playwright browsers": "npx -y playwright install --with-deps",
-        // "Install beads": "go install github.com/steveyegge/beads/cmd/bd@latest",
-        "Install npm tools": "npm install -g --no-fund @google/gemini-cli markdownlint-cli @playwright/cli",
     },
-    "mounts": [
-    ],
     "remoteEnv": {
         // Pass through Context7 API key for MCP access
         "CONTEXT7_API_KEY": "${localEnv:CONTEXT7_API_KEY}",

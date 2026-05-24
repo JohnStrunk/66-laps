@@ -3,13 +3,7 @@
 import { useBellLapStore, EVENT_CONFIGS } from "@/modules/bellLapStore";
 import {
   Tabs,
-  Tab,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell
+  Table
 } from "@heroui/react";
 import { useMemo, useSyncExternalStore } from "react";
 import { TimelineView } from "./TimelineView";
@@ -68,60 +62,66 @@ export default function RaceDetailsView() {
   }, [race]);
 
   if (!mounted || !race) {
-    return <div className="flex-1 bg-background" data-testid="race-details-loading" />;
+    return (
+      <div
+        className="flex-1 bg-background"
+        data-testid="race-details-loading"
+        data-mounted={String(mounted)}
+        data-has-race={String(!!race)}
+        data-selected-id={selectedRaceId || 'none'}
+        data-history-count={history.length}
+        data-history-ids={history.map(r => r.id).join(',')}
+      />
+    );
   }
 
   return (
     <div className="flex flex-col h-full w-full bg-background overflow-hidden p-2" data-testid="race-details-view">
-      <Tabs
-        aria-label="Race Detail Modes"
-        classNames={{
-          base: "shrink-0",
-          panel: "flex-1 min-h-0 overflow-hidden p-0 pt-2",
-          tabList: "mb-2"
-        }}
-        fullWidth
-      >
-        <Tab key="lap-oof" title="OOF by Lap" className="h-full flex flex-col min-h-0">
-                              <Table
-                                aria-label="Lap Order of Finish"
-                                isHeaderSticky
-                                classNames={{
-                                  base: "flex-1 min-h-0",
-                                  wrapper: "h-full overflow-y-auto lap-oof-table-wrapper",
-                                  table: "min-w-full",
-                                  th: "px-1 py-2 text-xs",
-                                  td: "px-1 py-2"
-                                }}
-                              >
-                                <TableHeader>
-                                  <TableColumn width={30}>LAP</TableColumn>
-                                  <TableColumn>ORDER OF FINISH</TableColumn>
-                                </TableHeader>
-                                                        <TableBody>
-                                                          {lapOOFData.map((data) => (
-                                                            <TableRow key={data.lap} data-testid="lap-row">
-                                                              <TableCell className="font-bold text-default-500 text-sm">{data.lap}</TableCell>
-                                                              <TableCell>
-                                                                <div className="flex gap-x-1 flex-nowrap items-baseline">
-                                                                  {data.lanes.map((laneNum, idx) => (
-                                                                    <div key={idx} className="flex gap-x-0.5 items-baseline">
-                                                                      <span className="font-bold text-lg whitespace-nowrap">
-                                                                        {laneNum}
-                                                                      </span>
-                                                                      {idx < data.lanes.length - 1 && <span className="text-default-300 text-xs">|</span>}
-                                                                    </div>
-                                                                  ))}
-                                                                </div>
-                                                              </TableCell>
-                                                            </TableRow>
-                                                          ))}
-                                                        </TableBody>
-                                                                          </Table>
-                            </Tab>
-        <Tab key="timeline" title="Laps by time" className="h-full flex flex-col min-h-0">
+      <Tabs aria-label="Race Detail Modes" className="h-full flex flex-col min-h-0">
+        <Tabs.List className="shrink-0 mb-2">
+          <Tabs.Tab id="lap-oof">OOF by Lap</Tabs.Tab>
+          <Tabs.Tab id="timeline">Laps by time</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel id="lap-oof" className="flex-1 min-h-0 overflow-hidden p-0 pt-2 h-full flex flex-col">
+          <Table
+            aria-label="Lap Order of Finish"
+            className="flex-1 min-h-0 px-4"
+          >
+            <Table.ScrollContainer className="h-full overflow-y-auto lap-oof-table-wrapper">
+              <Table.Content aria-label="Lap Order of Finish">
+                <Table.Header className="sticky top-0 z-10 bg-background shadow-sm">
+                  <Table.Column className="w-[30px]" isRowHeader={true}>LAP</Table.Column>
+                  <Table.Column>ORDER OF FINISH</Table.Column>
+                </Table.Header>
+                <Table.Body>
+                  {lapOOFData.map((data) => (
+                    <Table.Row id={String(data.lap)} key={data.lap} data-testid="lap-row">
+                      <Table.Cell className="font-bold text-default-500 text-xs px-4">{data.lap}</Table.Cell>
+                      <Table.Cell className="px-1">
+                        <div className="flex gap-x-0.5 flex-nowrap items-baseline">
+                          {data.lanes.map((laneNum, idx) => (
+                            <div key={idx} className="flex gap-x-0.5 items-baseline">
+                              <span className="font-bold text-base whitespace-nowrap">
+                                {laneNum}
+                              </span>
+                              {idx < data.lanes.length - 1 && <span className="text-default-300 text-[10px]">|</span>}
+                            </div>
+                          ))}
+                        </div>
+                      </Table.Cell>
+                    </Table.Row>
+
+                  ))}
+                </Table.Body>
+              </Table.Content>
+            </Table.ScrollContainer>
+          </Table>
+        </Tabs.Panel>
+
+        <Tabs.Panel id="timeline" className="flex-1 min-h-0 overflow-hidden p-0 pt-2 h-full flex flex-col">
           <TimelineView race={race} />
-        </Tab>
+        </Tabs.Panel>
       </Tabs>
     </div>
   );

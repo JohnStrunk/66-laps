@@ -8,7 +8,7 @@ import RaceDetailsView from "@/components/RaceDetailsView/RaceDetailsView";
 import HelpView from "@/components/HelpView/HelpView";
 import NewRaceSetupModal from "@/components/NewRaceSetupModal/NewRaceSetupModal";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useBellLapStore } from "@/modules/bellLapStore";
 
 const subscribe = () => () => {};
@@ -122,14 +122,16 @@ function BellLapContent() {
 
 export default function PWALandingPage() {
   const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   return (
     <div
-      className="w-full h-full flex justify-center bg-background overflow-hidden"
+      ref={setContainer}
+      className="w-full h-full flex justify-center bg-background overflow-hidden relative [transform:translate3d(0,0,0)]"
       data-mounted={mounted ? "true" : "false"}
     >
       <div
-        className="w-full h-full flex flex-col overflow-hidden shadow-2xl bg-transparent"
+        className="w-full h-full flex flex-col overflow-hidden shadow-2xl bg-background"
       >
         <BellLapHeader />
         <main className="flex-1 min-h-0 w-full overflow-hidden p-2" data-testid="pwa-main">
@@ -137,7 +139,7 @@ export default function PWALandingPage() {
             <BellLapContent />
           </Suspense>
         </main>
-        <NewRaceSetupModal />
+        <NewRaceSetupModal portalContainer={container || undefined} />
       </div>
     </div>
   );

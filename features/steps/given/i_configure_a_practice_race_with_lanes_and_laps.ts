@@ -8,25 +8,33 @@ async function configurePracticeRace(page: Page, lanes: number, mode: '2D Overhe
     if (laps <= 0) throw new Error('Laps must be positive');
 
     // 1. Set Simulation Mode
-    const currentMode = await page.locator('[data-testid="settings-Simulation Mode"]').textContent();
+    const currentMode = await page.locator('[data-testid="settings-Simulation Mode"] button').textContent();
     if (!currentMode?.includes(mode)) {
         await selectDropdownItem(page, 'settings-Simulation Mode', mode);
     }
 
     // 2. Set Number of Lanes
-    const currentLanes = await page.locator('[data-testid="settings-Number of Lanes"]').textContent();
+    const currentLanes = await page.locator('[data-testid="settings-Number of Lanes"] button').textContent();
     if (!currentLanes?.includes(lanes.toString())) {
         await selectDropdownItem(page, 'settings-Number of Lanes', lanes.toString());
     }
 
     // 3. Set Race Length (Use 500 SC for tests)
-    const currentLength = await page.locator('[data-testid="settings-Race Length"]').textContent();
+    let currentLength = '';
+    const lengthLocator = page.locator('[data-testid="settings-Race Length"]');
+    const tagName = await lengthLocator.evaluate(el => el.tagName.toLowerCase());
+    if (tagName === 'select') {
+        const val = await lengthLocator.inputValue();
+        currentLength = val === '500_SC' ? '500 SC' : val;
+    } else {
+        currentLength = await lengthLocator.locator('button').textContent() || '';
+    }
     if (!currentLength?.includes('500 SC')) {
         await selectDropdownItem(page, 'settings-Race Length', '500 SC');
     }
 
     // 4. Set Spread to Minimal
-    const currentSpread = await page.locator('[data-testid="settings-Spread"]').textContent();
+    const currentSpread = await page.locator('[data-testid="settings-Spread"] button').textContent();
     if (!currentSpread?.includes('Minimal')) {
         await selectDropdownItem(page, 'settings-Spread', 'Minimal');
     }

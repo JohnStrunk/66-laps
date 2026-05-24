@@ -19,10 +19,10 @@ export default function LightDark() {
     return (
         <>
             <div className="flex flex-row gap-2 items-center justify-center">
-                <Tooltip content="Automatic">
+                <Tooltip>
                     <Button
                         isIconOnly
-                        variant={theme === "system" ? "solid" : "faded"}
+                        variant={theme === "system" ? "primary" : "outline"}
                         aria-label="Automatic light/dark mode"
                         onPress={() => {
                             setTheme("system");
@@ -31,11 +31,12 @@ export default function LightDark() {
                     >
                         <SunMoon className="w-full h-full m-2" />
                     </Button>
+                    <Tooltip.Content>Automatic</Tooltip.Content>
                 </Tooltip>
-                <Tooltip content="Dark">
+                <Tooltip>
                     <Button
                         isIconOnly
-                        variant={theme === "dark" ? "solid" : "faded"}
+                        variant={theme === "dark" ? "primary" : "outline"}
                         aria-label="Switch to dark mode"
                         onPress={() => {
                             setTheme("dark");
@@ -44,11 +45,12 @@ export default function LightDark() {
                     >
                         <Moon className="w-full h-full m-2" />
                     </Button>
+                    <Tooltip.Content>Dark</Tooltip.Content>
                 </Tooltip>
-                <Tooltip content="Light">
+                <Tooltip>
                     <Button
                         isIconOnly
-                        variant={theme === "light" ? "solid" : "faded"}
+                        variant={theme === "light" ? "primary" : "outline"}
                         aria-label="Switch to light mode"
                         onPress={() => {
                             setTheme("light");
@@ -57,6 +59,7 @@ export default function LightDark() {
                     >
                         <Sun className="w-full h-full m-2" />
                     </Button>
+                    <Tooltip.Content>Light</Tooltip.Content>
                 </Tooltip>
             </div>
         </>

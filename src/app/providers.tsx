@@ -1,17 +1,8 @@
 'use client'
 
-import { HeroUIProvider } from '@heroui/react';
+import { RouterProvider } from '@heroui/react';
 import { ThemeProvider } from 'next-themes';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
-
-// Client-side routing for HeroUI + Next.js
-// https://heroui.com/docs/guide/routing#app-router
-declare module "@react-types/shared" {
-    interface RouterConfig {
-        routerOptions: NonNullable<Parameters<ReturnType<typeof useRouter>["push"]>[1]>;
-    }
-}
 
 import { usePostHog } from 'posthog-js/react';
 import { Suspense, useEffect } from "react";
@@ -125,11 +116,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <PostHogProvider>
             <GlobalTimer />
-            <HeroUIProvider navigate={router.push}>
+            <RouterProvider navigate={router.push}>
                 <ThemeProvider attribute="class" scriptProps={{ 'data-cfasync': 'false' }}>
                     {children}
                 </ThemeProvider>
-            </HeroUIProvider>
+            </RouterProvider>
         </PostHogProvider>
     )
 }

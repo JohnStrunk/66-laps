@@ -1,7 +1,7 @@
 @import "tailwindcss";
+@import "@heroui/styles";
 @plugin "@tailwindcss/typography";
-@plugin "./heroui.ts";
-@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 html,
@@ -25,4 +25,22 @@ styling. */
 @theme {
   --font-sans: var(--font-atkinson-hyperlegible), var(--font-noto-color-emoji), ui-sans-serif, system-ui, sans-serif;
   --font-emoji: var(--font-noto-color-emoji), "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Map old primary to new accent */
+  --accent: #193cb8;
+  --accent-foreground: #FFFFFF;
+
+  /* Legacy semantic colors for tests and components */
+  --color-success: #00bc7d;
+  --color-danger: #82181a;
+  --color-danger-700: #b91c1c; /* red-700 */
+
+  /* Missing theme variables from v2 migration */
+  --drop-shadow-accent-soft: 0 10px 20px rgba(25, 60, 184, 0.3);
+}
+
+.dark {
+  --accent: #8ec5ff;
+  --accent-foreground: #000000;
+  --drop-shadow-accent-soft: 0 10px 20px rgba(142, 197, 255, 0.4);
 }

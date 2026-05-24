@@ -48,3 +48,6 @@ next-env.d.ts
 /.playwright-cli/
 /test-results/
 dev_server.log
+
+# antigravity-cli
+.antigravitycli/

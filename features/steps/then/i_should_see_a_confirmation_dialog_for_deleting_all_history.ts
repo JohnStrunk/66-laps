@@ -7,7 +7,7 @@ Then('I should see a confirmation dialog for deleting all history', async functi
   const dialog = this.page!.locator('[role="dialog"]');
   await waitForVisible(dialog);
   await expect(dialog).toBeVisible();
-  const title = dialog.locator('header');
+  const title = dialog.locator('header, h2, [data-slot="header"]');
   await expect(title).toBeVisible();
   const text = await title.innerText();
   if (!text.includes('Delete All History')) {

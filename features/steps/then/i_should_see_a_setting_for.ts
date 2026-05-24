@@ -8,7 +8,15 @@ Then('I should see a setting for {string} with options {string} and {string}', a
     await waitForVisible(settingLabel);
     await expect(settingLabel).toBeVisible();
     // Click to open the listbox
-    await this.page!.getByRole('button', { name: settingName }).click();
+    // In HeroUI v3, the button name might be the current value, not the label.
+    // We try to find the button that is either named by the label or follows the label.
+    let trigger = this.page!.getByRole('button', { name: settingName });
+    if (!(await trigger.isVisible())) {
+        // Fallback: look for a button with data-testid or just the first button after the label
+        trigger = this.page!.locator(`[data-testid="settings-${settingName}"] button, [data-testid="settings-${settingName}"] [role="button"]`).first();
+    }
+    await waitForVisible(trigger);
+    await trigger.click();
 
     const listbox = this.page!.getByRole('listbox', { name: settingName });
     await waitForVisible(listbox.getByRole('option', { name: option1 }));
