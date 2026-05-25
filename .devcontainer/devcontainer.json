@@ -2,7 +2,7 @@
     // For format details, see https://aka.ms/devcontainer.json.
     // Other base images: https://github.com/devcontainers/images
     "name": "Node.js & TypeScript",
-    "image": "mcr.microsoft.com/devcontainers/typescript-node:4.0.8-22@sha256:9ca971f572d5cf413a6e91e59ae0553764053eb8ee2631d226f59e78448f080a",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:4.0.9-22@sha256:27a2d19026714b1d8323c68a6e53ab29da4b59b463b6eb22971f6f6a4f77693f",
     // Available features: https://containers.dev/features
     "features": {
         "ghcr.io/devcontainers-extra/features/act:1.0.15": {},
