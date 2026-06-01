@@ -42,7 +42,7 @@ __metadata:
     jspdf: "npm:4.2.1"
     jspdf-autotable: "npm:5.0.8"
     lucide-react: "npm:1.16.0"
-    monocart-coverage-reports: "npm:2.12.11"
+    monocart-coverage-reports: "npm:2.12.12"
     motion: "npm:12.40.0"
     next: "npm:16.2.6"
     next-themes: "npm:0.4.6"
@@ -10513,9 +10513,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monocart-coverage-reports@npm:2.12.11":
-  version: 2.12.11
-  resolution: "monocart-coverage-reports@npm:2.12.11"
+"monocart-coverage-reports@npm:2.12.12":
+  version: 2.12.12
+  resolution: "monocart-coverage-reports@npm:2.12.12"
   dependencies:
     acorn: "npm:^8.16.0"
     acorn-loose: "npm:^8.5.2"
@@ -10531,7 +10531,7 @@ __metadata:
     monocart-locator: "npm:^1.0.3"
   bin:
     mcr: lib/cli.js
-  checksum: 10c0/724c695e88932fd91fba51a3f99788f6bd9a2e3fd53c0f7416dec71d2168ff5779aed76cb9275333b28076030122792be333d91146c88454742e293c7d38a91d
+  checksum: 10c0/71c9a2f6bb330fd1f0ec4628bb1a943828a8647a68c4286dcdc05b901a38da4834d37f6acf3883d9db2cfb2558a75250245cd4e9ca81d24c5565f71851b520cd
   languageName: node
   linkType: hard
 
