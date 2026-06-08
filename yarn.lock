@@ -11,7 +11,7 @@ __metadata:
   dependencies:
     "@cucumber/cucumber": "npm:12.9.0"
     "@ducanh2912/next-pwa": "npm:10.2.9"
-    "@heroui/react": "npm:3.0.5"
+    "@heroui/react": "npm:3.1.0"
     "@heroui/styles": "npm:3.0.5"
     "@opentelemetry/api": "npm:1.9.1"
     "@opentelemetry/context-async-hooks": "npm:2.7.1"
@@ -30,7 +30,7 @@ __metadata:
     "@tailwindcss/typography": "npm:0.5.19"
     "@testing-library/dom": "npm:10.4.1"
     "@types/node": "npm:24.12.4"
-    "@types/react": "npm:19.2.15"
+    "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/three": "npm:0.184.1"
     "@vitest/browser": "npm:4.1.7"
@@ -41,7 +41,7 @@ __metadata:
     jsdom: "npm:29.1.1"
     jspdf: "npm:4.2.1"
     jspdf-autotable: "npm:5.0.8"
-    lucide-react: "npm:1.16.0"
+    lucide-react: "npm:1.17.0"
     monocart-coverage-reports: "npm:2.12.12"
     motion: "npm:12.40.0"
     next: "npm:16.2.7"
@@ -49,8 +49,8 @@ __metadata:
     pixi.js: "npm:8.19.0"
     playwright: "npm:1.60.0"
     posthog-js: "npm:1.376.0"
-    react: "npm:19.2.6"
-    react-dom: "npm:19.2.6"
+    react: "npm:19.2.7"
+    react-dom: "npm:19.2.7"
     storybook: "npm:10.4.1"
     tailwindcss: "npm:4.3.0"
     three: "npm:0.184.0"
@@ -2189,11 +2189,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@heroui/react@npm:3.0.5":
-  version: 3.0.5
-  resolution: "@heroui/react@npm:3.0.5"
+"@heroui/react@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@heroui/react@npm:3.1.0"
   dependencies:
-    "@heroui/styles": "npm:3.0.5"
+    "@heroui/styles": "npm:3.1.0"
     "@radix-ui/react-avatar": "npm:1.1.11"
     "@react-aria/i18n": "npm:3.13.0"
     "@react-aria/ssr": "npm:3.10.0"
@@ -2209,7 +2209,7 @@ __metadata:
     react: ">=19.0.0"
     react-dom: ">=19.0.0"
     tailwindcss: ">=4.0.0"
-  checksum: 10c0/acaa731b4f98d5a6861f09995ce32f945847f757090bf94c9069491b222cf0430747eb270f4f974711d21f57fc97e7740e474be785ecbfee81a63052d21433ba
+  checksum: 10c0/7a2ed4479d69f1778ce1122fe52b329ab1be4a32c258a3d7622213f234fa616acfda42f52d3545eda91756e1220a8fd4096c0269c313cb613340f0b6d5b4fa79
   languageName: node
   linkType: hard
 
@@ -2222,6 +2222,18 @@ __metadata:
   peerDependencies:
     tailwindcss: ">=4.0.0"
   checksum: 10c0/4f4a1b85f4e10b7c844a75d1bc59f6e2ec1fbb7b3d44cf9649e4740dcffb7ad5390551fe612d81244cf73daf0f7a55552526cc4ca241d829dad2e8d34ae0aae8
+  languageName: node
+  linkType: hard
+
+"@heroui/styles@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@heroui/styles@npm:3.1.0"
+  dependencies:
+    tailwind-variants: "npm:3.2.2"
+    tw-animate-css: "npm:1.4.0"
+  peerDependencies:
+    tailwindcss: ">=4.0.0"
+  checksum: 10c0/766fc4e2ad1724ee3e4246f981fcdda7d84801907b9b028d702f50a8605a1a03d1a9ac52fc01b1eee36cf1a5bc0f776ddec2f1809fc2383d98c50d75cd187c2b
   languageName: node
   linkType: hard
 
@@ -5662,12 +5674,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.2.15":
-  version: 19.2.15
-  resolution: "@types/react@npm:19.2.15"
+"@types/react@npm:19.2.17":
+  version: 19.2.17
+  resolution: "@types/react@npm:19.2.17"
   dependencies:
     csstype: "npm:^3.2.2"
-  checksum: 10c0/b554eab715bb14e581f0ae60e5cefe91e1a5e06c31022b543a9806cf224aa056f21e4fb46208e46eb934d86ca0b247ebc82377192a0dead303cb28b8764c6e67
+  checksum: 10c0/bc2c4af96b3e480604424de70d5ebda90c5f4b485df471858c0bc2d7d70364b606ec3c4d8579f94f01aa0c6c0591f56bcf14cba5689f5eea4b74250ccdc3a232
   languageName: node
   linkType: hard
 
@@ -10192,12 +10204,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:1.16.0":
-  version: 1.16.0
-  resolution: "lucide-react@npm:1.16.0"
+"lucide-react@npm:1.17.0":
+  version: 1.17.0
+  resolution: "lucide-react@npm:1.17.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/d1c4b7f1abdc8b5c729a5bd74d875f0b0db732b2e8d0cc8c76f9e167818b81a6b246a64986ab2fc1ae74cf9f8d16ce2cefe98fe5a6420b31f4fd6742b3181d5a
+  checksum: 10c0/a600d882afceffa5d3479666549e801e201ff5a95c19961648e45fc288cf3d2248a345e563cd3891f3ff3dbc052730121feeb54aa75628b663810159246b9468
   languageName: node
   linkType: hard
 
@@ -11623,14 +11635,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:19.2.6":
-  version: 19.2.6
-  resolution: "react-dom@npm:19.2.6"
+"react-dom@npm:19.2.7":
+  version: 19.2.7
+  resolution: "react-dom@npm:19.2.7"
   dependencies:
     scheduler: "npm:^0.27.0"
   peerDependencies:
-    react: ^19.2.6
-  checksum: 10c0/dbf2aef67857c03a612bc9316a4562e5066f43fa04bf28f7f0734963fc1350da2c9f8eb973930655453281079f30cc8222bab383dbec4b5097084e2c081e3334
+    react: ^19.2.7
+  checksum: 10c0/970ff600f6e80d47d39e2f226f12f226173b3cba3382efc97c5f0cd663de9af38c7a4c11c213fb936094faeac83060d660247accaa96b752180d5b951b9cfecb
   languageName: node
   linkType: hard
 
@@ -11703,10 +11715,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.2.6":
-  version: 19.2.6
-  resolution: "react@npm:19.2.6"
-  checksum: 10c0/66afde33b9a9ee87b1e1cae39d8e7e040d1262e719524fd70660c4d4ce79929c532ac19fc3df5a911edaf02768fdf2c49de4ede1ba99bc6aad72796e0e26e798
+"react@npm:19.2.7":
+  version: 19.2.7
+  resolution: "react@npm:19.2.7"
+  checksum: 10c0/0bd0e2f1bbd4ba97561c6597bf8a5fec05e6476fe61e165c1065598d16668efc6715205599c94d3ddd49d36cb0f21cbf1b9bcc18ee840b805ce222c3e8d558ac
   languageName: node
   linkType: hard
 
