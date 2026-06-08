@@ -12,7 +12,7 @@ __metadata:
     "@cucumber/cucumber": "npm:12.9.0"
     "@ducanh2912/next-pwa": "npm:10.2.9"
     "@heroui/react": "npm:3.1.0"
-    "@heroui/styles": "npm:3.0.5"
+    "@heroui/styles": "npm:3.1.0"
     "@opentelemetry/api": "npm:1.9.1"
     "@opentelemetry/context-async-hooks": "npm:2.7.1"
     "@opentelemetry/core": "npm:2.7.1"
@@ -2210,18 +2210,6 @@ __metadata:
     react-dom: ">=19.0.0"
     tailwindcss: ">=4.0.0"
   checksum: 10c0/7a2ed4479d69f1778ce1122fe52b329ab1be4a32c258a3d7622213f234fa616acfda42f52d3545eda91756e1220a8fd4096c0269c313cb613340f0b6d5b4fa79
-  languageName: node
-  linkType: hard
-
-"@heroui/styles@npm:3.0.5":
-  version: 3.0.5
-  resolution: "@heroui/styles@npm:3.0.5"
-  dependencies:
-    tailwind-variants: "npm:3.2.2"
-    tw-animate-css: "npm:1.4.0"
-  peerDependencies:
-    tailwindcss: ">=4.0.0"
-  checksum: 10c0/4f4a1b85f4e10b7c844a75d1bc59f6e2ec1fbb7b3d44cf9649e4740dcffb7ad5390551fe612d81244cf73daf0f7a55552526cc4ca241d829dad2e8d34ae0aae8
   languageName: node
   linkType: hard
 
