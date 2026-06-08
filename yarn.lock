@@ -46,7 +46,7 @@ __metadata:
     motion: "npm:12.40.0"
     next: "npm:16.2.7"
     next-themes: "npm:0.4.6"
-    pixi.js: "npm:8.18.1"
+    pixi.js: "npm:8.19.0"
     playwright: "npm:1.60.0"
     posthog-js: "npm:1.376.0"
     react: "npm:19.2.7"
@@ -6368,7 +6368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@xmldom/xmldom@npm:^0.8.12":
+"@xmldom/xmldom@npm:^0.8.13":
   version: 0.8.13
   resolution: "@xmldom/xmldom@npm:0.8.13"
   checksum: 10c0/06405ee6fffba631abf715a305ace338420ebcea8baf1317f19f2752f5c505952b7df45159908e7be8451a42faa54326b780616ab4d08242b20477b2973da24b
@@ -11142,10 +11142,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse-svg-path@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "parse-svg-path@npm:0.1.2"
-  checksum: 10c0/005af72d535f47bbe4673108e51d657b81cb19dcc4f10ab425dd9f824066ef300ddbc83640607ef318f853a9fce7065114705531dcf88fb87fe58c287b562f2b
+"parse-svg-path@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "parse-svg-path@npm:0.2.0"
+  checksum: 10c0/a6089505fd63ce43c873c616e6eb7fa85f88644bb38fadd5c2b66a1e30c77275d391049e5c6cd4be09520f191e1e2d37d173b6470f9aa6f548a2fff6f649894a
   languageName: node
   linkType: hard
 
@@ -11275,21 +11275,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pixi.js@npm:8.18.1":
-  version: 8.18.1
-  resolution: "pixi.js@npm:8.18.1"
+"pixi.js@npm:8.19.0":
+  version: 8.19.0
+  resolution: "pixi.js@npm:8.19.0"
   dependencies:
     "@pixi/colord": "npm:^2.9.6"
     "@types/earcut": "npm:^3.0.0"
     "@webgpu/types": "npm:^0.1.69"
-    "@xmldom/xmldom": "npm:^0.8.12"
+    "@xmldom/xmldom": "npm:^0.8.13"
     earcut: "npm:^3.0.2"
     eventemitter3: "npm:^5.0.1"
     gifuct-js: "npm:^2.1.2"
     ismobilejs: "npm:^1.1.1"
-    parse-svg-path: "npm:^0.1.2"
+    parse-svg-path: "npm:^0.2.0"
     tiny-lru: "npm:^11.4.7"
-  checksum: 10c0/a0ada3b3d90cb83db2340b9338cf6e497398d2e7a10baf5ce1c307e43b3a78c18d13b8181fc0b1e79a19a56f3949ec90001cb766eb5817ae777d61cf325cc99a
+  checksum: 10c0/ba0e688bc7bef70ffd205e67ccdcc915fbb96aba6a41eb14d10e03e6ac1dd9055135e34d09256750d88702bb034b968f17a77d5ac68848518b8b6db0012f1f1c
   languageName: node
   linkType: hard
 
