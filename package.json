@@ -25,7 +25,7 @@
     "@react-three/drei": "10.7.8",
     "@react-three/fiber": "9.6.1",
     "@sentry/nextjs": "10.69.0",
-    "@types/three": "0.184.1",
+    "@types/three": "0.185.4",
     "jspdf": "4.2.1",
     "jspdf-autotable": "5.0.8",
     "lucide-react": "1.17.0",
@@ -36,7 +36,7 @@
     "posthog-js": "1.382.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "three": "0.184.0",
+    "three": "0.185.1",
     "zustand": "5.0.14"
   },
   "devDependencies": {
