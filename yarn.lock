@@ -19,7 +19,7 @@ __metadata:
     "@opentelemetry/sdk-trace-base": "npm:2.7.1"
     "@pixi/react": "npm:8.0.5"
     "@playwright/test": "npm:1.60.0"
-    "@react-three/drei": "npm:10.7.7"
+    "@react-three/drei": "npm:10.7.8"
     "@react-three/fiber": "npm:9.6.1"
     "@sentry/nextjs": "npm:10.56.0"
     "@storybook/addon-themes": "npm:10.4.2"
@@ -3638,9 +3638,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/drei@npm:10.7.7":
-  version: 10.7.7
-  resolution: "@react-three/drei@npm:10.7.7"
+"@react-three/drei@npm:10.7.8":
+  version: 10.7.8
+  resolution: "@react-three/drei@npm:10.7.8"
   dependencies:
     "@babel/runtime": "npm:^7.26.0"
     "@mediapipe/tasks-vision": "npm:0.10.17"
@@ -3671,7 +3671,7 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 10c0/d328b6cd748abc8063a596176189261a60af6a905df8bfaa0eb708149c6afb264fe021eb2265991c3ccbcecabf464e38511cc631f846378b7af105d62ab7f524
+  checksum: 10c0/b4103a79f2cebfd6ff00a869de38e602ad670df14bd08c2fa0d44b71ebebe81b000b523077df01df8c358fe406a4e1ff75c44eb727bca216d3407c1d7e91192e
   languageName: node
   linkType: hard
 
