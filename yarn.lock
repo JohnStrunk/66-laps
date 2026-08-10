@@ -20,7 +20,7 @@ __metadata:
     "@pixi/react": "npm:8.0.5"
     "@playwright/test": "npm:1.60.0"
     "@react-three/drei": "npm:10.7.8"
-    "@react-three/fiber": "npm:9.6.1"
+    "@react-three/fiber": "npm:9.7.0"
     "@sentry/nextjs": "npm:10.69.0"
     "@storybook/addon-themes": "npm:10.4.2"
     "@storybook/addon-vitest": "npm:10.4.2"
@@ -32,7 +32,7 @@ __metadata:
     "@types/node": "npm:24.13.3"
     "@types/react": "npm:19.2.18"
     "@types/react-dom": "npm:19.2.4"
-    "@types/three": "npm:0.184.1"
+    "@types/three": "npm:0.185.4"
     "@vitest/browser": "npm:4.1.10"
     "@vitest/browser-playwright": "npm:4.1.10"
     eslint: "npm:9.39.5"
@@ -43,17 +43,17 @@ __metadata:
     jspdf-autotable: "npm:5.0.8"
     lucide-react: "npm:1.17.0"
     monocart-coverage-reports: "npm:2.12.12"
-    motion: "npm:12.40.0"
+    motion: "npm:12.43.0"
     next: "npm:16.2.11"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.19.0"
     playwright: "npm:1.60.0"
-    posthog-js: "npm:1.382.0"
+    posthog-js: "npm:1.414.0"
     react: "npm:19.2.8"
     react-dom: "npm:19.2.8"
     storybook: "npm:10.4.2"
     tailwindcss: "npm:4.3.0"
-    three: "npm:0.184.0"
+    three: "npm:0.185.1"
     tsx: "npm:4.22.4"
     typescript: "npm:6.0.3"
     vite: "npm:8.2.1"
@@ -3460,19 +3460,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/core@npm:1.30.10":
-  version: 1.30.10
-  resolution: "@posthog/core@npm:1.30.10"
+"@posthog/browser-common@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@posthog/browser-common@npm:0.4.0"
   dependencies:
-    "@posthog/types": "npm:1.382.0"
-  checksum: 10c0/edcf8758caafa7de2680bdb0a5c9edf2cf77ea43853b8ec7b845eaf83f99b17815b8c8c849f55ec769219bf469eb8d2db483ffeeda7c290c6f503f85d4b6bd91
+    "@posthog/core": "npm:^1.46.8"
+    "@posthog/types": "npm:^1.402.0"
+  checksum: 10c0/dd66cb9b56e48b7dbf7847cb7bf24274b8b8d6032cac2b5569a3637ce9fdd800771d9d1e9115b4eb9dddd9f280ef05c863c7b282cfbcdad938aeaf8158eea09d
   languageName: node
   linkType: hard
 
-"@posthog/types@npm:1.382.0":
-  version: 1.382.0
-  resolution: "@posthog/types@npm:1.382.0"
-  checksum: 10c0/5dce78c534251d1580f9f84884b7ca4543253e0890fe2f4a4a516ef723ff676888b271f5a071d83b0baff9875d5426e9f974466c55a09144e9049d102db94c9c
+"@posthog/core@npm:^1.46.8, @posthog/core@npm:^1.46.9":
+  version: 1.46.9
+  resolution: "@posthog/core@npm:1.46.9"
+  dependencies:
+    "@posthog/types": "npm:^1.402.2"
+  checksum: 10c0/cdbe678a428f7afacba90f9518259cbca9730b03a5e1eee0b2f162f03f7b745bc9b9e281965384227796e137f56a7a4cea165e162123651b06a0a7c282d58d76
+  languageName: node
+  linkType: hard
+
+"@posthog/types@npm:^1.402.0, @posthog/types@npm:^1.402.2":
+  version: 1.402.2
+  resolution: "@posthog/types@npm:1.402.2"
+  checksum: 10c0/2dafb52e325e15f5f75caae7cf79e2932eb98c8644d26f59b9919e5707d5224d349e84377b0f986caa8952fc14c9664026b502a5a83125050db379343e1d2e57
   languageName: node
   linkType: hard
 
@@ -3733,9 +3743,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/fiber@npm:9.6.1":
-  version: 9.6.1
-  resolution: "@react-three/fiber@npm:9.6.1"
+"@react-three/fiber@npm:9.7.0":
+  version: 9.7.0
+  resolution: "@react-three/fiber@npm:9.7.0"
   dependencies:
     "@babel/runtime": "npm:^7.17.8"
     "@types/webxr": "npm:*"
@@ -3769,7 +3779,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 10c0/669d78d126ab61977356936d3a89ce0f15051ec4d49e130d009cdc1ee3f6e01763322d4ef0b2720852d0cb457595417aeffccc433b33abd1d07b23b891527ea2
+  checksum: 10c0/7ad36da135b5105e379c4984455dab1bd7cfabfad7548e4ff87ee161f8265be5d9e9af7f00a761c7f3a4252dc2db7c7ea8b9bfd9db7f601dd9759ee1179dc533
   languageName: node
   linkType: hard
 
@@ -5338,9 +5348,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:0.184.1":
-  version: 0.184.1
-  resolution: "@types/three@npm:0.184.1"
+"@types/three@npm:0.185.4":
+  version: 0.185.4
+  resolution: "@types/three@npm:0.185.4"
   dependencies:
     "@dimforge/rapier3d-compat": "npm:~0.12.0"
     "@tweenjs/tween.js": "npm:~23.1.3"
@@ -5348,7 +5358,7 @@ __metadata:
     "@types/webxr": "npm:>=0.5.17"
     fflate: "npm:~0.8.2"
     meshoptimizer: "npm:~1.1.1"
-  checksum: 10c0/de5d9d1c9c2ff9642ced8d3567293a2a0b1c4550decea9073fd766a469ab72e0502014caf499d1db98ab0036ee28060e47b19acccd0ca96438883bbe1210c37c
+  checksum: 10c0/f9cc28d3f343067e56741017bb0ac0257d8d2994707c2ee69512b668a57c8cd8892798978e54b2224920e9495eebe0878fcd8ea18b9a5ab555a7d445c689f804
   languageName: node
   linkType: hard
 
@@ -6822,7 +6832,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.38.1, core-js@npm:^3.6.0, core-js@npm:^3.8.3":
+"core-js@npm:^3.49.0":
+  version: 3.50.0
+  resolution: "core-js@npm:3.50.0"
+  checksum: 10c0/1bfcfb1dbdf45b0b1428a9fdcb03697d1fc52c7e9bc336f804a86ff2c2705a301dca7d9d6636d09d49d60298183273b9321681baeaf330c78db5393bc73f3f6a
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.6.0, core-js@npm:^3.8.3":
   version: 3.48.0
   resolution: "core-js@npm:3.48.0"
   checksum: 10c0/6c3115900dd7cce9fab74c07cb262b3517fc250d02e8fd2ff34f80bda5f43a28482a909dbc4491dc6e1ddd9807f57a7df4c3eeecd1f202b7d9c8bfe25f9d680c
@@ -7118,7 +7135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:^3.3.1, dompurify@npm:^3.3.2":
+"dompurify@npm:^3.3.1, dompurify@npm:^3.4.12":
   version: 3.4.13
   resolution: "dompurify@npm:3.4.13"
   dependencies:
@@ -8182,11 +8199,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^12.40.0":
-  version: 12.40.0
-  resolution: "framer-motion@npm:12.40.0"
+"framer-motion@npm:^12.43.0":
+  version: 12.43.0
+  resolution: "framer-motion@npm:12.43.0"
   dependencies:
-    motion-dom: "npm:^12.40.0"
+    motion-dom: "npm:^12.43.0"
     motion-utils: "npm:^12.39.0"
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -8200,7 +8217,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/a1d26908d6661028fcdba0cf200fca18927a4d4eae0b1e64c37dfb7fdea9da66a8991abd0007079e98687060ba9c83db55620c238bc363106a24ff411d22f533
+  checksum: 10c0/cce3c1daf8f53da4d9299e6bdd2a1e9f08a30e13d84ce1e468cf25285f9ec2a900c812e0aa3dce79e7453a2a3cf328a717451beef9bf0a6175a3d3794116e36a
   languageName: node
   linkType: hard
 
@@ -10231,12 +10248,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion-dom@npm:^12.40.0":
-  version: 12.40.0
-  resolution: "motion-dom@npm:12.40.0"
+"motion-dom@npm:^12.43.0":
+  version: 12.43.0
+  resolution: "motion-dom@npm:12.43.0"
   dependencies:
     motion-utils: "npm:^12.39.0"
-  checksum: 10c0/79da846a36fd5f6762a0fcfa6e0b7128e4d58f7c07d1467a9f789a9cd0b5adbef9bfbde75760901a13cf2bddd9b31e93e4348a714f570c45ca1e2bfabd22859e
+  checksum: 10c0/ef7d3f6eaa6cfeb1a939847a8b2581d119f2efc054948921ece0e2b1091f0969c15ca7707b87a46dddac7f156a714878f168e7b9f6ea189eeb7d5d9fbbb99d26
   languageName: node
   linkType: hard
 
@@ -10247,11 +10264,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion@npm:12.40.0":
-  version: 12.40.0
-  resolution: "motion@npm:12.40.0"
+"motion@npm:12.43.0":
+  version: 12.43.0
+  resolution: "motion@npm:12.43.0"
   dependencies:
-    framer-motion: "npm:^12.40.0"
+    framer-motion: "npm:^12.43.0"
     tslib: "npm:^2.4.0"
   peerDependencies:
     "@emotion/is-prop-valid": "*"
@@ -10264,7 +10281,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/d0c118ed4829f2999c3ab7eb1ee916df70c65e95d262e951b69d3cea67a74e4a1d12e181badf4180e0d01c1ca8a9b109be4ea5456cad04bb58d4510f071af60f
+  checksum: 10c0/15544ecc71d356661a959c78c4f84b3ca91728f5d17265b68912d2bbcf86f20409ebf5acf2f6c82e0c0425d1024267b04abd5b786177a3694bf706f7a3a529d6
   languageName: node
   linkType: hard
 
@@ -11019,19 +11036,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.382.0":
-  version: 1.382.0
-  resolution: "posthog-js@npm:1.382.0"
+"posthog-js@npm:1.414.0":
+  version: 1.414.0
+  resolution: "posthog-js@npm:1.414.0"
   dependencies:
-    "@posthog/core": "npm:1.30.10"
-    "@posthog/types": "npm:1.382.0"
-    core-js: "npm:^3.38.1"
-    dompurify: "npm:^3.3.2"
+    "@posthog/browser-common": "npm:^0.4.0"
+    "@posthog/core": "npm:^1.46.9"
+    "@posthog/types": "npm:^1.402.2"
+    core-js: "npm:^3.49.0"
+    dompurify: "npm:^3.4.12"
     fflate: "npm:^0.4.8"
-    preact: "npm:^10.28.2"
+    preact: "npm:^10.29.3"
     query-selector-shadow-dom: "npm:^1.0.1"
-    web-vitals: "npm:^5.1.0"
-  checksum: 10c0/545ad63d904a5d53f514cc240fd642c4ed58210a6b41b287b4044905484b727b59ba2f4bb329b7a80248ec15d14020bb824218a7576c24fa799270ac0415ffff
+    web-vitals: "npm:^5.3.0"
+    web-vitals-soft-navs: "npm:web-vitals@6.0.0"
+  checksum: 10c0/c06a834e055fe3cd3821479fbc418c7d831b63ddd0b8068774758102327869c69ca4e2a80e1e73e8b8231302821c4426acbc0b29d67454363a734fa9b4d99c11
   languageName: node
   linkType: hard
 
@@ -11042,10 +11061,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:^10.28.2":
-  version: 10.28.3
-  resolution: "preact@npm:10.28.3"
-  checksum: 10c0/e8854fae8d8d40c918538f7a90888dd4f8acd388b8ba8e0c612ed0eb1a7d2cc6c15a7dc0a7b7c7bb5c361d2df63aa283e501cf1d47f8eb1413979cee611a38ef
+"preact@npm:^10.29.3":
+  version: 10.29.8
+  resolution: "preact@npm:10.29.8"
+  peerDependencies:
+    preact-render-to-string: ">=5"
+  peerDependenciesMeta:
+    preact-render-to-string:
+      optional: true
+  checksum: 10c0/505460352139e0ce5b9c971b69d8d9f3b73ea0f316e3ff1c0b3db9a1abe206c9dff6ba385eb796253c38fcc08b5ade70cd8da3d9d6c9e9aec1a2fd59348253ae
   languageName: node
   linkType: hard
 
@@ -12812,10 +12836,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:0.184.0":
-  version: 0.184.0
-  resolution: "three@npm:0.184.0"
-  checksum: 10c0/6af4a36dd97e7082c8daca57af162a36df0ca18337a805913bdb6787dd5b2626face8b51d361a0cb2f767e18fdb1ad7e73ab945ae32647741af9278311f5369d
+"three@npm:0.185.1":
+  version: 0.185.1
+  resolution: "three@npm:0.185.1"
+  checksum: 10c0/d15d3fa934f53c9fd6706965ff9946f55653bc728cf582e68acb03421c0179d7662f7d270e14bcf72923e140c36779e7fba6b0f6e542e07deade7342f63c8bdf
   languageName: node
   linkType: hard
 
@@ -13739,10 +13763,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "web-vitals@npm:5.1.0"
-  checksum: 10c0/1af22ddbe2836ba880fcb492cfba24c3349f4760ebb5e92f38324ea67bca3c4dbb9c86f1a32af4795b6115cdaf98b90000cf3a7402bffef6e8c503f0d1b2e706
+"web-vitals-soft-navs@npm:web-vitals@6.0.0":
+  version: 6.0.0
+  resolution: "web-vitals@npm:6.0.0"
+  checksum: 10c0/2388ab2a760c112f083993db78ebd39b78590a74c75d7b4d446724b49b6b29e52fecf745db2f907d902f2ffedb4243023f4c01ed337864143145d9f3535c6dc0
+  languageName: node
+  linkType: hard
+
+"web-vitals@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "web-vitals@npm:5.3.0"
+  checksum: 10c0/a073c024d791bfac7a92f82607999b45be978ef3070f642f3cdd94c50d3e1651cf62b2475039248256b2d84651e16fa9bdcaa4b03f31af8bfeefb05832298b97
   languageName: node
   linkType: hard
 
