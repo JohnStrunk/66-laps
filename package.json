@@ -23,7 +23,7 @@
     "@heroui/styles": "3.2.4",
     "@pixi/react": "8.0.5",
     "@react-three/drei": "10.7.8",
-    "@react-three/fiber": "9.6.1",
+    "@react-three/fiber": "9.7.0",
     "@sentry/nextjs": "10.69.0",
     "@types/three": "0.184.1",
     "jspdf": "4.2.1",
