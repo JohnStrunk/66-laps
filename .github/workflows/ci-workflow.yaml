@@ -74,10 +74,20 @@ jobs:
   # This is a dummy job to determine success of the CI workflow
   ci-success:
     name: CI Workflow - Success
+    if: always()
     needs:
       - devcontainer
       - pre-commit
     runs-on: ubuntu-latest
     steps:
-      - name: Success
-        run: echo "Previous jobs were successful"
+      - name: Check all jobs
+        env:
+          RESULTS: "${{ join(needs.*.result, ' ') }}"
+        run: |
+          for r in $RESULTS; do
+            if [[ "$r" != "success" ]]; then
+              echo "::error::❌ One or more required jobs failed, were cancelled, or were skipped ❌"
+              exit 1
+            fi
+          done
+          echo "✅ All required jobs succeeded ✅"
