@@ -53,6 +53,13 @@
       "schedule": [
         "before 9am on monday"
       ]
+    },
+    {
+      "description": "Group HeroUI packages together",
+      "matchPackagePatterns": [
+        "^@heroui/"
+      ],
+      "groupName": "heroui"
     }
   ],
   "prConcurrentLimit": 15,
