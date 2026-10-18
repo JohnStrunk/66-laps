@@ -62,6 +62,7 @@
       "groupName": "heroui"
     }
   ],
+  "minimumReleaseAge": "7 days",
   "prConcurrentLimit": 15,
   "prHourlyLimit": 0,
   "rebaseWhen": "auto",
