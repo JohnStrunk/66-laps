@@ -20,7 +20,7 @@ __metadata:
     "@pixi/react": "npm:8.0.5"
     "@playwright/test": "npm:1.60.0"
     "@react-three/drei": "npm:10.7.9"
-    "@react-three/fiber": "npm:9.7.0"
+    "@react-three/fiber": "npm:9.8.1"
     "@sentry/nextjs": "npm:10.69.0"
     "@storybook/addon-themes": "npm:10.4.2"
     "@storybook/addon-vitest": "npm:10.4.2"
@@ -3700,17 +3700,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/fiber@npm:9.7.0":
-  version: 9.7.0
-  resolution: "@react-three/fiber@npm:9.7.0"
+"@react-three/fiber@npm:9.8.1":
+  version: 9.8.1
+  resolution: "@react-three/fiber@npm:9.8.1"
   dependencies:
     "@babel/runtime": "npm:^7.17.8"
     "@types/webxr": "npm:*"
     base64-js: "npm:^1.5.1"
     buffer: "npm:^6.0.3"
-    its-fine: "npm:^2.0.0"
+    its-fine: "npm:^2.1.1"
     react-use-measure: "npm:^2.1.7"
-    scheduler: "npm:^0.27.0"
+    scheduler: "npm:^0.28.0"
     suspend-react: "npm:^0.1.3"
     use-sync-external-store: "npm:^1.4.0"
     zustand: "npm:^5.0.3"
@@ -3719,8 +3719,8 @@ __metadata:
     expo-asset: ">=8.4"
     expo-file-system: ">=11.0"
     expo-gl: ">=11.0"
-    react: ">=19 <19.3"
-    react-dom: ">=19 <19.3"
+    react: ">=19 <19.4"
+    react-dom: ">=19 <19.4"
     react-native: ">=0.78"
     three: ">=0.156"
   peerDependenciesMeta:
@@ -3736,7 +3736,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 10c0/7ad36da135b5105e379c4984455dab1bd7cfabfad7548e4ff87ee161f8265be5d9e9af7f00a761c7f3a4252dc2db7c7ea8b9bfd9db7f601dd9759ee1179dc533
+  checksum: 10c0/13db92ddaf501793539a4fdeb7bc19754729a7dce972fab8d3aa3b7ddc12caa125e2051d7685be74ac5691b50644b6d81b5f4b239fc935f27fc055589a0dc831
   languageName: node
   linkType: hard
 
@@ -9118,6 +9118,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"its-fine@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "its-fine@npm:2.1.1"
+  dependencies:
+    "@types/react-reconciler": "npm:^0.28.9"
+  peerDependencies:
+    react: ^19.0.0
+  checksum: 10c0/847f22026bce46571c1cd48d36181e97d2280d3386d4442ca5a59a93b825dfdbffce779ce5e3110ccd3bff711b53349e5ddcfc968b8d9e84b3ef27a7dbd1eea9
+  languageName: node
+  linkType: hard
+
 "jake@npm:^10.8.5":
   version: 10.9.4
   resolution: "jake@npm:10.9.4"
@@ -11769,6 +11780,13 @@ __metadata:
   version: 0.27.0
   resolution: "scheduler@npm:0.27.0"
   checksum: 10c0/4f03048cb05a3c8fddc45813052251eca00688f413a3cee236d984a161da28db28ba71bd11e7a3dd02f7af84ab28d39fb311431d3b3772fed557945beb00c452
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.28.0":
+  version: 0.28.0
+  resolution: "scheduler@npm:0.28.0"
+  checksum: 10c0/783c8e5ce89d41273a02ed6dc0e3d24bd60e05c9e8f7e3adfc6c82e7c69935500d90e343f1ee26d592fc7504e8a2532573c6368def3e93bfe812391fa53efaf4
   languageName: node
   linkType: hard
 
