@@ -9,7 +9,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "66-laps@workspace:."
   dependencies:
-    "@cucumber/cucumber": "npm:13.2.1"
+    "@cucumber/cucumber": "npm:13.3.0"
     "@ducanh2912/next-pwa": "npm:10.2.9"
     "@heroui/react": "npm:3.2.6"
     "@heroui/styles": "npm:3.2.6"
@@ -41,7 +41,7 @@ __metadata:
     jsdom: "npm:29.1.1"
     jspdf: "npm:4.2.1"
     jspdf-autotable: "npm:5.0.8"
-    lucide-react: "npm:1.17.0"
+    lucide-react: "npm:1.55.0"
     monocart-coverage-reports: "npm:2.12.12"
     motion: "npm:12.43.0"
     next: "npm:16.3.8"
@@ -56,7 +56,7 @@ __metadata:
     three: "npm:0.185.1"
     tsx: "npm:4.23.15"
     typescript: "npm:6.0.3"
-    vite: "npm:8.3.0"
+    vite: "npm:8.3.4"
     vitest: "npm:5.0.0"
     webpack: "npm:5.109.2"
     zustand: "npm:5.0.14"
@@ -1549,37 +1549,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/ci-environment@npm:14.0.0":
-  version: 14.0.0
-  resolution: "@cucumber/ci-environment@npm:14.0.0"
-  checksum: 10c0/6f873814a285da13c90c35b55d87b0b35ec7024f01621b3f4edb939a4311aa5764c9fd93f16cb3cb724f8a985e6ed7e4ab04d0d1cd85c9d802ddf2963f77e81d
+"@cucumber/ci-environment@npm:15.0.0":
+  version: 15.0.0
+  resolution: "@cucumber/ci-environment@npm:15.0.0"
+  checksum: 10c0/e9a2744c84aefa11c794bbe0cc582b1123e57e04555e9ece7491bfb7215f33ddfa67a926838f6e3e6d8013d4e32a7c153eec93a44de7d6a5879493db7d2ee81d
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber-expressions@npm:20.0.0":
-  version: 20.0.0
-  resolution: "@cucumber/cucumber-expressions@npm:20.0.0"
+"@cucumber/cucumber-expressions@npm:20.1.0":
+  version: 20.1.0
+  resolution: "@cucumber/cucumber-expressions@npm:20.1.0"
   dependencies:
     regexp-match-indices: "npm:1.0.2"
-  checksum: 10c0/67ed845205b3b76aa7d30eb91943de77ce3102db517f1206b5edd6432c0fc5cf7604b08af1abd37136cdae6ed012ac23ad4a61807939c0f09422486124b5e471
+  checksum: 10c0/835516a9c1c24dda937645ae758a6a5d43c7e474f5590b1b833d8e5723e5bc6d64bc2379cc1b1fa7e2e646e354e2db85ce8135c2fb3d4f04194a8a04dae66936
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:13.2.1":
-  version: 13.2.1
-  resolution: "@cucumber/cucumber@npm:13.2.1"
+"@cucumber/cucumber@npm:13.3.0":
+  version: 13.3.0
+  resolution: "@cucumber/cucumber@npm:13.3.0"
   dependencies:
-    "@cucumber/ci-environment": "npm:14.0.0"
-    "@cucumber/cucumber-expressions": "npm:20.0.0"
-    "@cucumber/gherkin": "npm:42.0.0"
+    "@cucumber/ci-environment": "npm:15.0.0"
+    "@cucumber/cucumber-expressions": "npm:20.1.0"
+    "@cucumber/gherkin": "npm:42.0.1"
     "@cucumber/gherkin-streams": "npm:7.0.1"
-    "@cucumber/gherkin-utils": "npm:12.0.1"
-    "@cucumber/html-formatter": "npm:24.1.0"
-    "@cucumber/junit-xml-formatter": "npm:0.14.0"
+    "@cucumber/gherkin-utils": "npm:12.0.2"
+    "@cucumber/html-formatter": "npm:24.2.0"
+    "@cucumber/junit-xml-formatter": "npm:0.15.0"
     "@cucumber/message-streams": "npm:5.0.1"
-    "@cucumber/messages": "npm:34.2.0"
-    "@cucumber/pretty-formatter": "npm:4.0.0"
-    "@cucumber/tag-expressions": "npm:11.0.0"
+    "@cucumber/messages": "npm:34.2.1"
+    "@cucumber/pretty-formatter": "npm:4.1.0"
+    "@cucumber/tag-expressions": "npm:11.0.1"
     assertion-error-formatter: "npm:^3.0.0"
     cli-table3: "npm:0.6.5"
     commander: "npm:^15.0.0"
@@ -1603,7 +1603,7 @@ __metadata:
     yup: "npm:1.7.1"
   bin:
     cucumber-js: bin/cucumber.js
-  checksum: 10c0/a436bb8804d30e262fdab7a0ebf2f73c830e9bc22b2cd70ce01588bf6523d1aa492be8f2166737ed19674ed7756b34b852668ebde7c2ffc446847a04277afbc2
+  checksum: 10c0/82a8092a5186f25ee7b1fc3831965890fa088118bb24b1d8d0fca25754a0cdf3ca780060d55eff3e388673011f53b3caf9d410b381674aad84ca99ee81d044c6
   languageName: node
   linkType: hard
 
@@ -1623,51 +1623,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/gherkin-utils@npm:12.0.1":
-  version: 12.0.1
-  resolution: "@cucumber/gherkin-utils@npm:12.0.1"
+"@cucumber/gherkin-utils@npm:12.0.2":
+  version: 12.0.2
+  resolution: "@cucumber/gherkin-utils@npm:12.0.2"
   dependencies:
-    "@cucumber/gherkin": "npm:^41.0.0"
-    "@cucumber/messages": "npm:^33.0.0"
+    "@cucumber/gherkin": "npm:^42.0.0"
+    "@cucumber/messages": "npm:^34.0.0"
     "@teppeis/multimaps": "npm:3.0.0"
     commander: "npm:15.0.0"
     source-map-support: "npm:^0.5.21"
   bin:
     gherkin-utils: bin/gherkin-utils
-  checksum: 10c0/94abb95ff494ce49ea638a9e8ef5de63bf9ccad098971439b87d6758d0ad49bd023714da20efaf669b333977f148c09f7252f2952c7619dd831841dd7714b205
+  checksum: 10c0/e74e993d6bc71c5638bedc746632d807d770fd3a14650815c3f2045f572a5d8b38c47e8724f5a8217ba83c00796715b217479421fbc4854b713a068c9a205813
   languageName: node
   linkType: hard
 
-"@cucumber/gherkin@npm:42.0.0":
-  version: 42.0.0
-  resolution: "@cucumber/gherkin@npm:42.0.0"
+"@cucumber/gherkin@npm:42.0.1, @cucumber/gherkin@npm:^42.0.0":
+  version: 42.0.1
+  resolution: "@cucumber/gherkin@npm:42.0.1"
   dependencies:
     "@cucumber/messages": "npm:>=34.0.0 <35"
-  checksum: 10c0/b0d2e4d1c51f90b385e27c6258d773181cc0ad37fd4d9a2d089db9088c7ff59034ca7285616cd108453c778ff2ed4da4b407f94a5862a9acc475a51cc88fd9f5
+  checksum: 10c0/8722510e3dbec40b11f25dc5a2a7e4fe0a7c10fc04445773f24d8e4760b5448907962eb56c01cb31e5df61257a7bc4532e039f7b174d05d8f9594b92a0ba7e96
   languageName: node
   linkType: hard
 
-"@cucumber/gherkin@npm:^41.0.0":
-  version: 41.0.0
-  resolution: "@cucumber/gherkin@npm:41.0.0"
-  dependencies:
-    "@cucumber/messages": "npm:>=31.0.0 <34"
-  checksum: 10c0/92fc5a1b3dc18559a9247ff5a02e6c64d02bd94f52c8da1b2095764b9ba250f03dbe7b56ef3c392a39510c5c9b64d6dfdcffeef26d08c6065207a5c9fdbdc556
-  languageName: node
-  linkType: hard
-
-"@cucumber/html-formatter@npm:24.1.0":
-  version: 24.1.0
-  resolution: "@cucumber/html-formatter@npm:24.1.0"
+"@cucumber/html-formatter@npm:24.2.0":
+  version: 24.2.0
+  resolution: "@cucumber/html-formatter@npm:24.2.0"
   peerDependencies:
     "@cucumber/messages": ">=18"
-  checksum: 10c0/e0273acce270b875975a488fe265ba091833012a4da7bfb2660758263b442c49bab0add837af013cbb1d5f984335407d1ea8fa630e586fa4dd2f7ab9f49cae68
+  checksum: 10c0/25c40909930c2794f59adcb5d4203df7e321d14cda1209a4b263547daf3cd8c7118364bbfb4754b4d41bfe5109eb5af622654fb1a47d1a561e99fd67958d8845
   languageName: node
   linkType: hard
 
-"@cucumber/junit-xml-formatter@npm:0.14.0":
-  version: 0.14.0
-  resolution: "@cucumber/junit-xml-formatter@npm:0.14.0"
+"@cucumber/junit-xml-formatter@npm:0.15.0":
+  version: 0.15.0
+  resolution: "@cucumber/junit-xml-formatter@npm:0.15.0"
   dependencies:
     "@cucumber/query": "npm:^16.0.0"
     "@teppeis/multimaps": "npm:^3.0.0"
@@ -1675,7 +1666,7 @@ __metadata:
     xmlbuilder: "npm:^15.1.1"
   peerDependencies:
     "@cucumber/messages": "*"
-  checksum: 10c0/29ac2da9d9743f4fbf098b3df03ce280c086658f3d559646828790ac291c0596185d484a5207bf429c9f864d51fbf05043d8aee04ad0f5df904ca497efc2583e
+  checksum: 10c0/718ff7480879019b67a6227433f2a772f733f1adda8017c519b37a3440e46bf68d1c0f724c7d01996cc163d579bb432a69daf5597ddea4dccb91a4e6871d270d
   languageName: node
   linkType: hard
 
@@ -1690,52 +1681,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/messages@npm:34.2.0":
-  version: 34.2.0
-  resolution: "@cucumber/messages@npm:34.2.0"
-  checksum: 10c0/e81cd86b7e890e783b7950173d627b7a7270980ba06076aa7a034b6a71782ab839359533227eb940ca3f7182a59be83e2552874dbcc5f92b50864209786ff05c
-  languageName: node
-  linkType: hard
-
-"@cucumber/messages@npm:>=31.0.0 <34, @cucumber/messages@npm:^33.0.0":
-  version: 33.0.4
-  resolution: "@cucumber/messages@npm:33.0.4"
-  checksum: 10c0/6e4d4b65e5dee7283089697c694d605200830142c7f4d238815e77c2a5afc9bde8ecff614861c5af8ba79a241441c29aacf368f57f37ff474e547148fb0b4216
-  languageName: node
-  linkType: hard
-
-"@cucumber/messages@npm:>=34.0.0 <35":
+"@cucumber/messages@npm:34.2.1, @cucumber/messages@npm:>=34.0.0 <35, @cucumber/messages@npm:^34.0.0":
   version: 34.2.1
   resolution: "@cucumber/messages@npm:34.2.1"
   checksum: 10c0/0e81ed0b6aa33f4a814deb87c02ab7eb03ef6fcb9443802cd43b945b7d27fa132d08257789f52f7d454d7a53fe8df4aff17ea3e4787767891c87ad81e676966d
   languageName: node
   linkType: hard
 
-"@cucumber/pretty-formatter@npm:4.0.0":
-  version: 4.0.0
-  resolution: "@cucumber/pretty-formatter@npm:4.0.0"
+"@cucumber/pretty-formatter@npm:4.1.0":
+  version: 4.1.0
+  resolution: "@cucumber/pretty-formatter@npm:4.1.0"
   dependencies:
-    "@cucumber/query": "npm:16.0.0"
+    "@cucumber/query": "npm:16.1.1"
     luxon: "npm:^3.7.2"
   peerDependencies:
     "@cucumber/messages": "*"
-  checksum: 10c0/d30c1030eb548868d70ca8aa52c72b56cfbb6cfa5c44fd96dadec38237df1990e8c6e6afa526564d7c59524e28af97f9b45e9190f2527d65ee3976ff9c3b8eb7
+  checksum: 10c0/0fd423aff31b31e997ec27d22a03e51d1c852e74b64711894eff81247db185763387306250284ef545d5ffa66fb3bdefdbcb466310b413216afb0092c311f0c2
   languageName: node
   linkType: hard
 
-"@cucumber/query@npm:16.0.0":
-  version: 16.0.0
-  resolution: "@cucumber/query@npm:16.0.0"
-  dependencies:
-    "@teppeis/multimaps": "npm:3.0.0"
-    lodash.sortby: "npm:^4.7.0"
-  peerDependencies:
-    "@cucumber/messages": "*"
-  checksum: 10c0/90145f61793558304da0304fb67303ac3fb0e2984c18f75328a3c502c231e987e47e3809c59e47c71c76a8c4effb7569b575be8fb0f9f1a5776f850f3784cbd8
-  languageName: node
-  linkType: hard
-
-"@cucumber/query@npm:^16.0.0":
+"@cucumber/query@npm:16.1.1, @cucumber/query@npm:^16.0.0":
   version: 16.1.1
   resolution: "@cucumber/query@npm:16.1.1"
   dependencies:
@@ -1747,10 +1712,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/tag-expressions@npm:11.0.0":
-  version: 11.0.0
-  resolution: "@cucumber/tag-expressions@npm:11.0.0"
-  checksum: 10c0/ee15b74738436f7ab9ce4b953a020d75f0547409b0828ef5e6af1ce58e59ccc238ec3c25c20cdfee8e7422dbe4bb92003a5b0d328e68c157277d955448c93552
+"@cucumber/tag-expressions@npm:11.0.1":
+  version: 11.0.1
+  resolution: "@cucumber/tag-expressions@npm:11.0.1"
+  checksum: 10c0/f1ce0816765a7e263f16ba5a3173b57779deb4d0fb5f3af2294d017663493df20754e561e6d47462b519368a35eba232c386c69087a2c2b44d790b2be841c8dc
   languageName: node
   linkType: hard
 
@@ -3268,10 +3233,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oxc-project/types@npm:=0.149.0":
-  version: 0.149.0
-  resolution: "@oxc-project/types@npm:0.149.0"
-  checksum: 10c0/f91ff8101300ce5a29fbfc57bdaafd9c1c9d3d9b46c63093f437c479d047042eb615cb6c3ddac91a0d289701ce60c365632866a85d0f1e0d159b20180115187e
+"@oxc-project/types@npm:=0.154.0":
+  version: 0.154.0
+  resolution: "@oxc-project/types@npm:0.154.0"
+  checksum: 10c0/fa91599d087ea4d37c5a3b40dd8e2cb431a7d37730116069f2577dee0b104dc5abb06c96b931c517c8b86f618df1e0c7a37d24086f3cfe39d81eb6db59e70add
   languageName: node
   linkType: hard
 
@@ -3817,107 +3782,107 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rolldown/binding-android-arm-eabi@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-android-arm-eabi@npm:1.2.8"
+"@rolldown/binding-android-arm-eabi@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-android-arm-eabi@npm:1.2.14"
   conditions: os=android & cpu=arm
   languageName: node
   linkType: hard
 
-"@rolldown/binding-android-arm64@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-android-arm64@npm:1.2.8"
+"@rolldown/binding-android-arm64@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-android-arm64@npm:1.2.14"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
-"@rolldown/binding-darwin-arm64@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-darwin-arm64@npm:1.2.8"
+"@rolldown/binding-darwin-arm64@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-darwin-arm64@npm:1.2.14"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@rolldown/binding-darwin-x64@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-darwin-x64@npm:1.2.8"
+"@rolldown/binding-darwin-x64@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-darwin-x64@npm:1.2.14"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@rolldown/binding-freebsd-x64@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-freebsd-x64@npm:1.2.8"
+"@rolldown/binding-freebsd-x64@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-freebsd-x64@npm:1.2.14"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-arm-gnueabihf@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-arm-gnueabihf@npm:1.2.8"
+"@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-arm-gnueabihf@npm:1.2.14"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-arm64-gnu@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-arm64-gnu@npm:1.2.8"
+"@rolldown/binding-linux-arm64-gnu@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-arm64-gnu@npm:1.2.14"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-arm64-musl@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-arm64-musl@npm:1.2.8"
+"@rolldown/binding-linux-arm64-musl@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-arm64-musl@npm:1.2.14"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-ppc64-gnu@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-ppc64-gnu@npm:1.2.8"
+"@rolldown/binding-linux-ppc64-gnu@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-ppc64-gnu@npm:1.2.14"
   conditions: os=linux & cpu=ppc64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-s390x-gnu@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-s390x-gnu@npm:1.2.8"
+"@rolldown/binding-linux-s390x-gnu@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-s390x-gnu@npm:1.2.14"
   conditions: os=linux & cpu=s390x & libc=glibc
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-x64-gnu@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-x64-gnu@npm:1.2.8"
+"@rolldown/binding-linux-x64-gnu@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-x64-gnu@npm:1.2.14"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@rolldown/binding-linux-x64-musl@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-linux-x64-musl@npm:1.2.8"
+"@rolldown/binding-linux-x64-musl@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-linux-x64-musl@npm:1.2.14"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@rolldown/binding-openharmony-arm64@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-openharmony-arm64@npm:1.2.8"
+"@rolldown/binding-openharmony-arm64@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-openharmony-arm64@npm:1.2.14"
   conditions: os=openharmony & cpu=arm64
   languageName: node
   linkType: hard
 
-"@rolldown/binding-win32-arm64-msvc@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-win32-arm64-msvc@npm:1.2.8"
+"@rolldown/binding-win32-arm64-msvc@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-win32-arm64-msvc@npm:1.2.14"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@rolldown/binding-win32-x64-msvc@npm:1.2.8":
-  version: 1.2.8
-  resolution: "@rolldown/binding-win32-x64-msvc@npm:1.2.8"
+"@rolldown/binding-win32-x64-msvc@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@rolldown/binding-win32-x64-msvc@npm:1.2.14"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -9759,12 +9724,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:1.17.0":
-  version: 1.17.0
-  resolution: "lucide-react@npm:1.17.0"
+"lucide-react@npm:1.55.0":
+  version: 1.55.0
+  resolution: "lucide-react@npm:1.55.0"
   peerDependencies:
+    "@types/react": "*"
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/a600d882afceffa5d3479666549e801e201ff5a95c19961648e45fc288cf3d2248a345e563cd3891f3ff3dbc052730121feeb54aa75628b663810159246b9468
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/0618af0eb06e0ea71a7c66b39b89158ff357093714fff5f4bfc1b4851af890ffc49092956b08daf89f38c7ff48f783bb14e7b52756aae4f6bed06da4cf297821
   languageName: node
   linkType: hard
 
@@ -10212,6 +10181,15 @@ __metadata:
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 10c0/b994b4e396730f8be2520923284e2040d61eaee55cc6d4935ef6d38d34bafdc46133eda4d3faea5073bda545aa6079d82b886caeac5c731cf9ac18bcc1301425
+  languageName: node
+  linkType: hard
+
+"nanoid@npm:^3.3.20":
+  version: 3.3.20
+  resolution: "nanoid@npm:3.3.20"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 10c0/856e8bf3bddb959d65997bd94908be030dbc5e6ed88fb3af2a638e51d1938f4d4f454c7c7231aba340775224f88b8cfd3ce1693c70471bfd05f5b6a2227c0c1e
   languageName: node
   linkType: hard
 
@@ -10896,7 +10874,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.5.16, postcss@npm:^8.5.28":
+"postcss@npm:^8.5.16":
   version: 8.5.28
   resolution: "postcss@npm:8.5.28"
   dependencies:
@@ -10904,6 +10882,17 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
   checksum: 10c0/9fe44215a6628d89c8a75184b92f5b2f77e16f9e5b13b39b9009bb7e8e6eccddf82c8854bae922db1f17ace6ef3445073fe38abff513caeb03e5285b1b55620a
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.5.29":
+  version: 8.5.30
+  resolution: "postcss@npm:8.5.30"
+  dependencies:
+    nanoid: "npm:^3.3.20"
+    picocolors: "npm:^1.1.1"
+    source-map-js: "npm:^1.2.2"
+  checksum: 10c0/219cdc50ba3f2b6d0f8b779c4939514cb9d9f53cc9eb92dae1a06f2d6eb910b2ce339a3ee93e7c893b89e50241509fd92c04f0639af1cdf41a1e13983a476029
   languageName: node
   linkType: hard
 
@@ -11534,26 +11523,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rolldown@npm:~1.2.6":
-  version: 1.2.8
-  resolution: "rolldown@npm:1.2.8"
+"rolldown@npm:~1.2.12":
+  version: 1.2.14
+  resolution: "rolldown@npm:1.2.14"
   dependencies:
-    "@oxc-project/types": "npm:=0.149.0"
-    "@rolldown/binding-android-arm-eabi": "npm:1.2.8"
-    "@rolldown/binding-android-arm64": "npm:1.2.8"
-    "@rolldown/binding-darwin-arm64": "npm:1.2.8"
-    "@rolldown/binding-darwin-x64": "npm:1.2.8"
-    "@rolldown/binding-freebsd-x64": "npm:1.2.8"
-    "@rolldown/binding-linux-arm-gnueabihf": "npm:1.2.8"
-    "@rolldown/binding-linux-arm64-gnu": "npm:1.2.8"
-    "@rolldown/binding-linux-arm64-musl": "npm:1.2.8"
-    "@rolldown/binding-linux-ppc64-gnu": "npm:1.2.8"
-    "@rolldown/binding-linux-s390x-gnu": "npm:1.2.8"
-    "@rolldown/binding-linux-x64-gnu": "npm:1.2.8"
-    "@rolldown/binding-linux-x64-musl": "npm:1.2.8"
-    "@rolldown/binding-openharmony-arm64": "npm:1.2.8"
-    "@rolldown/binding-win32-arm64-msvc": "npm:1.2.8"
-    "@rolldown/binding-win32-x64-msvc": "npm:1.2.8"
+    "@oxc-project/types": "npm:=0.154.0"
+    "@rolldown/binding-android-arm-eabi": "npm:1.2.14"
+    "@rolldown/binding-android-arm64": "npm:1.2.14"
+    "@rolldown/binding-darwin-arm64": "npm:1.2.14"
+    "@rolldown/binding-darwin-x64": "npm:1.2.14"
+    "@rolldown/binding-freebsd-x64": "npm:1.2.14"
+    "@rolldown/binding-linux-arm-gnueabihf": "npm:1.2.14"
+    "@rolldown/binding-linux-arm64-gnu": "npm:1.2.14"
+    "@rolldown/binding-linux-arm64-musl": "npm:1.2.14"
+    "@rolldown/binding-linux-ppc64-gnu": "npm:1.2.14"
+    "@rolldown/binding-linux-s390x-gnu": "npm:1.2.14"
+    "@rolldown/binding-linux-x64-gnu": "npm:1.2.14"
+    "@rolldown/binding-linux-x64-musl": "npm:1.2.14"
+    "@rolldown/binding-openharmony-arm64": "npm:1.2.14"
+    "@rolldown/binding-win32-arm64-msvc": "npm:1.2.14"
+    "@rolldown/binding-win32-x64-msvc": "npm:1.2.14"
     "@rolldown/pluginutils": "npm:^1.0.0"
   dependenciesMeta:
     "@rolldown/binding-android-arm-eabi":
@@ -11588,7 +11577,7 @@ __metadata:
       optional: true
   bin:
     rolldown: ./bin/cli.mjs
-  checksum: 10c0/5a9c6b30a7ef0af257a963e6b0b95d5a60b23512b7dbcca617273bd63fb0892b88be6b33dc9a6cb66350f47d260eff6456af0b7afef34898767f3527ce0d967d
+  checksum: 10c0/61782e6764bb05e525517dc8b2d69b465033a48a6998b1fb21de01e787938f3f7a2aa1e8eee5d83c924d131cc629eeaea9fa56b69dd469f97b3c6bb7fb6ddcb2
   languageName: node
   linkType: hard
 
@@ -12112,7 +12101,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-js@npm:^1.2.1":
+"source-map-js@npm:^1.2.1, source-map-js@npm:^1.2.2":
   version: 1.2.2
   resolution: "source-map-js@npm:1.2.2"
   checksum: 10c0/d5d6dec62266834f83dd4f8a2606a196fb1a006ca5d53b0ef80ee513b7eba2f4e2ae241f4bc129ae7e9b80dea24f6e3d92b446b7e6e96be7653cab8888168a94
@@ -13380,15 +13369,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:8.3.0":
-  version: 8.3.0
-  resolution: "vite@npm:8.3.0"
+"vite@npm:8.3.4":
+  version: 8.3.4
+  resolution: "vite@npm:8.3.4"
   dependencies:
     fsevents: "npm:~2.3.3"
     lightningcss: "npm:^1.33.0"
     picomatch: "npm:^4.0.7"
-    postcss: "npm:^8.5.28"
-    rolldown: "npm:~1.2.6"
+    postcss: "npm:^8.5.29"
+    rolldown: "npm:~1.2.12"
     tinyglobby: "npm:^0.2.17"
   peerDependencies:
     "@types/node": ^20.19.0 || >=22.12.0
@@ -13433,7 +13422,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/28d9a1c8b5018a865b8d8b2330859b11b035c3c578349d6ef0fc4a69b7a99460fc65aff75926d2ac18a7b217cd9a847901e2f7bcb32875f37319ccd81cd9064a
+  checksum: 10c0/63d7351fa21580fb646f0b594c64e97a56cdf15c55a57372a7adefe6287995fa7384cb5ddca14695ff7dca738ba00e0a3352fc24df711d9c501c5576f40f0867
   languageName: node
   linkType: hard
 
