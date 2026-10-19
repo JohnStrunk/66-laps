@@ -56,8 +56,8 @@
     },
     {
       "description": "Group HeroUI packages together",
-      "matchPackagePatterns": [
-        "^@heroui/"
+      "matchPackageNames": [
+        "/^@heroui//"
       ],
       "groupName": "heroui"
     }
@@ -66,9 +66,9 @@
   "prConcurrentLimit": 15,
   "prHourlyLimit": 0,
   "rebaseWhen": "auto",
-  "schedule": [
-    "before 9am on Monday"
-  ],
   "semanticCommits": "disabled",
-  "timezone": "America/New_York"
+  "timezone": "America/New_York",
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": "1 day"
+  }
 }
