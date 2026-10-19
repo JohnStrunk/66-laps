@@ -1,4 +1,4 @@
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import withPWAInit from "@ducanh2912/next-pwa";
 import type { NextConfig } from "next";
 
