@@ -48,7 +48,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.22.0"
     playwright: "npm:1.64.0"
-    posthog-js: "npm:1.438.7"
+    posthog-js: "npm:1.438.9"
     react: "npm:19.3.0"
     react-dom: "npm:19.3.0"
     storybook: "npm:10.6.1"
@@ -3428,7 +3428,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/core@npm:^1.57.4, @posthog/core@npm:^1.59.1":
+"@posthog/core@npm:^1.58.1, @posthog/core@npm:^1.59.1":
   version: 1.59.1
   resolution: "@posthog/core@npm:1.59.1"
   dependencies:
@@ -3437,7 +3437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/types@npm:^1.415.2, @posthog/types@npm:^1.416.0":
+"@posthog/types@npm:^1.415.3, @posthog/types@npm:^1.416.0":
   version: 1.416.0
   resolution: "@posthog/types@npm:1.416.0"
   checksum: 10c0/d3227a4b6423a1ce69db9c8e74ada17a5c3fd8ba824b0e6ed496744d907859717a0d3ad162bde08d5908679916896e7a1c4f1793ea74c6e641cf08928fe80c4e
@@ -10836,13 +10836,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.438.7":
-  version: 1.438.7
-  resolution: "posthog-js@npm:1.438.7"
+"posthog-js@npm:1.438.9":
+  version: 1.438.9
+  resolution: "posthog-js@npm:1.438.9"
   dependencies:
     "@posthog/browser-common": "npm:^0.9.4"
-    "@posthog/core": "npm:^1.57.4"
-    "@posthog/types": "npm:^1.415.2"
+    "@posthog/core": "npm:^1.58.1"
+    "@posthog/types": "npm:^1.415.3"
     core-js: "npm:^3.49.0"
     dompurify: "npm:^3.4.13"
     fflate: "npm:^0.4.8"
@@ -10858,7 +10858,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 10c0/1c03a65c68ae1e5667a411565d19e52780e37ab36aff24870b3065b85ef59d879c32d524660d8aabca74d17f1e691b372d80e8a0e37d77508546e1fae1bb218e
+  checksum: 10c0/f22db9432b669cd32a8537f06e157febf057e7f74da73006d673649bae4e2c8ab6d6e48182634257e839125f3f567564b57ab39256e56694c080fe94bc8c9003
   languageName: node
   linkType: hard
 
