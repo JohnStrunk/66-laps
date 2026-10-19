@@ -24,7 +24,7 @@
     "@pixi/react": "8.0.5",
     "@react-three/drei": "10.7.9",
     "@react-three/fiber": "9.8.1",
-    "@sentry/nextjs": "10.69.0",
+    "@sentry/nextjs": "10.76.2",
     "@types/three": "0.186.0",
     "jspdf": "4.2.1",
     "jspdf-autotable": "5.0.8",
