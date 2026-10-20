@@ -43,7 +43,7 @@ __metadata:
     jspdf-autotable: "npm:5.0.8"
     lucide-react: "npm:1.55.0"
     monocart-coverage-reports: "npm:2.13.2"
-    motion: "npm:14.1.0"
+    motion: "npm:14.2.0"
     next: "npm:16.4.0"
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.22.0"
@@ -7943,12 +7943,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:14.1.0":
-  version: 14.1.0
-  resolution: "framer-motion@npm:14.1.0"
+"framer-motion@npm:14.2.0":
+  version: 14.2.0
+  resolution: "framer-motion@npm:14.2.0"
   dependencies:
-    motion-dom: "npm:14.1.0"
-    motion-utils: "npm:14.1.0"
+    motion-dom: "npm:14.2.0"
+    motion-utils: "npm:14.1.1"
     tslib: "npm:^2.4.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
@@ -7958,7 +7958,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/cf167172d041c2d20d844da7aaba91826aa3767aafa2251acb43c6271294e5f60ea3ab99d198ff21521d1f72fc24aeb391ea7ff1faf54f80764ef3a76114966a
+  checksum: 10c0/d469b770a7089b7703be8adf40817ce8d3395eb0c6c85b25fb39c3e9dfd749202d6b498aa5ec6b5ad0ab8776ae5f6bce0f34d8791a87daa2529f7b83af558e0d
   languageName: node
   linkType: hard
 
@@ -9973,27 +9973,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion-dom@npm:14.1.0":
-  version: 14.1.0
-  resolution: "motion-dom@npm:14.1.0"
+"motion-dom@npm:14.2.0":
+  version: 14.2.0
+  resolution: "motion-dom@npm:14.2.0"
   dependencies:
-    motion-utils: "npm:14.1.0"
-  checksum: 10c0/ad5d65e10cd88b2e2f2d2728eb936c0607c8862b04246f8732dad07559ec632a09f5d5ee547afa08d4898ef0fd3fc8d3f5c1615e4d32bda477daac7017f2dd35
+    motion-utils: "npm:14.1.1"
+  checksum: 10c0/3b15f5bbb67a04da9d18224e2c6cb22838e80fff02ed4b7b9e5278e1611a471fd539e46e2612346506f1801c3e1a44148718bcda82804001db91b047ee652188
   languageName: node
   linkType: hard
 
-"motion-utils@npm:14.1.0":
-  version: 14.1.0
-  resolution: "motion-utils@npm:14.1.0"
-  checksum: 10c0/d48bb8bf9e78af2ee9dd5b4f6ef54e4357b876b950be7be1216f40b7e8f080270109741a02ac168a9b202505a12e9809538c90e36821591dc2a2b8489a6048f2
+"motion-utils@npm:14.1.1":
+  version: 14.1.1
+  resolution: "motion-utils@npm:14.1.1"
+  checksum: 10c0/ee89684857aae2b02897d7297568e1e6dc6c1eec08c61533fbc0a9650de5d5c454aa888532b825baabac92defddecd364cbb8cd7fa63b2171152edf8f9f819f0
   languageName: node
   linkType: hard
 
-"motion@npm:14.1.0":
-  version: 14.1.0
-  resolution: "motion@npm:14.1.0"
+"motion@npm:14.2.0":
+  version: 14.2.0
+  resolution: "motion@npm:14.2.0"
   dependencies:
-    framer-motion: "npm:14.1.0"
+    framer-motion: "npm:14.2.0"
     tslib: "npm:^2.4.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
@@ -10003,7 +10003,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/515a1e78e4b810899436ad5a23862d190927533ea98c8c02f567e993c7b54d4b3b6d044a04d18fdff38fa52f7432600fc0ac2dec0267272bf7b393b66c0fc66f
+  checksum: 10c0/4c288db5503dd4cc7879437f3fef1b7fd5add4903307a333b9ee631dfb301d8db68417e96fb1345119bc77cfeebd9ff1c4305926e4fe0606c73dbe68a052ca67
   languageName: node
   linkType: hard
 
