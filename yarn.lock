@@ -38,9 +38,9 @@ __metadata:
     eslint: "npm:10.12.0"
     eslint-config-next: "npm:16.4.1"
     eslint-plugin-storybook: "npm:10.6.2"
-    jsdom: "npm:30.1.2"
+    jsdom: "npm:30.1.3"
     jspdf: "npm:4.2.1"
-    jspdf-autotable: "npm:5.0.8"
+    jspdf-autotable: "npm:5.0.9"
     lucide-react: "npm:1.57.0"
     monocart-coverage-reports: "npm:2.13.2"
     motion: "npm:14.2.0"
@@ -48,7 +48,7 @@ __metadata:
     next-themes: "npm:0.4.6"
     pixi.js: "npm:8.22.0"
     playwright: "npm:1.64.1"
-    posthog-js: "npm:1.438.9"
+    posthog-js: "npm:1.438.12"
     react: "npm:19.3.1"
     react-dom: "npm:19.3.1"
     storybook: "npm:10.6.2"
@@ -146,15 +146,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@asamuzakjp/dom-selector@npm:^9.2.4":
-  version: 9.2.4
-  resolution: "@asamuzakjp/dom-selector@npm:9.2.4"
+"@asamuzakjp/dom-selector@npm:^10.0.3":
+  version: 10.0.5
+  resolution: "@asamuzakjp/dom-selector@npm:10.0.5"
   dependencies:
     bidi-js: "npm:^1.1.0"
     css-tree: "npm:^3.2.1"
     is-potential-custom-element-name: "npm:^1.0.1"
     lru-cache: "npm:^11.5.3"
-  checksum: 10c0/2b290465e38ba8c77612f059e647e2675454c8b8788ce056f18bf31f793003fa7d831c4f6cf5f4118a40491c662c5bca200ae61c2e780cfbe4af6ab831f38e96
+  checksum: 10c0/c4995420b8b6af6787a4ece7d7316c8db2adc1cac1e29183b8f3db1f7f2aaa3bab4c35d935445ca6e4a9a7a90fece508ceaa7be462b512d6fb8794dd818c3286
   languageName: node
   linkType: hard
 
@@ -3479,17 +3479,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/browser-common@npm:^0.9.4":
-  version: 0.9.5
-  resolution: "@posthog/browser-common@npm:0.9.5"
+"@posthog/browser-common@npm:^0.9.5":
+  version: 0.9.11
+  resolution: "@posthog/browser-common@npm:0.9.11"
   dependencies:
-    "@posthog/core": "npm:^1.59.1"
+    "@posthog/core": "npm:^1.60.1"
     "@posthog/types": "npm:^1.416.0"
-  checksum: 10c0/98a2b234d3f3e5c69b946bdbca899e147ceaea1ec3511d99bd70201f754af1a30c1f9c7de5b84ce338c742314f119fcab37c5ab01fe1d9b7c60d58a6f0f6bb09
+    preact: "npm:^10.29.3"
+  checksum: 10c0/4cf12842c96e76b62c45641bc8c7a2a7d5ec481ab83e01bf14b00457281e9b774911a9a5eb5de9460fc513378d6ff8ce6498538befb5c150ef6628e444323f3d
   languageName: node
   linkType: hard
 
-"@posthog/core@npm:^1.58.1, @posthog/core@npm:^1.59.1":
+"@posthog/core@npm:^1.59.1":
   version: 1.59.1
   resolution: "@posthog/core@npm:1.59.1"
   dependencies:
@@ -3498,7 +3499,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@posthog/types@npm:^1.415.3, @posthog/types@npm:^1.416.0":
+"@posthog/core@npm:^1.60.1":
+  version: 1.60.1
+  resolution: "@posthog/core@npm:1.60.1"
+  dependencies:
+    "@posthog/types": "npm:^1.416.0"
+  checksum: 10c0/77d10aee5d94e34fe2b5152274a995c9851155b83e5fd165dcd1fec5f51f64ea43f0e78bc606d270ee4871807b2c7cf47f7d03137cb62d04fc1093053cf58500
+  languageName: node
+  linkType: hard
+
+"@posthog/types@npm:^1.416.0":
   version: 1.416.0
   resolution: "@posthog/types@npm:1.416.0"
   checksum: 10c0/d3227a4b6423a1ce69db9c8e74ada17a5c3fd8ba824b0e6ed496744d907859717a0d3ad162bde08d5908679916896e7a1c4f1793ea74c6e641cf08928fe80c4e
@@ -9032,12 +9042,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdom@npm:30.1.2":
-  version: 30.1.2
-  resolution: "jsdom@npm:30.1.2"
+"jsdom@npm:30.1.3":
+  version: 30.1.3
+  resolution: "jsdom@npm:30.1.3"
   dependencies:
     "@asamuzakjp/css-color": "npm:^7.1.3"
-    "@asamuzakjp/dom-selector": "npm:^9.2.4"
+    "@asamuzakjp/dom-selector": "npm:^10.0.3"
     "@bramus/specificity": "npm:^2.4.2"
     "@csstools/css-syntax-patches-for-csstree": "npm:^1.1.15"
     "@exodus/bytes": "npm:^1.16.0"
@@ -9050,7 +9060,7 @@ __metadata:
     parse5: "npm:^8.0.1"
     saxes: "npm:^6.0.0"
     tough-cookie: "npm:^6.0.2"
-    undici: "npm:^8.11.2"
+    undici: "npm:^8.12.1"
     w3c-xmlserializer: "npm:^6.0.0"
     webidl-conversions: "npm:^8.0.1"
     whatwg-mimetype: "npm:^5.0.0"
@@ -9061,7 +9071,7 @@ __metadata:
   peerDependenciesMeta:
     canvas:
       optional: true
-  checksum: 10c0/58c7bddabe1d2d396280ec90e5e7042e0def6bf2767779d8c3017bd88ffe11ab32ab2ceab57ec91d512b51f5b2a25e6f0a52c6b58ed0713789bd0a50fce2055f
+  checksum: 10c0/4dfb5a3b4e155eed829076c828f220264170a4b79128af9694b4b428643551f1f42e54fa016637ad0e98e926bbc063c8f11b1b8d22fe65f01e99828f91a67344
   languageName: node
   linkType: hard
 
@@ -9149,12 +9159,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jspdf-autotable@npm:5.0.8":
-  version: 5.0.8
-  resolution: "jspdf-autotable@npm:5.0.8"
+"jspdf-autotable@npm:5.0.9":
+  version: 5.0.9
+  resolution: "jspdf-autotable@npm:5.0.9"
   peerDependencies:
     jspdf: ^2 || ^3 || ^4
-  checksum: 10c0/c5e695d6d31692b9d2c11d284948ad508fc3e616d0b555119451dfd307176bdd80c880459cef6fee9e7db5140272b6fa281ee0ffaeeffddca6bf2497b577b40e
+  checksum: 10c0/c0e217765df1895560b7850a057b297ee82677db0608516ff25c81722416fc92149189c3f9f9361df6d31e5e8784c1367d63b1228d225b7bc4e59eb34bf32c3e
   languageName: node
   linkType: hard
 
@@ -10799,13 +10809,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:1.438.9":
-  version: 1.438.9
-  resolution: "posthog-js@npm:1.438.9"
+"posthog-js@npm:1.438.12":
+  version: 1.438.12
+  resolution: "posthog-js@npm:1.438.12"
   dependencies:
-    "@posthog/browser-common": "npm:^0.9.4"
-    "@posthog/core": "npm:^1.58.1"
-    "@posthog/types": "npm:^1.415.3"
+    "@posthog/browser-common": "npm:^0.9.5"
+    "@posthog/core": "npm:^1.59.1"
+    "@posthog/types": "npm:^1.416.0"
     core-js: "npm:^3.49.0"
     dompurify: "npm:^3.4.13"
     fflate: "npm:^0.4.8"
@@ -10821,7 +10831,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 10c0/f22db9432b669cd32a8537f06e157febf057e7f74da73006d673649bae4e2c8ab6d6e48182634257e839125f3f567564b57ab39256e56694c080fe94bc8c9003
+  checksum: 10c0/2d207a8e3397ac4ce421c834558b99565700a40d091c3a54e80c17e9e177f51ab551adf80f56c2de0e77d59232cbc5b37af1fd3f99a26045574c44cb527489b6
   languageName: node
   linkType: hard
 
@@ -13009,10 +13019,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^8.11.2":
-  version: 8.12.2
-  resolution: "undici@npm:8.12.2"
-  checksum: 10c0/25b0e0a69585b2b2e2678fdcd07942bbe15b14c6686d496712b0ee37ce15753af90ab7335ee42c8e65ec60b72bf3a21adc72bbabf86c1eaca74f27a3779532de
+"undici@npm:^8.12.1":
+  version: 8.12.3
+  resolution: "undici@npm:8.12.3"
+  checksum: 10c0/714919e62b4160eea195fb35c7f5c4907235741e47bfde8a014ac58f6d24df13434e23400d7f48e2c455fd2b259d27f07fce514f04a5b4e99936ba62cbc4bb71
   languageName: node
   linkType: hard
 
